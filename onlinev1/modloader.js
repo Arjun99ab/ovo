@@ -1,6 +1,6 @@
 const mods = {
-    "gui": "/onlinev1/ModLoader/V1/gui.js",
-    "multiplayer": "/onlinev1/ModLoader/V1/multiplayerSKYPORTED.js",
+    "gui": "/ovo/onlinev1/ModLoader/V1/gui.js",
+    "multiplayer": "/ovo/onlinev1/ModLoader/V1/multiplayerSKYPORTED.js",
     
   };
   
@@ -175,22 +175,6 @@ const mods = {
               return loadModJS(js);
           }
       }
-      
-
-    //   pwd = prompt("enter pwd");
-    //   fetch("./tips.json")
-    //   .then(response => {
-    //     return response.json();
-    //   })
-    //   .then(jsondata => {
-    //     if(pwd === jsondata[7]["name"]) {
-    //         console.log('pwd correct');
-
-
-    //     } else {
-    //       window.location.href = 'https://static-17f1f.web.app/';
-    //     }
-    //   });
       
       setTimeout(onFinishLoad, 100);
       //hiiiiii
