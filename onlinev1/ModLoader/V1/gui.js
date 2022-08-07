@@ -195,7 +195,7 @@
                         Math.round(player.x.toString()) +
                         ", " +
                         Math.round(player.y.toString());
-                    console.log(document.getElementById("pos").offsetWidth);
+                    //console.log(document.getElementById("pos").offsetWidth);
 
                     if(parseInt(document.getElementById("state").style.right.substring(0, 2)) - (parseInt(document.getElementById("pos").style.right.substring(0, 2)) + document.getElementById("pos").offsetWidth) !== 6) {
                         document.getElementById("state").style.right = (parseInt(document.getElementById("pos").style.right.substring(0, 2)) + document.getElementById("pos").offsetWidth + 6).toString() + "px";
