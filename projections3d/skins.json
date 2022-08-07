@@ -1,0 +1,209 @@
+[
+    {
+      "name": "Default",
+      "hidden": false,
+      "icon": "./images/default.png",
+      "skin": "",
+      "lang": "default",
+      "price": 0,
+      "achievement": -1
+    },
+    {
+      "name": "Electrical",
+      "hidden": false,
+      "icon": "./images/electrical.png",
+      "skin": "elec",
+      "lang": "electrical",
+      "price": -1,
+      "achievement": 6
+    },
+    {
+      "name": "Pole",
+      "hidden": false,
+      "icon": "./images/pole.png",
+      "skin": "pole",
+      "lang": "pole",
+      "price": 30,
+      "achievement": -1
+    },
+    {
+      "name": "Pink Guy",
+      "hidden": false,
+      "icon": "./images/frank.png",
+      "skin": "frank",
+      "lang": "pinkguy",
+      "price": 20,
+      "achievement": -1
+    },
+    {
+      "name": "OvO+",
+      "hidden": true,
+      "icon": "./images/ovoplus.png",
+      "skin": "ovo+",
+      "lang": "ovoplus",
+      "price": -1,
+      "achievement": 5
+    },
+    {
+      "name": "Knight",
+      "hidden": false,
+      "icon": "./images/knight.png",
+      "skin": "knight",
+      "lang": "knight",
+      "price": 40,
+      "achievement": -1
+    },
+    {
+      "name": "Dark Knight",
+      "hidden": false,
+      "icon": "./images/dknight.png",
+      "skin": "dknight",
+      "lang": "dknight",
+      "price": 60,
+      "achievement": -1
+    },
+    {
+      "name": "Light Knight",
+      "hidden": false,
+      "icon": "./images/lknight.png",
+      "skin": "lknight",
+      "lang": "lknight",
+      "price": -1,
+      "achievement": 15
+    },
+    {
+      "name": "Astronaut",
+      "hidden": true,
+      "icon": "./images/astronaut.png",
+      "skin": "astronaut",
+      "lang": "astronaut",
+      "price": -1,
+      "achievement": 7
+    },
+    {
+      "name": "Alien",
+      "hidden": false,
+      "icon": "./images/alien.png",
+      "skin": "alien",
+      "lang": "alien",
+      "price": 70,
+      "achievement": -1
+    },
+    {
+      "name": "Erigato",
+      "hidden": false,
+      "icon": "./images/erigato.png",
+      "skin": "erigato",
+      "lang": "erigato",
+      "price": 50,
+      "achievement": -1
+    },
+    {
+      "name": "Batter",
+      "hidden": true,
+      "icon": "./images/batter.png",
+      "skin": "batter",
+      "lang": "batter",
+      "price": -1,
+      "achievement": 10
+    },
+    {
+      "name": "Adalich",
+      "hidden": false,
+      "icon": "./images/ada.png",
+      "skin": "ada",
+      "lang": "adalich",
+      "price": 0,
+      "achievement": -1
+    },
+    {
+      "name": "The Fallen",
+      "hidden": true,
+      "icon": "./images/thefall.png",
+      "skin": "thefall",
+      "lang": "fallen",
+      "price": -1,
+      "achievement": 20
+    },
+    {
+      "name": "Pulse",
+      "hidden": false,
+      "icon": "./images/pulse.png",
+      "skin": "pulse",
+      "lang": "pulse",
+      "price": -1,
+      "achievement": 8
+    },
+    {
+      "name": "MaterWelon",
+      "hidden": false,
+      "icon": "./images/materwelon.png",
+      "skin": "materwelon",
+      "lang": "materwelon",
+      "price": -1,
+      "achievement": 9
+    },
+    {
+      "name": "Fl1ckd",
+      "hidden": false,
+      "icon": "./images/fl1ckd.png",
+      "skin": "fl1ckd",
+      "lang": "flickd",
+      "price": 50,
+      "achievement": -1
+    },
+    {
+      "name": "TheLilJoker",
+      "hidden": false,
+      "icon": "./images/theliljoker.png",
+      "skin": "theliljoker",
+      "lang": "theliljoker",
+      "price": 50,
+      "achievement": -1
+    },
+    {
+      "name": "French",
+      "hidden": false,
+      "icon": "./images/french.png",
+      "skin": "french",
+      "lang": "french",
+      "price": 0,
+      "achievement": -1
+    },
+    {
+      "name": "English",
+      "hidden": false,
+      "icon": "./images/english.png",
+      "skin": "english",
+      "lang": "english",
+      "price": 0,
+      "achievement": -1
+    },
+    {
+      "name": "Spanish",
+      "hidden": false,
+      "icon": "./images/spanish.png",
+      "skin": "spanish",
+      "lang": "spanish",
+      "price": 0,
+      "achievement": -1
+    },
+    {
+      "name": "Brazilian",
+      "hidden": false,
+      "icon": "./images/brazilian.png",
+      "skin": "brazilian",
+      "lang": "brazilian",
+      "price": 0,
+      "achievement": -1
+    },
+    {
+      "name": "ShyGuy",
+      "hidden": false,
+      "icon": "./images/shyguy.png",
+      "skin": "shyguy",
+      "lang": "shyguy",
+      "price": 0,
+      "achievement": -1
+    }
+  ]
