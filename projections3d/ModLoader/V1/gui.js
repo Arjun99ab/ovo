@@ -14,6 +14,16 @@
     var scale = 1;
     var customTextNum = 0;
 
+    if(localStorage.getItem('guiSettings') !== null) {
+        guiSettings = JSON.parse(localStorage.getItem('guiSettings'));
+        for (const [key] of Object.entries(guiSettings)) {
+            if(key.startsWith('text') && parseInt(key.substring(4)) > customTextNum) {
+                customTextNum = parseInt(key.substring(4))
+            }
+        }
+    }
+    
+
     var currentMouseCoords = [];
 
     var keyColors = {
@@ -1270,7 +1280,11 @@
                 "onTextColor": "",
                 "opacity": 1,
                 "fontFamily": "Retron2000",
-                "innerHTML": "N/A"
+                "innerHTML": "N/A",
+                "enabled": true,
+                "display": "block", 
+                "width": 0,
+                "height": 0
             }
             localStorage.setItem('guiSettings', JSON.stringify(guiSettings));
         
@@ -1619,7 +1633,9 @@
 
                     //console.log(Math.round(player.behavior_insts[0].dy.toString()), Math.round(player.behavior_insts[0].dx.toString()))
                     if(document.getElementById("state") !== null) {
-                        if(Math.abs(player.behavior_insts[0].dx) > 500) {
+                        if(Math.abs(player.behavior_insts[0].dx) > 551) {
+                            document.getElementById("state").innerHTML = "Rejump/1FSJ";
+                        } else if(Math.abs(player.behavior_insts[0].dx) > 500) {
                             document.getElementById("state").innerHTML = "Sliding";                    
                         } else if(Math.abs(player.behavior_insts[0].dx) > 450) {
                             document.getElementById("state").innerHTML = "Diving";                    
@@ -1632,6 +1648,7 @@
                         } else {
                             document.getElementById("state").innerHTML = "Resting"; 
                         }
+                        
                     }
                     
 
