@@ -1649,7 +1649,7 @@
                             document.getElementById("state").innerHTML = "Resting"; 
                         }
                         
-                    }
+                    } //
                     
 
                     
