@@ -384,7 +384,13 @@
         deleteElementButton.onclick = function() {
             guiSettings = JSON.parse(localStorage.getItem('guiSettings'))
             guiSettings[elementEditing.id]["enabled"] = false;
+
+            if(elementEditing.name === "Custom Text") {
+                delete guiSettings[elementEditing.id];
+            }
             localStorage.setItem('guiSettings', JSON.stringify(guiSettings));
+
+            
             
             b.remove();
             elementEditing.remove();
@@ -1649,7 +1655,7 @@
                             document.getElementById("state").innerHTML = "Resting"; 
                         }
                         
-                    } //
+                    }
                     
 
                     
