@@ -131,10 +131,10 @@
     );
   };
 
-  // notify(
-  //     "Save state with Shift+S, load with S, reset with R, reset sate with Shift+R, skip level with Shift+N, go back in level with Shift+B",
-  //     "Mod loaded"
-  // );
+  notify(
+      "Save state with Shift+S, load with S, reset with R, reset sate with Shift+R, skip level with Shift+N, go back in level with Shift+B",
+      "Mod loaded"
+  );
 
   let getPlayer = () =>
     runtime.types_by_index

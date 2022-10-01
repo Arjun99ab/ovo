@@ -3556,7 +3556,7 @@ let getRandomOvORoomCode = () => {
         let multiplayer = {
           init() {
             // Init code
-            // notify("Mod loaded", "Multiplayer mod loaded");
+            notify("Mod loaded", "Multiplayer mod loaded");
 
             this.username = "";
             this.initialUsername = "";

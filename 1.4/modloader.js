@@ -7,12 +7,30 @@
 
     let onFinishLoad = () => {
         if ((cr_getC2Runtime() || {isloading: true}).isloading) {
-            setTimeout(onFinishLoad, 100);
+            setTimeout(onFinishLoad, 500);
         } else {
+
+            var Retron2000 = new FontFace('Retron2000', 'url(./retron2000.ttf)');
+            Retron2000.load().then(function(loaded_face) {
+                document.fonts.add(loaded_face);
+                document.body.style.fontFamily = '"Retron2000", Arial';
+            console.log("123123")
+            }).catch(function(error) {
+                console.log(error)
+            });
             runtime = cr_getC2Runtime();
-            sleep(1000).then(() => {
+
+            let old = globalThis.sdk_runtime;
+            c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
+            //runtime = globalThis.sdk_runtime;
+            globalThis.sdk_runtime = old;
+            
+            sleep(5000).then(() => {
                 cleanModLoader.init();
             });
+
+           
+
         }
     }
 
@@ -1015,6 +1033,7 @@
                     }
                     js.id = key;
                     document.head.appendChild(js);
+                    console.log("yooyoyo")
                 }
             }
 
@@ -1101,5 +1120,5 @@
         }
     };
   
-    setTimeout(onFinishLoad, 100);
+    setTimeout(onFinishLoad, 500);
 })();
