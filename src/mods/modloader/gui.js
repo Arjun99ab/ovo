@@ -201,7 +201,7 @@
             "onTextColor": "",
             "opacity": 1,
             "fontFamily": "Retron2000",
-            "innerHTML": "",
+            "innerHTML": "123",
             "enabled": true,
             "display": "block", 
             "width": 0,
@@ -1416,6 +1416,7 @@
                 
                 console.log(guiSettings[key]);
                 if(guiSettings[key]["enabled"] === true) {
+                    console.log(key + "loaded")
                     createGuiElement(key, guiSettings[key]["top"], guiSettings[key]["left"], guiSettings[key]["name"]);
                     element = document.getElementById(key);
                     element.style.border = guiSettings[key]["border"]
@@ -1617,7 +1618,8 @@
                             document.getElementById("fps").innerHTML = runtime.fps;
                         }
                         if(document.getElementById("speed") !== null) {
-                            document.getElementById("speed").innerHTML =  Math.round(Math.sqrt(Math.pow(player.behavior_insts[0].dx, 2) + Math.pow(player.behavior_insts[0].dy, 2)));
+                            //console.log("hi")
+                            document.getElementById("speed").innerHTML = Math.round(Math.sqrt(Math.pow(player.behavior_insts[0].dx, 2) + Math.pow(player.behavior_insts[0].dy, 2)));
                         }
                         if(Object.keys(runtime.deathRow).length !== 0) {
                             this.attempts++;

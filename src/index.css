@@ -1,0 +1,35 @@
+body {
+  background-color: rgba(6, 19, 53, 255);
+
+  font-family: "Nunito", sans-serif;
+  color: white;
+}
+
+.btn {
+  background-color: #9368e4;
+  border-color: #9368e4;
+}
+.feature-icon-small {
+  background-color: #9368e4;
+  border-color: #9368e4;
+  width: 3rem;
+  height: 3rem;
+}
+
+::-webkit-scrollbar-track
+{
+  border-radius: 10px;
+  background-color: rgba(6, 19, 53, 255);
+}
+
+::-webkit-scrollbar
+{
+  width: 12px;
+  background-color: rgba(6, 19, 53, 255);
+}
+
+::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  background-color: #9368e4;
+}

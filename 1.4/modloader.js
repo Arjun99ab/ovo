@@ -1,4 +1,6 @@
 (function() {
+    let version = '1.4'
+
     var runtime;
 
     function sleep (time) {
@@ -38,6 +40,8 @@
     var map = null;
 
     var customModNum = 0; 
+    
+    var speedy_boi = 1;
 
     var guiEnabledElements = []
     
@@ -45,7 +49,7 @@
                        
     }
 
-    fetch('../src/mods/modloader/config/baseMods.json')
+    fetch('../src/mods/modloader/config/baseMods' + version + '.json')
         .then((response) => response.json())
         .then(jsondata => {
             console.log(jsondata)
@@ -61,6 +65,15 @@
     let isInLevel = () => {
         return runtime.running_layout.name.startsWith("Level")
     };
+    let isPaused = () => {
+        if (isInLevel()) return runtime.running_layout.layers.find(function(a) {
+            return "Pause" === a.name
+        }).visible
+    };
+    
+    let closePaused = () => {
+        if (isInLevel()) return runtime.running_layout.layers.find(function(a) {return "Pause" === a.name}).visible = false
+    }
 
 
 
@@ -381,6 +394,8 @@
 
         saveModButton.onclick = function() {
 
+            //map = disableClick()
+
             if(editing === null) {
                 if(modNameInput.value !== "" && modSrc.value !== "") {
                     customModNum++;
@@ -515,7 +530,63 @@
         xButton.onclick = function() {
             menuBg.remove();
             enableClick(map);
+
+            if(playerXSpeedInput.value !== 1) {
+                speedy_boi = parseInt((playerXSpeedInput.value))
+                console.log(speedy_boi)
+            }
+
+
         }
+
+
+        hubButton = document.createElement("button");
+        c = {
+            background: "url(https://cdn-icons-png.flaticon.com/512/826/826070.png)",
+            backgroundSize: "cover", //or contain
+            border: "none", //2p solid black
+            position: "absolute",
+            cursor: "pointer",
+            left: "4px",
+            top: "4px",
+            width: "45px",
+            height: "45px",
+            display: "block",
+        };
+        Object.keys(c).forEach(function (a) {
+            hubButton.style[a] = c[a];
+        });
+
+
+        hubButton.onclick = function() {
+            window.location.href = '../';   
+        }
+
+
+
+        homeButton = document.createElement("button");
+        c = {
+            background: "url(https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Home-icon.svg/2048px-Home-icon.svg.png)",
+            backgroundSize: "cover", //or contain
+            border: "none", //2p solid black
+            position: "absolute",
+            cursor: "pointer",
+            right: "24px",
+            top: "4px",
+            width: "40px",
+            height: "40px",
+            display: "block",
+        };
+        Object.keys(c).forEach(function (a) {
+            homeButton.style[a] = c[a];
+        });
+
+
+        homeButton.onclick = function() {
+            menuBg.remove();
+            menuButton.click()
+        }
+
 
         modInfo = document.createElement("div")
         c = {
@@ -587,6 +658,7 @@
         addModButton.onclick = function() {
             menuBg.remove();
             editCustomMod();
+            console.log(map)
             //map = disableClick();
         }
 
@@ -638,10 +710,97 @@
         deleteModButton.innerHTML = "Delete Mod";
         deleteModButton.id = "delete-mod-btn";
 
-        deleteModButton.onclick = function() {
-            menuBg.remove();
-            editCustomMod(); //fix this
+
+
+        generalInfo = document.createElement("div")
+        styleMenuText(generalInfo, "15%", "123");
+        generalInfo.style.position = "absolute"
+        generalInfo.style.color = 'black';
+        generalInfo.style.left = '2px';
+        generalInfo.style.fontSize = "10pt" 
+        generalInfo.innerHTML = "Hey! This is where you can enable/disable mods. Chaos and any other custom mod requires a reload to disable. <br/>Below are multiple settings you can adjust to modify your gameplay. Press the top right 'x' to save. <br/>Contact me at Awesomeguy#4997, and have fun!"
+        generalInfo.style.textAlign = "center";
+
+        
+        playerXSpeedText = document.createElement("div");
+        
+        styleMenuText(playerXSpeedText, "42%", "X Speed: ")
+        playerXSpeedText.style.position = "absolute";
+        playerXSpeedText.style.left = "2px"
+
+        playerXSpeedInput = document.createElement("input");
+        c = {
+            backgroundColor: "white",
+            border: "solid",
+            borderColor: "black",
+            borderWidth: "2px",
+            position: "absolute",
+            fontFamily: "Retron2000",
+            color: "black",
+            fontSize: "10pt",
+            cursor: "text",
+            width: "40px",
+            top: "42%",
+            left: "23%",
+        };
+        Object.keys(c).forEach(function (a) {
+            playerXSpeedInput.style[a] = c[a];
+        });
+
+        playerXSpeedInput.onclick = (e) => {
+            console.log("please");
+            e.stopImmediatePropagation()
+            e.stopPropagation();
+            e.preventDefault();
+            playerXSpeedInput.focus()
         }
+        playerXSpeedInput.onkeydown = (e) => {
+            console.log("pleasev2");
+            e.stopImmediatePropagation()
+            e.stopPropagation();
+        };
+
+
+
+        // playerYSpeedText = document.createElement("div");
+        
+        // styleMenuText(playerYSpeedText, "52%", "Y Speed: ")
+        // playerYSpeedText.style.position = "absolute";
+        // playerYSpeedText.style.left = "2px"
+
+        // playerYSpeedInput = document.createElement("input");
+        // c = {
+        //     backgroundColor: "white",
+        //     border: "solid",
+        //     borderColor: "black",
+        //     borderWidth: "2px",
+        //     position: "absolute",
+        //     fontFamily: "Retron2000",
+        //     color: "black",
+        //     fontSize: "10pt",
+        //     cursor: "text",
+        //     width: "40px",
+        //     top: "52%",
+        //     left: "23%",
+        // };
+        // Object.keys(c).forEach(function (a) {
+        //     playerYSpeedInput.style[a] = c[a];
+        // });
+
+        // playerYSpeedInput.onclick = (e) => {
+        //     console.log("please");
+        //     e.stopImmediatePropagation()
+        //     e.stopPropagation();
+        //     e.preventDefault();
+        //     playerYSpeedInput.focus()
+        // }
+        // playerYSpeedInput.onkeydown = (e) => {
+        //     console.log("pleasev2");
+        //     e.stopImmediatePropagation()
+        //     e.stopPropagation();
+        // };
+
+        
 
 
         
@@ -687,8 +846,29 @@
         });
         modInfo.appendChild(titleText);
         modInfo.appendChild(addModButton);
+        modInfo.appendChild(homeButton);
+        modInfo.appendChild(hubButton);
         modInfo.appendChild(editModButton);
         modInfo.appendChild(deleteModButton);
+
+        modInfo.appendChild(generalInfo)
+
+
+
+        modInfo.appendChild(playerXSpeedText);
+        modInfo.appendChild(playerXSpeedInput);
+
+        playerXSpeedInput.value = speedy_boi
+
+
+        // modInfo.appendChild(playerYSpeedText);
+        // modInfo.appendChild(playerYSpeedInput);
+
+
+
+
+
+        
 
 
 
@@ -708,9 +888,23 @@
                 console.log("hi")
                 //li.style.backgroundColor = "#d3d3d3"
                 try {
+                    
                     modInfo.removeChild(document.getElementById("desc-text"));
                     modInfo.removeChild(document.getElementById("enable-text"));
                     modInfo.removeChild(document.getElementById("enable-btn"));
+                } catch (err) {
+                    console.log(err);
+                }
+
+                try {
+                    modInfo.removeChild(generalInfo);
+
+                    modInfo.removeChild(playerXSpeedText);
+                    modInfo.removeChild(playerXSpeedInput);
+
+                    // modInfo.removeChild(playerYSpeedText);
+                    // modInfo.removeChild(playerYSpeedInput);
+
                 } catch (err) {
                     console.log(err);
                 }
@@ -738,6 +932,7 @@
                             localStorage.setItem('modSettings', JSON.stringify(modSettings));
                         }
                         menuBg.remove();
+                        enableClick(map)
                         
                         
                     }
@@ -837,9 +1032,9 @@
                                 if(runtime.running_layout.name == "Main Menu") {
                                     runtime.changelayout = runtime.layouts["Main Menu"];
                                 }
-                                menuBg.remove();
+                                //menuBg.remove();
                                 console.log("sduiygfguasyidgfdas???")
-                                // enableClick(map);
+                                //enableClick(map);
                                 // map = disableClick();
                             
                             }
@@ -893,7 +1088,7 @@
                                 }
                                 menuBg.remove();
                                 console.log("sduiygfguasyidgfdas???")
-                                // enableClick(map);
+                                enableClick(map);
                                 // map = disableClick();
                             }
                         }
@@ -948,13 +1143,14 @@
         c = {
             background: "url(https://cdn-icons-png.flaticon.com/512/2099/2099192.png)",
             backgroundSize: "cover", //or contain
+            backgroundColor: "white",
             border: "none", //2p solid black
             position: "absolute",
             cursor: "pointer",
-            left: "8px",
-            top: "4px",
-            width: "75px",
-            height: "75px",
+            left: "4px",
+            top: "2px",
+            width: "100px",
+            height: "100px",
             display: "block",
         };
         Object.keys(c).forEach(function (a) {
@@ -1009,6 +1205,7 @@
             
             `);
 
+
             //localStorage.removeItem('modSettings');
 
             if(localStorage.getItem('modSettings') === null) {
@@ -1019,10 +1216,86 @@
 
             currentModsNames = []
 
+            modsEnabled = []
+
 
             for (const [key] of Object.entries(modSettings)) { // loading the mods in (create js), if the mod is said "enabled"
                 console.log(key)
-                currentModsNames.push(key)
+                if(!key.startsWith("customMod")) {
+                    currentModsNames.push(key)
+                }
+                if(modSettings[key]["enabled"]) {
+                    // js = document.createElement("script");
+                    // js.type = "application/javascript";
+                    // if(key.startsWith("customMod")) {
+                    //     js.text = modSettings[key]["url"];
+                    // } else {
+                    //     js.src = modSettings[key]["url"];
+                    // }
+                    // js.id = key;
+                    // document.head.appendChild(js);
+                    modsEnabled.push(key)
+                }
+            }
+
+            console.log(modsEnabled)
+
+            baseModsNames = []
+
+            //  data1 = null
+
+            fetch('../src/mods/modloader/config/baseMods' + version + '.json')
+                .then((response) => response.json())
+                .then(jsondata => {
+                    console.log(jsondata)
+                    for (const [key] of Object.entries(jsondata)) { //current global mods
+                        if(!key.startsWith("customMod")) {
+                            baseModsNames.push(key);
+                        }
+                    }
+                    console.log(baseModsNames)
+                    console.log(currentModsNames)
+                    diffMods = baseModsNames
+                    .filter(x => !currentModsNames.includes(x))
+                    .concat(currentModsNames.filter(x => !baseModsNames.includes(x)));
+
+                    console.log(diffMods)
+
+                    diffMods.forEach(function (item) {
+                        if(currentModsNames.includes(item)) {
+                            delete modSettings[item];
+                            currentModsNames.splice(currentModsNames.indexOf(item), 1);
+
+                            console.log(item)
+                        }
+                    });
+
+                    console.log(baseModsNames)
+                    console.log(modSettings)
+
+                    baseModsNames.forEach(function (item) {
+                        modSettings[item] = jsondata[item]
+                    });
+
+                    console.log(modSettings)
+
+                    console.log(currentModsNames)
+
+
+                    currentModsNames.forEach(function (item) {
+                        if(modsEnabled.includes(item)) {
+                            modSettings[item]["enabled"] = true;  //TODO, PUT ANOTHER LOOP TO CREATE ALL OF THE SCRIPT ELEMENTS
+                        }
+                    });
+
+                    localStorage.setItem('modSettings', JSON.stringify(modSettings));
+
+                });
+            
+            modSettings = JSON.parse(localStorage.getItem('modSettings'));
+            
+            for (const [key] of Object.entries(modSettings)) { // loading the mods in (create js), if the mod is said "enabled"
+                console.log("hasdousd")
                 if(modSettings[key]["enabled"]) {
                     js = document.createElement("script");
                     js.type = "application/javascript";
@@ -1033,34 +1306,9 @@
                     }
                     js.id = key;
                     document.head.appendChild(js);
-                    console.log("yooyoyo")
+                    
                 }
             }
-
-            baseModsNames = []
-
-            //  data1 = null
-
-            fetch('../src/mods/modloader/config/baseMods.json')
-                .then((response) => response.json())
-                .then(jsondata => {
-                    console.log(jsondata)
-                    for (const [key] of Object.entries(jsondata)) {
-                        if(!key.startsWith("customMod")) {
-                            baseModsNames.push(key);
-                        }
-                    }
-                    newMods = baseModsNames.filter(function(obj) { return currentModsNames.indexOf(obj) == -1; });
-                    console.log(newMods)
-
-                    newMods.forEach(function (item) {
-                        modSettings[item] = jsondata[item]
-                    });
-                    console.log(modSettings)
-
-                    localStorage.setItem('modSettings', JSON.stringify(modSettings));
-
-                });
                 
             
             //console.log(data)
@@ -1070,8 +1318,24 @@
 
             createModLoaderMenuBtn();
 
+            document.addEventListener("keydown", (event) => {
+                this.keyDown(event)
+                
+            });
+            document.addEventListener("keyup", (event) => {
+                this.keyUp(event)
+            });
+
+            this.boolKeys = [false, false, false, false];
+
+
 
             
+
+            let inputsObject = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0];
+            //inputsObject.instance_vars;
+            console.log(inputsObject.instance_vars);
+            this.movementKeys = (inputsObject.instance_vars).slice(0, 4); //Left, Up, Right, Down
             
             
             
@@ -1086,6 +1350,36 @@
 
         },
 
+        keyDown(event) {
+            
+            //console.log(String.fromCharCode(event.keyCode));
+            //console.log(cr.plugins_.Keyboard.prototype.cnds.OnKey() || cr.plugins_.Keyboard.prototype.cnds.OnKeyCode());
+            //console.log(cr.plugins_.Keyboard.prototype.exps.StringFromKeyCode())
+            //c2_callFunction("Controls > Buffer", ["Jump"]);
+            if (this.movementKeys.includes(event.keyCode) && speedy_boi !== 1) {
+                
+                // //console.log(event.key);
+                //console.log("key down")
+                this.boolKeys[this.movementKeys.indexOf(event.keyCode)] = true
+                
+            }
+
+            // if(event.keyCode === 82 && event.target.id === "bg-color-input") {  
+            //     //event.target.focus()
+            //     event.preventDefault();
+            //     //return false;
+            //     console.log("hi")
+            // }
+        },
+      
+        keyUp(event) {
+            if (this.movementKeys.includes(event.keyCode)) {
+                
+                this.boolKeys[this.movementKeys.indexOf(event.keyCode)] = false
+
+            }
+        },
+
         
 
         
@@ -1093,15 +1387,32 @@
         
         
         tick() {
-            //let playerInstances = runtime.types_by_index.filter((x) =>!!x.animations &&x.animations[0].frames[0].texture_file.includes("collider"))[0].instances.filter((x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled);
-            //let player = playerInstances[0];
+            playerInstances = runtime.types_by_index.filter((x) =>!!x.animations &&x.animations[0].frames[0].texture_file.includes("collider"))[0].instances.filter((x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled);
+            player = playerInstances[0];
             
             try {
-                if(!isInLevel() && document.getElementById("menu-button").style.display === "none") {
+
+                if(this.boolKeys[2]) { // right key
+                    player.x += speedy_boi
+                } 
+                if(this.boolKeys[0]) { // left key
+                    player.x -= speedy_boi
+                }
+
+                if(!isInLevel() && document.getElementById("menu-button").style.top === "45%") {
+                    document.getElementById("menu-button").style.top = "2px"
+                    
+                } else if(isPaused() && document.getElementById("menu-button").style.top === "2px"){
+                    document.getElementById("menu-button").style.top = "45%"
+
+                }
+                if((!isInLevel() && document.getElementById("menu-button").style.display === "none") || (isPaused() && document.getElementById("menu-button").style.display === "none")) {
                     document.getElementById("menu-button").style.display = "block";
+                    
                     console.log("hello")
-                } else if(isInLevel() && document.getElementById("menu-button").style.display === "block") {
+                } else if((isInLevel() && document.getElementById("menu-button").style.display === "block") && (!isPaused() && document.getElementById("menu-button").style.display === "block")) {
                     document.getElementById("menu-button").style.display = "none";
+
                 }
                 
                 

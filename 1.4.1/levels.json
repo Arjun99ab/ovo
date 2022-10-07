@@ -1,0 +1,37 @@
+[
+	{
+		"name": "Basics",
+		"textScale": 1,
+		"levels": [1, 8]
+	},
+	{
+		"name": "Getting serious",
+		"textScale": 1,
+		"levels": [9, 16]
+	},
+	{
+		"name": "Higher order",
+		"textScale": 1,
+		"levels": [17, 24]
+	},
+	{
+		"name": "Mechanics",
+		"textScale": 1,
+		"levels": [25, 32]
+	},
+	{
+		"name": "OvO Space Program",
+		"textScale": 1,
+		"levels": [33, 40]
+	},
+	{
+		"name": "Journey through the portal",
+		"textScale": 0.8,
+		"levels": [41, 48]
+	},
+	{
+		"name": "Community levels",
+		"textScale": 1,
+		"levels": [49, 51]
+	}
+]

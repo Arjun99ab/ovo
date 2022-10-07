@@ -8133,14 +8133,11 @@ window["cr_setSuspended"] = function(s)
 		if (!this.runtime.isLoadingState)
 		{
 			this.runtime.trigger(cr.system_object.prototype.cnds.OnLayoutStart, null);
-			console.log('hi')
 			let runtime = cr_getC2Runtime()
-			console.log(runtime.running_layout.name)
-			if(runtime.running_layout.name === "Site Locking") {
-				runtime.changelayout = runtime.layouts["Main Menu"]
-			}
-			// 
-			console.log(this.first_visit)
+            console.log(runtime.running_layout.name)
+            if(runtime.running_layout.name === "Site Locking") {
+                runtime.changelayout = runtime.layouts["Main Menu"]
+            }
 		}
 		this.first_visit = false;
 	};

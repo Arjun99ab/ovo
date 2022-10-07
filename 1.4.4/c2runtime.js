@@ -3571,7 +3571,6 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 		this.raf_id = -1;
 		this.timeout_id = -1;
 		this.isloading = true;
-		this.attempts = 1;
 		this.loadingprogress = 0;
 		this.isNodeFullscreen = false;
 		this.stackLocalCount = 0;	// number of stack-based local vars for recursion
@@ -3880,7 +3879,6 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			}
 			if (this.pauseOnBlur && !this.isMobile)
 			{
-				
 				jQuery(window).focus(function ()
 				{
 					self["setSuspended"](false);
@@ -3890,7 +3888,6 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 					var parent = window.parent;
 					if (!parent || !parent.document.hasFocus())
 						self["setSuspended"](true);
-						
 				});
 			}
 		}
@@ -4225,12 +4222,10 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			cr.logerror("Project model unavailable");
 		var pm = data_response["project"];
 		this.name = pm[0];
-		console.log("name ", this.name);
 		this.first_layout = pm[1];
 		this.fullscreen_mode = pm[12];	// 0 = off, 1 = crop, 2 = scale inner, 3 = scale outer, 4 = letterbox scale, 5 = integer letterbox scale
 		this.fullscreen_mode_set = pm[12];
 		this.original_width = pm[10];
-		console.log("testing ", pm[3][70]);
 		this.original_height = pm[11];
 		this.parallax_x_origin = this.original_width / 2;
 		this.parallax_y_origin = this.original_height / 2;
@@ -10428,8 +10423,6 @@ window["cr_setSuspended"] = function(s)
 			evinfo.else_branch_ran = true;
 		if (this.toplevelevent && this.runtime.hasPendingInstances)
 			this.runtime.ClearDeathRow();
-			
-		
 	};
 	EventBlock.prototype.run_orblocktrigger = function (index)
 	{
@@ -13291,19 +13284,17 @@ cr.system_object.prototype.loadFromJSON = function (o)
 	};
 	SysActs.prototype.GoToLayoutByName = function (layoutname)
 	{
-		this.runtime.attempts = 1;
 		if (this.runtime.isloading)
 			return;		// cannot change layout while loading on loader layout
 		if (this.runtime.changelayout)
 			return;		// already changing to different layout
-;		
+;
 		var l;
 		for (l in this.runtime.layouts)
 		{
 			if (this.runtime.layouts.hasOwnProperty(l) && cr.equals_nocase(l, layoutname))
 			{
 				this.runtime.changelayout = this.runtime.layouts[l];
-				
 				return;
 			}
 		}
@@ -13318,7 +13309,6 @@ cr.system_object.prototype.loadFromJSON = function (o)
 		if (!this.runtime.running_layout)
 			return;
 		this.runtime.changelayout = this.runtime.running_layout;
-		this.runtime.attempts = this.runtime.attempts + 1;
 		var i, len, g;
 		for (i = 0, len = this.runtime.allGroups.length; i < len; i++)
 		{
@@ -22041,7 +22031,6 @@ cr.plugins_.Keyboard = function(runtime)
 		this.keyMap = new Array(256);	// stores key up/down state
 		this.usedKeys = new Array(256);
 		this.triggerKey = 0;
-		//console.log(this);
 	};
 	var instanceProto = pluginProto.Instance.prototype;
 	instanceProto.onCreate = function()
@@ -22083,13 +22072,10 @@ cr.plugins_.Keyboard = function(runtime)
 		this.runtime.trigger(cr.plugins_.Keyboard.prototype.cnds.OnAnyKey, this);
 		var eventRan = this.runtime.trigger(cr.plugins_.Keyboard.prototype.cnds.OnKey, this);
 		var eventRan2 = this.runtime.trigger(cr.plugins_.Keyboard.prototype.cnds.OnKeyCode, this);
-		//console.log(eventRan);
-		//console.log(eventRan2);
 		this.runtime.isInUserInputEvent = false;
 		if (eventRan || eventRan2)
 		{
 			this.usedKeys[info.which] = true;
-			//console.log(this);
 			if (!alreadyPreventedDefault)
 				info.preventDefault();
 		}
@@ -22106,7 +22092,6 @@ cr.plugins_.Keyboard = function(runtime)
 		if (eventRan || eventRan2 || this.usedKeys[info.which])
 		{
 			this.usedKeys[info.which] = true;
-			//console.log(this);
 			info.preventDefault();
 		}
 	};
@@ -28368,7 +28353,7 @@ cr.plugins_.TR_ClockParser = function(runtime)
         if (hours   < 10) { hours   = "0" + hours; }
         if (minutes < 10) { minutes = "0"  +minutes; }
         if (seconds < 10) { seconds = "0" + seconds; }
-        ret.set_string(hours + ':123' + minutes + ':' + seconds);
+        ret.set_string(hours + ':' + minutes + ':' + seconds);
     };
     pluginProto.exps = new Exps();
 }());
@@ -37493,7 +37478,6 @@ cr.plugins_.sirg_notifications = function(runtime)
 	pluginProto.Instance = function(type)
 	{
 		this.type = type;
-		;
 		this.runtime = type.runtime;
 	};
 	var instanceProto = pluginProto.Instance.prototype;
@@ -39279,7 +39263,6 @@ cr.behaviors.Platform = function(runtime)
 		this.enableDoubleJump = (this.properties[6] !== 0);	// 0=disabled, 1=enabled
 		this.jumpSustain = (this.properties[7] / 1000);		// convert ms to s
 		this.defaultControls = (this.properties[8] === 1);	// 0=no, 1=yes
-		console.log(this.defaultControls);
 		this.enabled = (this.properties[9] !== 0);
 		this.wasOnFloor = false;
 		this.wasOverJumpthru = this.runtime.testOverlapJumpThru(this.inst);
@@ -44136,7 +44119,6 @@ cr.behaviors.aekiro_dialog = function(runtime)
 		this.isOpen = true;
 		this.runtime.trigger(cr.behaviors.aekiro_dialog.prototype.cnds.onDialogOpened, this.inst);
 		if(this.pauseOnOpen){
-			console.log("paused");
 			this.prevTimescale = this.runtime.timescale;
 			cr.system_object.prototype.acts.SetTimescale.call(this.runtime.system,0);
 		}

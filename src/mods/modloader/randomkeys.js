@@ -325,13 +325,13 @@
     let randomKeys = {
         init() {
           
-            notify("Mod Loaded", "Random Keys mod loaded");
+            notify("Random Keys mod loaded", "By Awesomeguy");
         }
     };
     document.addEventListener("keydown", (event) => { 
         if (event.code === "Backquote") {
             if (event.ctrlKey) {
-                console.log("2394712983478912")
+                console.log("2394712983478912") // 
                 clearInterval(countdown);
 
                 user_keys = []

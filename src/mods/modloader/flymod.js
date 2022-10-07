@@ -120,9 +120,9 @@
       
         setSpeed(speed) {
             this.speed.x = speed;
-            this.speed.y = speed;
+            this.speed.y = speed;  //
         },
-      
+
         setOverride(value) {
             this.override = !!value;
         },
