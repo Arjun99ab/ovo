@@ -412,7 +412,7 @@
                         "name": modNameInput.value,
                         "desc": modDesc.value,
                         "enabled": false,
-                        "url": eval('`' + modSrc.value + '`'),
+                        "url": modSrc.value,
                     }
                     localStorage.setItem('modSettings', JSON.stringify(modSettings));
         
@@ -430,7 +430,7 @@
                     "name": modNameInput.value,
                     "desc": modDesc.value,
                     "enabled": modSettings[editing]["enabled"],
-                    "url": eval('`' + modSrc.value + '`'),
+                    "url": modSrc.value,
                 }
                 localStorage.setItem('modSettings', JSON.stringify(modSettings));
     
