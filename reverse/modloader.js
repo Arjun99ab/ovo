@@ -1205,6 +1205,11 @@
                 console.log(key)
                 if(!key.startsWith("customMod")) {
                     currentModsNames.push(key)
+                } else {
+                    if(parseInt(key.substring(9)) > customModNum) {
+                        customModNum = parseInt(key.substring(9)) + 1;
+                        console.log(customModNum)
+                    }
                 }
                 if(modSettings[key]["enabled"]) {
                     // js = document.createElement("script");
