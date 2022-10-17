@@ -46,3 +46,10 @@ function kaizoSelect() {
     document.getElementById("launchBtn").innerHTML = "Launch Kaizo"
     document.getElementById("launchBtn").href = "./kaizo/"
 }
+
+function crashTestSelect() {
+    document.getElementById("versionName").innerHTML = "Modded Crash Test Level Editor"
+    document.getElementById("versionDesc").innerHTML = "The Crash Test Level Editor is essentially version 1.4.4, but with support for community made levels. Drag and drop them onto the window to play them!"
+    document.getElementById("launchBtn").innerHTML = "Launch Crash Test"
+    document.getElementById("launchBtn").href = "./crashtest/"
+}

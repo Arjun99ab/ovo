@@ -1,6 +1,6 @@
 {
     "flymod": {
-        "name": "who Mod",
+        "name": "Fly Mod",
         "desc": "Use 'shift' + your controls to fly around!",
         "enabled": false,
         "url": "../src/mods/modloader/flymod.js"

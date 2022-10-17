@@ -1,5 +1,5 @@
 body {
-  background-color: rgba(6, 19, 53, 255);
+  background-color: #061335;
 
   font-family: "Nunito", sans-serif;
   color: white;
@@ -16,20 +16,21 @@ body {
   height: 3rem;
 }
 
-::-webkit-scrollbar-track
+/* ::-webkit-scrollbar-track
 {
   border-radius: 10px;
-  background-color: rgba(6, 19, 53, 255);
-}
+  background-color: #111827;
+} */
 
 ::-webkit-scrollbar
 {
   width: 12px;
-  background-color: rgba(6, 19, 53, 255);
+  background-color: #061335;
 }
 
 ::-webkit-scrollbar-thumb
 {
   border-radius: 10px;
-  background-color: #9368e4;
+  background-color: #9368e4
+  ;
 }
