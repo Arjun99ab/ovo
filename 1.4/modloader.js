@@ -583,7 +583,7 @@
 
 
         homeButton.onclick = function() {
-            menuBg.remove();
+            xButton.click()
             menuButton.click()
         }
 

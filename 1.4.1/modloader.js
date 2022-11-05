@@ -583,7 +583,7 @@
 
 
         homeButton.onclick = function() {
-            menuBg.remove();
+            xButton.click()
             menuButton.click()
         }
 
@@ -1270,6 +1270,7 @@
                         if(currentModsNames.includes(item)) {
                             delete modSettings[item];
                             currentModsNames.splice(currentModsNames.indexOf(item), 1);
+
                             console.log(item)
                         }
                     });

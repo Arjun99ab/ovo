@@ -9,7 +9,7 @@
 
     let onFinishLoad = () => {
         if ((cr_getC2Runtime() || {isloading: true}).isloading) {
-            setTimeout(onFinishLoad, 100);
+            setTimeout(onFinishLoad, 500);
         } else {
 
             var Retron2000 = new FontFace('Retron2000', 'url(./retron2000.ttf)');
@@ -27,7 +27,7 @@
             //runtime = globalThis.sdk_runtime;
             globalThis.sdk_runtime = old;
             
-            sleep(2000).then(() => {
+            sleep(5000).then(() => {
                 cleanModLoader.init();
             });
 
@@ -583,7 +583,7 @@
 
 
         homeButton.onclick = function() {
-            menuBg.remove();
+            xButton.click()
             menuButton.click()
         }
 
@@ -1270,6 +1270,7 @@
                         if(currentModsNames.includes(item)) {
                             delete modSettings[item];
                             currentModsNames.splice(currentModsNames.indexOf(item), 1);
+
                             console.log(item)
                         }
                     });
@@ -1285,12 +1286,6 @@
 
                     console.log(currentModsNames)
 
-                    
-                    // modsEnabled.forEach(function (item) {
-                    //     if(!currentModsNames.includes(item)) {
-                    //         modsEnabled.splice(modsEnabled.indexOf(item), 1);
-                    //     }
-                    // });
 
                     currentModsNames.forEach(function (item) {
                         if(modsEnabled.includes(item)) {
@@ -1441,5 +1436,5 @@
         }
     };
   
-    setTimeout(onFinishLoad, 100);
+    setTimeout(onFinishLoad, 500);
 })();

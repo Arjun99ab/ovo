@@ -381,6 +381,7 @@
             if(editing === null) {
                 if(modNameInput.value !== "" && modSrc.value !== "") {
                     customModNum++;
+                    console.log("brand new mod")
     
                     // let js = document.createElement("script");
                     // js.type = "application/javascript";
@@ -394,7 +395,7 @@
                         "name": modNameInput.value,
                         "desc": modDesc.value,
                         "enabled": false,
-                        "url": modSrc.value,
+                        "url": modSrc.value, //eval('`' + modSrc.value + '`'),
                     }
                     localStorage.setItem('modSettings', JSON.stringify(modSettings));
         
@@ -407,6 +408,8 @@
             
             
             } else {
+                console.log("editie mod")
+
                 modSettings = JSON.parse(localStorage.getItem('modSettings'));
                 modSettings[editing] = {
                     "name": modNameInput.value,
@@ -565,7 +568,7 @@
 
 
         homeButton.onclick = function() {
-            menuBg.remove();
+            xButton.click()
             menuButton.click()
         }
 
