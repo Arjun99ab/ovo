@@ -5188,7 +5188,6 @@ let getRandomOvORoomCode = () => {
                   if (!connection.data) return;
                   if (!connection.player) {
                     connection.player = this.createGhostPlayer(connection.data);
-                    console.log(connection.data)
                   } else if (connection.data.layout !== getCurLayout()) {
                     //destroy player
                     this.destroyGhostPlayer(connection.player);
@@ -5218,7 +5217,6 @@ let getRandomOvORoomCode = () => {
                     type: DATA_TYPES.PLAYER_DATA,
                     payload: this.getMyData(),
                   });
-                  //console.log(this.getMyData())
                 }
               }
             } else {
