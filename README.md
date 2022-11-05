@@ -1,4 +1,4 @@
-# OvO Modloader
+# OvO Modloader by Arjun99ab
 
 This is a UI based modloader for the game OvO. It features many versions, many popular mods, and provides the ability to add custom mods as well.
 
@@ -52,5 +52,4 @@ Navigate to the page of the custom mod, and on the bottom you will see buttons t
 Currently, the chaos mod and any custom created mod will reload on disabling. This is due to the way script are loaded in Javascript. 
 If you have any further questions or ideas, create a pull request or contact me on Discord, Awesomeguy#4997.
  ## 
- Created by Arjun99ab
  Not affliated with Dedra Games
