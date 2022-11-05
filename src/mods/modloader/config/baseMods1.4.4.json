@@ -46,6 +46,12 @@
         "desc": "'Shift + s': Create Checkpoint <br/>'Shift + r': Return to Original Spawn<br/>'Shift + n': Bypass to next level<br/>'Shift + b': Bypass to previous level<br/>'Shift + m': Move to end flag<br/>'Shift + c': Move to coin",
         "enabled": false,
         "url": "../src/mods/modloader/savestate.js"
+    },
+    "modapi": {
+        "name": "Mod API",
+        "desc": "Open in devtools to use various game mechanics. ",
+        "enabled": false,
+        "url": "../src/mods/modloader/modapi.js"
     }
 }
 
