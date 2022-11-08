@@ -1,0 +1,17 @@
+media/prepound.ogg
+media/stun.ogg
+media/slide.ogg
+media/coin1.ogg
+media/jump.ogg
+media/slide_recover.ogg
+media/plunge.ogg
+media/fanfarehi_tail_with_note.ogg
+media/step.ogg
+media/jumpstrong.ogg
+media/step2.ogg
+media/superjump.ogg
+media/step3.ogg
+media/button.ogg
+media/fanfarehi_with_note.ogg
+media/newskinriser.ogg
+media/newskinreveal.ogg
