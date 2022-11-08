@@ -22,7 +22,7 @@ The modloader is one of it's kind and offers a lot.
 	- Custom mods that you created
 
 ## Versions
-The modloader currently supports 8 versions:
+The modloader currently supports 9 versions:
 - 1.4.4
 - 1.4.3
 - 1.4.2
@@ -31,6 +31,8 @@ The modloader currently supports 8 versions:
 - Crash Test Level Editor
 - Reverse
 - Kaizo
+- Dimensions Version qa_v3
+
 
 Want another version supported? Contact me in Discord at Awesomeguy#4997.
 
