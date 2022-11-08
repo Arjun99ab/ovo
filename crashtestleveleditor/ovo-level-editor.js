@@ -466,6 +466,7 @@
         },
         handleDrop(ev) {
           console.log("File(s) dropped");
+          console.log(ev)
 
           // Prevent default behavior (Prevent file from being opened)
           ev.preventDefault();
@@ -475,8 +476,10 @@
               console.log(text);
               try {
                 let json = JSON.parse(text);
+                console.log(json)
                 if (globalThis.ovoLevelEditor.startLevel)
                   globalThis.ovoLevelEditor.startLevel(json);
+                  console.log("STARTING LEVEL")
               } catch (error) {
                 alert("not a valid level file");
               }

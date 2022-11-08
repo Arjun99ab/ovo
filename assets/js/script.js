@@ -7,6 +7,8 @@ var niceNames = {
   "reverse": "Reverse",
   "kaizo": "Kaizo",
   "crashtestleveleditor": "CrashTestLevelEditor",
+    "dimensions_qa_v3":
+    "Dimensions v3"
 }
 
 var versionsDict = {
@@ -85,9 +87,9 @@ document.querySelectorAll('.launch').forEach(element => {
       document.getElementsByClassName("lastLaunchedBtn")[0].id = element.id
   
       if(element.id in versionsDict) {
-        window.open(`./${versionsDict[element.id]}/`,'_blank')
+        window.open(`/${versionsDict[element.id]}/`,'_blank')
       } else {
-        window.open(`./${element.id}/`,'_blank')
+        window.open(`/${element.id}/`,'_blank')
       }
     }
     
