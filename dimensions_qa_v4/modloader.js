@@ -1,5 +1,5 @@
 (function() {
-    let version = '1.4'
+    let version = '1.4.4'
 
     var runtime;
 

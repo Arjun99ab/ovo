@@ -8,7 +8,9 @@ var niceNames = {
   "kaizo": "Kaizo",
   "crashtestleveleditor": "CrashTestLevelEditor",
     "dimensions_qa_v3":
-    "Dimensions v3"
+    "Dimensions v3",
+    "dimensions_qa_v4":
+    "Dimensions v4"
 }
 
 var versionsDict = {
