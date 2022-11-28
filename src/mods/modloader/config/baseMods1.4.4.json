@@ -52,6 +52,12 @@
         "desc": "Open in devtools to use various game mechanics. ",
         "enabled": false,
         "url": "../src/mods/modloader/modapi.js"
+    },
+    "community": {
+        "name": "Community Levels",
+        "desc": "Access community levels with a click of a button!",
+        "enabled": false,
+        "url": "../src/mods/modloader/community.js"
     }
 }
 
