@@ -1,0 +1,5 @@
+images/smokeparticle-sheet0.png
+images/rewardexplodeparticle-sheet1.png
+images/rewardexplodeparticle-sheet0.png
+images/secretegg-sheet0.png
+images/info2d-sheet0.png

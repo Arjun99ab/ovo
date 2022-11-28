@@ -11,6 +11,14 @@
         if ((cr_getC2Runtime() || {isloading: true}).isloading) {
             setTimeout(onFinishLoad, 100);
         } else {
+            var Torus = new FontFace('Torus', 'url(./torus-bold-webfont.woff2)');
+            Torus.load().then(function(loaded_face) {
+                document.fonts.add(loaded_face);
+                document.body.style.fontFamily = '"Torus", Arial';
+            console.log("123123")
+            }).catch(function(error) {
+                console.log(error)
+            });
             runtime = cr_getC2Runtime();
             sleep(2000).then(() => {
                 cleanModLoader.init();
@@ -134,7 +142,7 @@
         c = {
             backgroundColor: "white",
             border: "none",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "relative",
             top: top,
             //left: left.toString() + "px",
@@ -158,7 +166,7 @@
             borderColor: "black",
             borderWidth: "2px",
             position: "relative",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             color: "black",
             fontSize: "10pt",
             cursor: "pointer",
@@ -179,7 +187,7 @@
             border: "solid",
             borderColor: "black",
             borderWidth: "2px",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "absolute",
             cursor: "default",
             top: "17.5%",
@@ -201,7 +209,7 @@
             backgroundColor: "white",
             border: "none",
             position: "absolute",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             color: "black",
             fontSize: "10pt",
             cursor: "pointer",
@@ -224,7 +232,7 @@
         c = {
             backgroundColor: "white",
             border: "none",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "absolute",
             top: "2%",
             left: "25%",
@@ -253,7 +261,7 @@
             borderColor: "black",
             borderWidth: "2px",
             position: "absolute",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             color: "black",
             fontSize: "10pt",
             cursor: "text",
@@ -293,7 +301,7 @@
         modSrc.value = code;
 
         c = {
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "absolute",
             top: "28%",
             color: "black",
@@ -328,7 +336,7 @@
         modDesc.cols = "20";
         modDesc.value = desc;
         c = {
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "absolute",
             top: "63%",
             color: "black",
@@ -359,7 +367,7 @@
             border: "lawngreen",
             padding: "8px",
             position: "absolute",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             color: "white",
             fontSize: "10pt",
             cursor: "pointer",
@@ -477,7 +485,7 @@
             border: "solid",
             borderColor: "black",
             borderWidth: "2px",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "absolute",
             cursor: "default",
             top: "17.5%",
@@ -499,7 +507,7 @@
             backgroundColor: "white",
             border: "none",
             position: "absolute",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             color: "black",
             fontSize: "10pt",
             cursor: "pointer",
@@ -579,7 +587,7 @@
             border: "solid",
             borderColor: "black",
             borderWidth: "2px",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "absolute",
             cursor: "default",
             top: "-1px",
@@ -601,7 +609,7 @@
         c = {
             backgroundColor: "white",
             border: "none",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "relative",
             top: "2%",
             //left: "35%",
@@ -625,7 +633,7 @@
             border: "lawngreen",
             padding: "8px",
             position: "absolute",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             color: "white",
             fontSize: "10pt",
             cursor: "pointer",
@@ -654,7 +662,7 @@
             border: "blue",
             padding: "8px",
             position: "absolute",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             color: "white",
             fontSize: "10pt",
             cursor: "pointer",
@@ -679,7 +687,7 @@
             border: "red",
             padding: "8px",
             position: "absolute",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             color: "white",
             fontSize: "10pt",
             cursor: "pointer",
@@ -720,7 +728,7 @@
             borderColor: "black",
             borderWidth: "2px",
             position: "absolute",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             color: "black",
             fontSize: "10pt",
             cursor: "text",
@@ -760,7 +768,7 @@
         //     borderColor: "black",
         //     borderWidth: "2px",
         //     position: "absolute",
-        //     fontFamily: "Retron2000",
+        //     fontFamily: "Torus",
         //     color: "black",
         //     fontSize: "10pt",
         //     cursor: "text",
@@ -796,7 +804,7 @@
             border: "solid",
             borderColor: "black",
             borderWidth: "2px",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "absolute",
             cursor: "default",
             top: "-1px",
@@ -818,7 +826,7 @@
         modsList = document.createElement('ul');
         c = {
             listStyleType: "none",
-            fontFamily: "Retron2000",
+            fontFamily: "Torus",
             position: "absolute",
             cursor: "default",
             color: "black",

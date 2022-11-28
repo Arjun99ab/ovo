@@ -230,7 +230,7 @@
             left: "25%",
             color: "black",
             fontSize: "22pt",
-            cursor: "default",
+            cursor: "default", 
             textAlign: "center",
         };
         Object.keys(c).forEach(function (a) {

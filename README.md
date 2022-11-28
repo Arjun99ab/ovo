@@ -29,9 +29,10 @@ The modloader currently supports 9 versions:
 - 1.4.1
 - 1.4
 - Crash Test Level Editor
-- Reverse
-- Kaizo
+- Reverse by OvOPlant#0001
+- Kaizo by Seblertyg#1337
 - Dimensions Version qa_v3
+- Dimensions Version qa_v4
 
 
 Want another version supported? Contact me in Discord at Awesomeguy#4997.

@@ -39,6 +39,107 @@
         }).visible
     };
 
+    let createCommunityMenu = () => {
+        //Create background div
+        b = document.createElement("div")
+        c = {
+            backgroundColor: "white",
+            border: "solid",
+            borderColor: "black",
+            borderWidth: "2px",
+            fontFamily: "Retron2000",
+            position: "absolute",
+            top: "17.5%",
+            left: "32.5%",
+            padding: "5px",
+            color: "black",
+            fontSize: "10pt",
+            display: "block",
+            width: "35%",
+            height: "65%",
+        };
+        Object.keys(c).forEach(function (a) {
+            b.style[a] = c[a];
+        });
+        b.id = "community-menu";
+
+        //X button CSS
+        xButton = document.createElement("button");
+        c = {
+            backgroundColor: "white",
+            border: "none",
+            position: "absolute",
+            fontFamily: "Retron2000",
+            color: "black",
+            fontSize: "10pt",
+            cursor: "pointer",
+            right: "1px",
+            top: "1px",
+        };
+        Object.keys(c).forEach(function (a) {
+            xButton.style[a] = c[a];
+        });
+
+        xButton.innerHTML = "❌";
+
+        xButton.onclick = function() {
+            b.remove();
+        }
+
+
+        titleText = document.createElement("div");
+
+        c = {
+            backgroundColor: "white",
+            border: "none",
+            fontFamily: "Retron2000",
+            position: "absolute",
+            top: "2%",
+            left: "25%",
+            textAlign: "center",
+            //padding: "5px",
+            color: "black",
+            fontSize: "22pt",
+            cursor: "default",
+        };
+        Object.keys(c).forEach(function (a) {
+            titleText.style[a] = c[a];
+        });
+
+        newContent = document.createTextNode("Community Levels");
+        titleText.appendChild(newContent);
+
+
+        searchBtn = document.createElement("button");
+        c = {
+            backgroundColor: "#9268e3",
+            borderRadius: "25px",
+            border: "#9268e3",
+            padding: "8px",
+            position: "absolute",
+            fontFamily: "Retron2000",
+            color: "white",
+            fontSize: "10pt",
+            cursor: "pointer",
+            left: "45%",
+            top: "30%",
+
+        };
+        Object.keys(c).forEach(function (a) {
+            searchBtn.style[a] = c[a];
+        });
+
+        searchBtn.innerHTML = "Search";
+        searchBtn.id = "search-btn";
+
+
+        b.appendChild(searchBtn)
+        b.appendChild(xButton);
+        b.appendChild(titleText);
+
+        document.body.appendChild(b);
+    }
+
     
     
 
@@ -83,8 +184,6 @@
             
             
 
-
-            
             
             
                 
@@ -105,6 +204,10 @@
                     ovoLevelEditor.startLevel(data);
                 });
             }
+
+            if (event.code === "KeyG") {
+                createCommunityMenu()
+            }
             
             
             
@@ -118,7 +221,7 @@
             
 
             try {
-                
+                //console.log(player.behavior_insts[0].leftkey)
                
 
                 
