@@ -22,7 +22,7 @@ The modloader is one of it's kind and offers a lot.
 	- Custom mods that you created
 
 ## Versions
-The modloader currently supports 9 versions:
+The modloader currently supports 12 versions:
 - 1.4.4
 - 1.4.3
 - 1.4.2
@@ -30,9 +30,12 @@ The modloader currently supports 9 versions:
 - 1.4
 - Crash Test Level Editor
 - Reverse by OvOPlant#0001
-- Kaizo by Seblertyg#1337
-- Dimensions Version qa_v3
-- Dimensions Version qa_v4
+- Kaizo by Seblertyg#0090
+- Dimensions Version Beta v3
+- Dimensions Version Beta v4
+- Dimensions Version Beta v7
+- Dimensions Version v1.0.1
+
 
 
 Want another version supported? Contact me in Discord at Awesomeguy#4997.
@@ -55,4 +58,5 @@ Navigate to the page of the custom mod, and on the bottom you will see buttons t
 Currently, the chaos mod and any custom created mod will reload on disabling. This is due to the way script are loaded in Javascript. 
 If you have any further questions or ideas, create a pull request or contact me on Discord, Awesomeguy#4997.
  ## 
- Not affliated with Dedra Games
+ Not affliated with [Dedra Games](https://dedragames.com/)
+
