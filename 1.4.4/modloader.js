@@ -1233,7 +1233,7 @@
             baseModsNames = []
 
             //  data1 = null
-
+            console.log(version)
             fetch('../src/mods/modloader/config/baseMods' + version + '.json')
                 .then((response) => response.json())
                 .then(jsondata => {

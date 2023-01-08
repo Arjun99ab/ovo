@@ -3,7 +3,7 @@
         "name": "Fly Mod",
         "desc": "Use 'shift' + your controls to fly around!",
         "enabled": false,
-        "url": "../src/mods/modloader/flymod.js"
+        "url": "../src/mods/modloader/dimensions/flymod.js"
       },
       "chaos": {
         "name": "Chaos Mod",
@@ -15,26 +15,20 @@
         "name": "Gui Mod",
         "desc": "By Awesomeguy <br/><br/>Customize your HUD! Move around elements, right click to edit them, pause the game to enable/disable and add custom text nodes!<br/><br/>PRESS THE GREEN CHECKMARKS TO SAVE SETTING",
         "enabled": false,
-        "url": "../src/mods/modloader/gui.js"
+        "url": "../src/mods/modloader/dimensions/gui.js"
     },
     "hurricane": {
         "name": "Hurricane Mod",
         "desc": "Creates random wind for you to suffer in.",
         "enabled": false,
-        "url": "../src/mods/modloader/hurricane.js"
+        "url": "../src/mods/modloader/dimensions/hurricane.js"
     }, 
     "levelselector": {
         "name": "Level Selector Mod",
         "desc": "Pick from all the levels and more!",
         "enabled": false,
         "url": "../src/mods/modloader/levelselector.js"
-    },    
-    "multiplayer": {
-        "name": "Multiplayer Mod",
-        "desc": "Play or speedrun against your friends!",
-        "enabled": false,
-        "url": "../src/mods/modloader/multiplayerREALSKY.js"
-    }, 
+    },
     "randomlevel": {
         "name": "Random Level Mod",
         "desc": "Use 'shift + y' to be taken to a random level.",
@@ -42,10 +36,10 @@
         "url": "../src/mods/modloader/randomlevel.js"
     }, 
     "savestate": {
-        "name": "Save State Mod",
+        "name": "Save State",
         "desc": "'Shift + s': Create Checkpoint <br/>'Shift + r': Return to Original Spawn<br/>'Shift + n': Bypass to next level<br/>'Shift + b': Bypass to previous level<br/>'Shift + m': Move to end flag<br/>'Shift + c': Move to coin",
         "enabled": false,
-        "url": "../src/mods/modloader/savestate.js"
+        "url": "../src/mods/modloader/dimensions/savestate.js"
     },
     "modapi": {
         "name": "Mod API",

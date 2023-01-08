@@ -1,5 +1,5 @@
 (function() {
-    let version = '1.4.4'
+    let version = 'Dim'
 
     var runtime;
 
@@ -1066,7 +1066,7 @@
                                     }
                                     element.style.display = "none";
                                 });
-                                //document.getElementById("toggle-elements-btn").style.display = "none";
+                                document.getElementById("toggle-elements-btn").style.display = "none";
                             }
 
                             else if(key === "levelselector") {
@@ -1204,8 +1204,10 @@
             if(localStorage.getItem('modSettings') === null) {
                 localStorage.setItem('modSettings', JSON.stringify(modPreSettings));
             }
-
+            console.log("Mod loader loaded")
             modSettings = JSON.parse(localStorage.getItem('modSettings'));
+
+            console.log(modSettings)
 
             currentModsNames = []
 
@@ -1241,11 +1243,12 @@
             baseModsNames = []
 
             //  data1 = null
-
+            console.log(version)
             fetch('../src/mods/modloader/config/baseMods' + version + '.json')
                 .then((response) => response.json())
                 .then(jsondata => {
                     console.log(jsondata)
+                    console.log("???")
                     for (const [key] of Object.entries(jsondata)) { //current global mods
                         if(!key.startsWith("customMod")) {
                             baseModsNames.push(key);
