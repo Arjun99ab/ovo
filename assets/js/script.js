@@ -7,10 +7,10 @@ var niceNames = {
   "reverse": "Reverse",
   "kaizo": "Kaizo",
   "crashtestleveleditor": "CrashTestLevelEditor",
-    "dimensions_qa_v3":
-    "Dimensions v3",
-    "dimensions_qa_v4":
-    "Dimensions v4"
+    "dimensions_qa_v3": "Dimensions Beta v3",
+    "dimensions_qa_v4": "Dimensions Beta v4",
+    "dimensions_qa_v7": "Dimensions Beta v7",
+    "dimensions_v101": "Dimensions v1.0.1"
 }
 
 var versionsDict = {
