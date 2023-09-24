@@ -1,6 +1,6 @@
-# OvO Modloader by Arjun99ab
+# OvO Modloader
 
-This is a UI based modloader for the game OvO. It features many versions, many popular mods, and provides the ability to add custom mods as well.
+This is a UI based modloader for the game OvO, created by me. It features many versions, many popular mods, and provides the ability to add custom mods as well.
 
 
 ## Features

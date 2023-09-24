@@ -32,9 +32,10 @@
         "up": ["white", "black", "black", "white"],
         "down": ["white", "black", "black", "white"],
         "left": ["white", "black", "black", "white"],
-        "right": ["white", "black", "black", "white"]
+        "right": ["white", "black", "black", "white"],
+        "reset": ["white", "black", "black", "black"]
     }
-    var arrows = ["left", "up", "right", "down"];
+    var arrows = ["left", "up", "right", "down", "reset"];
 
     var displayNone = [];
 
@@ -202,6 +203,24 @@
             "opacity": 1,
             "fontFamily": "Retron2000",
             "innerHTML": "",
+            "enabled": true,
+            "display": "block", 
+            "width": 0,
+            "height": 0           
+        },
+        "reset": {
+            "left": 62,
+            "top": 40,
+            "name": "Reset",
+            "border": "2px solid black",
+            "backgroundColor": "white",
+            "onBgColor": "black",
+            "scale": 1,
+            "color": "black",
+            "onTextColor": "white",
+            "opacity": 1,
+            "fontFamily": "Retron2000",
+            "innerHTML": "R",
             "enabled": true,
             "display": "block", 
             "width": 0,
@@ -1113,6 +1132,8 @@
                             document.getElementById(elID).innerHTML = "🠛";
                         } else if(elID === "right") {
                             document.getElementById(elID).innerHTML = "🠚";
+                        } else if(elID === "reset") {
+                            document.getElementById(elID).innerHTML = "R";
                         }
                         
                     }
@@ -1259,21 +1280,25 @@
         speedText = document.createElement("div")
         createEnableElement(speedButton, speedText, "speed", "Speed", 290, 95);
 
+        resetButton = document.createElement("button");
+        resetText = document.createElement("div")
+        createEnableElement(resetButton, resetText, "reset", "Reset", 320, 95);
+
 
 
 
         
         textButton = document.createElement("button");
         textText = document.createElement("div")
-        styleMenuButton(textButton, 95, 320);
+        styleMenuButton(textButton, 95, 350);
         
         textButton.style.backgroundColor = "#00d26a";
         textButton.innerHTML = "➕";
     
-        styleMenuText(textText, 5, 320, "Add Text:") 
+        styleMenuText(textText, 5, 350, "Add Text:") 
         textButton.onclick = function() {
             customTextNum++;
-            createGuiElement("text" + customTextNum, 300, 300, "Custom Text");
+            createGuiElement("text" + customTextNum, 300, 330, "Custom Text");
 
             guiSettings = JSON.parse(localStorage.getItem('guiSettings'))
             guiSettings["text" + customTextNum] = {
@@ -1335,6 +1360,9 @@
         bg.appendChild(speedText);
         bg.appendChild(speedButton);
 
+        bg.appendChild(resetText);
+        bg.appendChild(resetButton);
+
 
         bg.appendChild(titleText);
         bg.appendChild(xButton);
@@ -1350,7 +1378,7 @@
     let guiMod = {
         init() {
             this.movementKeys = []; //left, up, right, down
-            this.arrows = ["left", "up", "right", "down"];
+            this.arrows = ["left", "up", "right", "down", "reset"];
             this.activatorKeyHeld = false;
             this.activated = false;
             this.speed = {x: 10, y: 10};
@@ -1524,7 +1552,9 @@
             //inputsObject.instance_vars;
             console.log(inputsObject.instance_vars);
             this.movementKeys = (inputsObject.instance_vars).slice(0, 4); //Left, Up, Right, Down
+            this.movementKeys[4] = 82; //R
             console.log(this.movementKeys);
+
             
             
                 
@@ -1555,6 +1585,7 @@
                 document.getElementById(arrow).style.backgroundColor = keyColors[arrow][1];
                 document.getElementById(arrow).style.color = keyColors[arrow][3];
             }
+            
 
             // if(event.keyCode === 82 && event.target.id === "bg-color-input") {  
             //     //event.target.focus()

@@ -4,7 +4,7 @@
     let runtime = globalThis.sdk_runtime;
     globalThis.sdk_runtime = old;
 
-    var jumping = false
+    var done = true
 
   
     let getPlayer = () => {
@@ -51,51 +51,26 @@
         init() {
             document.addEventListener("keydown", (event) => {this.keyDown(event)});
             document.addEventListener("keyup", (event) => {this.keyUp(event)});
-            this.movementKeys = [false, false, false, false];
-            
+            this.movementKeys = [false];
+
             runtime.tickMe(this);
 
-            notify("hyello??")
-//
-            
-
-
-            
-            
-            
-                
-
-
-
-
-
+            notify("hyello??");
+            console.log("w");
         },
 
         keyDown(event) {
-            
-            if (event.keyCode >= 37 && event.keyCode <= 40) {
-                
-                
-                this.movementKeys[event.keyCode - 37] = true;
-                
-
-            }
-            
-            
-            
+            if (event.keyCode == 71) {
+                this.movementKeys[0] = true;
+                done = false;
+            }  
         },
       
         keyUp(event) {
-
-            
-          
-            if (event.keyCode >= 37 && event.keyCode <= 40) { //37 left 39 up
-                console.log(event.keyCode)
-                this.movementKeys[event.keyCode - 37] = false;
-
+            if (event.keyCode == 71) {
+                this.movementKeys[0] = false;
             }
         },
-
         
         
         tick() {
@@ -104,17 +79,33 @@
             // };
 
             try {
-                
-                if(this.movementKeys[2]) { // right key
-                    player.x += 5
-                } 
-                if(this.movementKeys[0]) { // left key
-                    player.x -= 5
+                if(this.movementKeys[0] && !done) {
+                    console.log(player.bquad);
+                    
+                    player.bquad.tlx = 200; 
+                    player.bquad.tly = 200; 
+                    player.bquad.trx = 200; 
+                    player.bquad.try_ = 200;
+                    player.bquad.blx = 200; 
+                    player.bquad.bly = 200; 
+                    player.bquad.brx = 200; 
+                    player.bquad.bry_ = 200; 
+
+                    console.log(player.bquad.tlx);
+                    console.log(player.bquad);
+                    // for (const property in player.bquad) {
+                    //     console.log(`${property}: ${player.bquad[property]}`);
+                    //   }
+                      
+
+                    done = true;            
                 }
-               
+
                 
-                 
-                //console.log(this.movementKeys)
+                // if(isInLevel() && !done) {
+                //     player.angle+=1;
+                //     done = true;
+                // }
                 
                  
 
