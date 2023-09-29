@@ -1022,6 +1022,8 @@
                                 //enableClick(map);
                                 // map = disableClick();
                             
+                            } else if(key === "darkmode") {
+                                document.getElementById("darkmode-div").style.display = "block";
                             }
                         }
 
@@ -1075,6 +1077,8 @@
                                 console.log("sduiygfguasyidgfdas???")
                                 enableClick(map);
                                 // map = disableClick();
+                            } else if(key === "darkmode") {
+                                document.getElementById("darkmode-div").style.display = "none";
                             }
                         }
                         

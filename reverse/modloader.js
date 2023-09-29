@@ -1022,6 +1022,8 @@
                                 //enableClick(map);
                                 // map = disableClick();
                             
+                            } else if(key === "darkmode") {
+                                document.getElementById("darkmode-div").style.display = "block";
                             }
                         }
 
@@ -1075,6 +1077,8 @@
                                 console.log("sduiygfguasyidgfdas???")
                                 enableClick(map);
                                 // map = disableClick();
+                            } else if(key === "darkmode") {
+                                document.getElementById("darkmode-div").style.display = "none";
                             }
                         }
                         
@@ -1233,7 +1237,7 @@
             baseModsNames = []
 
             //  data1 = null
-
+            console.log(version)
             fetch('../src/mods/modloader/config/baseMods' + version + '.json')
                 .then((response) => response.json())
                 .then(jsondata => {

@@ -46,6 +46,12 @@
         "desc": "Open in devtools to use various game mechanics. ",
         "enabled": false,
         "url": "../src/mods/modloader/modapi.js"
+    }, 
+    "darkmode": {
+        "name": "Dark Mode",
+        "desc": "Ease your eyes with a dark theme.",
+        "enabled": false,
+        "url": "../src/mods/modloader/darkmode.js"
     }
 }
 
