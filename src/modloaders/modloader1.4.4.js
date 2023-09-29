@@ -18,7 +18,7 @@
         }
     }
 
-
+    //general 
     var map = null;
 
     var customModNum = 0; 

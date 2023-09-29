@@ -1,3 +1,6 @@
+//mod to make the game chaotic
+
+//different settings for chaos
 let chaosPresets = {
   "original": {
     "sin": "random",
@@ -15,11 +18,13 @@ let chaosPresets = {
 };
 
 (function() {
+    //setup runtime variables
     let old = globalThis.sdk_runtime;
     c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
     let runtime = globalThis.sdk_runtime;
     globalThis.sdk_runtime = old;
 
+    //notification popup
     let notify = (title, text, image = "./speedrunner.png") => {
         cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
             runtime.types_by_index.find(
@@ -33,6 +38,8 @@ let chaosPresets = {
 
     let chaos = {
         init() {
+
+            //save the initial math values
             this.random = Math.random;
           
             this.abs = Math.abs;
@@ -75,14 +82,16 @@ let chaosPresets = {
             this.fix = (n) => {return n<0?Math.ceil(n):n>0?Math.floor(n):n};
             this.cat = (n) => {if(n<=1)return 1;let t=0;for(let a=0;a<n;n++)t+=this.cat(a)*this.cat(n-a-1);return t}
 
-            this.start("original");
+            this.start("funky");
             globalThis.ovoChaos = this;
             notify("Mod Loaded", "Chaos mod loaded");
         },
 
         start(presetName="original") {
             let preset = chaosPresets[presetName];
-            
+
+            //set all of math functions to random
+            //ovo relies on these functions to be to do stuff, so randomizing them will make the game unpredictable
             if (preset) {
               for (const [key, value] of Object.entries(preset)) {
                 eval(`Math.${key} = this.${value}`)
@@ -91,6 +100,7 @@ let chaosPresets = {
         },
 
         stop() {
+            //sets all the math functions back to normal
             Math.random = this.random;
           
             Math.abs = this.abs;

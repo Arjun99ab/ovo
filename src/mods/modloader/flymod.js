@@ -1,11 +1,15 @@
+//allows a user to fly + be invincible when pressing the shift key & arrows
+
 (function() {
+    //get ovo runtime variable
     let old = globalThis.sdk_runtime;
     c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
     let runtime = globalThis.sdk_runtime;
     globalThis.sdk_runtime = old;
 
     var modEnabled;
-  
+    
+    //get the player object
     let getPlayer = () => {
         return runtime.types_by_index
             .filter(
@@ -18,6 +22,7 @@
             )[0];
     }
     
+    //popup notification
     let notify = (title, text, image = "./speedrunner.png") => {
         cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
             runtime.types_by_index.find(
@@ -31,6 +36,7 @@
     
     let flyMod = {
         init() {
+            //setup general variables and presets
             this.movementKeys = [false, false, false, false];
             this.activatorKeyHeld = false;
             this.activated = false;
@@ -38,6 +44,7 @@
             this.stored = [1500, true];
             this.override = false;
             
+            //listen to key events
             document.addEventListener("keydown", (event) => {this.keyDown(event)});
             document.addEventListener("keyup", (event) => {this.keyUp(event)});
           
@@ -48,10 +55,8 @@
         },
       
         keyDown(event) {
+            //check if mod is enabled & shift arrows => allow to fly
             let key = event.key.toLowerCase();
-
-
-            
             if(JSON.parse(localStorage.getItem('modSettings'))["flymod"]["enabled"]) {
                 if (key == "shift" && !this.override) {
                     this.activatorKeyHeld = true;
@@ -70,10 +75,9 @@
         },
       
         keyUp(event) {
+            //activated variable can only be true if it was set true in the first palce
+            //if shift is released, disable fly
             let key = event.key.toLowerCase();
-
-            
-          
             if (key == "shift" && this.activatorKeyHeld) {
                 this.activatorKeyHeld = false;
               
@@ -128,7 +132,7 @@
         },
       
         tick() {
-
+            //if fly is enabled, do the fly stuff
             if (this.activated) {
                 let player = getPlayer();
               

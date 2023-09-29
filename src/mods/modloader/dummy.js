@@ -1,3 +1,5 @@
+//useless mod - used it for testing something that was resolved in a different way
+
 (function() {
     let old = "globalThis.sdk_runtime";
     //c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);

@@ -1,3 +1,5 @@
+//layers a div over the game in order to essentially high contrast the game
+
 (function () {
     // create a div element
     const div = document.createElement("div");

@@ -1,4 +1,6 @@
 (function() {
+
+    //setup general ovo runtime variables
     let old = globalThis.sdk_runtime;
     c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
     let runtime = globalThis.sdk_runtime;
@@ -7,7 +9,7 @@
     
 
 
-
+    //global gui variables needed for various knowledge across functions
     var editing = false;
     var startingMouseCoords = []; 
     var elementMoving = null;
@@ -16,6 +18,7 @@
     var scale = 1;
     var customTextNum = 0;
 
+    //check if there are existing gui settings, and if so, modify the starting customTextNum so that it doesn't overlap with existing custom mods
     if(localStorage.getItem('guiSettings') !== null) {
         guiSettings = JSON.parse(localStorage.getItem('guiSettings'));
         for (const [key] of Object.entries(guiSettings)) {
@@ -26,6 +29,7 @@
     }
     
 
+    //more general array vars for tracking across functions
     var currentMouseCoords = [];
 
     var keyColors = {
@@ -38,12 +42,13 @@
 
     var displayNone = [];
 
+    //listener for tracking mouse coords because can't just get it instantly for some reason
     document.addEventListener('mousemove', (event) => {
         //console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
         currentMouseCoords = [event.clientX, event.clientY]
     });
 
-
+    //generic save data settings for a new user
     var guiPreSettings = {
         "pos": {
             "left": 5,
@@ -212,7 +217,7 @@
 
     
     
-
+    //generic function for getting the player object
     let getPlayer = () => {
         return runtime.types_by_index
             .filter(
@@ -225,6 +230,7 @@
             )[0];
     }
     
+    //popup notification function
     let notify = (title, text, image = "./speedrunner.png") => {
         cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
             runtime.types_by_index.find(
@@ -236,16 +242,20 @@
         );
     };
 
+    //check if user is current playing a level
     let isInLevel = () => {
         return runtime.running_layout.name.startsWith("Level")
     };
 
+    //check if the game is paused
     let isPaused = () => {
         if (isInLevel()) return runtime.running_layout.layers.find(function(a) {
             return "Pause" === a.name
         }).visible
     };
 
+    //style the save setting button, next to settings when editing an element
+    //or for enabling/disabling menu buttons
     let styleMenuButton = (button, left, top) => {
         c = {
             backgroundColor: "#00d26a",
@@ -267,6 +277,7 @@
         button.innerHTML = "✅";
     }
 
+    //style the input boxes, created when editing an element
     let styleMenuInput = (input, left, top, width) => {
         c = {
             backgroundColor: "white",
@@ -285,11 +296,9 @@
         Object.keys(c).forEach(function (a) {
             input.style[a] = c[a];
         });
-
-        
-
     }
 
+    //style & create a generic text div
     let styleMenuText = (textDiv, left, top, text) => {
         c = {
             backgroundColor: "white",
@@ -309,13 +318,13 @@
 
         newContent = document.createTextNode(text);
         textDiv.appendChild(newContent);
-
-        
-
     }
+    
 
+    //generate the gui element's editing menu
     let createGuiEditingMenu = () => {
-        //Create background div
+       
+        //Create background div of appropriate size
         b = document.createElement("div")
         c = {
             backgroundColor: "white",
@@ -337,6 +346,7 @@
             b.style[a] = c[a];
         });
         b.id = "gui-editing-menu";
+
 
         //X button CSS
         xButton = document.createElement("button");
@@ -362,6 +372,8 @@
             elementEditing = null;
         }
 
+
+        //button for deleting the element currently being edited
         deleteElementButton = document.createElement("button");
         c = {
             backgroundColor: "red",
@@ -382,7 +394,8 @@
         });
 
         deleteElementButton.innerHTML = "DELETE ELEMENT";
-
+        
+        //if pressed, update save settings and remove from screen
         deleteElementButton.onclick = function() {
             guiSettings = JSON.parse(localStorage.getItem('guiSettings'))
             guiSettings[elementEditing.id]["enabled"] = false;
@@ -392,8 +405,6 @@
             }
             localStorage.setItem('guiSettings', JSON.stringify(guiSettings));
 
-            
-            
             b.remove();
             elementEditing.remove();
             
@@ -401,8 +412,9 @@
         }
 
 
-        titleText = document.createElement("div");
 
+        //create textnode for the title indicating the name of the element being edited
+        titleText = document.createElement("div");
         c = {
             backgroundColor: "white",
             border: "none",
@@ -426,7 +438,7 @@
 
 
 
-        //X Position CSS
+        //X position of element config
         leftButton = document.createElement("button");
         styleMenuButton(leftButton, 80, 55);
         leftInput = document.createElement("input");
@@ -460,7 +472,7 @@
 
 
 
-        //Y Position CSS
+        //Y position of element config
         topButton = document.createElement("button");
         styleMenuButton(topButton, 80, 85);
         topInput = document.createElement("input");
@@ -494,7 +506,7 @@
 
 
 
-        //Border Enabled CSS
+        //Border enabled of element config
         borderButton = document.createElement("button");
         styleMenuButton(borderButton, 80, 115);
         if(elementEditing.style.border === "none") {
@@ -969,23 +981,17 @@
         b.appendChild(customTextText);
         b.appendChild(customTextInput);
         b.appendChild(customTextButton);
-        b.appendChild(customTextInfo);
-
-        
-
-        
-       
+        b.appendChild(customTextInfo);       
 
         b.appendChild(xButton);
         b.appendChild(deleteElementButton);
         b.appendChild(titleText);
 
         document.body.appendChild(b);
-
-
     }
     
     
+    //style & create a gui element, with its position and name
     let createGuiElement = (id1, top, left, name) => {
         b = document.createElement("div")
         c = {
@@ -1014,7 +1020,8 @@
         document.body.appendChild(b);
 
         document.getElementById(b.id).className = 'gui';
-        //document.getElementById(b.id).setAttribute("onmouseover", "guiHoverMove(this)");
+        
+        //for moving the element
         document.getElementById(b.id).addEventListener('mousedown', (event) => {
             //onsole.log(event.button)
             if(event.button === 0) {
@@ -1028,6 +1035,8 @@
             }
             
         });
+        
+        //for moving the element
         document.getElementById(b.id).addEventListener('mouseup', (event) => {
             if(event.button === 0) {
                 guiSettings = JSON.parse(localStorage.getItem('guiSettings'))
@@ -1051,15 +1060,11 @@
 
                     createGuiEditingMenu();
                 }
-                
-
-
-
-
             }
             
         });
 
+        //for scaling up and down the element
         document.getElementById(b.id).onwheel = function(event) { 
             event.preventDefault();
             console.log(event.deltaY);
@@ -1076,12 +1081,14 @@
             guiSettings[event.target.id]["scale"] = scale;
             localStorage.setItem('guiSettings', JSON.stringify(guiSettings));
         }
-
-        
     };
 
+
+    //in the enabling menu, create a button that enables/disables an element
     let createEnableElement = (elementButton, elementText, elID, elName, y, btnX) => {
         styleMenuButton(elementButton, btnX, y);
+
+        //set intial state of checkbox
         if(document.getElementById(elID) === null || document.getElementById(elID).style.display === "none") {
             elementButton.style.backgroundColor = "white";
             elementButton.innerHTML = "⬜";
@@ -1096,14 +1103,16 @@
             e.stopPropagation();
             e.preventDefault();
             elementButton.focus();
-            if(elementButton.style.backgroundColor === "white") {
+            if(elementButton.style.backgroundColor === "white") { //if currently disabled
                 elementButton.style.backgroundColor = "#00d26a";
                 elementButton.innerHTML = "✅";
 
                 guiSettings = JSON.parse(localStorage.getItem('guiSettings'))
 
-                if(document.getElementById(elID) === null) {
+                if(document.getElementById(elID) === null) { //if the element doesnt exist, create it
                     createGuiElement(elID, guiPreSettings[elID]["top"], guiPreSettings[elID]["left"], elName);
+                    //hydrate movement keys with existing text
+                    //not needed for other elements because they are hydrated by tick()
                     if(arrows.includes(elID)) {
                         if(elID === "up") {
                             document.getElementById(elID).innerHTML = "🠙";
@@ -1118,9 +1127,9 @@
                     }
                     guiSettings[elID] = guiPreSettings[elID];
                 } 
-                if(document.getElementById(elID).style.display === "none") {
+                if(document.getElementById(elID).style.display === "none") { //if it exists but is hidden, show it
                     document.getElementById(elID).style.display = "block";
-                    displayNone = displayNone.filter(function(ele){ 
+                    displayNone = displayNone.filter(function(ele){  //update the displayNone array
                         ele != elID; 
                     });
                     console.log(displayNone)
@@ -1130,7 +1139,7 @@
 
                 
                 localStorage.setItem('guiSettings', JSON.stringify(guiSettings));
-            } else {
+            } else { //to disable it, update the checkbox, hide element, and update save data
                 elementButton.style.backgroundColor = "white";
                 elementButton.innerHTML = "⬜";
                 document.getElementById(elID).style.display = "none";
@@ -1142,12 +1151,14 @@
 
             }  
         }
-
-
-
     }
 
+
+
+    //create the menu that allows you to enable/disable elements
+    //also allows you to add custom text elements
     let createEnablingMenu = () => {
+        
         //Create background div
         bg = document.createElement("div")
         c = {
@@ -1171,6 +1182,8 @@
         });
         bg.id = "enabling-menu-bg";
 
+
+        //Create X button and style it
         xButton = document.createElement("button");
         c = {
             backgroundColor: "white",
@@ -1199,7 +1212,7 @@
             
         }
 
-        
+        //create title element of the enbaling disabling menu
         titleText = document.createElement("div");
 
         c = {
@@ -1222,7 +1235,8 @@
         titleText.appendChild(newContent);
 
 
-        //Border Enabled CSS
+        //create the buttons and text for each element
+        //kind of repeitive but idk a better way, its not that bad i guess
         posButton = document.createElement("button");
         posText = document.createElement("div")
         createEnableElement(posButton, posText, "pos", "Position", 50, 82);
@@ -1261,8 +1275,7 @@
 
 
 
-
-        
+        //add custom text feature
         textButton = document.createElement("button");
         textText = document.createElement("div")
         styleMenuButton(textButton, 95, 320);
@@ -1271,6 +1284,7 @@
         textButton.innerHTML = "➕";
     
         styleMenuText(textText, 5, 320, "Add Text:") 
+        //if clicked, give it a unique id (+1 of previous node), style it, and add it to the gui settings save data
         textButton.onclick = function() {
             customTextNum++;
             createGuiElement("text" + customTextNum, 300, 300, "Custom Text");
@@ -1304,7 +1318,7 @@
         
 
 
-        
+        //add all of the menu elements to the menu and render
         bg.appendChild(posText);
         bg.appendChild(posButton);
 
@@ -1346,9 +1360,10 @@
 
     
 
-
+    //create guiMod object containing init, tick, and some other stuff idk
     let guiMod = {
         init() {
+            //some global variables for checking across functions
             this.movementKeys = []; //left, up, right, down
             this.arrows = ["left", "up", "right", "down"];
             this.activatorKeyHeld = false;
@@ -1364,7 +1379,7 @@
     
 
             
-            
+            //add listeners for the key events (used for movement keys)
             document.addEventListener("keydown", (event) => {
                 this.keyDown(event)
                 
@@ -1373,6 +1388,7 @@
                 this.keyUp(event)
             });
 
+            //combat the weird container hitboxes when active alongside multiplayer mod
             function addStyle(styleString) {
                 const style = document.createElement('style');
                 style.textContent = styleString;
@@ -1403,13 +1419,18 @@
             
             `);
           
-            //localStorage.setItem('myCat', 'Tom');
+
+
+
+
+            //if there is no existing save data, use default
             console.log(localStorage.getItem('guiSettings'));
             if(localStorage.getItem('guiSettings') === null) {
                 localStorage.setItem('guiSettings', JSON.stringify(guiPreSettings));
             }
 
             //guiSettings = guiPreSettings;
+            //sync gui settings in save data and hydrate all the elements
             guiSettings = JSON.parse(localStorage.getItem('guiSettings'));
             for (const [key] of Object.entries(guiSettings)) {
                 console.log(key)
@@ -1417,7 +1438,9 @@
                 console.log(guiSettings[key]);
                 if(guiSettings[key]["enabled"] === true) {
                     console.log(key + "loaded")
+                    //create the elements with the appropriate attributes according to save data
                     createGuiElement(key, guiSettings[key]["top"], guiSettings[key]["left"], guiSettings[key]["name"]);
+                    //style the created element accoridng to save
                     element = document.getElementById(key);
                     element.style.border = guiSettings[key]["border"]
                     element.style.backgroundColor = guiSettings[key]["backgroundColor"];
@@ -1426,10 +1449,13 @@
                     element.style.opacity = guiSettings[key]["opacity"];
                     element.style.fontFamily = guiSettings[key]["fontFamily"];
                     element.style.display = guiSettings[key]["display"];
+                    
+                    //if it was hidden, ensure that program knows it is hidden
                     if(element.style.display === "none") {
                         displayNone.push(key);
                     }
-
+                    
+                    //special attributes for the keystrokes
                     if(arrows.includes(key)) {
                         keyColors[key][0] = guiSettings[key]["backgroundColor"];
                         keyColors[key][1] = guiSettings[key]["onBgColor"];
@@ -1437,6 +1463,8 @@
                         keyColors[key][3] = guiSettings[key]["onTextColor"];
                         element.innerHTML = guiSettings[key]["innerHTML"];
                     }
+
+                    //special attribute for custom text node
                     if(element.name === "Custom Text") {
                         element.innerHTML = guiSettings[key]["innerHTML"];
                     }
@@ -1469,7 +1497,7 @@
 
 
 
-            
+            //create the button that opens the enabling menu (hidden unless in pause menu, checked in tick())
             const btn = document.createElement("button");
             btn.innerHTML = "Enable/Disable Elements";
 
