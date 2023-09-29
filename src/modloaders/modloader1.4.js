@@ -644,7 +644,7 @@
             color: "white",
             fontSize: "10pt",
             cursor: "pointer",
-            left: "40%",
+            left: "35%",
             bottom: "2%",
 
         };
@@ -652,7 +652,7 @@
             addModButton.style[a] = c[a];
         });
 
-        addModButton.innerHTML = "Add Mod";
+        addModButton.innerHTML = "Add Custom Mod";
         addModButton.id = "add-mod-btn";
 
         addModButton.onclick = function() {
@@ -911,6 +911,8 @@
 
                 editModButton.style.display = "none"
                 deleteModButton.style.display = "none"
+                addModButton.style.display = "none"
+
                 if(key.startsWith("customMod")) {
                     editModButton.style.display = "block"
                     deleteModButton.style.display = "block"

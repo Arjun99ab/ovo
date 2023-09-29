@@ -1,5 +1,5 @@
 (function() {
-    let version = '1.4'
+    let version = '1.4.4'
 
     var runtime;
 
@@ -9,30 +9,12 @@
 
     let onFinishLoad = () => {
         if ((cr_getC2Runtime() || {isloading: true}).isloading) {
-            setTimeout(onFinishLoad, 500);
+            setTimeout(onFinishLoad, 100);
         } else {
-
-            var Retron2000 = new FontFace('Retron2000', 'url(./retron2000.ttf)');
-            Retron2000.load().then(function(loaded_face) {
-                document.fonts.add(loaded_face);
-                document.body.style.fontFamily = '"Retron2000", Arial';
-            console.log("123123")
-            }).catch(function(error) {
-                console.log(error)
-            });
             runtime = cr_getC2Runtime();
-
-            let old = globalThis.sdk_runtime;
-            c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
-            //runtime = globalThis.sdk_runtime;
-            globalThis.sdk_runtime = old;
-            
-            sleep(5000).then(() => {
+            sleep(2000).then(() => {
                 cleanModLoader.init();
             });
-
-           
-
         }
     }
 
@@ -399,6 +381,7 @@
             if(editing === null) {
                 if(modNameInput.value !== "" && modSrc.value !== "") {
                     customModNum++;
+                    console.log("brand new mod")
     
                     // let js = document.createElement("script");
                     // js.type = "application/javascript";
@@ -412,7 +395,7 @@
                         "name": modNameInput.value,
                         "desc": modDesc.value,
                         "enabled": false,
-                        "url": modSrc.value,
+                        "url": modSrc.value, //eval('`' + modSrc.value + '`'),
                     }
                     localStorage.setItem('modSettings', JSON.stringify(modSettings));
         
@@ -425,6 +408,8 @@
             
             
             } else {
+                console.log("editie mod")
+
                 modSettings = JSON.parse(localStorage.getItem('modSettings'));
                 modSettings[editing] = {
                     "name": modNameInput.value,
@@ -644,7 +629,7 @@
             color: "white",
             fontSize: "10pt",
             cursor: "pointer",
-            left: "40%",
+            left: "35%",
             bottom: "2%",
 
         };
@@ -652,7 +637,7 @@
             addModButton.style[a] = c[a];
         });
 
-        addModButton.innerHTML = "Add Mod";
+        addModButton.innerHTML = "Add Custom Mod";
         addModButton.id = "add-mod-btn";
 
         addModButton.onclick = function() {
@@ -911,6 +896,7 @@
 
                 editModButton.style.display = "none"
                 deleteModButton.style.display = "none"
+                addModButton.style.display = "none"
                 if(key.startsWith("customMod")) {
                     editModButton.style.display = "block"
                     deleteModButton.style.display = "block"
@@ -1095,7 +1081,7 @@
                             } else if(key === "darkmode") {
                                 document.getElementById("darkmode-div").style.display = "none";
                             }
-                        } 
+                        }
                         
                         
                         
@@ -1177,7 +1163,7 @@
 
     let cleanModLoader = {
         init() {
-            
+            console.log("new folder")
 
             function addStyle(styleString) {
                 const style = document.createElement('style');
@@ -1252,7 +1238,7 @@
             baseModsNames = []
 
             //  data1 = null
-
+            console.log(version)
             fetch('../src/mods/modloader/config/baseMods' + version + '.json')
                 .then((response) => response.json())
                 .then(jsondata => {
@@ -1273,8 +1259,6 @@
                     diffMods.forEach(function (item) {
                         if(currentModsNames.includes(item)) {
                             delete modSettings[item];
-                            currentModsNames.splice(currentModsNames.indexOf(item), 1);
-
                             console.log(item)
                         }
                     });
@@ -1440,5 +1424,5 @@
         }
     };
   
-    setTimeout(onFinishLoad, 500);
+    setTimeout(onFinishLoad, 100);
 })();
