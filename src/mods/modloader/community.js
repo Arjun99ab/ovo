@@ -207,7 +207,7 @@
                 });
             }
 
-            if (event.code === "KeyG") {
+            if (event.code === "KeyG" && document.getElementById("community-menu") === null) {
                 createCommunityMenu()
             }
             

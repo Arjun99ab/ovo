@@ -1077,7 +1077,7 @@
                                     }
                                     element.style.display = "none";
                                 });
-                                //document.getElementById("toggle-elements-btn").style.display = "none";
+                                document.getElementById("toggle-elements-btn").style.display = "none";
                             }
 
                             else if(key === "levelselector") {
