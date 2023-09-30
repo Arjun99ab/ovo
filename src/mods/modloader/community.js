@@ -200,7 +200,7 @@
         keyDown(event) {
             
             if (event.code === "KeyH") {
-                fetch('Novaya_Zemlya.json')
+                fetch('../src/communitylevels/3D_OvO_1.json')
                 .then((response) => response.json())
                 .then((data) => {
                     ovoLevelEditor.startLevel(data);
