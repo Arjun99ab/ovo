@@ -1212,7 +1212,7 @@
             
         }
 
-        //create title element of the enbaling disabling menu
+        //create title element of the enabling disabling menu
         titleText = document.createElement("div");
 
         c = {
@@ -1548,7 +1548,9 @@
             //     // This code runs if there were any errors
             //     console.log(err);
             // });\
+            
 
+            //get the movement keys that the user uses and store them
             let inputsObject = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0];
             //inputsObject.instance_vars;
             console.log(inputsObject.instance_vars);
@@ -1568,13 +1570,10 @@
         },
 
         
-
+        //keydown listenere
         keyDown(event) {
             
-            //console.log(String.fromCharCode(event.keyCode));
-            //console.log(cr.plugins_.Keyboard.prototype.cnds.OnKey() || cr.plugins_.Keyboard.prototype.cnds.OnKeyCode());
-            //console.log(cr.plugins_.Keyboard.prototype.exps.StringFromKeyCode())
-            //c2_callFunction("Controls > Buffer", ["Jump"]);
+            //if the key pressed is a movement key, change the color of the key to the on color
             if (this.movementKeys.includes(event.keyCode)) {
                 
                 // //console.log(event.key);
@@ -1592,8 +1591,10 @@
             //     console.log("hi")
             // }
         },
-      
+        
+        //keyup listener
         keyUp(event) {
+            //if the key pressed is a movement key, change the color of the key to the on color
             if (this.movementKeys.includes(event.keyCode)) {
                 arrow = this.arrows[this.movementKeys.indexOf(event.keyCode)]
                 
@@ -1605,7 +1606,10 @@
             }
         },
         
+
+        //tick method to update all the elements
         tick() {
+            //get player object
             let playerInstances = runtime.types_by_index.filter((x) =>!!x.animations &&x.animations[0].frames[0].texture_file.includes("collider"))[0].instances.filter((x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled);
             let player = playerInstances[0];
             const elements = document.querySelectorAll('.gui');
@@ -1618,6 +1622,7 @@
                 
                 
                 if(JSON.parse(localStorage.getItem('modSettings'))["gui"]["enabled"]) {
+                    //if a gui element is currently being moved, move it
                     if(elementMoving !== null) {
                     
 
@@ -1625,7 +1630,8 @@
                         elementMoving.style.top = (currentMouseCoords[1] - startingMouseCoords[1] + parseInt(elementMoving.style.top)).toString() + 'px';
                         startingMouseCoords = currentMouseCoords;
                     }
-    
+                    
+                    //if in pause menu, display the "enable/disable elements" button
                     if(isPaused() && document.getElementById("toggle-elements-btn").style.display === "none") {
                         document.getElementById("toggle-elements-btn").style.display = "block";
                     } else if(!isPaused() && document.getElementById("toggle-elements-btn").style.display === "block") {
@@ -1641,6 +1647,8 @@
                             document.getElementById(id2).style.display = "none";
                         });
                     });
+
+                    //if in game, display all the elements and update them
                     if(isInLevel() && runtime.running_layout.name !== "Level Menu") {
                         if(document.getElementById("fps") !== null) {
                             document.getElementById("fps").innerHTML = runtime.fps;
@@ -1695,6 +1703,9 @@
                         elements.forEach(element => {
                             element.style.display = "none";
                         });
+                        //if user changes their movement keys, update to accomodate
+                        //this is probably very inefficient please fix
+                        //honestly many parts of this code are probably very inefficient
                         if((runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0]).instance_vars.slice(0, 4) !== this.movementKeys) {
                             this.movementKeys = (runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0]).instance_vars.slice(0, 4);
                         }
