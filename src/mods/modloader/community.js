@@ -5,6 +5,9 @@
     c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
     let runtime = globalThis.sdk_runtime;
     globalThis.sdk_runtime = old;
+
+
+    var map = null;
   
     let getPlayer = () => {
         return runtime.types_by_index
@@ -40,6 +43,63 @@
             return "Pause" === a.name
         }).visible
     };
+
+    let disableClick = () => {
+        let map = [];
+        let mapUI = [];
+        let types = runtime.types_by_index.filter((x) =>
+          x.behaviors.some(
+            (y) => y.behavior instanceof cr.behaviors.aekiro_button
+          )
+        );
+        types.forEach((type) => {
+          type.instances.forEach((inst) => {
+            let behavior = inst.behavior_insts.find(
+              (x) => x.behavior instanceof cr.behaviors.aekiro_button
+            );
+            map.push({
+              inst,
+              oldState: behavior.isEnabled,
+            });
+            behavior.isEnabled = 0;
+          });
+        });
+        let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
+        if (layer) {
+          layer.instances.forEach((inst) => {
+            //save state to mapUI
+            mapUI.push({
+              inst,
+              oldState: {
+                width: inst.width,
+                height: inst.height,
+              },
+            });
+            // set size to 0
+            inst.width = 0;
+            inst.height = 0;
+            inst.set_bbox_changed();
+          });
+        }
+        return {
+          map,
+          mapUI,
+        };
+      };
+
+      let enableClick = ({ map, mapUI }) => {
+        map.forEach((x) => {
+          let inst = x.inst.behavior_insts.find(
+            (x) => x.behavior instanceof cr.behaviors.aekiro_button
+          );
+          inst.isEnabled = inst.isEnabled ? 1 : x.oldState;
+        });
+        mapUI.forEach((x) => {
+          x.inst.width = x.oldState.width;
+          x.inst.height = x.oldState.height;
+          x.inst.set_bbox_changed();
+        });
+      };
 
     let createCommunityMenu = () => {
         //Create background div
@@ -86,6 +146,7 @@
 
         xButton.onclick = function() {
             b.remove();
+            enableClick(map);
         }
 
 
@@ -123,8 +184,8 @@
             color: "white",
             fontSize: "10pt",
             cursor: "pointer",
-            left: "45%",
-            top: "30%",
+            right: "3%",
+            top: "14%",
 
         };
         Object.keys(c).forEach(function (a) {
@@ -135,9 +196,68 @@
         searchBtn.id = "search-btn";
 
 
+        levelScroll = document.createElement("div")
+        c = {
+            backgroundColor: "white",
+            border: "solid",
+            borderColor: "black",
+            borderWidth: "2px",
+            fontFamily: "Retron2000",
+            position: "absolute",
+            cursor: "default",
+            top: "25%",
+            left: "-1px",
+            padding: "0px",
+            color: "black",
+            fontSize: "12pt",
+            display: "block",
+            width: "99.5%",
+            height: "75%",
+        };
+        Object.keys(c).forEach(function (a) {
+            levelScroll.style[a] = c[a];
+        });
+
+        levelsList = document.createElement('ul');
+        c = {
+            listStyleType: "none",
+            fontFamily: "Retron2000",
+            position: "absolute",
+            cursor: "default",
+            color: "black",
+            fontSize: "10pt",
+            
+            
+        };
+        Object.keys(c).forEach(function (a) {
+            levelsList.style[a] = c[a];
+        });
+
+        li = document.createElement("li");
+        div = document.createElement("div");
+        div.style.border = "1px solid black";
+        div.style.cursor = "pointer"
+        div.style.width = "50%";
+        div.style.height = "50%";
+        div.style.position = "relative";
+        div.innerText = "testtesttesttest";
+        
+
+
+
+
+
+
         b.appendChild(searchBtn)
         b.appendChild(xButton);
         b.appendChild(titleText);
+        b.appendChild(levelScroll);
+        levelScroll.appendChild(levelsList);
+        levelsList.appendChild(li);
+        
+        li.appendChild(div);
+        
+
 
         document.body.appendChild(b);
     }
@@ -208,6 +328,7 @@
             }
 
             if (event.code === "KeyG" && document.getElementById("community-menu") === null) {
+                map = disableClick();
                 createCommunityMenu()
             }
             

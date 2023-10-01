@@ -488,6 +488,7 @@
             display: "block",
             width: "35%",
             height: "65%",
+            overflowY: "auto",
         };
         Object.keys(c).forEach(function (a) {
             menuBg.style[a] = c[a];
@@ -807,6 +808,8 @@
             display: "block",
             width: "20%",
             height: "99.5%",
+            overflowY: "auto",
+            // maxHeight: "150px",
         };
         Object.keys(c).forEach(function (a) {
             modScroll.style[a] = c[a];
@@ -823,6 +826,9 @@
             cursor: "default",
             color: "black",
             fontSize: "10pt",
+            overflowY: "auto",
+            // maxHeight: "150px",
+
             
             
         };
@@ -1338,7 +1344,7 @@
 
             runtime.tickMe(this);
 
-            notify("QOL Loader", "by Awesomeguy & chas", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
+            notify("QOL Loader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
 
 
         },
