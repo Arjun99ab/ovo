@@ -20,6 +20,7 @@
 
     //general 
     var map = null;
+    var map2 = null;
 
     var customModNum = 0; 
     
@@ -59,6 +60,65 @@
 
 
 
+    let disableScroll = () => {
+        let map = [];
+        let mapUI = [];
+        let types = runtime.types_by_index.filter((x) =>
+          x.behaviors.some(
+            (y) => y.behavior instanceof cr.behaviors.aekiro_scrollView
+          )
+        );
+        types.forEach((type) => {
+          type.instances.forEach((inst) => {
+            let behavior = inst.behavior_insts.find(
+              (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
+            );
+            console.log(behavior)
+            console.log(behavior.scroll.isEnabled)
+            map.push({
+              inst,
+              oldState: behavior.scroll.isEnabled,
+            });
+            behavior.scroll.isEnabled = false;
+          });
+        });
+        let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
+        if (layer) {
+          layer.instances.forEach((inst) => {
+            //save state to mapUI
+            mapUI.push({
+              inst,
+              oldState: {
+                width: inst.width,
+                height: inst.height,
+              },
+            });
+            // set size to 0
+            inst.width = 0;
+            inst.height = 0;
+            inst.set_bbox_changed();
+          });
+        }
+        return {
+          map,
+          mapUI,
+        };
+      };
+
+    let enableScroll = ({ map, mapUI }) => {
+        map.forEach((x) => {
+          let inst = x.inst.behavior_insts.find(
+            (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
+          );
+          inst.scroll.isEnabled = inst.scroll.isEnabled ? 1 : x.oldState;
+        });
+        mapUI.forEach((x) => {
+          x.inst.width = x.oldState.width;
+          x.inst.height = x.oldState.height;
+          x.inst.set_bbox_changed();
+        });
+      };
+
     
     let disableClick = () => {
         let map = [];
@@ -73,6 +133,8 @@
             let behavior = inst.behavior_insts.find(
               (x) => x.behavior instanceof cr.behaviors.aekiro_button
             );
+            console.log(behavior)
+            console.log(behavior.isEnabled)
             map.push({
               inst,
               oldState: behavior.isEnabled,
@@ -217,6 +279,7 @@
         xAddingButton.onclick = function() {
             menuAddBg.remove();
             enableClick(map);
+            enableScroll(map2);
         }
 
         //Title
@@ -516,6 +579,7 @@
         xButton.onclick = function() {
             menuBg.remove();
             enableClick(map);
+            enableScroll(map2);
 
             if(playerXSpeedInput.value !== 1) {
                 speedy_boi = parseInt((playerXSpeedInput.value))
@@ -827,6 +891,7 @@
             color: "black",
             fontSize: "10pt",
             overflowY: "auto",
+            // height: "100%",
             // maxHeight: "150px",
 
             
@@ -924,7 +989,8 @@
                             localStorage.setItem('modSettings', JSON.stringify(modSettings));
                         }
                         menuBg.remove();
-                        enableClick(map)
+                        enableClick(map);
+                        enableScroll(map2);
                         
                         
                     }
@@ -1083,6 +1149,7 @@
                                 menuBg.remove();
                                 console.log("sduiygfguasyidgfdas???")
                                 enableClick(map);
+                                enableClick(map2);
                                 // map = disableClick();
                             } else if(key === "darkmode") {
                                 document.getElementById("darkmode-div").style.display = "none";
@@ -1157,6 +1224,9 @@
 
         menuButton.onclick = function() {
             map = disableClick();
+            map2 = disableScroll();
+            console.log(map)
+            console.log(map2)
             createModLoaderMenu();
             //console.log(document.getElementById('mod-menu-bg'))
         }
