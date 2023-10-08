@@ -43,17 +43,24 @@
     },
     {
         "id": "1037492540095602728",
-        "username": "Haah",
+        "username": "Wolf",
         "content": "Second level I've completed, has two paths to the flag. Not very long or difficult, personally I find it fun to speedrun. I will make a long one (+30 seconds) next time",
         "levelname": "Novaya_Zemlya.json",
         "levelurl": "https://cdn.discordapp.com/attachments/880569148005044325/1037492539898482748/Novaya_Zemlya.json?ex=651948f9&is=6517f779&hm=04e303a88b0f077dd6483bfb477a74eb352ceb59af7605f438807c7c500433c5&"
     },
     {
         "id": "1037136629485293688",
-        "username": "Haah",
+        "username": "Wolf",
         "content": "My first level. It's a little jumbled and I'll make one better next time",
         "levelname": "Eosinophilia_Patient.json",
         "levelurl": "https://cdn.discordapp.com/attachments/880569148005044325/1037136629296541806/Eosinophilia_Patient.json?ex=65194f01&is=6517fd81&hm=ae0fd4f88165c16e3fa7eab045eeff9fc231484f0d8b6ba0d20ce0052bfe98a8&"
+    },
+    {
+        "id": "1036705387442868294",
+        "username": "RobotMania",
+        "content": "My first level, Laced Halloween Candy (and also a reverse version)",
+        "levelname": "Laced_Halloween_Candy.json",
+        "levelurl": "null"
     },
     {
         "id": "1036705387442868294",

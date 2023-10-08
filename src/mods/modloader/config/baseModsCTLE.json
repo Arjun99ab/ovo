@@ -58,6 +58,12 @@
         "desc": "Ease your eyes with a dark theme.",
         "enabled": false,
         "url": "../src/mods/modloader/darkmode.js"
+    },
+    "community": {
+        "name": "Community Levels",
+        "desc": "Play custom levels made by the community!<br/><br/> <b>STILL IN DEVELOPMENT<b>",
+        "enabled": false,
+        "url": "../src/mods/modloader/community.js"
     }
 }
 
