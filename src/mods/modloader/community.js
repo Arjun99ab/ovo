@@ -9,17 +9,8 @@
 
     var map = null;
     var map2 = null;
-    var namedOrdered = {};
-    var idOrdered = {};
-    fetch('../src/communitylevels/config/levels.json')
-            .then((response) => response.json())
-            .then(jsondata => {
-                console.log(jsondata)
-                for (var i = 0; i < jsondata.length; i++) {
-                    namedOrdered[jsondata[i].name] = jsondata[i].id;
-                    idOrdered[jsondata[i].id] = jsondata[i].name;
-                }
-            });
+    var levelData;
+    
     
     
   
@@ -173,29 +164,156 @@
       };
     
 
-    let queryDatabase = (query) => {
-        let db = "../src/communitylevels/config/data.json";
-        var ids = [];
-        fetch(db)
-            .then((response) => response.json())
-            .then(jsondata => {
-                console.log(jsondata)
-                for(var i = 0; i < jsondata.length; i++) {
-                    if(jsondata[i].name.startsWith(query)) {
-                        ids.push(jsondata[i].id);
-                    }
-                }
-                
+    function queryDatabase(query) {
+        var levelJsons = [];
+        
+        for(var i = 0; i < levelData.length; i++) {
+            if(levelData[i]["levelname"].toLowerCase().startsWith(query) || levelData[i]["username"].toLowerCase().startsWith(query)) {
+                levelJsons.push(levelData[i]);
+            }
+        }
+        return levelJsons;
+    
+
+    }
+
+    function getDatabase(numEntries = 3) { 
+      return levelData.slice(0, numEntries);
+    }
+
+    let renderListLevels = (levelsQueried) => {
+        var levelsList = document.createElement('div');
+        levelsList.id = 'levels-list';
+
+        levelsList.style.display = 'flex';
+        levelsList.style.flexWrap = 'wrap';
+        levelsList.style.position = 'absolute';
+        levelsList.style.top = '25%';
+        levelsList.style.left = '0px';
+        levelsList.style.width = '100%';
+        levelsList.style.height = '75%';
+        // levelsList.style.border = '1px solid black';
+        levelsList.style.overflowY = 'auto';
+        levelsList.style.overflowX = 'hidden';
+
+        console.log(levelsQueried)
+        levelsQueried.forEach((level) => {
+            // console.log(level["levelname"])
+            var levelBox = document.createElement('div');
+            levelBox.style.width = '100%';
+            levelBox.style.height = '100px';
+            levelBox.style.borderTop = '2px solid black';
+            levelBox.style.position = "relative";
+            levelBox.style.overflowY = "auto";
+            levelBox.style.overflowX = "hidden";
+
+            levelTitleText = document.createElement("div");
+            c = {
+                backgroundColor: "white",
+                border: "none",
+                fontFamily: "Retron2000",
+                position: "relative",
+                top: "2%",
+                left: "2%",
+                //padding: "5px",
+                color: "black",
+                fontSize: "15pt",
+                cursor: "default",
+            };
+            Object.keys(c).forEach(function (a) {
+                levelTitleText.style[a] = c[a];
             });
-        return ids;
+            
+            newContent = document.createTextNode(level["levelname"].replace(/_/g, " ").slice(0, -5));
+            levelTitleText.appendChild(newContent);
+            levelBox.appendChild(levelTitleText);
+            
+            levelAuthorText = document.createElement("div");
+            c = {
+                backgroundColor: "white",
+                border: "none",
+                fontFamily: "Retron2000",
+                position: "relative",
+                top: "10%",
+                left: "2%",
+                //padding: "5px",
+                color: "black",
+                fontSize: "10pt",
+                cursor: "default",
+            };
+            Object.keys(c).forEach(function (a) {
+                levelAuthorText.style[a] = c[a];
+            });
 
-    }
+            newContent = document.createTextNode("by " + level["username"]);
+            levelAuthorText.appendChild(newContent);
 
-    async function getDatabase(numEntries = 3) { 
-      return fetch('../src/communitylevels/config/data.json')
-      .then((response)=>response.json())
-      .then((responseJson)=>{return responseJson.slice(0, numEntries)});
-    }
+            levelBox.appendChild(levelAuthorText);
+
+
+
+            levelDescText = document.createElement("div");
+            c = {
+                backgroundColor: "white",
+                border: "none",
+                fontFamily: "Retron2000",
+                position: "relative",
+                top: "15%",
+                left: "2%",
+                //padding: "5px",
+                color: "black",
+                fontSize: "10pt",
+                cursor: "default",
+                width: "80%",
+
+            };
+            Object.keys(c).forEach(function (a) {
+              levelDescText.style[a] = c[a];
+            });
+
+            newContent = document.createTextNode(level["content"]);
+            levelDescText.appendChild(newContent);
+
+            levelBox.appendChild(levelDescText);
+
+
+            levelPlayBtn = document.createElement("button");
+            c = {
+                backgroundColor: "#9268e3",
+                borderRadius: "25px",
+                border: "#9268e3",
+                padding: "10px",
+                position: "absolute",
+                fontFamily: "Retron2000",
+                color: "white",
+                fontSize: "10pt",
+                cursor: "pointer",
+                top: "30%",
+                right: "5%",
+
+            };
+            Object.keys(c).forEach(function (a) {
+                levelPlayBtn.style[a] = c[a];
+            });
+            
+            levelPlayBtn.innerHTML = "Play";
+            levelPlayBtn.onclick = async function() {
+                var levelJson = await fetch("../src/communitylevels/" + level["levelname"])
+                  .then((response) => response.json())
+                  .then((data) => {
+                      return data;
+                  });
+                ovoLevelEditor.startLevel(levelJson);
+                xButton.click()
+            };
+
+            levelBox.appendChild(levelPlayBtn);            
+            levelsList.appendChild(levelBox);
+        });
+        
+        return levelsList;
+    };
+
 
     let createCommunityMenu = async () => {
         //Create background div
@@ -293,7 +411,7 @@
             e.stopImmediatePropagation()
             e.stopPropagation();
             e.preventDefault();
-            modNameInput.focus()
+            searchInput.focus()
         }
         searchInput.onkeydown = (e) => { // ensures that user is able to type in input box
             console.log("pleasev2");
@@ -321,141 +439,27 @@
             searchBtn.style[a] = c[a];
         });
 
+        
         searchBtn.innerHTML = "Search";
         searchBtn.id = "search-btn";
-        searchBtn.onclick = function() {
+        searchBtn.onclick = async function() {
             let query = searchInput.value;
             console.log("searching" + query);
-            var levelIds = queryDatabase(query);
-            levelIds.forEach((id) => {
-                console.log(id);
+            var levelsQueried = await queryDatabase(query);
+            console.log(levelsQueried);
+            if(document.getElementById('levels-list') != null) { //are there levels already displayed?
+                document.getElementById('levels-list').remove(); //if so remove them
             }
+            levelsList = renderListLevels(levelsQueried);
+            b.appendChild(levelsList);
+                       
             
-        )};
-
-
-
-        // levelScroll = document.createElement("div")
-        // c = {
-        //     backgroundColor: "white",
-        //     border: "solid",
-        //     borderColor: "black",
-        //     borderWidth: "2px",
-        //     fontFamily: "Retron2000",
-        //     position: "absolute",
-        //     cursor: "default",
-        //     top: "25%",
-        //     left: "-1px",
-        //     padding: "0px",
-        //     color: "black",
-        //     fontSize: "12pt",
-        //     display: "block",
-        //     width: "99.5%",
-        //     height: "75%",
-        // };
-        // Object.keys(c).forEach(function (a) {
-        //     levelScroll.style[a] = c[a];
-        // });
-
-        // levelsList = document.createElement('ul');
-        // c = {
-        //     listStyleType: "none",
-        //     fontFamily: "Retron2000",
-        //     position: "absolute",
-        //     cursor: "default",
-        //     color: "black",
-        //     fontSize: "10pt",
-        // };
-        // Object.keys(c).forEach(function (a) {
-        //     levelsList.style[a] = c[a];
-        // });
+        };
         
-
-        // for(var i = 0; i < 2; i++) {
-        //   li = document.createElement("li");
-        //   d1 = document.createElement("div");
-        //   d1.style.width = "100%";
-        //   d1.style.height = "100%";
-        //   d1.style.border = "1px solid red";
-        //   d1.style.flex = "none";
-        //   li.appendChild(d1);
-
-          
-        //   li.style.border = "1px solid black";
-        //   li.style.borderLeftStyle = "none";
-        //   li.style.cursor = "pointer"
-        //   // li.innerText = "apple1"
-        //   levelsList.appendChild(li);
-        // }
-
-        var levelsList = document.createElement('div');
-
-        // set the CSS properties of the parent element
-        levelsList.style.display = 'flex';
-        levelsList.style.flexWrap = 'wrap';
-        levelsList.style.position = 'absolute';
-        levelsList.style.top = '25%';
-        levelsList.style.left = '0px';
-        levelsList.style.width = '100%';
-        levelsList.style.height = '75%';
-        // levelsList.style.border = '1px solid black';
-        levelsList.style.overflowY = 'auto';
-
-        
-        const data = await getDatabase();
-        console.log(data);
-        for (var i = 0; i < data.length; i++) {
-          console.log(i)
-          var levelBox = document.createElement('div');
-
-          levelTitleText = document.createElement("div");
-          c = {
-              backgroundColor: "white",
-              border: "none",
-              fontFamily: "Retron2000",
-              position: "relative",
-              top: "2%",
-              left: "20%",
-              //padding: "5px",
-              color: "black",
-              fontSize: "15pt",
-              cursor: "default",
-          };
-          Object.keys(c).forEach(function (a) {
-            levelTitleText.style[a] = c[a];
-          });
-
-          newContent = document.createTextNode(data[i]["levelname"]);
-          levelTitleText.appendChild(newContent);
-          levelBox.appendChild(levelTitleText);
-          
-          levelAuthorText = document.createElement("div");
-          c = {
-            backgroundColor: "white",
-            border: "none",
-            fontFamily: "Retron2000",
-            position: "relative",
-            top: "20%",
-            left: "20%",
-            //padding: "5px",
-            color: "black",
-            fontSize: "10pt",
-            cursor: "default",
-          };
-          Object.keys(c).forEach(function (a) {
-            levelAuthorText.style[a] = c[a];
-          });
-
-          newContent = document.createTextNode("by " + data[i]["username"]);
-          levelAuthorText.appendChild(newContent);
-
-          levelBox.appendChild(levelAuthorText);
-
-          levelBox.style.width = '100%';
-          levelBox.style.height = '100px';
-          levelBox.style.borderTop = '2px solid black';
-          levelsList.appendChild(levelBox);
-        }
+        levelsQueried = await getDatabase(numEntries = 4);
+        console.log(levelsQueried);
+        levelsList = renderListLevels(levelsQueried);
+        b.appendChild(levelsList);
 
         // append the divList to the document body
         b.appendChild(levelsList);
@@ -484,7 +488,7 @@
     
 
     let communityLevelsMod = {
-        init() {
+        async init() {
            
 
 
@@ -520,6 +524,14 @@
 
 
             console.log(ovoLevelEditor)
+
+            levelData = await fetch('../src/communitylevels/config/data.json')
+              .then((response) => response.json())
+              .then(jsondata => {
+                  console.log(jsondata)
+                  return jsondata;
+              });
+            console.log(levelData)
 
             
             
