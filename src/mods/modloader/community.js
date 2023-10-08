@@ -552,13 +552,13 @@
         },
         keyDown(event) {
             
-            if (event.code === "KeyH") {
-                fetch('../src/communitylevels/3D_OvO_1.json')
-                .then((response) => response.json())
-                .then((data) => {
-                    ovoLevelEditor.startLevel(data);
-                });
-            }
+            // if (event.code === "KeyH") {
+            //     fetch('../src/communitylevels/3D_OvO_1.json')
+            //     .then((response) => response.json())
+            //     .then((data) => {
+            //         ovoLevelEditor.startLevel(data);
+            //     });
+            // }
 
             if (event.code === "KeyG" && document.getElementById("community-menu") === null) {
                 map = disableClick();
