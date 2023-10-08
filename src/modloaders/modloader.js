@@ -578,6 +578,7 @@
         Object.keys(c).forEach(function (a) {
             menuBg.style[a] = c[a];
         });
+        menuBg.id = "menu-bg";
 
         //X button CSS
         xButton = document.createElement("button");
@@ -1243,9 +1244,10 @@
 
 
         menuButton.onclick = function() {
-            map = disableClick();
-            createModLoaderMenu();
-            //console.log(document.getElementById('mod-menu-bg'))
+            if(document.getElementById("menu-bg") === null) { //if menu doesnt exist, to avoid duplicates
+                map = disableClick();
+                createModLoaderMenu();
+            }
         }
         document.body.appendChild(menuButton);
     
@@ -1320,20 +1322,16 @@
             console.log("modSettings after removing custom mods")
             console.log(modSettings)
             console.log(Object.keys(modSettings).length + " " + Object.keys(baseModsNames).length)
-
-            diffMods = Object.keys(baseModsNames)
-            .filter(x => !Object.keys(modSettings).includes(x))
-            .concat(Object.keys(modSettings).filter(x => !Object.keys(baseModsNames).includes(x)));
-            console.log("difference in mods")
-            console.log(diffMods)
-            diffMods.forEach(function (modName) {
-                if(Object.keys(modSettings).includes(modName)) {
-                    delete modSettings[modName];
-                }
-                else if(Object.keys(baseModsNames).includes(modName)) {
-                    modSettings[modName] = baseModsNames[modName];
+            modsEnabled = []
+            Object.keys(modSettings).forEach(function (modName) {
+                if(modSettings[modName]["enabled"]) {
+                    modsEnabled.push(modName)
                 }
             });
+            console.log("modsEnabled")
+            console.log(modsEnabled)
+
+            modSettings = baseModsNames;
             console.log("modSettings after adding/removing mods")
             console.log(modSettings)
             Object.keys(customMods).forEach(function (modName) {
@@ -1345,8 +1343,17 @@
             });
             console.log("modSettings after adding custom mods")
             console.log(modSettings)
-            localStorage.setItem('modSettings', JSON.stringify(modSettings)); //set current mods, so it shows up correctly in menu
 
+            modsEnabled.forEach(function (modName) {
+                if(modSettings[modName] !== undefined) { //make sure it exists in current version
+                    modSettings[modName]["enabled"] = true;
+                }
+            });
+
+
+            //WALL OF FINAL SETTING
+            //DONT MODIFY MODSETTINGS PAST THIS
+            localStorage.setItem('modSettings', JSON.stringify(modSettings)); //set current mods, so it shows up correctly in menu
             for (const [key] of Object.entries(modSettings)) { // loading the mods in (create js), if the mod is said "enabled"
                 console.log("hasdousd")
                 if(modSettings[key]["enabled"]) {
@@ -1509,32 +1516,38 @@
 
         keyDown(event) {
             
-            //console.log(String.fromCharCode(event.keyCode));
-            //console.log(cr.plugins_.Keyboard.prototype.cnds.OnKey() || cr.plugins_.Keyboard.prototype.cnds.OnKeyCode());
-            //console.log(cr.plugins_.Keyboard.prototype.exps.StringFromKeyCode())
-            //c2_callFunction("Controls > Buffer", ["Jump"]);
+            // console.log(String.fromCharCode(event.keyCode));
+            // console.log(cr.plugins_.Keyboard.prototype.cnds.OnKey() || cr.plugins_.Keyboard.prototype.cnds.OnKeyCode());
+            // console.log(cr.plugins_.Keyboard.prototype.exps.StringFromKeyCode())
+            // c2_callFunction("Controls > Buffer", ["Jump"]);
             if (this.movementKeys.includes(event.keyCode) && speedy_boi !== 1) {
-                
-                // //console.log(event.key);
-                //console.log("key down")
                 this.boolKeys[this.movementKeys.indexOf(event.keyCode)] = true
-                
             }
 
-            // if(event.keyCode === 82 && event.target.id === "bg-color-input") {  
-            //     //event.target.focus()
-            //     event.preventDefault();
-            //     //return false;
-            //     console.log("hi")
-            // }
+            if(event.keyCode === 9 && event.keyCode !== 16) { //tab, no shift
+                if(document.getElementById("menu-bg") === null) { //menu doesnt exist
+                    //create mod menu via tab
+                    map = disableClick();
+                    createModLoaderMenu(); 
+                } else { //menu exists
+                    //remove mod menu via tab                
+                    menuBg.remove();
+                    enableClick(map);
+
+                    if(playerXSpeedInput.value !== 1) {
+                        speedy_boi = parseInt((playerXSpeedInput.value))
+                        console.log(speedy_boi)
+                    }
+                }
+                 
+            }
         },
       
         keyUp(event) {
             if (this.movementKeys.includes(event.keyCode)) {
-                
                 this.boolKeys[this.movementKeys.indexOf(event.keyCode)] = false
-
             }
+            
         },
 
         

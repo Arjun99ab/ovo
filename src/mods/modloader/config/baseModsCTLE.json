@@ -61,7 +61,7 @@
     },
     "community": {
         "name": "Community Levels",
-        "desc": "Play custom levels made by the community!<br/><br/> <b>STILL IN DEVELOPMENT<b>",
+        "desc": "Play custom levels made by the community!<br/><br/> 'Shift + l' to open the level menu",
         "enabled": false,
         "url": "../src/mods/modloader/community.js"
     }

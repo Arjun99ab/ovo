@@ -361,7 +361,6 @@
         xButton.onclick = function() {
             b.remove();
             enableClick(map);
-            enableScroll(map2);
         }
 
 
@@ -419,6 +418,9 @@
             e.stopPropagation();
             if(e.keyCode === 13) {
                 searchBtn.click();
+            }
+            if(e.keyCode === 27) {
+                searchInput.blur();
             }
         };
 
@@ -539,51 +541,22 @@
             
             
 
-            
-            
-                
-
-
             document.addEventListener("keydown", (event) => {this.keyDown(event)});
 
             notify("Community Levels Loaded", "by Awesomeguy")
-            runtime.tickMe(this);
 
         },
         keyDown(event) {
-            
-            // if (event.code === "KeyH") {
-            //     fetch('../src/communitylevels/3D_OvO_1.json')
-            //     .then((response) => response.json())
-            //     .then((data) => {
-            //         ovoLevelEditor.startLevel(data);
-            //     });
-            // }
-
-            if (event.code === "KeyG" && document.getElementById("community-menu") === null) {
-                map = disableClick();
-                map2 = disableScroll();
-                createCommunityMenu()
+          if (event.shiftKey && event.code === "KeyL" ) {
+            if (document.getElementById("community-menu") === null) { //if menu doesn't exist
+              map = disableClick();
+              createCommunityMenu()
+            } else { //if menu exists
+              document.getElementById("community-menu").remove();
+              enableClick(map);
             }
-            
-            
-            
+          }  
         },
-
-        
-        
-        tick() {
-            let playerInstances = runtime.types_by_index.filter((x) =>!!x.animations &&x.animations[0].frames[0].texture_file.includes("collider"))[0].instances.filter((x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled);
-            let player = playerInstances[0];
-            
-
-            try {
-                //console.log(player.behavior_insts[0].leftkey)
-               
-
-                
-            } catch (err) {}
-        }
     };
   
     communityLevelsMod.init();
