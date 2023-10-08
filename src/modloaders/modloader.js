@@ -1,10 +1,12 @@
 (function() {
-    // MYLIBRARY.init(["somevalue", 1, "controlId"]);
-    // MYLIBRARY.helloWorld();
     console.log(VERSION.version());
 
-    let version = '1.4.4'
-
+    let version = VERSION.version() //1.4, 1.4.4, or CTLE
+    if(version === "1.4") {
+        timers = [500, 5000]
+    } else { //1.4.4 or CTLE
+        timers = [100, 2000]
+    }
     var runtime;
 
     function sleep (time) {
@@ -13,10 +15,27 @@
 
     let onFinishLoad = () => {
         if ((cr_getC2Runtime() || {isloading: true}).isloading) {
-            setTimeout(onFinishLoad, 100);
+            setTimeout(onFinishLoad, timers[0]);
         } else {
-            runtime = cr_getC2Runtime();
-            sleep(2000).then(() => {
+            if(version === "1.4") {
+                var Retron2000 = new FontFace('Retron2000', 'url(./retron2000.ttf)');
+                Retron2000.load().then(function(loaded_face) {
+                    document.fonts.add(loaded_face);
+                    document.body.style.fontFamily = '"Retron2000", Arial';
+                console.log("123123")
+                }).catch(function(error) {
+                    console.log(error)
+                });
+                runtime = cr_getC2Runtime();
+
+                let old = globalThis.sdk_runtime;
+                c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
+                //runtime = globalThis.sdk_runtime;
+                globalThis.sdk_runtime = old;
+            } else { //1.4.4 or CTLE
+                runtime = cr_getC2Runtime();
+            }
+            sleep(timers[1]).then(() => {
                 cleanModLoader.init();
             });
         }
@@ -1316,7 +1335,7 @@
             fetch('../src/mods/modloader/config/baseMods' + version + '.json')
                 .then((response) => response.json())
                 .then(jsondata => {
-                    console.log(jsondata)
+                    console.log(jsondata) //version base mods by me
                     for (const [key] of Object.entries(jsondata)) { //current global mods
                         if(!key.startsWith("customMod")) {
                             baseModsNames.push(key);
@@ -1333,7 +1352,18 @@
                     diffMods.forEach(function (item) {
                         if(currentModsNames.includes(item)) {
                             delete modSettings[item];
+                            var index = currentModsNames.indexOf(item);
+                            if (index !== -1) {
+                                currentModsNames.splice(index, 1);
+                            }
                             console.log(item)
+                        } 
+                        if(modsEnabled.includes(item)) {
+                            var index = modsEnabled.indexOf(item);
+                            if (index !== -1) {
+                                modsEnabled.splice(index, 1);
+                            }
+                            delete modSettings[item];
                         }
                     });
 
@@ -1360,10 +1390,12 @@
                 });
             
             modSettings = JSON.parse(localStorage.getItem('modSettings'));
+            console.log(modSettings)
             
             for (const [key] of Object.entries(modSettings)) { // loading the mods in (create js), if the mod is said "enabled"
                 console.log("hasdousd")
                 if(modSettings[key]["enabled"]) {
+                    console.log(key)
                     js = document.createElement("script");
                     js.type = "application/javascript";
                     if(key.startsWith("customMod")) {
@@ -1376,9 +1408,6 @@
                     
                 }
             }
-                
-            
-            //console.log(data)
             
             
 
@@ -1498,5 +1527,5 @@
         }
     };
   
-    setTimeout(onFinishLoad, 100);
+    setTimeout(onFinishLoad, timers[0]);
 })();

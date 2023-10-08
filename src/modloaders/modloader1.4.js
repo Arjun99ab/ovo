@@ -1254,7 +1254,6 @@
             baseModsNames = []
 
             //  data1 = null
-
             fetch('../src/mods/modloader/config/baseMods' + version + '.json')
                 .then((response) => response.json())
                 .then(jsondata => {
@@ -1276,7 +1275,6 @@
                         if(currentModsNames.includes(item)) {
                             delete modSettings[item];
                             currentModsNames.splice(currentModsNames.indexOf(item), 1);
-
                             console.log(item)
                         }
                     });

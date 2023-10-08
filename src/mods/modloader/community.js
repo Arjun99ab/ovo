@@ -168,7 +168,7 @@
         var levelJsons = [];
         
         for(var i = 0; i < levelData.length; i++) {
-            if(levelData[i]["levelname"].toLowerCase().startsWith(query) || levelData[i]["username"].toLowerCase().startsWith(query)) {
+            if(levelData[i]["levelname"].replace(/_/g, " ").toLowerCase().startsWith(query) || levelData[i]["username"].toLowerCase().startsWith(query)) {
                 levelJsons.push(levelData[i]);
             }
         }
@@ -417,6 +417,9 @@
             console.log("pleasev2");
             e.stopImmediatePropagation()
             e.stopPropagation();
+            if(e.keyCode === 13) {
+                searchBtn.click();
+            }
         };
 
 

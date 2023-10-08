@@ -132,6 +132,15 @@
             };
               
         </script>
-        <script src="../src/modloaders/modloader1.4.4.js" id="modloader" defer></script>
+        <script type="text/javascript">
+            var VERSION = VERSION || (function(){
+                return {
+                    version : function() {
+                        return "1.4.4"
+                    }
+                };
+            }());
+        </script>
+        <script src="../src/modloaders/modloader.js" id="modloader" defer></script>
     </body>
 </html>
