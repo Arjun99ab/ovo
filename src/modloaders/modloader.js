@@ -1255,9 +1255,7 @@
 
 
     let cleanModLoader = {
-        init() {
-            console.log("new folder")
-
+        async init() {
             function addStyle(styleString) {
                 const style = document.createElement('style');
                 style.textContent = styleString;
@@ -1291,107 +1289,64 @@
 
             //localStorage.removeItem('modSettings');
 
-            if(localStorage.getItem('modSettings') === null) {
+            if(localStorage.getItem('modSettings') === null) { //first time user, create default settings
                 localStorage.setItem('modSettings', JSON.stringify(modPreSettings));
             }
 
-            modSettings = JSON.parse(localStorage.getItem('modSettings'));
-
-            currentModsNames = []
-
-            modsEnabled = []
-
-
-            for (const [key] of Object.entries(modSettings)) { // loading the mods in (create js), if the mod is said "enabled"
-                console.log(key)
-                if(!key.startsWith("customMod")) {
-                    currentModsNames.push(key)
-                } else {
-                    if(parseInt(key.substring(9)) > customModNum) {
-                        customModNum = parseInt(key.substring(9)) + 1;
-                        console.log(customModNum)
-                    }
-                }
-                if(modSettings[key]["enabled"]) {
-                    // js = document.createElement("script");
-                    // js.type = "application/javascript";
-                    // if(key.startsWith("customMod")) {
-                    //     js.text = modSettings[key]["url"];
-                    // } else {
-                    //     js.src = modSettings[key]["url"];
-                    // }
-                    // js.id = key;
-                    // document.head.appendChild(js);
-                    modsEnabled.push(key)
-                }
-            }
-
-            console.log(modsEnabled)
+            modSettings = JSON.parse(localStorage.getItem('modSettings')); //get USER settings
+            console.log("modSettings real")
+            console.log(modSettings) //USER SETTINGS
 
             baseModsNames = []
+            baseModsNames = await fetch('../src/mods/modloader/config/baseMods' + version + '.json')
+            .then((response) => response.json())
+            .then(jsondata => {
+                return jsondata;
+            });
+            console.log("baseMods")            
+            console.log(baseModsNames) //VERSION SETTINGS
 
-            //  data1 = null
-            console.log(version)
-            fetch('../src/mods/modloader/config/baseMods' + version + '.json')
-                .then((response) => response.json())
-                .then(jsondata => {
-                    console.log(jsondata) //version base mods by me
-                    for (const [key] of Object.entries(jsondata)) { //current global mods
-                        if(!key.startsWith("customMod")) {
-                            baseModsNames.push(key);
-                        }
-                    }
-                    console.log(baseModsNames)
-                    console.log(currentModsNames)
-                    diffMods = baseModsNames
-                    .filter(x => !currentModsNames.includes(x))
-                    .concat(currentModsNames.filter(x => !baseModsNames.includes(x)));
+            //remove custom mods
+            customMods = {}
+            for (const [key] of Object.entries(modSettings)) {
+                if(key.startsWith("customMod")) {
+                    customMods[key] = modSettings[key];
+                    delete modSettings[key];
+                }
+            }
+            console.log("customMods")
+            console.log(customMods)
 
-                    console.log(diffMods)
-
-                    diffMods.forEach(function (item) {
-                        if(currentModsNames.includes(item)) {
-                            delete modSettings[item];
-                            var index = currentModsNames.indexOf(item);
-                            if (index !== -1) {
-                                currentModsNames.splice(index, 1);
-                            }
-                            console.log(item)
-                        } 
-                        if(modsEnabled.includes(item)) {
-                            var index = modsEnabled.indexOf(item);
-                            if (index !== -1) {
-                                modsEnabled.splice(index, 1);
-                            }
-                            delete modSettings[item];
-                        }
-                    });
-
-                    console.log(baseModsNames)
-                    console.log(modSettings)
-
-                    baseModsNames.forEach(function (item) {
-                        modSettings[item] = jsondata[item]
-                    });
-
-                    console.log(modSettings)
-
-                    console.log(currentModsNames)
-
-
-                    currentModsNames.forEach(function (item) {
-                        if(modsEnabled.includes(item)) {
-                            modSettings[item]["enabled"] = true;  //TODO, PUT ANOTHER LOOP TO CREATE ALL OF THE SCRIPT ELEMENTS
-                        }
-                    });
-
-                    localStorage.setItem('modSettings', JSON.stringify(modSettings));
-
-                });
-            
-            modSettings = JSON.parse(localStorage.getItem('modSettings'));
+            console.log("modSettings after removing custom mods")
             console.log(modSettings)
-            
+            console.log(Object.keys(modSettings).length + " " + Object.keys(baseModsNames).length)
+
+            diffMods = Object.keys(baseModsNames)
+            .filter(x => !Object.keys(modSettings).includes(x))
+            .concat(Object.keys(modSettings).filter(x => !Object.keys(baseModsNames).includes(x)));
+            console.log("difference in mods")
+            console.log(diffMods)
+            diffMods.forEach(function (modName) {
+                if(Object.keys(modSettings).includes(modName)) {
+                    delete modSettings[modName];
+                }
+                else if(Object.keys(baseModsNames).includes(modName)) {
+                    modSettings[modName] = baseModsNames[modName];
+                }
+            });
+            console.log("modSettings after adding/removing mods")
+            console.log(modSettings)
+            Object.keys(customMods).forEach(function (modName) {
+                modSettings[modName] = customMods[modName];
+                if(parseInt(modName.substring(9)) > customModNum) {
+                    customModNum = parseInt(modName.substring(9)) + 1;
+                    console.log(customModNum)
+                }
+            });
+            console.log("modSettings after adding custom mods")
+            console.log(modSettings)
+            localStorage.setItem('modSettings', JSON.stringify(modSettings)); //set current mods, so it shows up correctly in menu
+
             for (const [key] of Object.entries(modSettings)) { // loading the mods in (create js), if the mod is said "enabled"
                 console.log("hasdousd")
                 if(modSettings[key]["enabled"]) {
@@ -1408,10 +1363,116 @@
                     
                 }
             }
-            
-            
 
 
+            // for (const [key] of Object.entries(modSettings)) { // loading the mods in (create js), if the mod is said "enabled"
+            //     console.log(key)
+            //     if(!key.startsWith("customMod")) {
+            //         currentModsNames.push(key)
+            //     } else {
+            //         if(parseInt(key.substring(9)) > customModNum) {
+            //             customModNum = parseInt(key.substring(9)) + 1;
+            //             console.log(customModNum)
+            //         }
+            //     }
+            //     if(modSettings[key]["enabled"]) {
+            //         // js = document.createElement("script");
+            //         // js.type = "application/javascript";
+            //         // if(key.startsWith("customMod")) {
+            //         //     js.text = modSettings[key]["url"];
+            //         // } else {
+            //         //     js.src = modSettings[key]["url"];
+            //         // }
+            //         // js.id = key;
+            //         // document.head.appendChild(js);
+            //         modsEnabled.push(key)
+            //     }
+            // }
+
+            // console.log(modsEnabled)
+
+            // baseModsNames = []
+
+            // //  data1 = null
+            // console.log(version)
+            // fetch('../src/mods/modloader/config/baseMods' + version + '.json')
+            //     .then((response) => response.json())
+            //     .then(jsondata => {
+            //         console.log(jsondata) //version base mods by me
+            //         for (const [key] of Object.entries(jsondata)) { //current global mods
+            //             if(!key.startsWith("customMod")) {
+            //                 baseModsNames.push(key);
+            //             }
+            //         }
+            //         console.log(baseModsNames)
+            //         console.log(currentModsNames)
+            //         diffMods = baseModsNames
+            //         .filter(x => !currentModsNames.includes(x))
+            //         .concat(currentModsNames.filter(x => !baseModsNames.includes(x)));
+
+            //         console.log(diffMods)
+
+            //         diffMods.forEach(function (item) {
+            //             if(currentModsNames.includes(item)) {
+            //                 delete modSettings[item];
+            //                 var index = currentModsNames.indexOf(item);
+            //                 if (index !== -1) {
+            //                     currentModsNames.splice(index, 1);
+            //                 }
+            //                 console.log(item)
+            //             } 
+            //             if(modsEnabled.includes(item)) {
+            //                 var index = modsEnabled.indexOf(item);
+            //                 if (index !== -1) {
+            //                     modsEnabled.splice(index, 1);
+            //                 }
+            //                 delete modSettings[item];
+            //             }
+            //         });
+
+            //         console.log(baseModsNames)
+            //         console.log(modSettings)
+
+            //         baseModsNames.forEach(function (item) {
+            //             modSettings[item] = jsondata[item]
+            //         });
+
+            //         console.log(modSettings)
+
+            //         console.log(currentModsNames)
+
+
+            //         currentModsNames.forEach(function (item) {
+            //             if(modsEnabled.includes(item)) {
+            //                 modSettings[item]["enabled"] = true;  //TODO, PUT ANOTHER LOOP TO CREATE ALL OF THE SCRIPT ELEMENTS
+            //             }
+            //         });
+
+            //         localStorage.setItem('modSettings', JSON.stringify(modSettings));
+
+            //     });
+            
+            // modSettings = JSON.parse(localStorage.getItem('modSettings'));
+            // console.log(modSettings)
+            
+            // for (const [key] of Object.entries(modSettings)) { // loading the mods in (create js), if the mod is said "enabled"
+            //     console.log("hasdousd")
+            //     if(modSettings[key]["enabled"]) {
+            //         console.log(key)
+            //         js = document.createElement("script");
+            //         js.type = "application/javascript";
+            //         if(key.startsWith("customMod")) {
+            //             js.text = modSettings[key]["url"];
+            //         } else {
+            //             js.src = modSettings[key]["url"];
+            //         }
+            //         js.id = key;
+            //         document.head.appendChild(js);
+                    
+            //     }
+            // }
+            
+            
             createModLoaderMenuBtn();
 
             document.addEventListener("keydown", (event) => {
