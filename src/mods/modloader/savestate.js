@@ -165,7 +165,7 @@
   let curState = null;
   let curLayout = null;
   let saveState = () => {
-    ("Saved player state", "State Saved");
+    notify("Saved player state", "State Saved");
     let state = runtime.saveInstanceToJSON(getPlayer(), true);
     return state;
   };

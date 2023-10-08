@@ -1,67 +1,7 @@
 {
-    "flymod": {
-        "name": "Fly Mod",
-        "desc": "Use 'shift' + your controls to fly around!",
-        "enabled": false,
-        "url": "../src/mods/modloader/flymod.js"
-      },
-      "chaos": {
-        "name": "Chaos Mod",
-        "desc": "Pure chaos. Use at your own risk.",
-        "enabled": false,
-        "url": "../src/mods/modloader/chaos.js"
-    },
-    "gui": {
-        "name": "Gui Mod",
-        "desc": "By Awesomeguy <br/><br/>Customize your HUD! Move around elements, right click to edit them, pause the game to enable/disable and add custom text nodes!<br/><br/>PRESS THE GREEN CHECKMARKS TO SAVE SETTING",
-        "enabled": false,
-        "url": "../src/mods/modloader/gui.js"
-    },
-    "hurricane": {
-        "name": "Hurricane Mod",
-        "desc": "Creates random wind for you to suffer in.",
-        "enabled": false,
-        "url": "../src/mods/modloader/hurricane.js"
-    }, 
-    "levelselector": {
-        "name": "Level Selector Mod",
-        "desc": "Pick from all the levels and more!",
-        "enabled": false,
-        "url": "../src/mods/modloader/levelselector.js"
-    },    
-    "multiplayer": {
-        "name": "Multiplayer Mod",
-        "desc": "Play or speedrun against your friends!",
-        "enabled": false,
-        "url": "../src/mods/modloader/multiplayerREALSKY.js"
-    }, 
-    "randomlevel": {
-        "name": "Random Level Mod",
-        "desc": "Use 'shift + y' to be taken to a random level.",
-        "enabled": false,
-        "url": "../src/mods/modloader/randomlevel.js"
-    }, 
-    "savestate": {
-        "name": "Save State Mod",
-        "desc": "'Shift + s': Create Checkpoint <br/>'Shift + r': Return to Original Spawn<br/>'Shift + n': Bypass to next level<br/>'Shift + b': Bypass to previous level<br/>'Shift + m': Move to end flag<br/>'Shift + c': Move to coin",
-        "enabled": false,
-        "url": "../src/mods/modloader/savestate.js"
-    },
-    "modapi": {
-        "name": "Mod API",
-        "desc": "Open in devtools to use manipulate game mechanics.",
-        "enabled": false,
-        "url": "../src/mods/modloader/modapi.js"
-    }, 
-    "darkmode": {
-        "name": "Dark Mode",
-        "desc": "Ease your eyes with a dark theme.",
-        "enabled": false,
-        "url": "../src/mods/modloader/darkmode.js"
-    },
     "community": {
         "name": "Community Levels",
-        "desc": "By Awesomeguy <br/><br/>Play custom levels made by the community!<br/><br/> 'Shift + l' to open the level menu",
+        "desc": "By Awesomeguy<br/><br/>Play custom levels made by the community!<br/><br/> 'Shift + l' to open the level menu",
         "enabled": true,
         "url": "../src/mods/modloader/community.js"
     }

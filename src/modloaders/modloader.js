@@ -51,20 +51,10 @@
 
     var guiEnabledElements = []
     
-    var modPreSettings = {
-                       
-    }
 
-    fetch('../src/mods/modloader/config/baseMods' + version + '.json')
-        .then((response) => response.json())
-        .then(jsondata => {
-            console.log(jsondata)
-            for (const [key] of Object.entries(jsondata)) {
-                modPreSettings[key] = jsondata[key]
-            }
-        });
     
-    console.log(modPreSettings)
+    
+    
 
 
 
@@ -574,6 +564,7 @@
             width: "35%",
             height: "65%",
             overflowY: "auto",
+            overflowX: "hidden",
         };
         Object.keys(c).forEach(function (a) {
             menuBg.style[a] = c[a];
@@ -785,19 +776,19 @@
 
 
         generalInfo = document.createElement("div")
-        styleMenuText(generalInfo, "15%", "123");
-        generalInfo.style.position = "absolute"
+        styleMenuText(generalInfo, "3%", "123");
+        generalInfo.style.position = "relative"
         generalInfo.style.color = 'black';
-        generalInfo.style.left = '2px';
+        generalInfo.style.left = '0%';
         generalInfo.style.fontSize = "10pt" 
-        generalInfo.innerHTML = "Hey! This is where you can enable/disable mods. Chaos and any other custom mod requires a reload to disable. <br/>Below are multiple settings you can adjust to modify your gameplay. Press the top right 'x' to save. <br/>Contact me at Awesomeguy#4997, and have fun!"
+        generalInfo.innerHTML = "By Awesomeguy<br/><br/>Use 'tab' to quickly open!<br/><br/><b><u>About</u></b><br/>A one of a kind UI based modloader<br/>Enable mods via the sidebar<br/>Add custom mods with the button below<br/>Chaos, MP, & custom mods reload page on disable<br/>Contact me at '.awesomeguy.' on Discord with any bugs<br/>If you can, a star would be appreciated on <a href='https://github.com/Arjun99ab/ovo' target='_blank'>GitHub<a><br/>Have fun!"
         generalInfo.style.textAlign = "center";
 
         
         playerXSpeedText = document.createElement("div");
         
-        styleMenuText(playerXSpeedText, "42%", "X Speed: ")
-        playerXSpeedText.style.position = "absolute";
+        styleMenuText(playerXSpeedText, "6%", "X Speed: ")
+        playerXSpeedText.style.position = "relative";
         playerXSpeedText.style.left = "2px"
 
         playerXSpeedInput = document.createElement("input");
@@ -806,14 +797,14 @@
             border: "solid",
             borderColor: "black",
             borderWidth: "2px",
-            position: "absolute",
+            position: "relative",
             fontFamily: "Retron2000",
             color: "black",
             fontSize: "10pt",
             cursor: "text",
             width: "40px",
-            top: "42%",
-            left: "23%",
+            top: "2%",
+            left: "20%",
         };
         Object.keys(c).forEach(function (a) {
             playerXSpeedInput.style[a] = c[a];
@@ -959,6 +950,7 @@
             li.style.borderLeftStyle = "none";
             li.style.cursor = "pointer"
             li.id = key + "List";
+            console.log(li.id);
             // li.style.listStylePosition = "inside"; 
             li.innerText = modSettings[key]["name"];
             modsList.appendChild(li);
@@ -999,9 +991,9 @@
                         editCustomMod(key, modSettings[key]["name"], modSettings[key]["url"], modSettings[key]["desc"]);
                     }
 
-                    deleteModButton.onclick = function() {
-
+                    deleteModButton.onclick = function() { //only appears for custom mods
                         modSettings = JSON.parse(localStorage.getItem('modSettings'));
+                        let modIndex = Object.keys(modSettings).indexOf(key);
                         if(modSettings[key]["enabled"]) {
                             delete modSettings[key];
                             localStorage.setItem('modSettings', JSON.stringify(modSettings));
@@ -1012,7 +1004,8 @@
                         }
                         menuBg.remove();
                         enableClick(map);
-                        
+                        document.getElementById("menu-button").click();
+                        document.getElementById(Object.keys(modSettings)[modIndex-1] + "List").click();
                         
                     }
                 } 
@@ -1024,7 +1017,7 @@
                 
                 descText = document.createElement("div");
                 descText.id = "desc-text";
-                styleMenuText(descText, "10%", modSettings[key]["desc"])
+                styleMenuText(descText, "4%", modSettings[key]["desc"])
                 descText.innerHTML = modSettings[key]["desc"];
                 //descText.style.position = "relative";
                 descText.style.textAlign = "center";
@@ -1132,7 +1125,7 @@
                         
 
 
-                        if(key.startsWith("customMod") || key === "chaos") {
+                        if(key.startsWith("customMod") || key === "chaos" || key === "multiplayer") {
                             console.log(document.getElementById(key))
                             window[document.getElementById(key)] = undefined;
 
@@ -1158,19 +1151,21 @@
 
                             else if(key === "levelselector") {
                                 document.getElementById("ovo-dummy-div").click();
-                            }
-                            else if(key === "multiplayer") {
-                                document.getElementById("ovo-multiplayer-container").style.display = "none";
-                                document.getElementById("ovo-multiplayer-toggle-button").style.display = "none";
-                                console.log(runtime.running_layout.name)
-                                if(runtime.running_layout.name == "Main Menu") {
-                                    runtime.changelayout = runtime.layouts["Main Menu"];
-                                }
-                                menuBg.remove();
-                                console.log("sduiygfguasyidgfdas???")
-                                enableClick(map);
-                                enableClick(map2);
-                                // map = disableClick();
+                            // }
+                            // else if(key === "multiplayer") {
+                            //     document.getElementById("ovo-multiplayer-container").style.display = "none";
+                            //     document.getElementById("ovo-multiplayer-toggle-button").style.display = "none";
+                            //     console.log(runtime.running_layout.name)
+                            //     if(runtime.running_layout.name == "Main Menu") {
+                            //         runtime.changelayout = runtime.layouts["Main Menu"];
+                            //     }
+                            //     menuBg.remove();
+                            //     console.log("sduiygfguasyidgfdas???")
+                            //     // enableClick(map);
+                            //     document.getElementById("menu-button").click();
+                            //     document.getElementById("multiplayerList").click();
+                            //     // enableClick(map2);
+                            //     // map = disableClick();
                             } else if(key === "darkmode") {
                                 document.getElementById("darkmode-div").style.display = "none";
                             }
@@ -1287,25 +1282,43 @@
             
             `);
 
+            
+            baseModsNames = []
+            baseModsNames = await fetch('../src/mods/modloader/config/baseMods.json')
+            .then((response) => response.json())
+            .then(jsondata => {
+                return jsondata;
+            });
+            if(version === "1.4.4" || version === "CTLE") {
+                extra = await fetch('../src/mods/modloader/config/baseMods1.4.4.json')
+                .then((response) => response.json())
+                .then(jsondata => {
+                    return jsondata;
+                });
+                if(version === "CTLE") {
+                    extra = Object.assign({}, extra, await fetch('../src/mods/modloader/config/baseModsCTLE.json')
+                    .then((response) => response.json())
+                    .then(jsondata => {
+                        return jsondata;
+                    }));
+                }
+                baseModsNames = Object.assign({}, baseModsNames, extra)
+            }
+            
+            console.log("baseMods")            
+            console.log(baseModsNames) //VERSION SETTINGS
 
-            //localStorage.removeItem('modSettings');
+            //localStorage.removeItem('modSettings'); //reset settings
 
             if(localStorage.getItem('modSettings') === null) { //first time user, create default settings
-                localStorage.setItem('modSettings', JSON.stringify(modPreSettings));
+                localStorage.setItem('modSettings', JSON.stringify(baseModsNames));
             }
 
             modSettings = JSON.parse(localStorage.getItem('modSettings')); //get USER settings
             console.log("modSettings real")
             console.log(modSettings) //USER SETTINGS
 
-            baseModsNames = []
-            baseModsNames = await fetch('../src/mods/modloader/config/baseMods' + version + '.json')
-            .then((response) => response.json())
-            .then(jsondata => {
-                return jsondata;
-            });
-            console.log("baseMods")            
-            console.log(baseModsNames) //VERSION SETTINGS
+            
 
             //remove custom mods
             customMods = {}
@@ -1480,6 +1493,7 @@
             
             
             createModLoaderMenuBtn();
+            
 
             document.addEventListener("keydown", (event) => {
                 this.keyDown(event)
