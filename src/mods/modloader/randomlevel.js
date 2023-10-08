@@ -30,7 +30,7 @@
 
             this.interval = null;
             globalThis.ovoRandomLevel = this;
-            notify("Mod loaded", "Random Level mod loaded");
+            notify("Random Level Mod loaded", "Shift + Y", "./tutorials.png");
         },
 
         loadRandomLevel() {

@@ -62,14 +62,17 @@
             let behavior = inst.behavior_insts.find(
               (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
             );
+            console.log(behavior)
             map.push({
               inst,
               oldState: behavior.scroll.isEnabled,
             });
             behavior.scroll.isEnabled = 0;
+            behavior.movement = 0;
           });
         });
         let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
+        console.log(layer)
         if (layer) {
           layer.instances.forEach((inst) => {
             //save state to mapUI
@@ -81,29 +84,24 @@
               },
             });
             // set size to 0
+            console.log(inst)
             inst.width = 0;
             inst.height = 0;
             inst.set_bbox_changed();
           });
         }
+        types.forEach((type) => {
+          type.instances.forEach((inst) => {
+            let behavior = inst.behavior_insts.find(
+              (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
+            );
+            console.log(behavior)
+          });
+        });
         return {
           map,
           mapUI,
         };
-      };
-
-      let enableScroll = ({ map, mapUI }) => {
-        map.forEach((x) => {
-          let inst = x.inst.behavior_insts.find(
-            (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
-          );
-          inst.isEnabled = inst.isEnabled ? 1 : x.oldState;
-        });
-        mapUI.forEach((x) => {
-          x.inst.width = x.oldState.width;
-          x.inst.height = x.oldState.height;
-          x.inst.set_bbox_changed();
-        });
       };
 
     let disableClick = () => {
@@ -115,6 +113,7 @@
           )
         );
         types.forEach((type) => {
+          console.log(type);
           type.instances.forEach((inst) => {
             let behavior = inst.behavior_insts.find(
               (x) => x.behavior instanceof cr.behaviors.aekiro_button
@@ -127,6 +126,7 @@
           });
         });
         let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
+        console.log(layer)
         if (layer) {
           layer.instances.forEach((inst) => {
             //save state to mapUI
@@ -143,6 +143,14 @@
             inst.set_bbox_changed();
           });
         }
+        types.forEach((type) => {
+          type.instances.forEach((inst) => {
+            let behavior = inst.behavior_insts.find(
+              (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
+            );
+            console.log(behavior)
+          });
+        });
         return {
           map,
           mapUI,
@@ -177,141 +185,156 @@
 
     }
 
-    function getDatabase(numEntries = 3) { 
+    function getDatabase(numEntries = 4) { 
       return levelData.slice(0, numEntries);
     }
 
     let renderListLevels = (levelsQueried) => {
-        var levelsList = document.createElement('div');
-        levelsList.id = 'levels-list';
+      var levelsList = document.createElement('div');
+      levelsList.addEventListener('wheel', (e) => {
+        console.log("hello)")
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        e.preventDefault();
+        levelsList.focus();
+      });
+      
+      // levelsList.style.zIndex = "2147483646";
+      levelsList.id = 'levels-list';
+      // levelsList.focus();
 
-        levelsList.style.display = 'flex';
-        levelsList.style.flexWrap = 'wrap';
-        levelsList.style.position = 'absolute';
-        levelsList.style.top = '25%';
-        levelsList.style.left = '0px';
-        levelsList.style.width = '100%';
-        levelsList.style.height = '75%';
-        // levelsList.style.border = '1px solid black';
-        levelsList.style.overflowY = 'auto';
-        levelsList.style.overflowX = 'hidden';
+      levelsList.style.display = 'flex';
+      levelsList.style.flexWrap = 'wrap';
+      levelsList.style.position = 'absolute';
+      levelsList.style.top = '25%';
+      levelsList.style.left = '0px';
+      levelsList.style.width = '100%';
+      levelsList.style.height = '75%';
+      // levelsList.style.border = '1px solid black';
+      levelsList.style.overflowY = 'scroll';
+      levelsList.style.overflowX = 'hidden';
+      // levelsList.onscroll = function() {
+      //     console.log("scrolling");
+      //     levelsList.focus();
+      // }
 
-        console.log(levelsQueried)
-        levelsQueried.forEach((level) => {
-            // console.log(level["levelname"])
-            var levelBox = document.createElement('div');
-            levelBox.style.width = '100%';
-            levelBox.style.height = '100px';
-            levelBox.style.borderTop = '2px solid black';
-            levelBox.style.position = "relative";
-            levelBox.style.overflowY = "auto";
-            levelBox.style.overflowX = "hidden";
-
-            levelTitleText = document.createElement("div");
-            c = {
-                backgroundColor: "white",
-                border: "none",
-                fontFamily: "Retron2000",
-                position: "relative",
-                top: "2%",
-                left: "2%",
-                //padding: "5px",
-                color: "black",
-                fontSize: "15pt",
-                cursor: "default",
-            };
-            Object.keys(c).forEach(function (a) {
-                levelTitleText.style[a] = c[a];
-            });
-            
-            newContent = document.createTextNode(level["levelname"].replace(/_/g, " ").slice(0, -5));
-            levelTitleText.appendChild(newContent);
-            levelBox.appendChild(levelTitleText);
-            
-            levelAuthorText = document.createElement("div");
-            c = {
-                backgroundColor: "white",
-                border: "none",
-                fontFamily: "Retron2000",
-                position: "relative",
-                top: "10%",
-                left: "2%",
-                //padding: "5px",
-                color: "black",
-                fontSize: "10pt",
-                cursor: "default",
-            };
-            Object.keys(c).forEach(function (a) {
-                levelAuthorText.style[a] = c[a];
-            });
-
-            newContent = document.createTextNode("by " + level["username"]);
-            levelAuthorText.appendChild(newContent);
-
-            levelBox.appendChild(levelAuthorText);
+      // console.log(levelsQueried)
+      levelsQueried.forEach((level) => {
+          // console.log(level["levelname"])
+          var levelBox = document.createElement('div');
+          levelBox.style.width = '100%';
+          levelBox.style.height = '100px';
+          levelBox.style.borderTop = '2px solid black';
+          levelBox.style.position = "relative";
+          levelBox.style.overflowY = "auto";
+          levelBox.style.overflowX = "hidden";
 
 
+          levelTitleText = document.createElement("div");
+          c = {
+              backgroundColor: "white",
+              border: "none",
+              fontFamily: "Retron2000",
+              position: "relative",
+              top: "2%",
+              left: "2%",
+              //padding: "5px",
+              color: "black",
+              fontSize: "15pt",
+              cursor: "default",
+          };
+          Object.keys(c).forEach(function (a) {
+              levelTitleText.style[a] = c[a];
+          });
+          
+          newContent = document.createTextNode(level["levelname"].replace(/_/g, " ").slice(0, -5));
+          levelTitleText.appendChild(newContent);
+          levelBox.appendChild(levelTitleText);
+          
+          levelAuthorText = document.createElement("div");
+          c = {
+              backgroundColor: "white",
+              border: "none",
+              fontFamily: "Retron2000",
+              position: "relative",
+              top: "10%",
+              left: "2%",
+              //padding: "5px",
+              color: "black",
+              fontSize: "10pt",
+              cursor: "default",
+          };
+          Object.keys(c).forEach(function (a) {
+              levelAuthorText.style[a] = c[a];
+          });
 
-            levelDescText = document.createElement("div");
-            c = {
-                backgroundColor: "white",
-                border: "none",
-                fontFamily: "Retron2000",
-                position: "relative",
-                top: "15%",
-                left: "2%",
-                //padding: "5px",
-                color: "black",
-                fontSize: "10pt",
-                cursor: "default",
-                width: "80%",
+          newContent = document.createTextNode("by " + level["username"]);
+          levelAuthorText.appendChild(newContent);
 
-            };
-            Object.keys(c).forEach(function (a) {
-              levelDescText.style[a] = c[a];
-            });
-
-            newContent = document.createTextNode(level["content"]);
-            levelDescText.appendChild(newContent);
-
-            levelBox.appendChild(levelDescText);
+          levelBox.appendChild(levelAuthorText);
 
 
-            levelPlayBtn = document.createElement("button");
-            c = {
-                backgroundColor: "#9268e3",
-                borderRadius: "25px",
-                border: "#9268e3",
-                padding: "10px",
-                position: "absolute",
-                fontFamily: "Retron2000",
-                color: "white",
-                fontSize: "10pt",
-                cursor: "pointer",
-                top: "30%",
-                right: "5%",
 
-            };
-            Object.keys(c).forEach(function (a) {
-                levelPlayBtn.style[a] = c[a];
-            });
-            
-            levelPlayBtn.innerHTML = "Play";
-            levelPlayBtn.onclick = async function() {
-                var levelJson = await fetch("../src/communitylevels/" + level["levelname"])
-                  .then((response) => response.json())
-                  .then((data) => {
-                      return data;
-                  });
-                ovoLevelEditor.startLevel(levelJson);
-                xButton.click()
-            };
+          levelDescText = document.createElement("div");
+          c = {
+              backgroundColor: "white",
+              border: "none",
+              fontFamily: "Retron2000",
+              position: "relative",
+              top: "15%",
+              left: "2%",
+              //padding: "5px",
+              color: "black",
+              fontSize: "10pt",
+              cursor: "default",
+              width: "80%",
 
-            levelBox.appendChild(levelPlayBtn);            
-            levelsList.appendChild(levelBox);
-        });
-        
-        return levelsList;
+          };
+          Object.keys(c).forEach(function (a) {
+            levelDescText.style[a] = c[a];
+          });
+
+          newContent = document.createTextNode(level["content"]);
+          levelDescText.appendChild(newContent);
+
+          levelBox.appendChild(levelDescText);
+
+
+          levelPlayBtn = document.createElement("button");
+          c = {
+              backgroundColor: "#9268e3",
+              borderRadius: "25px",
+              border: "#9268e3",
+              padding: "10px",
+              position: "absolute",
+              fontFamily: "Retron2000",
+              color: "white",
+              fontSize: "10pt",
+              cursor: "pointer",
+              top: "30%",
+              right: "5%",
+
+          };
+          Object.keys(c).forEach(function (a) {
+              levelPlayBtn.style[a] = c[a];
+          });
+          
+          levelPlayBtn.innerHTML = "Play";
+          levelPlayBtn.onclick = async function() {
+              var levelJson = await fetch("../src/communitylevels/" + level["levelname"])
+                .then((response) => response.json())
+                .then((data) => {
+                    return data;
+                });
+              ovoLevelEditor.startLevel(levelJson);
+              xButton.click()
+          };
+
+          levelBox.appendChild(levelPlayBtn);            
+          levelsList.appendChild(levelBox);
+      });
+      
+      return levelsList;
     };
 
 
@@ -338,6 +361,7 @@
             b.style[a] = c[a];
         });
         b.id = "community-menu";
+        b.focus();
 
         //X button CSS
         xButton = document.createElement("button");
@@ -452,7 +476,7 @@
             console.log("searching" + query);
             var levelsQueried = await queryDatabase(query);
             console.log(levelsQueried);
-            if(document.getElementById('levels-list') != null) { //are there levels already displayed?
+            if(document.getElementById('levels-list') !== null) { //are there levels already displayed?
                 document.getElementById('levels-list').remove(); //if so remove them
             }
             levelsList = renderListLevels(levelsQueried);
@@ -461,8 +485,8 @@
             
         };
         
-        levelsQueried = await getDatabase(numEntries = 4);
-        console.log(levelsQueried);
+        levelsQueried = await getDatabase(numEntries = levelData.length);
+        // console.log(levelsQueried);
         levelsList = renderListLevels(levelsQueried);
         b.appendChild(levelsList);
 
@@ -543,13 +567,14 @@
 
             document.addEventListener("keydown", (event) => {this.keyDown(event)});
 
-            notify("Community Levels Loaded", "by Awesomeguy")
+            notify("Community Levels Loaded", "by Awesomeguy<br/>Shift + L to open the levels menu", "https://static.thenounproject.com/png/4306405-200.png")
 
         },
         keyDown(event) {
           if (event.shiftKey && event.code === "KeyL" ) {
             if (document.getElementById("community-menu") === null) { //if menu doesn't exist
               map = disableClick();
+              // map2 = disableScroll();
               createCommunityMenu()
             } else { //if menu exists
               document.getElementById("community-menu").remove();

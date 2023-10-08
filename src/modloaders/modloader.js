@@ -1060,7 +1060,7 @@
                         console.log(!!!document.getElementById(key))
                         enableButton.style.backgroundColor = "#00d26a";
                         enableButton.innerHTML = "✅";
-                        if(!!!document.getElementById(key)) { // mod hasnt been put in mem
+                        if(!!!document.getElementById(key)) { // mod hasnt been put in mem, custom mods are here by default
                             console.log('sadghyfisatdgifuygasdyifg')
                             modSettings = JSON.parse(localStorage.getItem('modSettings'));
                             js = document.createElement("script");
@@ -1071,9 +1071,8 @@
                                 js.src = modSettings[key]["url"];
                             }
                             js.id = key;
-                            document.head.appendChild(js);
-            
-    
+                            document.head.appendChild(js);                            
+
                             modSettings = JSON.parse(localStorage.getItem('modSettings'));
                             modSettings[key]["enabled"] = true;
                             localStorage.setItem('modSettings', JSON.stringify(modSettings));
@@ -1088,7 +1087,7 @@
                             localStorage.setItem('modSettings', JSON.stringify(modSettings));
 
                             
-                            notify("Mod Enabled")
+                            notify(modSettings[key]["name"] + " Enabled")
                             
                             
                             // TODO - PUT ENABLI NG MOD STUFF HERE
@@ -1509,7 +1508,7 @@
 
             runtime.tickMe(this);
 
-            notify("QOL Loader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
+            notify("QOL Modloader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
 
 
         },

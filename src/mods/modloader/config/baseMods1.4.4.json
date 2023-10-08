@@ -49,7 +49,7 @@
     },
     "modapi": {
         "name": "Mod API",
-        "desc": "Open in devtools to use various game mechanics. ",
+        "desc": "Open in devtools to manipulate various game mechanics. ",
         "enabled": false,
         "url": "../src/mods/modloader/modapi.js"
     }, 

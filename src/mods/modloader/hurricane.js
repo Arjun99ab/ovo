@@ -6,6 +6,17 @@
   globalThis.sdk_runtime = old;
   let counter = 0
 
+  let notify = (title, text, image = "./speedrunner.png") => {
+    cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
+        runtime.types_by_index.find(
+            (type) => type.plugin instanceof cr.plugins_.sirg_notifications
+        ).instances[0],
+        title,
+        text,
+        image
+    );
+  };
+
   let wind = {
     tick() {
       if(JSON.parse(localStorage.getItem('modSettings'))["hurricane"]["enabled"]) {
@@ -45,6 +56,7 @@
   g = globalThis.ovoExplorer = {
     init: function () {
       runtime.tickMe(wind);
+      notify("Hurricane Mod Loaded", "Good luck!", "https://static.thenounproject.com/png/1925975-200.png");
     },
   };
   g.init();

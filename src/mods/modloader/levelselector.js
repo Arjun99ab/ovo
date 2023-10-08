@@ -26,7 +26,7 @@
                 this.initDomUI();
 
                 globalThis.ovoLevelSelector = this;
-                notify("Mod Loaded", "Level Selector mod loaded");
+                notify("Level Selector Mod Loaded", "Shift + T", "https://static.thenounproject.com/png/4200152-200.png");
             },
 
             initDomUI() {

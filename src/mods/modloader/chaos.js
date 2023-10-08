@@ -84,7 +84,7 @@ let chaosPresets = {
 
             this.start("funky");
             globalThis.ovoChaos = this;
-            notify("Mod Loaded", "Chaos mod loaded");
+            notify("Chaos Mod Loaded", "Have fun :)", "https://cdn-icons-png.flaticon.com/512/4743/4743028.png");
         },
 
         start(presetName="original") {

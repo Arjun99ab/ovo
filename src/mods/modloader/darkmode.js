@@ -1,6 +1,21 @@
 //layers a div over the game in order to essentially high contrast the game
 
 (function () {
+    let old = globalThis.sdk_runtime;
+    c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
+    let runtime = globalThis.sdk_runtime;
+    globalThis.sdk_runtime = old;
+    let notify = (title, text, image = "./speedrunner.png") => {
+        cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
+            runtime.types_by_index.find(
+                (type) => type.plugin instanceof cr.plugins_.sirg_notifications
+            ).instances[0],
+            title,
+            text,
+            image
+        );
+    };
+
     // create a div element
     const div = document.createElement("div");
     div.id = "darkmode-div"; //for modloader
@@ -18,4 +33,8 @@
 
     // add the div element to the body of the webpage
     document.body.appendChild(div);
+    console.log("Dark Theme Enabled")
+    notify("Dark Theme Enabled", "", "https://static.thenounproject.com/png/2856481-200.png");
+    
+
 })();

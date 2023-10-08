@@ -49,7 +49,7 @@
     },
     "modapi": {
         "name": "Mod API",
-        "desc": "Open in devtools to use various game mechanics. ",
+        "desc": "Open in devtools to use manipulate game mechanics.",
         "enabled": false,
         "url": "../src/mods/modloader/modapi.js"
     }, 
@@ -61,8 +61,8 @@
     },
     "community": {
         "name": "Community Levels",
-        "desc": "Play custom levels made by the community!<br/><br/> 'Shift + l' to open the level menu",
-        "enabled": false,
+        "desc": "By Awesomeguy <br/><br/>Play custom levels made by the community!<br/><br/> 'Shift + l' to open the level menu",
+        "enabled": true,
         "url": "../src/mods/modloader/community.js"
     }
 }

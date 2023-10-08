@@ -51,7 +51,7 @@
             runtime.tickMe(this);
           
             globalThis.ovoFlyMod = this;
-            notify("Mod Loaded", "Fly mod loaded");
+            notify("Fly Mod Loaded", "Shift + [arrow keys]", "https://cdn-icons-png.flaticon.com/512/3125/3125683.png");
         },
       
         keyDown(event) {
@@ -100,7 +100,7 @@
                 this.stored = [1500, true];
             }
           
-            //notify("Fly Mod", "Fly Enabled");
+            notify("Fly Mod", "Fly Enabled");
         },
       
         endActivation() {
@@ -111,7 +111,7 @@
                 player.collisionsEnabled = this.stored[1];
             }
           
-            //notify("Fly Mod", "Fly Disabled");
+            notify("Fly Mod", "Fly Disabled");
         },
       
         speedX(speed) {

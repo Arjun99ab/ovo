@@ -6,7 +6,7 @@
             this.keybind.init();
 
             globalThis.ovoModAPI = this;
-            this.game.notify("Mod Loaded", "ModAPI mod loaded");
+            this.game.notify("ModAPI Loaded", "Open in devtools to manipulate various game mechanics.", "https://static.thenounproject.com/png/410844-200.png");
         },
 
         math: {

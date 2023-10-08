@@ -132,8 +132,8 @@
   };
 
   notify(
-      "Save state with Shift+S, load with S, reset with R, reset sate with Shift+R, skip level with Shift+N, go back in level with Shift+B",
-      "Mod loaded"
+      "Read the mod description for more info",
+      "Save State Mod Loaded", "https://static.thenounproject.com/png/3681374-200.png"
   );
 
   let getPlayer = () =>
@@ -165,7 +165,7 @@
   let curState = null;
   let curLayout = null;
   let saveState = () => {
-    //("Saved player state", "State Saved");
+    ("Saved player state", "State Saved");
     let state = runtime.saveInstanceToJSON(getPlayer(), true);
     return state;
   };
@@ -174,7 +174,7 @@
     player.y -= 10;
     player.set_bbox_changed();
     player.behavior_insts[0].lastFloorObject = null;
-    //notify("Loaded player state", "State Loaded");
+    notify("Loaded player state", "State Loaded");
     runtime.loadInstanceFromJSON(player, state, true);
   };
   document.addEventListener("keydown", (event) => {
@@ -194,14 +194,14 @@
             curState = null;
             runtime.changeLayout = runtime.runningLayout;
             //runtime.attempts = runtime.attempts + 1;
-            //notify("State reset by soft level reset (Shift + R)", "State Reset");
+            notify("State reset by soft level reset (Shift + R)", "State Reset");
         }
         if (event.code === "KeyN") {
             if (event.shiftKey) {
                 runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) + 1)]
-                // setTimeout(() => {
-                //     notify("Going to next level bypass (Shift + N)", "Next Level");
-                // }, 300);
+                setTimeout(() => {
+                    notify("Going to next level bypass (Shift + N)", "Next Level");
+                }, 300);
             }
         }
         if (event.code === "KeyM") {
@@ -211,17 +211,17 @@
                 player.x = flag.x;
                 player.y = flag.y;
                 player.set_bbox_changed();
-                // setTimeout(() => {
-                //     notify("Going to next level (Shift + M)", "Next Level");
-                // }, 300);
+                setTimeout(() => {
+                    notify("Going to next level (Shift + M)", "Next Level");
+                }, 300);
             }
         }
         if (event.code === "KeyB") {
             if (event.shiftKey) {
                 runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) - 1)]
-                // setTimeout(() => {
-                //     notify("Going to next level (Shift + N)", "Next Level");
-                // }, 300);
+                setTimeout(() => {
+                    notify("Going to next level (Shift + N)", "Next Level");
+                }, 300);
             }
         }
         if (event.code === "KeyC") {
@@ -231,9 +231,9 @@
                 player.x = flag.x;
                 player.y = flag.y;
                 player.set_bbox_changed();
-                // setTimeout(() => {
-                //     notify("Going to coin (Shift + C)", "Coin");
-                // }, 300);
+                setTimeout(() => {
+                    notify("Going to coin (Shift + C)", "Coin");
+                }, 300);
             }
         }
       }
