@@ -1230,6 +1230,7 @@
             width: "100px",
             height: "100px",
             display: "block",
+            zIndex: "2147483647",
         };
         Object.keys(c).forEach(function (a) {
             menuButton.style[a] = c[a];

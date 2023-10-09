@@ -38,7 +38,7 @@ The modloader currently supports 12 versions:
 
 
 
-Want another version supported? Contact me in Discord at Awesomeguy#4997.
+Want another version supported? Contact me in Discord at .awesomeguy.
 
 
 ## Common Questions

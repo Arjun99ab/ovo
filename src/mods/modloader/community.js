@@ -356,12 +356,12 @@
             display: "block",
             width: "35%",
             height: "65%",
+            // textAlign: "center",
         };
         Object.keys(c).forEach(function (a) {
             b.style[a] = c[a];
         });
         b.id = "community-menu";
-        b.focus();
 
         //X button CSS
         xButton = document.createElement("button");
@@ -375,6 +375,7 @@
             cursor: "pointer",
             right: "1px",
             top: "1px",
+            // zIndex: "1000",
         };
         Object.keys(c).forEach(function (a) {
             xButton.style[a] = c[a];
@@ -394,9 +395,9 @@
             backgroundColor: "white",
             border: "none",
             fontFamily: "Retron2000",
-            position: "absolute",
-            top: "2%",
-            left: "25%",
+            position: "relative",
+            // top: "2%",
+            // left: "25%",
             textAlign: "center",
             //padding: "5px",
             color: "black",
@@ -448,7 +449,6 @@
             }
         };
 
-
         searchBtn = document.createElement("button");
         c = {
             backgroundColor: "#9268e3",
@@ -467,7 +467,6 @@
         Object.keys(c).forEach(function (a) {
             searchBtn.style[a] = c[a];
         });
-
         
         searchBtn.innerHTML = "Search";
         searchBtn.id = "search-btn";
@@ -486,31 +485,130 @@
         };
         
         levelsQueried = await getDatabase(numEntries = levelData.length);
-        // console.log(levelsQueried);
         levelsList = renderListLevels(levelsQueried);
+
         b.appendChild(levelsList);
-
-        // append the divList to the document body
-        b.appendChild(levelsList);
-        
-
-        
-
-
-
-
-        // levelScroll.appendChild(levelsList);
 
         b.appendChild(searchInput);
         b.appendChild(searchBtn);
-        b.appendChild(xButton);
         b.appendChild(titleText);
-        // b.appendChild(levelScroll);
-        
-        
+        b.appendChild(xButton);
 
-
+        
         document.body.appendChild(b);
+    }
+
+    let createHome = () => {
+      //Create background div
+      b = document.createElement("div")
+      c = {
+          backgroundColor: "white",
+          border: "solid",
+          borderColor: "black",
+          borderWidth: "2px",
+          fontFamily: "Retron2000",
+          position: "absolute",
+          top: "17.5%",
+          left: "32.5%",
+          padding: "5px",
+          color: "black",
+          fontSize: "10pt",
+          display: "block",
+          width: "35%",
+          height: "65%",
+          textAlign: "center",
+      };
+      Object.keys(c).forEach(function (a) {
+          b.style[a] = c[a];
+      });
+      b.id = "home-menu";
+
+      //X button CSS
+      xButton = document.createElement("button");
+      c = {
+          backgroundColor: "white",
+          border: "none",
+          position: "absolute",
+          fontFamily: "Retron2000",
+          color: "black",
+          fontSize: "10pt",
+          cursor: "pointer",
+          right: "1px",
+          top: "1px",
+          // zIndex: "1000",
+      };
+      Object.keys(c).forEach(function (a) {
+          xButton.style[a] = c[a];
+      });
+
+      xButton.innerHTML = "❌";
+
+      xButton.onclick = function() {
+          b.remove();
+          enableClick(map);
+      }
+
+
+      titleText = document.createElement("div");
+
+      c = {
+          backgroundColor: "white",
+          border: "none",
+          fontFamily: "Retron2000",
+          position: "relative",
+          // top: "2%",
+          // left: "25%",
+          textAlign: "center",
+          //padding: "5px",
+          color: "black",
+          fontSize: "22pt",
+          cursor: "default",
+      };
+      Object.keys(c).forEach(function (a) {
+          titleText.style[a] = c[a];
+      });
+
+      newContent = document.createTextNode("Home");
+      titleText.appendChild(newContent);
+
+      menuIcons = document.createElement('div');
+      
+      menuIcons.style.display = 'flex';
+      menuIcons.style.flexWrap = 'wrap';
+      menuIcons.style.position = 'relative';
+      menuIcons.style.top = '5%';
+      menuIcons.style.gap = '5px';
+      
+      menuIcons.style.width = '70%';
+      menuIcons.style.margin = 'auto';
+      menuIcons.style.paddingLeft = '20px';
+      menuIcons.style.height = '70%';
+      menuIcons.style.border = '1px solid black';
+
+      for(var i = 0; i < 4; i++) {
+        var icon = document.createElement('div');
+        icon.style.width = '40%';
+        icon.style.height = '40%';
+        icon.style.border = '1px solid red';
+        icon.style.position = "relative";
+        console.log(icon.offsetWidth)
+        console.log(icon.offsetHeight)
+        iconImg = document.createElement('img');
+        iconImg.src = "https://static.thenounproject.com/png/17448-200.png";
+        iconImg.style.flexShrink = "0";
+        iconImg.style.width = "100%";
+        iconImg.style.height = "100%";
+        icon.appendChild(iconImg);
+        menuIcons.appendChild(icon);
+      }
+      
+
+
+      b.appendChild(titleText);
+      b.appendChild(menuIcons);
+      b.appendChild(xButton);
+      
+      document.body.appendChild(b);
     }
 
     
@@ -571,15 +669,24 @@
 
         },
         keyDown(event) {
-          if (event.shiftKey && event.code === "KeyL" ) {
+          if (event.shiftKey && event.code === "KeyL" && JSON.parse(localStorage.getItem('modSettings'))["community"]["enabled"]) {
             if (document.getElementById("community-menu") === null) { //if menu doesn't exist
               map = disableClick();
-              // map2 = disableScroll();
               createCommunityMenu()
             } else { //if menu exists
               document.getElementById("community-menu").remove();
               enableClick(map);
             }
+          }
+          if(event.code === "KeyG" && JSON.parse(localStorage.getItem('modSettings'))["community"]["enabled"]) {
+            if (document.getElementById("home-menu") === null) { //if menu doesn't exist
+              map = disableClick();
+              createHome();
+            } else { //if menu exists
+              document.getElementById("home-menu").remove();
+              enableClick(map);
+            }
+
           }  
         },
     };
