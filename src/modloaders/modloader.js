@@ -781,7 +781,7 @@
         generalInfo.style.color = 'black';
         generalInfo.style.left = '0%';
         generalInfo.style.fontSize = "10pt" 
-        generalInfo.innerHTML = "By Awesomeguy<br/><br/>Use '~' (above tab) to quickly open!<br/><br/><b><u>About</u></b><br/>A one of a kind UI based modloader<br/>Enable mods via the sidebar<br/>Add custom mods with the button below<br/>Chaos, MP, & custom mods reload page on disable<br/>Contact me at '.awesomeguy.' on Discord with any bugs<br/>If you can, a star would be appreciated on <a href='https://github.com/Arjun99ab/ovo' target='_blank'>GitHub<a><br/>Have fun!"
+        generalInfo.innerHTML = "By Awesomeguy<br/><br/>Use '~' (above tab) to quickly open!<br/><br/><b><u>About</u></b><br/>A one of a kind UI based modloader<br/>Enable mods via the sidebar<br/>Add custom mods with the button below<br/>Chaos, MP, TAS, & custom mods reload page on disable<br/>Contact me at '.awesomeguy.' on Discord with any bugs<br/>If you can, a star would be appreciated on <a href='https://github.com/Arjun99ab/ovo' target='_blank'>GitHub<a><br/>Have fun!"
         generalInfo.style.textAlign = "center";
 
         
@@ -1125,7 +1125,7 @@
                         
 
 
-                        if(key.startsWith("customMod") || key === "chaos" || key === "multiplayer") {
+                        if(key.startsWith("customMod") || key === "chaos" || key === "multiplayer" || key === "tas") {
                             console.log(document.getElementById(key))
                             window[document.getElementById(key)] = undefined;
 

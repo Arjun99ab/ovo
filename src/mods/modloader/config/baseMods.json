@@ -52,6 +52,12 @@
         "desc": "Ease your eyes with a dark theme.",
         "enabled": false,
         "url": "../src/mods/modloader/darkmode.js"
+    },
+    "tas": {
+        "name": "TAS Tools",
+        "desc": "By skymen<br/><br/>Perfect speedruns with frame advance, savestates, and more! <br/><br/>Join the <a href='https://discord.gg/ovo-speedrunning-community-645935373368688650' target='_blank'>Discord<a> for more info & help.",
+        "enabled": false,
+        "url": "../src/mods/modloader/tas.js"
     }
 }
 
