@@ -1,7 +1,7 @@
 (function() {
-    console.log(VERSION.version());
+    // console.log(VERSION.version());
 
-    let version = VERSION.version() //1.4, 1.4.4, or CTLE
+    let version = "1.4.4";
     if(version === "1.4") {
         timers = [500, 5000]
     } else { //1.4.4 or CTLE
@@ -775,14 +775,14 @@
 
 
 
-        generalInfo = document.createElement("div")
-        styleMenuText(generalInfo, "3%", "123");
-        generalInfo.style.position = "relative"
-        generalInfo.style.color = 'black';
-        generalInfo.style.left = '0%';
-        generalInfo.style.fontSize = "10pt" 
-        generalInfo.innerHTML = "By Awesomeguy<br/><br/>Use '~' (above tab) to quickly open!<br/><br/><b><u>About</u></b><br/>A one of a kind UI based modloader<br/>Enable mods via the sidebar<br/>Add custom mods with the button below<br/>Chaos, MP, & custom mods reload page on disable<br/>Contact me at '.awesomeguy.' on Discord with any bugs<br/>If you can, a star would be appreciated on <a href='https://github.com/Arjun99ab/ovo' target='_blank'>GitHub<a><br/>Have fun!"
-        generalInfo.style.textAlign = "center";
+        // generalInfo = document.createElement("div")
+        // styleMenuText(generalInfo, "3%", "123");
+        // generalInfo.style.position = "relative"
+        // generalInfo.style.color = 'black';
+        // generalInfo.style.left = '0%';
+        // generalInfo.style.fontSize = "10pt" 
+        // generalInfo.innerHTML = "By Awesomeguy<br/><br/>Use 'tab' to quickly open!<br/><br/><b><u>About</u></b><br/>A one of a kind UI based modloader<br/>Enable mods via the sidebar<br/>Add custom mods with the button below<br/>Chaos, MP, & custom mods reload page on disable<br/>Contact me at '.awesomeguy.' on Discord with any bugs<br/>If you can, a star would be appreciated on <a href='https://github.com/Arjun99ab/ovo' target='_blank'>GitHub<a><br/>Have fun!"
+        // generalInfo.style.textAlign = "center";
 
         
         playerXSpeedText = document.createElement("div");
@@ -920,7 +920,7 @@
         modInfo.appendChild(editModButton);
         modInfo.appendChild(deleteModButton);
 
-        modInfo.appendChild(generalInfo)
+        // modInfo.appendChild(generalInfo)
 
 
 
@@ -959,7 +959,7 @@
                 //li.style.backgroundColor = "#d3d3d3"
                 try {
                     
-                    modInfo.removeChild(document.getElementById("desc-text"));
+                    // modInfo.removeChild(document.getElementById("desc-text"));
                     modInfo.removeChild(document.getElementById("enable-text"));
                     modInfo.removeChild(document.getElementById("enable-btn"));
                 } catch (err) {
@@ -967,7 +967,7 @@
                 }
 
                 try {
-                    modInfo.removeChild(generalInfo);
+                    // modInfo.removeChild(generalInfo);
 
                     modInfo.removeChild(playerXSpeedText);
                     modInfo.removeChild(playerXSpeedInput);
@@ -1021,7 +1021,7 @@
                 descText.innerHTML = modSettings[key]["desc"];
                 //descText.style.position = "relative";
                 descText.style.textAlign = "center";
-                modInfo.appendChild(descText);
+                // modInfo.appendChild(descText);
 
                 enableText = document.createElement("div");
                 enableText.id = "enable-text";
