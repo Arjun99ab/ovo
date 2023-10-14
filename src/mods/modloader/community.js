@@ -195,7 +195,7 @@
         console.log("hello)")
         e.stopImmediatePropagation()
         e.stopPropagation();
-        e.preventDefault();
+        // e.preventDefault();
         levelsList.focus();
       });
       
@@ -211,7 +211,7 @@
       levelsList.style.width = '100%';
       levelsList.style.height = '75%';
       // levelsList.style.border = '1px solid black';
-      levelsList.style.overflowY = 'scroll';
+      levelsList.style.overflowY = 'auto';
       levelsList.style.overflowX = 'hidden';
       // levelsList.onscroll = function() {
       //     console.log("scrolling");
@@ -228,6 +228,7 @@
           levelBox.style.position = "relative";
           levelBox.style.overflowY = "auto";
           levelBox.style.overflowX = "hidden";
+          levelBox.style.scrollbarGutter = "stable";
 
 
           levelTitleText = document.createElement("div");
@@ -312,7 +313,7 @@
               fontSize: "10pt",
               cursor: "pointer",
               top: "30%",
-              right: "5%",
+              right: "1%",
 
           };
           Object.keys(c).forEach(function (a) {
