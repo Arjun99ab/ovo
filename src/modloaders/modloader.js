@@ -50,6 +50,8 @@
     var speedy_boi = 1;
 
     var guiEnabledElements = []
+
+    var globalModsEnabled = []
     
 
     
@@ -589,16 +591,27 @@
         });
 
         xButton.innerHTML = "❌";
+        xButton.id = "x-button";
 
         xButton.onclick = function() {
             menuBg.remove();
             enableClick(map);
 
-            if(playerXSpeedInput.value !== 1) {
+            if(parseInt((playerXSpeedInput.value)) !== 1) {
                 speedy_boi = parseInt((playerXSpeedInput.value))
                 console.log(speedy_boi)
-            }
 
+                globalModsEnabled.push("speed")
+            } else {
+                globalModsEnabled = globalModsEnabled.filter(e => e !== "speed")
+            }
+            tempGlobalModsEnabled = globalModsEnabled.filter(e => e !== "gui" && e !== "darkmode")
+            console.log(tempGlobalModsEnabled)
+            if(tempGlobalModsEnabled.length === 0) {
+                document.getElementById("cheat-indicator").style.display = "none";
+            } else {
+                document.getElementById("cheat-indicator").style.display = "block";
+            }
 
         }
 
@@ -1048,8 +1061,8 @@
 
                 enableButton.onclick = function() {
 
-                    if(enableButton.style.backgroundColor === "white") {
-
+                    if(enableButton.style.backgroundColor === "white") { //if currently disabled
+                        globalModsEnabled.push(key);
                         console.log(!!!document.getElementById(key))
                         enableButton.style.backgroundColor = "#00d26a";
                         enableButton.innerHTML = "✅";
@@ -1115,6 +1128,7 @@
 
                         
                     } else {
+                        globalModsEnabled = globalModsEnabled.filter(e => e !== key);
                         enableButton.style.backgroundColor = "white";
                         enableButton.innerHTML = "⬜";
 
@@ -1253,6 +1267,11 @@
 
     let cleanModLoader = {
         async init() {
+            var b=document.createElement("div")
+            c={backgroundColor:"rgba(150,10,1,0.8)",width:"5px",height:"5px",position:"absolute",bottom:"5px",right:"5px", zIndex:"2147483647", display:"none"}
+            Object.keys(c).forEach(function(a){b.style[a]=c[a]})
+            b.id = "cheat-indicator"
+            document.body.appendChild(b)
             function addStyle(styleString) {
                 const style = document.createElement('style');
                 style.textContent = styleString;
@@ -1360,9 +1379,15 @@
             modsEnabled.forEach(function (modName) {
                 if(modSettings[modName] !== undefined) { //make sure it exists in current version
                     modSettings[modName]["enabled"] = true;
+                    globalModsEnabled.push(modName);
                 }
             });
-
+            console.log(globalModsEnabled)
+            if(globalModsEnabled.filter(e => e !== "gui" && e !== "darkmode").length === 0) {
+                document.getElementById("cheat-indicator").style.display = "none";
+            } else {
+                document.getElementById("cheat-indicator").style.display = "block";
+            }
 
             //WALL OF FINAL SETTING
             //DONT MODIFY MODSETTINGS PAST THIS
@@ -1544,14 +1569,18 @@
                     map = disableClick();
                     createModLoaderMenu(); 
                 } else { //menu exists
-                    //remove mod menu via tab                
-                    menuBg.remove();
-                    enableClick(map);
+                    //remove mod menu via tab
+                    document.getElementById("x-button").click();                
+                    // menuBg.remove();
+                    // enableClick(map);
 
-                    if(playerXSpeedInput.value !== 1) {
-                        speedy_boi = parseInt((playerXSpeedInput.value))
-                        console.log(speedy_boi)
-                    }
+                    // if(playerXSpeedInput.value !== 1) {
+                    //     speedy_boi = parseInt((playerXSpeedInput.value))
+                    //     console.log(speedy_boi)
+                    //     globalModsEnabled.push("speed")
+                    // } else {
+                    //     globalModsEnabled = globalModsEnabled.filter(e => e !== "speed");
+                    // }
                 }
                  
             }
