@@ -431,9 +431,9 @@
 
         saveModButton = document.createElement("button");
         c = {
-            backgroundColor: "lawngreen",
+            backgroundColor: "rgb(45, 186, 47)",
             borderRadius: "25px",
-            border: "lawngreen",
+            border: "rgb(45, 186, 47)",
             padding: "8px",
             position: "absolute",
             fontFamily: "Retron2000",
@@ -687,6 +687,14 @@
             modInfo.style[a] = c[a];
         });
 
+        modInfo.addEventListener('wheel', (e) => {
+            console.log("hello)")
+            e.stopImmediatePropagation()
+            e.stopPropagation();
+            // e.preventDefault();
+            modInfo.focus();
+          });
+
         //Title
         titleText = document.createElement("div");
         c = {
@@ -711,7 +719,7 @@
 
         addModButton = document.createElement("button");
         c = {
-            backgroundColor: "lawngreen",
+            backgroundColor: "#065a82",
             borderRadius: "25px",
             border: "lawngreen",
             padding: "8px",
@@ -740,7 +748,7 @@
 
         editModButton = document.createElement("button");
         c = {
-            backgroundColor: "blue",
+            backgroundColor: "#00ABE7",
             borderRadius: "25px",
             border: "blue",
             padding: "8px",
@@ -765,7 +773,7 @@
 
         deleteModButton = document.createElement("button");
         c = {
-            backgroundColor: "red",
+            backgroundColor: "#DE3033",
             borderRadius: "25px",
             border: "red",
             padding: "8px",
@@ -905,6 +913,14 @@
             modScroll.style[a] = c[a];
         });
 
+        modScroll.addEventListener('wheel', (e) => {
+            console.log("hello)")
+            e.stopImmediatePropagation()
+            e.stopPropagation();
+            // e.preventDefault();
+            modScroll.focus();
+          });
+
 
 
 
@@ -973,7 +989,7 @@
                 try {
                     
                     modInfo.removeChild(document.getElementById("desc-text"));
-                    modInfo.removeChild(document.getElementById("enable-text"));
+                    // modInfo.removeChild(document.getElementById("enable-text"));
                     modInfo.removeChild(document.getElementById("enable-btn"));
                 } catch (err) {
                     console.log(err);
@@ -1036,36 +1052,63 @@
                 descText.style.textAlign = "center";
                 modInfo.appendChild(descText);
 
-                enableText = document.createElement("div");
-                enableText.id = "enable-text";
-                console.log((parseFloat(descText.style.top) / 100), modInfo.offsetHeight, descText.offsetHeight)
+                // enableText = document.createElement("div");
+                // enableText.id = "enable-text";
+                // console.log((parseFloat(descText.style.top) / 100), modInfo.offsetHeight, descText.offsetHeight)
 
-                styleMenuText(enableText, (((parseFloat(descText.style.top) / 100) * modInfo.offsetHeight) + 20) + "px", "Enabled:") // + descText.offsetHeight
-                enableText.style.width = "70px";
-                //enableText.style.position = "relative";
-                enableText.style.left = "30%";
-                modInfo.appendChild(enableText);
+                // styleMenuText(enableText, (((parseFloat(descText.style.top) / 100) * modInfo.offsetHeight) + 20) + "px", "Enabled:") // + descText.offsetHeight
+                // enableText.style.width = "70px";
+                // //enableText.style.position = "relative";
+                // enableText.style.left = "30%";
+                // modInfo.appendChild(enableText);
 
                 enableButton = document.createElement("button");
+                
                 enableButton.id = "enable-btn";
 
-                styleMenuButton(enableButton, (((parseFloat(enableText.style.left) / 100) * modInfo.offsetWidth) + enableText.offsetWidth + 10) + "px", (parseInt(enableText.style.top) - 20) + "px");
+                c = {
+                    backgroundColor: "rgb(45, 186, 47)",
+                    border: "solid",
+                    borderColor: "black",
+                    borderWidth: "2px",
+                    borderRadius: "25px",
+                    position: "relative",
+                    fontFamily: "Retron2000",
+                    color: "white",
+                    fontSize: "10pt",
+                    cursor: "pointer",
+                    margin: "0 auto",
+                    display: "block",
+                    padding: "5px",
+
+                    // left: left,
+                    top: "8%",
+                };
+                Object.keys(c).forEach(function (a) {
+                    enableButton.style[a] = c[a];
+                });
+        
+                enableButton.innerHTML = "Disabled";
+
+                // styleMenuButton(enableButton, (((parseFloat(enableText.style.left) / 100) * modInfo.offsetWidth) + enableText.offsetWidth + 10) + "px", (parseInt(enableText.style.top) - 20) + "px");
                 modSettings = JSON.parse(localStorage.getItem('modSettings'));
                 if(!modSettings[key]["enabled"]) { //false
-                    enableButton.style.backgroundColor = "white";
-                    enableButton.innerHTML = "⬜";
+                    enableButton.style.backgroundColor = "rgb(222, 48, 51)";
+                    enableButton.innerHTML = "Disabled";
+                    console.log(enableButton.style.backgroundColor)
                 } else {
-                    enableButton.style.backgroundColor = "#00d26a";
-                    enableButton.innerHTML = "✅";
+                    enableButton.style.backgroundColor = "rgb(45, 186, 47)";
+                    enableButton.innerHTML = "Enabled";
                 }
 
                 enableButton.onclick = function() {
 
-                    if(enableButton.style.backgroundColor === "white") { //if currently disabled
+                    console.log(enableButton.style.backgroundColor === "rgb(222, 48, 51)")
+                    if(enableButton.style.backgroundColor === "rgb(222, 48, 51)") { //if currently disabled
                         globalModsEnabled.push(key);
                         console.log(!!!document.getElementById(key))
-                        enableButton.style.backgroundColor = "#00d26a";
-                        enableButton.innerHTML = "✅";
+                        enableButton.style.backgroundColor = "rgb(45, 186, 47)";
+                        enableButton.innerHTML = "Enabled";
                         if(!!!document.getElementById(key)) { // mod hasnt been put in mem, custom mods are here by default
                             console.log('sadghyfisatdgifuygasdyifg')
                             modSettings = JSON.parse(localStorage.getItem('modSettings'));
@@ -1129,8 +1172,8 @@
                         
                     } else {
                         globalModsEnabled = globalModsEnabled.filter(e => e !== key);
-                        enableButton.style.backgroundColor = "white";
-                        enableButton.innerHTML = "⬜";
+                        enableButton.style.backgroundColor = "rgb(222, 48, 51)";
+                        enableButton.innerHTML = "Disabled";
 
                         modSettings = JSON.parse(localStorage.getItem('modSettings'));
                         modSettings[key]["enabled"] = false;
@@ -1164,7 +1207,9 @@
                             }
 
                             else if(key === "levelselector") {
-                                document.getElementById("ovo-dummy-div").click();
+                                if(document.getElementById("ovo-dummy-div") !== null) {
+                                    document.getElementById("ovo-dummy-div").click();
+                                }
                             // }
                             // else if(key === "multiplayer") {
                             //     document.getElementById("ovo-multiplayer-container").style.display = "none";
