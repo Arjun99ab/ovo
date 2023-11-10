@@ -148,8 +148,8 @@
             let behavior = inst.behavior_insts.find(
               (x) => x.behavior instanceof cr.behaviors.aekiro_button
             );
-            console.log(behavior)
-            console.log(behavior.isEnabled)
+            // console.log(behavior)
+            // console.log(behavior.isEnabled)
             map.push({
               inst,
               oldState: behavior.isEnabled,
