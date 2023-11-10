@@ -4,7 +4,7 @@ A one of a kind UI based modloader for the game OvO, by me.
 
 ## Features
 - A UI based enabling / disabling mod system
-- Comes with 8 standard mods
+- Comes with 12 default mods
 	- Fly Mod
 	- Chaos Mod
 	- Gui Mod
@@ -40,7 +40,7 @@ Currently supports 13 versions:
 
 
 
-Want another version supported? Have a bug report? Contact me in Discord at .awesomeguy.
+Want another version supported? Have a bug report? Contact me in Discord at '.awesomeguy.'
 
 
 ## Common Questions
@@ -58,7 +58,7 @@ Navigate to the page of the custom mod, and on the bottom you will see buttons t
 
 **Why do some mods reload the page when I disable them?**
 Currently, the chaos mod and any custom created mod will reload on disabling. This is due to the way script are loaded in Javascript. 
-If you have any further questions or ideas, create a pull request or contact me on Discord, Awesomeguy#4997.
+If you have any further questions or ideas, create a pull request or contact me on Discord, '.awesomeguy.'.
  ## 
  Not affliated with [Dedra Games](https://dedragames.com/)
 
