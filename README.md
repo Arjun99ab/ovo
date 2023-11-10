@@ -1,13 +1,10 @@
 # OvO Modloader
 
-This is a UI based modloader for the game OvO, created by me. It features many versions, many popular mods, and provides the ability to add custom mods as well.
-
+A one of a kind UI based modloader for the game OvO, by me.
 
 ## Features
-
-The modloader is one of it's kind and offers a lot.
-- A gui based enabling / disabling mod system
-- Comes with 8 pretty universal mods
+- A UI based enabling / disabling mod system
+- Comes with 8 standard mods
 	- Fly Mod
 	- Chaos Mod
 	- Gui Mod
@@ -15,14 +12,19 @@ The modloader is one of it's kind and offers a lot.
 	- Level Selector Mod
 	- Random Level Mod
 	- Save State Mod
+	- Mod API
+	- Dark Mode
+	- TAS Tools
 	- Multiplayer Mod (select versions)
-- Ability to add a custom mod
+	- Community Levels Mod (only CTLE)
+- The ability to add custom mods
 - Saves information across sessions like
-	- What mods you had enabled
-	- Custom mods that you created
+	- Mods you had enabled
+	- Custom mods that you added
 
 ## Versions
-The modloader currently supports 12 versions:
+Currently supports 13 versions:
+- 1.4.4b
 - 1.4.4
 - 1.4.3
 - 1.4.2
@@ -38,7 +40,7 @@ The modloader currently supports 12 versions:
 
 
 
-Want another version supported? Contact me in Discord at .awesomeguy.
+Want another version supported? Have a bug report? Contact me in Discord at .awesomeguy.
 
 
 ## Common Questions

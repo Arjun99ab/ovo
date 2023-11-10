@@ -679,16 +679,16 @@
               enableClick(map);
             }
           }
-          if(event.code === "KeyG" && JSON.parse(localStorage.getItem('modSettings'))["community"]["enabled"]) {
-            if (document.getElementById("home-menu") === null) { //if menu doesn't exist
-              map = disableClick();
-              createHome();
-            } else { //if menu exists
-              document.getElementById("home-menu").remove();
-              enableClick(map);
-            }
+          // if(event.code === "KeyG" && JSON.parse(localStorage.getItem('modSettings'))["community"]["enabled"]) {
+          //   if (document.getElementById("home-menu") === null) { //if menu doesn't exist
+          //     map = disableClick();
+          //     createHome();
+          //   } else { //if menu exists
+          //     document.getElementById("home-menu").remove();
+          //     enableClick(map);
+          //   }
 
-          }  
+          // }  
         },
     };
   

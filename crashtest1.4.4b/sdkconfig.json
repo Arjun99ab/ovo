@@ -1,0 +1,37 @@
+{
+  "networks": [
+    "Poki",
+    "CrazyGames",
+    "GamePix",
+    "GameDistribution",
+    "GameMonetize",
+    "CoolMathGames",
+    "HoodaMath",
+    "FreezeNova"
+  ],
+  "name": "",
+  "gameId": "1377b99c10284c229423118a941af3b1",
+  "removeSocials": false,
+  "stopAudioInBackground": false,
+  "removeMidrollRewarded": true,
+  "noReligion": false,
+  "removeServiceWorker": true,
+  "interTypes": {
+    "loader": false,
+    "mainMenuStart": true,
+    "randomskins": true,
+    "removeads": false,
+    "levelStart": true,
+    "restart": true,
+    "levelStartFromMenu": true,
+    "levelStartOnSuccess": true
+  },
+  "splashScreen": false,
+  "sitelock": false,
+  "sites": [
+    "www.onlinegames.io",
+    "onlinegames.io",
+    "unblocked-games.s3.amazonaws.com"
+  ],
+  "correctWebsite": "www.onlinegames.io/games/ovo"
+}

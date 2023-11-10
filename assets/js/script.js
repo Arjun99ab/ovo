@@ -1,4 +1,5 @@
 var niceNames = {
+  "crashtest144b": "1.4.4b",
   "144": "1.4.4",
   "14": "1.4",
   "141": "1.4.1",
@@ -14,6 +15,7 @@ var niceNames = {
 }
 
 var versionsDict = {
+  "crashtest144b": "crashtest1.4.4b",
   "144": "1.4.4",
   "14": "1.4",
   "141": "1.4.1",
@@ -68,10 +70,10 @@ document.querySelectorAll('.github').forEach(element => {
 
 document.querySelectorAll('.discord').forEach(element => {
    element.onclick = function() { 
-       navigator.clipboard.writeText("Awesomeguy#4997");
+       navigator.clipboard.writeText(".awesomeguy.");
        swal({
            title: "Successfully Copied to Clipboard!",
-           text: "Awesomeguy#4997",
+           text: ".awesomeguy.",
        });
    }
 });
