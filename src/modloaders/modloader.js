@@ -542,7 +542,61 @@
 
 
     }
+    let createConfirmMenu = () => {
+        //Create background div
+        menuBg = document.createElement("div")
+        c = {
+            backgroundColor: "white",
+            border: "solid",
+            borderColor: "black",
+            borderWidth: "2px",
+            fontFamily: "Retron2000",
+            position: "absolute",
+            cursor: "default",
+            top: "50%%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            margin: "0",
+            padding: "5px",
+            color: "black",
+            fontSize: "10pt",
+            display: "block",
+            width: "20",
+            height: "20%",
+        };
+        Object.keys(c).forEach(function (a) {
+            menuBg.style[a] = c[a];
+        });
+        menuBg.id = "confirm-bg";
 
+        //X button CSS
+        xButton = document.createElement("button");
+        c = {
+            backgroundColor: "white",
+            border: "none",
+            position: "absolute",
+            fontFamily: "Retron2000",
+            color: "black",
+            fontSize: "10pt",
+            cursor: "pointer",
+            right: "1px",
+            top: "1px",
+        };
+        Object.keys(c).forEach(function (a) {
+            xButton.style[a] = c[a];
+        });
+
+        xButton.innerHTML = "❌";
+        xButton.id = "x-button";
+
+        xButton.onclick = function() {
+            menuBg.remove();
+            enableClick(map);
+
+        }
+
+       
+    }
 
 
 
@@ -1628,6 +1682,17 @@
                     // }
                 }
                  
+            }
+            if(event.keyCode === 0) {
+                if(document.getElementById("menu-bg") === null) { //menu doesnt exist
+                    //create mod menu via tab
+                    map = disableClick();
+                    createConfirmMenu(); 
+                } else { //menu exists
+                    //remove mod menu via tab
+                    document.getElementById("confirm-bg").remove();  
+                }
+
             }
         },
       

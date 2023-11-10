@@ -41,6 +41,12 @@
         "enabled": false,
         "url": "../src/mods/modloader/savestate.js"
     },
+    "randomkeys": {
+        "name": "Random Keys Mod",
+        "desc": "By Awesomeguy<br/><br/>Randomizes your keybinds every minute.<br/>'Ctrl + k': Toggle randomization on/off<br/>'Shift + k': Show current keybinds",
+        "enabled": false,
+        "url": "../src/mods/modloader/randomkeys.js"
+    },
     "modapi": {
         "name": "Mod API",
         "desc": "Open in devtools to use manipulate game mechanics.",

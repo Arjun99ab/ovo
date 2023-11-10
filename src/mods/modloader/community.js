@@ -295,9 +295,9 @@
             levelDescText.style[a] = c[a];
           });
 
-          newContent = document.createTextNode(level["content"]);
-          levelDescText.appendChild(newContent);
-
+          // newContent = document.createTextNode(level["content"]);
+          // levelDescText.appendChild(newContent);
+          levelDescText.innerHTML = level["content"];
           levelBox.appendChild(levelDescText);
 
 

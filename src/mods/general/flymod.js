@@ -52,17 +52,15 @@
 
 
             
-            if(JSON.parse(localStorage.getItem('modSettings'))["flymod"]["enabled"]) {
-                if (key == "shift" && !this.override) {
-                    this.activatorKeyHeld = true;
-                } else if (event.keyCode >= 37 && event.keyCode <= 40 && this.activatorKeyHeld) {
-                    if (!this.activated) {
-                        this.startActivation();
-                        this.activated = true;
-                    }
-                    
-                    this.movementKeys[event.keyCode - 37] = true;
+            if (key == "shift" && !this.override) {
+                this.activatorKeyHeld = true;
+            } else if (event.keyCode >= 37 && event.keyCode <= 40 && this.activatorKeyHeld) {
+                if (!this.activated) {
+                    this.startActivation();
+                    this.activated = true;
                 }
+                
+                this.movementKeys[event.keyCode - 37] = true;
             }
             
             
@@ -96,7 +94,7 @@
                 this.stored = [1500, true];
             }
           
-            //notify("Fly Mod", "Fly Enabled");
+            notify("Fly Mod", "Fly Enabled");
         },
       
         endActivation() {
@@ -107,7 +105,7 @@
                 player.collisionsEnabled = this.stored[1];
             }
           
-            //notify("Fly Mod", "Fly Disabled");
+            notify("Fly Mod", "Fly Disabled");
         },
       
         speedX(speed) {

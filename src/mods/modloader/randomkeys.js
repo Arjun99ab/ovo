@@ -276,7 +276,7 @@
     }
     allowed_keys.splice(allowed_keys.indexOf(80), 1)
     allowed_keys.splice(allowed_keys.indexOf(82), 1)
-    allowed_keys = allowed_keys.concat([8, 9, 13, 16, 17, 18, 20, 32, 37, 38, 39, 40], [186, 187, 188, 189, 190, 191, 192, 219, 220, 221, 222])
+    allowed_keys = allowed_keys.concat([8, 9, 13, 16, 17, 18, 20, 32, 37, 38, 39, 40], [186, 187, 188, 189, 190, 191, 219, 220, 221, 222])
     console.log(allowed_keys)
 
     var user_keys = []
@@ -325,13 +325,13 @@
     let randomKeys = {
         init() {
           
-            notify("Random Keys mod loaded", "By Awesomeguy");
+            notify("Mod Loaded", "Random Keys mod loaded");
         }
     };
     document.addEventListener("keydown", (event) => { 
-        if (event.code === "Backquote") {
+        if (event.code === "KeyK" && JSON.parse(localStorage.getItem('modSettings'))["randomkeys"]["enabled"]) {
             if (event.ctrlKey) {
-                console.log("2394712983478912") // 
+                console.log("2394712983478912")
                 clearInterval(countdown);
 
                 user_keys = []
