@@ -42,6 +42,13 @@
     "levels": [49, 52]
   },
   {
+    "name": "The Gauntlet",
+    "lang": "gauntlet",
+    "textScale": 1,
+    "levels": [53, 60]
+  },
+
+  {
     "name": "Training Level",
     "lang": "Training",
     "textScale": 1,

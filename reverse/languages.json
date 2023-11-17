@@ -614,7 +614,7 @@
         "extra": [""]
       },
       "lvltxt1-1": {
-        "text": "Hello, and welcome to OvO",
+        "text": "Hello, and welcome to OvO Reverse",
         "extra": [""]
       },
       "lvltxt1-2": {
@@ -898,7 +898,7 @@
         "extra": [""]
       },
       "level16": {
-        "text": "A way down",
+        "text": "A way up",
         "extra": [""]
       },
       "level17": {
@@ -918,7 +918,7 @@
         "extra": [""]
       },
       "level21": {
-        "text": "A way up",
+        "text": "A way down",
         "extra": [""]
       },
       "level22": {
@@ -1717,7 +1717,7 @@
         "extra": [""]
       },
       "lvltxt1-1": {
-        "text": "Bienvenue dans OvO",
+        "text": "Bienvenue dans OvO Reverse",
         "extra": [""]
       },
       "lvltxt1-2": {
@@ -2001,7 +2001,7 @@
         "extra": [""]
       },
       "level16": {
-        "text": "La descente",
+        "text": "La montée",
         "extra": [""]
       },
       "level17": {
@@ -2021,7 +2021,7 @@
         "extra": [""]
       },
       "level21": {
-        "text": "La montée",
+        "text": "La descente",
         "extra": [""]
       },
       "level22": {
@@ -2817,7 +2817,7 @@
         "extra": [""]
       },
       "lvltxt1-1": {
-        "text": "Olá! Bem-vindo à OvO",
+        "text": "Olá! Bem-vindo à OvO Reverse",
         "extra": [""]
       },
       "lvltxt1-2": {
@@ -3102,7 +3102,7 @@
         "extra": [""]
       },
       "level16": {
-        "text": "Ladeira Abaixo",
+        "text": "Ladeira Acima",
         "extra": [""]
       },
       "level17": {
@@ -3122,7 +3122,7 @@
         "extra": [""]
       },
       "level21": {
-        "text": "Ladeira Acima",
+        "text": "Ladeira Abaixo",
         "extra": [""]
       },
       "level22": {
@@ -3922,7 +3922,7 @@
         "extra": [""]
       },
       "lvltxt1-1": {
-        "text": "¡Hola! Bienvenido a OvO",
+        "text": "¡Hola! Bienvenido a OvO Reverse",
         "extra": [""]
       },
       "lvltxt1-2": {
@@ -4206,7 +4206,7 @@
         "extra": [""]
       },
       "level16": {
-        "text": "Cuesta abajo",
+        "text": "Cuesta arriba",
         "extra": [""]
       },
       "level17": {
@@ -4226,7 +4226,7 @@
         "extra": [""]
       },
       "level21": {
-        "text": "Cuesta arriba",
+        "text": "Cuesta abajo",
         "extra": [""]
       },
       "level22": {
@@ -5026,7 +5026,7 @@
         "extra": [""]
       },
       "lvltxt1-1": {
-        "text": "Ciao, e benvento su OvO",
+        "text": "Ciao, e benvento su OvO Reverse",
         "extra": [""]
       },
       "lvltxt1-2": {
@@ -5310,7 +5310,7 @@
         "extra": [""]
       },
       "level16": {
-        "text": "Una via giù",
+        "text": "Una via SU",
         "extra": [""]
       },
       "level17": {
@@ -5330,7 +5330,7 @@
         "extra": [""]
       },
       "level21": {
-        "text": "Una via SU",
+        "text": "Una via giù",
         "extra": [""]
       },
       "level22": {

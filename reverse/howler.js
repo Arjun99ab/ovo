@@ -1771,16 +1771,14 @@
   };
 })();
 
-globalThis.HowlerWrapper = {
+globalThis.HowlerAudioPlayer = {
   audioStore: {},
   loadedAudio: {},
   paused: {},
   volumes: {},
-  audioFolder: "",
-  supportedFileTypes: [".ogg", ".m4a"],
-  init(path = "", supportedFileTypes = [".ogg", ".m4a"]) {
-    this.audioFolder = path;
-    this.supportedFileTypes = supportedFileTypes;
+  muted: {},
+  init(runtime) {
+    this.runtime = runtime;
   },
 
   dbToLinear(x) {
@@ -1809,7 +1807,7 @@ globalThis.HowlerWrapper = {
     return (Math.log(x) / Math.log(10)) * 20;
   },
 
-  play(name, group = "sounds", loop = false, isHtml = false) {
+  play(name, group = "sounds") {
     //if sound has already been played before, reuse it, else create new Howler.
     let howler;
     this.audioStore[group] = this.audioStore[group] || {};
@@ -1817,10 +1815,10 @@ globalThis.HowlerWrapper = {
     else if (this.loadedAudio[name]) {
       howler = this.audioStore[group][name] = this.loadedAudio[name];
       delete this.loadedAudio[name];
-    } else howler = this.load(name, group, isHtml);
+    } else howler = this.load(name, group);
 
     howler.volume(this.volumes[group] || 1);
-    howler.loop(loop);
+    howler.mute(!!this.muted[group]);
     howler.play();
   },
   setPaused(paused = true, group) {
@@ -1870,6 +1868,7 @@ globalThis.HowlerWrapper = {
   setMuted(muted = true, group) {
     if (group) {
       if (!this.audioStore.hasOwnProperty(group)) return;
+      this.muted[group] = muted;
       Object.values(this.audioStore[group]).forEach((howl) => {
         howl.mute(muted);
       });
@@ -1933,34 +1932,23 @@ globalThis.HowlerWrapper = {
         });
       }
     } else {
-      if (group) {
-        if (this.audioStore[group])
-          Object.values(this.audioStore[group]).forEach((howl) =>
-            howl.unload()
-          );
-      } else {
-        Howler.unload();
-      }
+      Howler.unload();
     }
   },
-  load(name, group, isHtml = false) {
-    let audioFolder = this.audioFolder;
-    if (typeof audioFolder === "function") audioFolder = audioFolder();
-    let fullPath = audioFolder + name.toLowerCase();
+  load(name, group) {
+    let fullName = this.runtime.files_subfolder + name.toLowerCase();
     if (group) {
       this.audioStore[group] = this.audioStore[group] || {};
       if (!this.audioStore[group][name]) {
         this.audioStore[group][name] = new Howl({
-          src: this.supportedFileTypes.map((type) => fullPath + type),
-          html5: isHtml,
+          src: [fullName + ".ogg", fullName + ".m4a"],
         });
       }
       return this.audioStore[group][name];
     } else {
       if (this.loadedAudio[name]) return;
       this.loadedAudio[name] = new Howl({
-        src: this.supportedFileTypes.map((type) => fullPath + type),
-        html5: isHtml,
+        src: [fullName + ".ogg", fullName + ".m4a"],
       });
     }
   },
