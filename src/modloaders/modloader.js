@@ -542,61 +542,121 @@
 
 
     }
+
     let createConfirmMenu = () => {
         //Create background div
-        menuBg = document.createElement("div")
+        let confirmBg = document.createElement("div");
+        confirmBg.id = "confirm-bg";
+
         c = {
+            display: "block",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "tra/..nslate(-50%, -50%)",
             backgroundColor: "white",
             border: "solid",
             borderColor: "black",
             borderWidth: "2px",
             fontFamily: "Retron2000",
-            position: "absolute",
             cursor: "default",
-            top: "50%%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            margin: "0",
-            padding: "5px",
             color: "black",
             fontSize: "10pt",
-            display: "block",
-            width: "20",
-            height: "20%",
+            width: "35%",
+            // height: "15%",
+            overflow: "auto",
+            margin: "0",
+            padding: "5px",
         };
         Object.keys(c).forEach(function (a) {
-            menuBg.style[a] = c[a];
+            confirmBg.style[a] = c[a];
         });
-        menuBg.id = "confirm-bg";
 
-        //X button CSS
-        xButton = document.createElement("button");
+        infoText = document.createElement("div");
+        infoText.id = "asd";
+
         c = {
             backgroundColor: "white",
             border: "none",
-            position: "absolute",
             fontFamily: "Retron2000",
+            // position: "relative",
+            // top: "2%",
+            // left: "25%",
+            textAlign: "center",
+            //padding: "5px",
             color: "black",
-            fontSize: "10pt",
-            cursor: "pointer",
-            right: "1px",
-            top: "1px",
+            fontSize: "13pt",
+            cursor: "default",
         };
         Object.keys(c).forEach(function (a) {
-            xButton.style[a] = c[a];
+            infoText.style[a] = c[a];
         });
 
-        xButton.innerHTML = "❌";
-        xButton.id = "x-button";
+        content = document.createTextNode("This mod requires a reload to disable.");
+        infoText.appendChild(content);
+        
+        // Create buttons container
+        let buttonsContainer = document.createElement("div");
+        buttonsContainer.style.display = "flex";
+        buttonsContainer.style.flexWrap = "wrap";
+        buttonsContainer.style.justifyContent = "center";
+        buttonsContainer.style.alignItems = "center";
+        buttonsContainer.style.marginTop = "15px";
+        buttonsContainer.style.marginBottom = "10px";
+        buttonsContainer.style.gap = "10px";
+        // buttonsContainer.style.position = "relative";
 
-        xButton.onclick = function() {
-            menuBg.remove();
-            enableClick(map);
+        // Create confirm button
+        let confirmButton = document.createElement("button");
+        confirmButton.innerHTML = "Reload now";
+        confirmButton.style.fontFamily = "Retron2000";
+        confirmButton.style.fontSize = "14pt";
+        confirmButton.style.backgroundColor = "rgb(45, 186, 47)";
+        confirmButton.style.color = "white";
+        confirmButton.style.border = "none";
+        confirmButton.style.padding = "5px 10px";
+        confirmButton.style.cursor = "pointer";
+        confirmButton.onclick = function() {
+            location.reload();
+        };
 
-        }
+        // Create cancel button
+        let cancelButton = document.createElement("button");
+        cancelButton.innerHTML = "Reload later";
+        cancelButton.style.fontFamily = "Retron2000";
+        cancelButton.style.fontSize = "14pt"
+        cancelButton.style.backgroundColor = "rgb(222, 48, 51)";
+        cancelButton.style.color = "white";
+        cancelButton.style.border = "none";
+        cancelButton.style.padding = "5px 10px";
+        cancelButton.style.cursor = "pointer";
+        cancelButton.onclick = function() {
+            console.log("cancel");
 
-       
+            confirmBg.remove();
+            document.getElementById("menu-bg").style.pointerEvents = "auto";
+            document.getElementById("c2canvasdiv").style.opacity = "1";
+            document.getElementById("menu-bg").style.opacity = "1";
+
+            
+            // enableClick(map);   
+        };
+
+        // Append buttons to the buttons container
+        buttonsContainer.appendChild(confirmButton);
+        buttonsContainer.appendChild(cancelButton);
+
+
+        confirmBg.appendChild(infoText);
+        confirmBg.appendChild(buttonsContainer);
+        
+
+        // confirmBg.appendChild(xButton);
+        document.body.appendChild(confirmBg);
     }
+    
 
 
 
@@ -604,6 +664,11 @@
         //Create background div
         menuBg = document.createElement("div")
         c = {
+            justifyContent: "center",
+            alignItems: "center",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             backgroundColor: "white",
             border: "solid",
             borderColor: "black",
@@ -611,8 +676,6 @@
             fontFamily: "Retron2000",
             position: "absolute",
             cursor: "default",
-            top: "17.5%",
-            left: "32.5%",
             padding: "5px",
             color: "black",
             fontSize: "10pt",
@@ -856,7 +919,7 @@
         generalInfo.style.color = 'black';
         generalInfo.style.left = '0%';
         generalInfo.style.fontSize = "10pt" 
-        generalInfo.innerHTML = "By Awesomeguy<br/><br/>Use '~' (above tab) to quickly open!<br/><br/><b><u>About</u></b><br/>A one of a kind UI based modloader<br/>Enable mods via the sidebar<br/>Add custom mods with the button below<br/>Chaos, MP, TAS, & custom mods reload page on disable<br/>Contact me at '.awesomeguy.' on Discord with any bugs<br/>If you can, a star would be appreciated on <a href='https://github.com/Arjun99ab/ovo' target='_blank'>GitHub<a><br/>Have fun!"
+        generalInfo.innerHTML = "By Awesomeguy<br/><br/>Use '~' (above tab) to quickly open!<br/><br/><b><u>About</u></b><br/>A one of a kind UI based modloader<br/>Enable mods via the sidebar<br/>Add custom mods with the button below<br/>If you can, a star would be appreciated on <a href='https://github.com/Arjun99ab/ovo' target='_blank'>GitHub<a><br/>Have fun!"
         generalInfo.style.textAlign = "center";
 
         
@@ -1237,14 +1300,20 @@
 
 
                         if(key.startsWith("customMod") || key === "chaos" || key === "multiplayer" || key === "tas") {
+                            //attempts to remove scripts from memory, but doesnt work
                             console.log(document.getElementById(key))
                             window[document.getElementById(key)] = undefined;
 
                             document.getElementById(key).remove();
                             console.log(document.getElementById(key))
                             
+                            document.getElementById("menu-bg").style.pointerEvents = "none";
+                            document.getElementById("menu-bg").style.opacity = "0.75";
+                            document.getElementById("c2canvasdiv").style.opacity = "0.75";
+                            createConfirmMenu();
+                            document.getElementById(key + "List").click();
 
-                            location.reload(true);
+                            // location.reload(true);
 
                         } else {
                             // TODO - PUT DISABLING MOD STUFF HERE
@@ -1282,6 +1351,7 @@
                             } else if(key === "darkmode") {
                                 document.getElementById("darkmode-div").style.display = "none";
                             }
+                            notify("Mod disabled")
                         }
                         
                         
@@ -1289,7 +1359,6 @@
 
 
                         
-                        notify("Mod disabled")
 
 
                         
@@ -1669,7 +1738,9 @@
                     createModLoaderMenu(); 
                 } else { //menu exists
                     //remove mod menu via tab
-                    document.getElementById("x-button").click();                
+                    if(document.getElementById("confirm-bg") === null) {
+                        document.getElementById("x-button").click();
+                    }                
                     // menuBg.remove();
                     // enableClick(map);
 
@@ -1683,17 +1754,7 @@
                 }
                  
             }
-            if(event.keyCode === 0) {
-                if(document.getElementById("menu-bg") === null) { //menu doesnt exist
-                    //create mod menu via tab
-                    map = disableClick();
-                    createConfirmMenu(); 
-                } else { //menu exists
-                    //remove mod menu via tab
-                    document.getElementById("confirm-bg").remove();  
-                }
-
-            }
+            
         },
       
         keyUp(event) {
