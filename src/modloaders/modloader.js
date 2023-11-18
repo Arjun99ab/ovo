@@ -555,7 +555,7 @@
             position: "absolute",
             top: "50%",
             left: "50%",
-            transform: "tra/..nslate(-50%, -50%)",
+            transform: "translate(-50%, -50%)",
             backgroundColor: "white",
             border: "solid",
             borderColor: "black",
@@ -637,8 +637,8 @@
 
             confirmBg.remove();
             document.getElementById("menu-bg").style.pointerEvents = "auto";
-            document.getElementById("c2canvasdiv").style.opacity = "1";
-            document.getElementById("menu-bg").style.opacity = "1";
+            document.getElementById("menu-bg").style.filter = "none";
+            document.getElementById("c2canvasdiv").style.filter = "none";
 
             
             // enableClick(map);   
@@ -1308,8 +1308,10 @@
                             console.log(document.getElementById(key))
                             
                             document.getElementById("menu-bg").style.pointerEvents = "none";
-                            document.getElementById("menu-bg").style.opacity = "0.75";
-                            document.getElementById("c2canvasdiv").style.opacity = "0.75";
+                            // document.getElementById("menu-bg").style.opacity = "0.75";
+                            // document.getElementById("c2canvasdiv").style.opacity = "0.75";
+                            document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+                            document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
                             createConfirmMenu();
                             document.getElementById(key + "List").click();
 
