@@ -1,5 +1,5 @@
 ﻿{
-	"version": 1700100899,
+	"version": 1700703343,
 	"fileList": [
 		"data.js",
 		"c2runtime.js",
@@ -101,6 +101,9 @@
 		"images/skin3-sheet0.png",
 		"images/skin3-sheet1.png",
 		"images/skin3-sheet2.png",
+		"images/electric-sheet0.png",
+		"images/electric-sheet1.png",
+		"images/electric-sheet2.png",
 		"images/sprite5-sheet0.png",
 		"images/border.png",
 		"images/decor-sheet0.png",
@@ -259,6 +262,7 @@
 		"spanish.png",
 		"english.png",
 		"shyguy.png",
+		"electric.png",
 		"ovo.png",
 		"ovo2.png",
 		"ovo3.png",

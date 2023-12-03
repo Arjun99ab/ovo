@@ -18,6 +18,15 @@
     "achievement": 6
   },
   {
+    "name": "Electric",
+    "hidden": false,
+    "icon": "electric.png",
+    "skin": "electric",
+    "lang": "electric",
+    "price": 20,
+    "achievement": -1
+  },
+  {
     "name": "Pole",
     "hidden": false,
     "icon": "pole.png",
