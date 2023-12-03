@@ -16216,6 +16216,7 @@ cr.plugins_.Arr = function(runtime)
 			a.textContent = filename;
 			a.href = "data:application/json," + encodeURIComponent(this.getAsJSON());
 			a.download = filename;
+			// a.download = "apple.json";
 			body.appendChild(a);
 			var clickEvent = document.createEvent("MouseEvent");
 			clickEvent.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -19862,6 +19863,7 @@ cr.plugins_.Browser = function(runtime)
 	Acts.prototype.InvokeDownloadString = function (str_, mimetype_, filename_)
 	{
 		var datauri = "data:" + mimetype_ + "," + encodeURIComponent(str_);
+		console.log(datauri)
 		var a = document.createElement("a");
 		if (typeof a["download"] === "undefined")
 		{
@@ -19872,7 +19874,7 @@ cr.plugins_.Browser = function(runtime)
 			var body = document.getElementsByTagName("body")[0];
 			a.textContent = filename_;
 			a.href = datauri;
-			a["download"] = filename_;
+			a["download"] = "filename_";
 			body.appendChild(a);
 			var clickEvent = new MouseEvent("click");
 			a.dispatchEvent(clickEvent);
