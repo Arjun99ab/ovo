@@ -19862,6 +19862,7 @@ cr.plugins_.Browser = function(runtime)
 	};
 	Acts.prototype.InvokeDownloadString = function (str_, mimetype_, filename_)
 	{
+		console.log(str_)
 		var datauri = "data:" + mimetype_ + "," + encodeURIComponent(str_);
 		console.log(datauri)
 		var a = document.createElement("a");
@@ -19874,7 +19875,7 @@ cr.plugins_.Browser = function(runtime)
 			var body = document.getElementsByTagName("body")[0];
 			a.textContent = filename_;
 			a.href = datauri;
-			a["download"] = "filename_";
+			a["download"] = filename_;
 			body.appendChild(a);
 			var clickEvent = new MouseEvent("click");
 			a.dispatchEvent(clickEvent);

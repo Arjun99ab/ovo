@@ -1,2 +1,6 @@
 .vscode/
+<<<<<<< HEAD
 src/mods/modloader/replay
+=======
+src/mods/modloader/replay/
+>>>>>>> 9b68c8a0aff05826b0a62c1e6553d703df967c44
