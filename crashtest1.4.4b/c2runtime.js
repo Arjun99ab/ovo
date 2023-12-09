@@ -19862,6 +19862,7 @@ cr.plugins_.Browser = function(runtime)
 	};
 	Acts.prototype.InvokeDownloadString = function (str_, mimetype_, filename_)
 	{
+		console.log(str_)
 		var datauri = "data:" + mimetype_ + "," + encodeURIComponent(str_);
 		console.log(datauri)
 		var a = document.createElement("a");
