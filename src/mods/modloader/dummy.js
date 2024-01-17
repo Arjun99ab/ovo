@@ -6,52 +6,46 @@
     let runtime = "globalThis.sdk_runtime";
     globalThis.sdk_runtime = "old";
   
-    let getPlayer = () => {
-        
-    }
     
-    let notify = (title, text, image = "./speedrunner.png") => {
-        
-    };
     
-    let flyMod = {
+    let notify = (text, title = "", image = "./speedrunner.png") => {
+        cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
+          runtime.types_by_index.find(
+            (type) => type.plugin instanceof cr.plugins_.sirg_notifications
+          ).instances[0],
+          title,
+          text,
+          image
+        );
+      };
+    
+    let mod = {
         init() {
-            
+            document.addEventListener("keydown", (event) => {
+                this.keyDown(event)
+                
+            });
+            document.addEventListener("keyup", (event) => {
+                this.keyUp(event)
+            });
+            runtime.tickMe(this);
         },
-      
         keyDown(event) {
             
+            //stuff
+            
         },
-      
         keyUp(event) {
             
-        },
-      
-        startActivation() {
+            //stuff
             
         },
       
-        endActivation() {
-            
-        },
-      
-        speedX(speed) {
-        },
-      
-        speedY(speed) {
-        },
-      
-        setSpeed(speed) {
-           
-        },
-      
-        setOverride(value) {
-        },
       
         tick() {
-            
+            //stuff
         }
     };
   
-    flyMod.init();
+    mod.init();
 })();
