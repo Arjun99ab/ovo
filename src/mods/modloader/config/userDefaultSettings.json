@@ -1,0 +1,183 @@
+{
+    "flymod": {
+        "favorite": false,
+        "settings": {
+            "speed": {
+                "value": 5,
+            }
+        }
+    },
+    "chaos": {
+        "name": "Chaos",
+        "author": "drakeerv",
+        "desc": "Pure chaos. Use at your own risk.",
+        "url": "../src/mods/modloader/chaos.js",
+        "icon": "https://cdn-icons-png.flaticon.com/512/4743/4743028.png",
+        "platforms": ["pc", "mobile"],
+        "settings": null
+    },
+    "gui": {
+        "name": "Gui",
+        "author": "Awesomeguy",
+        "desc": "Customize your HUD! Move around elements, right click to edit them, pause the game to enable/disable and add custom text nodes!<br/><br/>PRESS THE GREEN CHECKMARKS TO SAVE SETTING",
+        "url": "../src/mods/modloader/gui.js",
+        "icon": "https://cdn.iconscout.com/icon/free/png-256/keyboard-arrow-4712861-3906731.png",
+        "platforms": ["pc", "mobile"],
+        "settings": null
+    },
+    "hurricane": {
+        "name": "Hurricane",
+        "author": "Toadi",
+        "desc": "Creates random wind for you to suffer in.",
+        "url": "../src/mods/modloader/hurricane.js",
+        "icon": "https://static.thenounproject.com/png/1925975-200.png",
+        "platforms": ["pc", "mobile"],
+        "settings": null
+    }, 
+    "levelselector": {
+        "name": "Level Selector",
+        "author": "drakeerv",
+        "desc": "Pick from all the levels and more!",
+        "url": "../src/mods/modloader/levelselector.js",
+        "icon": "https://static.thenounproject.com/png/1925975-200.png",
+        "platforms": ["pc", "mobile"],
+        "settings": null
+    },
+    "randomlevel": {
+        "name": "Random Level",
+        "author": "drakeerv",
+        "desc": "Use 'shift + y' to be taken to a random level.",
+        "url": "../src/mods/modloader/randomlevel.js",
+        "icon": "./tutorials.png",
+        "platforms": ["pc"],
+        "settings": {
+            "randomlevelkeybind": {
+                "name": "Move to Random Level",
+                "desc": "Go to a random level",
+                "type": "keybind",
+                "default": ["shift", "y"]
+            }
+        }
+    }, 
+    "savestate": {
+        "name": "Save State",
+        "author": "skymen",
+        "desc": "'Shift + s': Create Checkpoint <br/>'Shift + r': Reset Checkpoint<br/>'Shift + n': Bypass to next level<br/>'Shift + b': Bypass to previous level<br/>'Shift + m': Move to end flag<br/>'Shift + c': Move to coin",
+        "url": "../src/mods/modloader/savestate.js",
+        "icon": "https://static.thenounproject.com/png/3681374-200.png",
+        "platforms": ["pc"],
+        "settings": {
+            "createcheckpointkeybind": {
+                "name": "Create Checkpoint",
+                "desc": "Create a checkpoint.",
+                "type": "keybind",
+                "default": ["shift", "s"]
+            },
+            "resetcheckpointkeybind": {
+                "name": "Reset Checkpoint",
+                "desc": "Reset checkpoints.",
+                "type": "keybind",
+                "default": ["shift", "r"]
+            },
+            "nextlevelkeybind": {
+                "name": "Next Level",
+                "desc": "Bypass to next level.",
+                "type": "keybind",
+                "default": ["shift", "n"]
+            },
+            "prevlevelkeybind": {
+                "name": "Previous Level",
+                "desc": "Bypass to previous level.",
+                "type": "keybind",
+                "default": ["shift", "b"]
+            },
+            "flagkeybind": {
+                "name": "Teleport to Flag",
+                "desc": "Teleport to the end flag.",
+                "type": "keybind",
+                "default": ["shift", "m"]
+            },
+            "coinkeybind": {
+                "name": "Teleport to  Coin",
+                "desc": "Teleport to the coin.",
+                "type": "keybind",
+                "default": ["shift", "c"]
+            }
+
+        }
+    },
+    "randomkeys": {
+        "name": "Random Keys",
+        "author": "Awesomeguy",
+        "desc": "Randomizes your keybinds every minute.<br/>'Ctrl + k': Toggle randomization on/off<br/>'Shift + k': Show current keybinds",
+        "url": "../src/mods/modloader/randomkeys.js",
+        "icon": "https://static.thenounproject.com/png/50379-200.png",
+        "platforms": ["pc"],
+        "settings": {
+            "randomkeyskeybind": {
+                "name": "Toggle Randomization",
+                "desc": "Toggle randomization on/off",
+                "type": "keybind",
+                "default": ["ctrl", "k"]
+            },
+            "showkeyskeybind": {
+                "name": "Show Current Keybinds",
+                "desc": "Shows current keybinds.",
+                "type": "keybind",
+                "default": ["shift", "k"]
+            }
+        }
+    },
+    "modapi": {
+        "name": "Mod API",
+        "author": null,
+        "desc": "Open in devtools to use manipulate game mechanics.",
+        "url": "../src/mods/modloader/modapi.js",
+        "icon": "https://static.thenounproject.com/png/410844-200.png",
+        "platforms": ["pc"],
+        "settings": null
+    }, 
+    "darkmode": {
+        "name": "Dark Mode",
+        "author": null,
+        "desc": "Ease your eyes with a dark theme.",
+        "url": "../src/mods/modloader/darkmode.js",
+        "icon": "https://static.thenounproject.com/png/2856481-200.png",
+        "platforms": ["pc", "mobile"],
+        "settings": null
+    },
+    "tas": {
+        "name": "TAS Tools",
+        "author": "skymen",
+        "desc": "Perfect speedruns with frame advance, savestates, and more! <br/><br/>Join the <a href='https://discord.gg/ovo-speedrunning-community-645935373368688650' target='_blank'>Discord<a> for more info & help.",
+        "url": "../src/mods/modloader/tasv5.js",
+        "icon": "https://static.thenounproject.com/png/2473944-200.png",
+        "platforms": ["pc"],
+        "settings": null
+    },
+    "multiplayer": {
+        "name": "Multiplayer",
+        "author": "skymen",
+        "desc": "Play or speedrun against your friends!",
+        "url": "../src/mods/modloader/multiplayerREALSKY.js",
+        "icon": "https://static.thenounproject.com/png/3734259-200.png",
+        "platforms": ["pc", "mobile"],
+        "settings": null
+    },
+    "community": {
+        "name": "Community Levels",
+        "author": "Awesomeguy",
+        "desc": "Play custom levels made by the community!<br/><br/> 'Shift + l' to open the level menu",
+        "url": "../src/mods/modloader/community.js",
+        "icon": "https://static.thenounproject.com/png/4306405-200.png",
+        "platforms": ["pc"],
+        "settings": {
+            "openlevelmenukeybind": {
+                "name": "Open Level Menu",
+                "desc": "Open the level menu.",
+                "type": "keybind",
+                "default": ["shift", "l"]
+            }
+        }
+    }
+}
