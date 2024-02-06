@@ -1,5 +1,4 @@
 (function() {
-    console.log(VERSION.version());
 
     let version = VERSION.version() //1.4, 1.4.4, or CTLE
     if(version === "1.4") {
@@ -7,6 +6,7 @@
     } else { //1.4.4 or CTLE
         timers = [100, 2000]
     }
+
     var runtime;
 
     function sleep (time) {
@@ -45,13 +45,7 @@
     var map = null;
     var map2 = null;
 
-    var customModNum = 0; 
-    
-    var speedy_boi = 1;
-
-    var guiEnabledElements = []
-
-    var globalModsEnabled = []
+    var customModNum = 0;
     
 
     
@@ -210,50 +204,157 @@
 
     
     
-    let detectDeviceType = () =>
-  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  )
-    ? 'mobile'
-    : 'pc';
+    let detectDeviceType = () => 
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mobile' : 'pc';
 
 
     
-
 
 
 
     let createModLoaderMenuBtn = () => {
-        menuButton = document.createElement("button");
-        c = {
-            background: "url(https://cdn-icons-png.flaticon.com/512/2099/2099192.png)",
-            backgroundSize: "cover", //or contain
-            backgroundColor: "white",
-            border: "none", //2p solid black
-            position: "absolute",
-            cursor: "pointer",
-            left: "4px",
-            top: "2px",
-            width: "100px",
-            height: "100px",
-            display: "block",
-            zIndex: "2147483647",
-        };
-        Object.keys(c).forEach(function (a) {
-            menuButton.style[a] = c[a];
-        });
-        menuButton.id = "menu-button";
+      menuButton = document.createElement("button");
+      c = {
+          background: "url(https://cdn-icons-png.flaticon.com/512/2099/2099192.png)",
+          backgroundSize: "cover", //or contain
+          backgroundColor: "white",
+          border: "none", //2p solid black
+          position: "absolute",
+          cursor: "pointer",
+          left: "4px",
+          top: "2px",
+          width: "100px",
+          height: "100px",
+          display: "block",
+          zIndex: "2147483647",
+      };
+      Object.keys(c).forEach(function (a) {
+          menuButton.style[a] = c[a];
+      });
+      menuButton.id = "menu-button";
 
 
-        menuButton.onclick = function() {
-            if(document.getElementById("menu-bg") === null) { //if menu doesnt exist, to avoid duplicates
-                map = disableClick();
-                createModLoaderMenu();
-            }
-        }
-        document.body.appendChild(menuButton);
-    
+      menuButton.onclick = function() {
+          if(document.getElementById("menu-bg") === null) { //if menu doesnt exist, to avoid duplicates
+              map = disableClick();
+              createModLoaderMenu();
+              document.getElementById("menu-button").style.display = "none";
+          } 
+      }
+      document.body.appendChild(menuButton);
+
     }
+    let createModLoaderMenu = () => {
+      //Create background div
+      menuBg = document.createElement("div")
+      c = {
+          justifyContent: "center",
+          alignItems: "center",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          backgroundColor: "white",
+          border: "solid",
+          borderColor: "black",
+          borderWidth: "2px",
+          fontFamily: "Retron2000",
+          position: "absolute",
+          cursor: "default",
+          padding: "5px",
+          color: "black",
+          fontSize: "10pt",
+          display: "block",
+          width: "90%",
+          height: "90%",
+          overflowY: "auto",
+          overflowX: "hidden",
+      };
+      Object.keys(c).forEach(function (a) {
+          menuBg.style[a] = c[a];
+      });
+      menuBg.id = "menu-bg";
+
+      //X button CSS
+      xButton = document.createElement("button");
+      c = {
+          backgroundColor: "white",
+          border: "none",
+          position: "absolute",
+          fontFamily: "Retron2000",
+          color: "black",
+          fontSize: "3vw",
+          cursor: "pointer",
+          right: "1px",
+          top: "1px",
+      };
+      Object.keys(c).forEach(function (a) {
+          xButton.style[a] = c[a];
+      });
+
+      xButton.innerHTML = "❌";
+      xButton.id = "x-button";
+
+      xButton.onclick = function() {
+          menuBg.remove();
+          enableClick(map);
+          document.getElementById("menu-button").style.display = "block";
+      }
+
+      hubButton = document.createElement("button");
+      c = {
+          background: "url(../assets/img/home-icon.png)",
+          backgroundSize: "cover", //or contain
+          border: "none", //2p solid black
+          position: "absolute",
+          cursor: "pointer",
+          left: "1vw",
+          top: "1vw",
+          width: "8vh",
+          height: "8vh",
+          display: "block",
+      };
+      Object.keys(c).forEach(function (a) {
+          hubButton.style[a] = c[a];
+      });
+
+
+      hubButton.onclick = function() {
+          window.location.href = '../';   
+      }
+
+      //Title
+      titleText = document.createElement("div");
+      c = {
+          backgroundColor: "white",
+          border: "none",
+          fontFamily: "Retron2000",
+          position: "relative",
+          top: "2%",
+          //left: "35%",
+          color: "black",
+          fontSize: "22pt",
+          cursor: "default",
+          textAlign: "center",
+      };
+      Object.keys(c).forEach(function (a) {
+          titleText.style[a] = c[a];
+      });
+      titleText.id = "title-text";
+      newContent = document.createTextNode("Mod Menu");
+      titleText.appendChild(newContent);
+
+
+      
+
+
+      menuBg.appendChild(hubButton);
+      menuBg.appendChild(xButton);
+      document.body.appendChild(menuBg);
+      
+
+    }
+
+
 
     
 
@@ -323,7 +424,7 @@
                 }
                 //migrate old custom mods to current format
                 for(const [key] of Object.entries(userConfig)) {
-                    if(backendConfig['mods'][key] === undefined) {
+                    if(backendConfig['mods'][key] === undefined) { //custom mod
                         customModConfig = userConfig[key];
                         customModConfig['author'] = null;
                         customModConfig['icon'] = "https://cdn0.iconfinder.com/data/icons/web-development-47/64/feature-application-program-custom-512.png"
@@ -332,6 +433,7 @@
                         customModConfig['tags'] = ['custom'];
                         customModConfig['settings'] = null;
                         freshUserConfig[key] = customModConfig;
+                        customModNum++;
                     }
                 }
                 localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
@@ -384,7 +486,8 @@
 
 
             
-
+            
+            createModLoaderMenuBtn();
 
             notify("QOL Modloader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
 
@@ -396,8 +499,9 @@
             if(event.keyCode === 192) { //backtick
                 if(document.getElementById("menu-bg") === null) { //menu doesnt exist
                     //create mod menu via tab
-                    map = disableClick();
-                    createModLoaderMenu(); 
+                    document.getElementById("menu-button").click();
+                    // map = disableClick();
+                    // createModLoaderMenu(); 
                 } else { //menu exists
                     //remove mod menu via tab
                     if(document.getElementById("confirm-bg") === null) {
