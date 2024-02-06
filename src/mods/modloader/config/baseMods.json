@@ -64,6 +64,12 @@
         "desc": "By skymen<br/><br/>Perfect speedruns with frame advance, savestates, and more! <br/><br/>Join the <a href='https://discord.gg/ovo-speedrunning-community-645935373368688650' target='_blank'>Discord<a> for more info & help.",
         "enabled": false,
         "url": "../src/mods/modloader/tasv5.js"
+    },
+    "speed": {
+        "name": "TAS Tools",
+        "desc": "By skymen<br/><br/>Perfect speedruns with frame advance, savestates, and more! <br/><br/>Join the <a href='https://discord.gg/ovo-speedrunning-community-645935373368688650' target='_blank'>Discord<a> for more info & help.",
+        "enabled": true,
+        "url": "../src/mods/modloader/speed.js"
     }
 }
 

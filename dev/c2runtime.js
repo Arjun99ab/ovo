@@ -4303,7 +4303,9 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 		for (i = 0, len = pm[3].length; i < len; i++)
 		{
 			m = pm[3][i];
+			// console.log(m)
 			plugin_ctor = this.GetObjectReference(m[1]);
+			console.log(typeof plugin_ctor)
 ;
 			plugin = null;
 			for (j = 0, lenj = this.plugins.length; j < lenj; j++)
@@ -4317,6 +4319,8 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 ;
 ;
 			var type_inst = new plugin.Type(plugin);
+			// console.log("type_inst", type_inst);
+			// console.log("plugin", plugin);
 ;
 			type_inst.name = m[0];
 			type_inst.is_family = m[2];
@@ -42011,8 +42015,8 @@ cr.behaviors.SkymenSkin = function(runtime)
 			this.skinBase = cr.SkymenSkinCore[this.skinBaseTag];
 			this.skinBase.addInstance(this);
 		}
-		console.log('apple')
-		console.log(this.skinBase)
+		// console.log('apple')
+		// console.log(this.skinBase)
 		this.skinTag = this.properties[1];
 		this.subSkinTag = this.properties[2];
 		this.oldSkinTag = this.properties[1];
@@ -42046,6 +42050,7 @@ cr.behaviors.SkymenSkin = function(runtime)
 			this.inst.behaviorSkins.push(this);
 		}
 		if(this.skinBase.init){
+			// console.log("aa")
 			this.updateSkin();
 		}
 	};
@@ -42285,9 +42290,9 @@ cr.behaviors.SkymenSkin = function(runtime)
 	}
 	behinstProto.getType = function (skin, subSkin)
 	{
-		console.log('banana')
-		console.log(this)
-		console.log(this.skinBase)
+		// console.log('banana')
+		// console.log(this)
+		// console.log(this.skinBase)
 		if(this.skinBase.skins[skin] == undefined || this.skinBase.skins[skin][subSkin] == undefined){
 			return null;
 		}

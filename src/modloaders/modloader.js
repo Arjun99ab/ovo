@@ -1718,6 +1718,8 @@
 
             runtime.tickMe(this);
 
+            console.log("ticked")
+            
             notify("QOL Modloader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
 
 
@@ -1773,10 +1775,12 @@
         
         
         tick() {
-            playerInstances = runtime.types_by_index.filter((x) =>!!x.animations &&x.animations[0].frames[0].texture_file.includes("collider"))[0].instances.filter((x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled);
-            player = playerInstances[0];
+            // console.log("tick")
+            
             
             try {
+                playerInstances = runtime.types_by_index.filter((x) =>!!x.animations &&x.animations[0].frames[0].texture_file.includes("collider"))[0].instances.filter((x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled);
+                player = playerInstances[0];
 
                 if(this.boolKeys[2]) { // right key
                     player.x += speedy_boi
@@ -1784,6 +1788,8 @@
                 if(this.boolKeys[0]) { // left key
                     player.x -= speedy_boi
                 }
+
+                // console.log(isInLevel(), isPaused())
 
                 if(!isInLevel() && document.getElementById("menu-button").style.top === "45%") {
                     document.getElementById("menu-button").style.top = "2px"

@@ -49,11 +49,11 @@
 
     let speedMod = {
         init() {
-            document.addEventListener("keydown", (event) => {this.keyDown(event)});
+            // document.addEventListener("keydown", (event) => {this.keyDown(event)});
             document.addEventListener("keyup", (event) => {this.keyUp(event)});
             this.movementKeys = [false];
 
-            runtime.tickMe(this);
+            // runtime.tickMe(this);
 
             notify("hyello??");
             console.log("w");
@@ -61,14 +61,23 @@
 
         keyDown(event) {
             if (event.keyCode == 71) {
-                this.movementKeys[0] = true;
-                done = false;
+                console
             }  
         },
       
         keyUp(event) {
             if (event.keyCode == 71) {
-                this.movementKeys[0] = false;
+                console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Mouse)[0].instances[0].mouseXcanvas, runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Mouse)[0].instances[0].mouseYcanvas)
+                console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0])
+
+                
+                console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0])
+                console.log(runtime.types_by_index.find(
+                    (x) =>
+                        (x.plugin instanceof cr.plugins_.Sprite &&
+                            x.all_frames &&
+                            x.all_frames[0].texture_file.includes("uidirection"))
+                ).instances[1])
             }
         },
         
