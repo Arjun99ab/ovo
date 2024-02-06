@@ -38095,6 +38095,7 @@ cr.plugins_.skymen_skinsCore = function(runtime)
 	Acts.prototype.AddSkin = function (obj, skin, mode, anim, subskin)
 	{
 		console.log("adding skin")
+		console.log(obj)
 		if(this.skins[skin] == undefined){
 			this.skins[skin] = {};
 		}
@@ -38128,7 +38129,7 @@ cr.plugins_.skymen_skinsCore = function(runtime)
 	Acts.prototype.RemoveSkin = function (skin)
 	{
 		console.log("removeskin")
-
+		console.log(this.skins)
 		if (this.skins[skin] != undefined) {
 			delete this.skins[skin];
 		}
@@ -42239,6 +42240,7 @@ cr.behaviors.SkymenSkin = function(runtime)
 			}
 		}
 		else{
+			console.log(this.skinTag)
 			if(this.object.type == this.getType(this.skinTag, this.subSkinTag)){
 				if(this.syncWithAnim){
 					this.subSkinTag = this.inst.cur_animation.name;
