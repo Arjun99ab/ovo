@@ -241,6 +241,7 @@
         fontFamily: "Retron2000",
         color: "black",
         fontSize: "2vw",
+        display: "block",
         // cursor: "pointer",
         backgroundColor: "white",
         width: width,
@@ -297,8 +298,8 @@
       //Create background div
       menuBg = document.createElement("div")
       c = {
-          justifyContent: "center",
-          alignItems: "center",
+          // justifyContent: "center",
+          // alignItems: "center",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
@@ -312,11 +313,11 @@
           padding: "5px",
           color: "black",
           fontSize: "10pt",
-          display: "block",
+          // display: "block",
           width: "90%",
           height: "90%",
-          overflowY: "auto",
-          overflowX: "hidden",
+          display: "flex",
+          flexDirection: "column",
       };
       Object.keys(c).forEach(function (a) {
           menuBg.style[a] = c[a];
@@ -325,12 +326,14 @@
       
 
       navbar = document.createElement("nav");
+
       c = {
         display: "flex",
-        alignItems: "center",
+        // flex: "0 0 auto",
+        // alignItems: "center",
         justifyContent: "space-between",
-        padding: "5px",
-        position: "relative",
+        padding: "10px",
+        // position: "relative",
         // backgroundColor: "#f2f2f2",
       }
       Object.keys(c).forEach(function (a) {
@@ -342,7 +345,7 @@
       c = {
           width: "50px",
           height: "50px",
-          display: "block",
+          // display: "block",
           cursor: "pointer",
       };
       Object.keys(c).forEach(function (a) {
@@ -366,7 +369,7 @@
           color: "black",
           fontSize: "28pt",
           cursor: "default",
-          margin: "0",
+          // margin: "0",
           // textAlign: "center",
       };
       Object.keys(c).forEach(function (a) {
@@ -429,16 +432,24 @@
 
 
       filtersAndCards = document.createElement("div");
+      filtersAndCards.id = "filters-and-cards-div";
       c = {
         display: "flex",
+        flex: "1",
         alignItems: "start",
         justifyContent: "space-between",
+        overflowY: "auto",
+        overflowX: "hidden",
+        scrollbarGutter: "stable",
+        scrollbarWidth: "thin",
+        height: "100%",
+
       }
       Object.keys(c).forEach(function (a) {
           filtersAndCards.style[a] = c[a];
       });
-      filtersAndCards.id = "filters-and-cards-div";
       filtersDiv = document.createElement("div");
+      filtersDiv.id = "filters-div";
       c = {
         display: "flex",
         alignItems: "left",
@@ -452,7 +463,6 @@
       Object.keys(c).forEach(function (a) {
           filtersDiv.style[a] = c[a];
       });
-      filtersDiv.id = "filters-div";
       button6 = createMenuButton("button6", "t", "13vw");
       button11 = createMenuButton("button6", "t", "13vw");
       button16 = createMenuButton("button6", "t", "13vw");
@@ -467,7 +477,7 @@
       filtersAndCards.appendChild(filtersDiv);
       cardsDiv = document.createElement("div");
       cardsDiv.addEventListener('wheel', (e) => {
-        console.log("hello)")
+        // console.log("hello)")
         e.stopImmediatePropagation()
         e.stopPropagation();
         // e.preventDefault();
@@ -479,10 +489,8 @@
         rowGap: "10px",
         width: "79%",
         flexWrap: "wrap",
-        overflowX: "hidden",
-        overflowY: "scroll",
-        // scrollbarWidth: "thin",
-        scrollbarGutter: "stable",
+        // overflow: "auto",
+        // height: "100%",
       }
       Object.keys(c).forEach(function (a) {
           cardsDiv.style[a] = c[a];
