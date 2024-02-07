@@ -209,6 +209,54 @@
 
 
     
+    let createMenuButton = (id, text, width) => {
+        let menuButton = document.createElement("button");
+        menuButton.id = id;
+        menuButton.innerHTML = text;
+
+        let c = {
+          fontFamily: "Retron2000",
+          color: "black",
+          fontSize: "2vw",
+          // cursor: "pointer",
+          backgroundColor: "white",
+          width: width,
+          textAlign: "center",
+          border: "solid 2px black",
+
+          // height: "auto",
+        }
+        Object.keys(c).forEach(function (a) {
+          menuButton.style[a] = c[a];
+        });
+        return menuButton;
+    }
+
+    let createMenuCard = (id, text, width) => {
+      let menuCard = document.createElement("button");
+      menuCard.id = id;
+      menuCard.innerHTML = text;
+ 
+      let c = {
+        fontFamily: "Retron2000",
+        color: "black",
+        fontSize: "2vw",
+        // cursor: "pointer",
+        backgroundColor: "white",
+        width: width,
+        textAlign: "center",
+        border: "solid 2px black",
+        marginLeft: "5px",
+        marginRight: "5px",
+        flex: "1 1 calc(33% - 10px)",
+        maxWidth: "calc(33% - 10px)",
+        // height: "auto",
+      }
+      Object.keys(c).forEach(function (a) {
+        menuCard.style[a] = c[a];
+      });
+      return menuCard;
+    }
 
 
 
@@ -273,19 +321,70 @@
           menuBg.style[a] = c[a];
       });
       menuBg.id = "menu-bg";
+      
+
+      navbar = document.createElement("nav");
+      c = {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "5px",
+        position: "relative",
+        // backgroundColor: "#f2f2f2",
+      }
+      Object.keys(c).forEach(function (a) {
+          navbar.style[a] = c[a];
+      });
+      navbar.id = "navbar";
+
+      logo = document.createElement("img");
+      c = {
+          width: "50px",
+          height: "50px",
+          display: "block",
+          cursor: "pointer",
+      };
+      Object.keys(c).forEach(function (a) {
+          logo.style[a] = c[a];
+      });
+      logo.src = "../assets/img/dimensions.png";
+      logo.onclick = function() {
+          window.location.href = "../";
+      }
+      navbar.appendChild(logo);
+
+      //Title
+      titleText = document.createElement("div");
+      c = {
+          backgroundColor: "white",
+          border: "none",
+          fontFamily: "Retron2000",
+          // position: "relative",
+          // top: "2%",
+          //left: "35%",
+          color: "black",
+          fontSize: "28pt",
+          cursor: "default",
+          margin: "0",
+          // textAlign: "center",
+      };
+      Object.keys(c).forEach(function (a) {
+          titleText.style[a] = c[a];
+      });
+      titleText.id = "title-text";
+      newContent = document.createTextNode("apple pie");
+      titleText.appendChild(newContent);
+      navbar.appendChild(titleText);
 
       //X button CSS
       xButton = document.createElement("button");
       c = {
           backgroundColor: "white",
           border: "none",
-          position: "absolute",
           fontFamily: "Retron2000",
           color: "black",
-          fontSize: "3vw",
+          fontSize: "26pt",
           cursor: "pointer",
-          right: "1px",
-          top: "1px",
       };
       Object.keys(c).forEach(function (a) {
           xButton.style[a] = c[a];
@@ -299,57 +398,131 @@
           enableClick(map);
           document.getElementById("menu-button").style.display = "block";
       }
+      navbar.appendChild(xButton);
 
-      hubButton = document.createElement("button");
+      buttonContainer = document.createElement("div");
       c = {
-          background: "url(../assets/img/home-icon.png)",
-          backgroundSize: "cover", //or contain
-          border: "none", //2p solid black
-          position: "absolute",
-          cursor: "pointer",
-          left: "1vw",
-          top: "1vw",
-          width: "8vh",
-          height: "8vh",
-          display: "block",
-      };
-      Object.keys(c).forEach(function (a) {
-          hubButton.style[a] = c[a];
-      });
-
-
-      hubButton.onclick = function() {
-          window.location.href = '../';   
+        display: "flex",
+        margin: "10px",
+        alignItems: "center",
+        justifyContent: "space-between", 
       }
-
-      //Title
-      titleText = document.createElement("div");
-      c = {
-          backgroundColor: "white",
-          border: "none",
-          fontFamily: "Retron2000",
-          position: "relative",
-          top: "2%",
-          //left: "35%",
-          color: "black",
-          fontSize: "22pt",
-          cursor: "default",
-          textAlign: "center",
-      };
       Object.keys(c).forEach(function (a) {
-          titleText.style[a] = c[a];
+          buttonContainer.style[a] = c[a];
       });
-      titleText.id = "title-text";
-      newContent = document.createTextNode("Mod Menu");
-      titleText.appendChild(newContent);
+      buttonContainer.className = "button-container";
+      button1 = createMenuButton("button1", "t", "13vw");
+      button2 = createMenuButton("button2", "t", "13vw");
+      button2.disabled = true;
+      button3 = createMenuButton("button3", "t", "13vw");
+      button4 = createMenuButton("button4", "t", "13vw");
+      button5 = createMenuButton("button5", "t", "13vw");
+
+
+     
+      buttonContainer.appendChild(button1);
+      buttonContainer.appendChild(button2);
+      buttonContainer.appendChild(button3);
+      buttonContainer.appendChild(button4);
+      buttonContainer.appendChild(button5);
+
+
+      filtersAndCards = document.createElement("div");
+      c = {
+        display: "flex",
+        alignItems: "start",
+        justifyContent: "space-between",
+      }
+      Object.keys(c).forEach(function (a) {
+          filtersAndCards.style[a] = c[a];
+      });
+      filtersAndCards.id = "filters-and-cards-div";
+      filtersDiv = document.createElement("div");
+      c = {
+        display: "flex",
+        alignItems: "left",
+        justifyContent: "space-between",
+        padding: "10px",
+        flexDirection: "column",
+        width: "19%",
+        backgroundColor: "#f2f2f2",
+        // marginRight: "2%",
+      }
+      Object.keys(c).forEach(function (a) {
+          filtersDiv.style[a] = c[a];
+      });
+      filtersDiv.id = "filters-div";
+      button6 = createMenuButton("button6", "t", "13vw");
+      button11 = createMenuButton("button6", "t", "13vw");
+      button16 = createMenuButton("button6", "t", "13vw");
+      button17 = createMenuButton("button6", "t", "13vw");
+      button18 = createMenuButton("button6", "t", "13vw");
+
+    
+      filtersDiv.appendChild(button6);
+      filtersDiv.appendChild(button11);
+      filtersDiv.appendChild(button16);
+
+      filtersAndCards.appendChild(filtersDiv);
+      cardsDiv = document.createElement("div");
+      c = {
+        display: "flex",
+        // position: "relative",
+        // marginLeft: "3%",
+        // marginRight: "3%",
+
+        alignItems: "center",
+        rowGap: "10px",
+        // marginTop: "0",
+
+        // justifyContent: "space-between",
+        // flexBasis: "21%",
+        width: "79%",
+        flexWrap: "wrap",
+        // backgroundColor: "#222222",
+      }
+      Object.keys(c).forEach(function (a) {
+          cardsDiv.style[a] = c[a];
+      });
+      cardsDiv.id = "cards-div";
+      button7 = createMenuCard("button7", "t", "13vw");
+      button8 = createMenuCard("button8", "t", "13vw");
+      button9 = createMenuCard("button9", "t", "13vw");
+      button10 = createMenuCard("button10", "t", "13vw");
+      button12 = createMenuCard("button12", "t", "13vw");
+      button13 = createMenuCard("button13", "t", "13vw");
+      button14 = createMenuCard("button14", "t", "13vw");
+      button15 = createMenuCard("button15", "t", "13vw");
+      
+
+
+
+
+
+      cardsDiv.appendChild(button7);
+      cardsDiv.appendChild(button8);
+      cardsDiv.appendChild(button9);
+      cardsDiv.appendChild(button10);
+      cardsDiv.appendChild(button12);
+      cardsDiv.appendChild(button13);
+      cardsDiv.appendChild(button14);
+      cardsDiv.appendChild(button15);
+
+
+
+      filtersAndCards.appendChild(cardsDiv);
 
 
       
 
 
-      menuBg.appendChild(hubButton);
-      menuBg.appendChild(xButton);
+      
+
+      menuBg.appendChild(navbar);
+      menuBg.appendChild(buttonContainer);
+      menuBg.appendChild(filtersAndCards);
       document.body.appendChild(menuBg);
+      
       
 
     }
