@@ -233,9 +233,9 @@
     }
 
     let createMenuCard = (id, text, width) => {
-      let menuCard = document.createElement("button");
+      let menuCard = document.createElement("div");
       menuCard.id = id;
-      menuCard.innerHTML = text;
+      // menuCard.innerHTML = text;
  
       let c = {
         fontFamily: "Retron2000",
@@ -244,12 +244,13 @@
         // cursor: "pointer",
         backgroundColor: "white",
         width: width,
+        height: "200px",
         textAlign: "center",
         border: "solid 2px black",
         marginLeft: "5px",
         marginRight: "5px",
-        flex: "1 1 calc(33% - 10px)",
-        maxWidth: "calc(33% - 10px)",
+        flex: "1 0 calc(33% - 15px)",
+        maxWidth: "calc(33% - 15px)",
         // height: "auto",
       }
       Object.keys(c).forEach(function (a) {
@@ -465,21 +466,23 @@
 
       filtersAndCards.appendChild(filtersDiv);
       cardsDiv = document.createElement("div");
+      cardsDiv.addEventListener('wheel', (e) => {
+        console.log("hello)")
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        // e.preventDefault();
+        cardsDiv.focus();
+      });
       c = {
         display: "flex",
-        // position: "relative",
-        // marginLeft: "3%",
-        // marginRight: "3%",
-
         alignItems: "center",
         rowGap: "10px",
-        // marginTop: "0",
-
-        // justifyContent: "space-between",
-        // flexBasis: "21%",
         width: "79%",
         flexWrap: "wrap",
-        // backgroundColor: "#222222",
+        overflowX: "hidden",
+        overflowY: "scroll",
+        // scrollbarWidth: "thin",
+        scrollbarGutter: "stable",
       }
       Object.keys(c).forEach(function (a) {
           cardsDiv.style[a] = c[a];
