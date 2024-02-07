@@ -244,14 +244,14 @@
         display: "block",
         // cursor: "pointer",
         backgroundColor: "white",
-        width: width,
+        // width: width,
         height: "200px",
         textAlign: "center",
         border: "solid 2px black",
         marginLeft: "5px",
         marginRight: "5px",
-        flex: "1 0 calc(33% - 15px)",
-        maxWidth: "calc(33% - 15px)",
+        flex: "1 0 calc(25% - 15px)",
+        maxWidth: "calc(25% - 15px)",
         // height: "auto",
       }
       Object.keys(c).forEach(function (a) {
@@ -458,6 +458,7 @@
         flexDirection: "column",
         width: "19%",
         backgroundColor: "#f2f2f2",
+        position: "sticky",
         // marginRight: "2%",
       }
       Object.keys(c).forEach(function (a) {
@@ -468,6 +469,7 @@
       button16 = createMenuButton("button6", "t", "13vw");
       button17 = createMenuButton("button6", "t", "13vw");
       button18 = createMenuButton("button6", "t", "13vw");
+      
 
     
       filtersDiv.appendChild(button6);
@@ -491,6 +493,10 @@
         flexWrap: "wrap",
         // overflow: "auto",
         // height: "100%",
+        borderLeft: "solid 2px black",
+        borderTop: "solid 2px black",
+        // backgroundColor:"red",
+        paddingTop: "10px",
       }
       Object.keys(c).forEach(function (a) {
           cardsDiv.style[a] = c[a];
@@ -504,6 +510,8 @@
       button13 = createMenuCard("button13", "t", "13vw");
       button14 = createMenuCard("button14", "t", "13vw");
       button15 = createMenuCard("button15", "t", "13vw");
+      button27 = createMenuCard("button16", "t", "13vw");
+
       
 
 
@@ -518,6 +526,7 @@
       cardsDiv.appendChild(button13);
       cardsDiv.appendChild(button14);
       cardsDiv.appendChild(button15);
+      cardsDiv.appendChild(button27);
 
 
 
@@ -672,6 +681,7 @@
             
             
             createModLoaderMenuBtn();
+            document.getElementById("menu-button").click();
 
             notify("QOL Modloader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
 
