@@ -256,7 +256,7 @@
         return menuButton;
     }
 
-    let createMenuCard = (id, text, width) => {
+    let createMenuCard = (id, name, iconurl, enabled) => {
       let menuCard = document.createElement("div");
       menuCard.id = id;
       // menuCard.innerHTML = text;
@@ -297,14 +297,15 @@
       Object.keys(c).forEach(function (a) {
         cardImage.style[a] = c[a];
       });
-      cardImage.src = "https://cdn0.iconfinder.com/data/icons/web-development-47/64/feature-application-program-custom-512.png";
+      cardImage.src = iconurl;
       menuCard.appendChild(cardImage);
 
-      cardText = document.createElement("div");
+      cardText = document.createElement("p");
       c = {
         fontFamily: "Retron2000",
         color: "black",
-        fontSize: "2vw",
+        fontSize: "clamp(1vw, 2vw, 3vw)",
+        whiteSpace: "nowrap",
         // display: "block",
         // position: "relative",
         backgroundColor: "white",
@@ -312,28 +313,28 @@
       Object.keys(c).forEach(function (a) {
         cardText.style[a] = c[a];
       });
-      cardText.innerHTML = text;
+      cardText.innerHTML = name;
       menuCard.appendChild(cardText);
 
-      cardButtons = document.createElement("div"); 
+      topCards = document.createElement("div"); 
       c = {
         display: "flex",
         justifyContent: "space-between",
         // padding: "5px",
       }
       Object.keys(c).forEach(function (a) {
-        cardButtons.style[a] = c[a];
+        topCards.style[a] = c[a];
       });
-      cardButtons.className = "card-buttons";
+      topCards.className = "card-buttons";
       cardButton1 = createNavButton("button1", "?", "13vw");
       cardButton2 = createNavButton("button2", "⚙️", "13vw");
       cardButton3 = createNavButton("button3", "⭐", "13vw");
-      cardButtons.appendChild(cardButton1);
-      cardButtons.appendChild(cardButton2);
-      cardButtons.appendChild(cardButton3);
-      menuCard.appendChild(cardButtons);
+      topCards.appendChild(cardButton1);
+      topCards.appendChild(cardButton2);
+      topCards.appendChild(cardButton3);
+      menuCard.appendChild(topCards);
 
-      cardButtons2 = document.createElement("div"); 
+      bottomCards = document.createElement("div"); 
       c = {
         display: "flex",
         flex: "1",
@@ -341,12 +342,38 @@
         // padding: "5px",
       }
       Object.keys(c).forEach(function (a) {
-        cardButtons2.style[a] = c[a];
+        bottomCards.style[a] = c[a];
       });
-      cardButton4 = createNavButton("button4", "Enabled", "18vw");
-      cardButton4.style.backgroundColor = "lightgreen";
-      cardButtons2.appendChild(cardButton4);
-      menuCard.appendChild(cardButtons2);
+      if(enabled) {
+        cardButton4 = createNavButton("button4", "Enabled", "18vw");
+        cardButton4.style.backgroundColor = "rgb(45, 186, 47)"; //lightgreen
+      } else {
+        cardButton4 = createNavButton("button4", "Disabled", "18vw");
+        cardButton4.style.backgroundColor = "rgb(222, 48, 51)";
+      }
+      cardButton4.id = id + "-enable-button";
+      cardButton4.onclick = function() {
+        console.log("clicked")
+        console.log(JSON.parse(localStorage.getItem('modSettings'))[id]['enabled'])
+        if(JSON.parse(localStorage.getItem('modSettings'))[id]['enabled']) {
+          console.log("disabled")
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
+          modSettings[id]["enabled"] = false;
+          localStorage.setItem('modSettings', JSON.stringify(modSettings));
+          document.getElementById(id + '-enable-button').innerHTML = "Disabled";
+          document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(222, 48, 51)";
+        } else {
+          console.log("enabled")
+
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
+          modSettings[id]["enabled"] = true;
+          localStorage.setItem('modSettings', JSON.stringify(modSettings));
+          document.getElementById(id + '-enable-button').innerHTML = "Enabled";
+          document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(45, 186, 47)";
+        }
+      }
+      bottomCards.appendChild(cardButton4);
+      menuCard.appendChild(bottomCards);
 
 
 
@@ -599,6 +626,7 @@
         borderTop: "solid 2px black",
         height: "100%",
         paddingTop: "10px",
+        // paddingBottom: "25%",
         flex: "0 0 auto",
         // backgroundColor: "red",
 
@@ -611,31 +639,15 @@
           cardsDiv.style[a] = c[a];
       });
       cardsDiv.id = "cards-div";
-      button7 = createMenuCard("button7", "Fly", "13vw");
-      button8 = createMenuCard("button8", "Chaos", "13vw");
-      button9 = createMenuCard("button9", "Gui", "13vw");
-      button10 = createMenuCard("button10", "Hurricane", "13vw");
-      button12 = createMenuCard("button12", "Level Selector", "13vw");
-      button13 = createMenuCard("button13", "Save State", "13vw");
-      button14 = createMenuCard("button14", "Random Level", "13vw");
-      button15 = createMenuCard("button15", "Random Keys", "13vw");
-      button27 = createMenuCard("button16", "t", "13vw");
 
-      
-
-
-
-
-
-      cardsDiv.appendChild(button7);
-      cardsDiv.appendChild(button8);
-      cardsDiv.appendChild(button9);
-      cardsDiv.appendChild(button10);
-      cardsDiv.appendChild(button12);
-      cardsDiv.appendChild(button13);
-      cardsDiv.appendChild(button14);
-      cardsDiv.appendChild(button15);
-      cardsDiv.appendChild(button27);
+      console.log(this.backendConfig['mods'])
+      for (const [key] of Object.entries(this.backendConfig['mods'])) {
+        console.log(key)
+        if(key != "version") {
+          b = createMenuCard(key, this.backendConfig['mods'][key]['name'], this.backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
+          cardsDiv.appendChild(b);
+        }
+      }
 
 
 
@@ -663,6 +675,7 @@
 
     let cleanModLoader = {
         async init() {
+            this.backendConfig = null;
             var b=document.createElement("div")
             c={backgroundColor:"rgba(150,10,1,0.8)",width:"5px",height:"5px",position:"absolute",bottom:"5px",right:"5px", zIndex:"2147483647", display:"none"}
             Object.keys(c).forEach(function(a){b.style[a]=c[a]})
@@ -703,11 +716,12 @@
             .then(jsondata => {
                 return jsondata;
             });
+            
             // console.log(backendConfig['mods'])
 
             userConfig = JSON.parse(localStorage.getItem('modSettings'));
             // console.log(userConfig)
-            
+            this.backendConfig = backendConfig;
             if(userConfig === null) {
                 //first time user
                 freshUserConfig = {}
@@ -738,6 +752,7 @@
                         customModNum++;
                     }
                 }
+                freshUserConfig['version'] = backendConfig['version'];
                 localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
             } else if(userConfig['version'] !== backendConfig['version']) {
                 //new version
