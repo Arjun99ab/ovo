@@ -413,6 +413,7 @@
               map = disableClick();
               createModLoaderMenu();
               document.getElementById("menu-button").style.display = "none";
+              document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
           } 
       }
       document.body.appendChild(menuButton);
@@ -525,6 +526,7 @@
           menuBg.remove();
           enableClick(map);
           document.getElementById("menu-button").style.display = "block";
+          document.getElementById("c2canvasdiv").style.filter = "none";
       }
       navbar.appendChild(xButton);
 
