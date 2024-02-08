@@ -437,12 +437,11 @@
         display: "flex",
         flex: "1",
         alignItems: "start",
-        justifyContent: "space-between",
-        overflowY: "auto",
-        overflowX: "hidden",
-        scrollbarGutter: "stable",
-        scrollbarWidth: "thin",
-        height: "100%",
+        overflow: "hidden",
+        // height: "100%",
+        // backgroundColor: "blue",
+        // justifyContent: "space-between",
+        // flexDirection: "row",
 
       }
       Object.keys(c).forEach(function (a) {
@@ -452,13 +451,14 @@
       filtersDiv.id = "filters-div";
       c = {
         display: "flex",
+        flex: "1",
         alignItems: "left",
         justifyContent: "space-between",
         padding: "10px",
         flexDirection: "column",
         width: "19%",
-        backgroundColor: "#f2f2f2",
-        position: "sticky",
+        // backgroundColor: "#f2f2f2",
+        // position: "sticky",
         // marginRight: "2%",
       }
       Object.keys(c).forEach(function (a) {
@@ -487,16 +487,23 @@
       });
       c = {
         display: "flex",
-        alignItems: "center",
+        // alignItems: "start",
+        // justifyContent: "space-between",
+        // position: "relative",
         rowGap: "10px",
         width: "79%",
         flexWrap: "wrap",
-        // overflow: "auto",
-        // height: "100%",
         borderLeft: "solid 2px black",
         borderTop: "solid 2px black",
-        // backgroundColor:"red",
+        height: "100%",
         paddingTop: "10px",
+        flex: "0 0 auto",
+        // backgroundColor: "red",
+
+        overflowY: "auto",
+        // overflowX: "hidden",
+        // scrollbarGutter: "stable",
+        // scrollbarWidth: "thin",
       }
       Object.keys(c).forEach(function (a) {
           cardsDiv.style[a] = c[a];
