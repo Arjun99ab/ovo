@@ -8,6 +8,7 @@
     }
 
     var runtime;
+    var filters = new Set();
 
     function sleep (time) {
         return new Promise((resolve) => setTimeout(resolve, time));
@@ -229,6 +230,40 @@
       Object.keys(c).forEach(function (a) {
         menuButton.style[a] = c[a];
       });
+
+      menuButton.onclick = function() {
+        if(document.getElementById(id).style.backgroundColor === "white") {
+          filters.forEach((filter) => { //set all other filters to white
+            document.getElementById(filter + "-filter-btn").style.backgroundColor = "white";
+          });
+          this.currentFilter = id.split("-")[0]; //set currentFilter to this filter
+          document.getElementById(id).style.backgroundColor = "lightblue";
+          filterCards = document.getElementById("cards-div").children;
+          while(filterCards.length > 0) { //clear all cards
+            filterCards[0].remove();
+          }
+          for (const [key] of Object.entries(backendConfig['mods'])) {
+            if(key != "version" && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
+              if(this.currentFilter === 'all') {
+                b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
+                cardsDiv.appendChild(b);
+              } else if(this.currentFilter === 'favorite') {
+                if(JSON.parse(localStorage.getItem('modSettings'))[key]['favorite']) {
+                  b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
+                  cardsDiv.appendChild(b);
+                }
+              } else {
+                if(backendConfig['mods'][key]['tags'].includes(this.currentFilter)) {
+                  b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
+                  cardsDiv.appendChild(b);
+                }
+              }
+            }
+          }
+
+
+        } 
+      }
       return menuButton;
     }
 
@@ -236,7 +271,7 @@
     let createNavButton = (id, text, width) => {
         let menuButton = document.createElement("button");
         menuButton.id = id;
-        menuButton.innerHTML = text;
+        menuButton.innerHTML = "";
 
         let c = {
           fontFamily: "Retron2000",
@@ -245,8 +280,13 @@
           cursor: "pointer",
           backgroundColor: "white",
           width: width,
+          height: "3vw",
           textAlign: "center",
           border: "solid 2px black",
+          background: "url(https://cdn-icons-png.flaticon.com/128/1828/1828970.png)",
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
 
           // height: "auto",
         }
@@ -501,7 +541,7 @@
           titleText.style[a] = c[a];
       });
       titleText.id = "title-text";
-      newContent = document.createTextNode("OvO Modloader");
+      newContent = document.createTextNode("apple pie");
       titleText.appendChild(newContent);
       navbar.appendChild(titleText);
 
@@ -593,21 +633,35 @@
       Object.keys(c).forEach(function (a) {
           filtersDiv.style[a] = c[a];
       });
-      button6 = createFilterButton("button6", "All", "13vw"); //fix so that font rescales
-      button11 = createFilterButton("button6", "Popular", "13vw");
-      button16 = createFilterButton("button6", "Favorites", "13vw");
-      button17 = createFilterButton("button6", "Custom", "13vw");
-      button18 = createFilterButton("button6", "Hacks", "13vw");
+
+
+      console.log(filters)
+      // allFilterButton = createFilterButton("all-filter-btn", "All", "13vw", 'all'); //fix so that font rescales
+      // favFilterButton = createFilterButton("fav-filter-btn", "Favorites", "13vw", 'favorite');
+      // customFilterButton = createFilterButton("custom-filter-btn", "Custom", "13vw", 'custom');
+      // filtersDiv.appendChild(allFilterButton);
+      // filtersDiv.appendChild(favFilterButton);
+      // filtersDiv.appendChild(customFilterButton);
+
+      for(const filter of filters) {
+        console.log(filter)
+        filterButton = createFilterButton(filter + "-filter-btn", filter.charAt(0).toUpperCase() + filter.slice(1), "13vw");
+        if(filter === 'all') { //set initial filter to all
+          filterButton.style.backgroundColor = "lightblue";
+          this.currentFilter = 'all';
+
+        }
+        filtersDiv.appendChild(filterButton);
+      }
+
       
 
+
     
-      filtersDiv.appendChild(button6);
-      filtersDiv.appendChild(button11);
-      filtersDiv.appendChild(button16);
-      filtersDiv.appendChild(button18);
 
 
       filtersAndCards.appendChild(filtersDiv);
+      
       cardsDiv = document.createElement("div");
       cardsDiv.addEventListener('wheel', (e) => {
         // console.log("hello)")
@@ -645,7 +699,7 @@
       console.log(this.backendConfig['mods'])
       for (const [key] of Object.entries(this.backendConfig['mods'])) {
         console.log(key)
-        if(key != "version") {
+        if(key != "version" && this.backendConfig['mods'][key]['version'].includes(version) && this.backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
           b = createMenuCard(key, this.backendConfig['mods'][key]['name'], this.backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
           cardsDiv.appendChild(b);
         }
@@ -665,6 +719,8 @@
       menuBg.appendChild(buttonContainer);
       menuBg.appendChild(filtersAndCards);
       document.body.appendChild(menuBg);
+
+      
       
       
 
@@ -678,6 +734,7 @@
     let cleanModLoader = {
         async init() {
             this.backendConfig = null;
+            this.currentFilter = null;
             var b=document.createElement("div")
             c={backgroundColor:"rgba(150,10,1,0.8)",width:"5px",height:"5px",position:"absolute",bottom:"5px",right:"5px", zIndex:"2147483647", display:"none"}
             Object.keys(c).forEach(function(a){b.style[a]=c[a]})
@@ -718,6 +775,9 @@
             .then(jsondata => {
                 return jsondata;
             });
+
+
+
             
             // console.log(backendConfig['mods'])
 
@@ -729,6 +789,7 @@
                 freshUserConfig = {}
                 for (const [key] of Object.entries(backendConfig['mods'])) {
                     freshUserConfig[key] = backendConfig["mods"][key]['defaultSettings'];
+
                 }
                 localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
             } else if(userConfig['version'] === undefined) {
@@ -793,6 +854,19 @@
                     document.head.appendChild(js);
                 }
             }
+            console.log(filters)
+            filters.add('all');
+            filters.add('favorite');
+            filters.add('custom');
+            for (const [key] of Object.entries(backendConfig['mods'])) {
+              console.log(backendConfig["mods"][key]['tags'])
+              for(var i = 0; i < backendConfig["mods"][key]['tags'].length; i++) {
+                filters.add(backendConfig["mods"][key]['tags'][i]);
+                console.log("ooh ahah")
+              }
+            }
+            console.log(filters)
+            
                         
 
             document.addEventListener("keydown", (event) => {
