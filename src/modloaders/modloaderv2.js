@@ -208,8 +208,32 @@
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mobile' : 'pc';
 
 
+    let createFilterButton = (id, text, width) => {
+      let menuButton = document.createElement("button");
+      menuButton.id = id;
+      menuButton.innerHTML = text;
+
+      let c = {
+        fontFamily: "Retron2000",
+        color: "black",
+        fontSize: "2vw",
+        cursor: "pointer",
+        backgroundColor: "white",
+        width: width,
+        textAlign: "center",
+        marginTop: "15px",
+        border: "solid 2px black",
+
+        // height: "auto",
+      }
+      Object.keys(c).forEach(function (a) {
+        menuButton.style[a] = c[a];
+      });
+      return menuButton;
+    }
+
     
-    let createMenuButton = (id, text, width) => {
+    let createNavButton = (id, text, width) => {
         let menuButton = document.createElement("button");
         menuButton.id = id;
         menuButton.innerHTML = text;
@@ -218,7 +242,7 @@
           fontFamily: "Retron2000",
           color: "black",
           fontSize: "2vw",
-          // cursor: "pointer",
+          cursor: "pointer",
           backgroundColor: "white",
           width: width,
           textAlign: "center",
@@ -236,16 +260,18 @@
       let menuCard = document.createElement("div");
       menuCard.id = id;
       // menuCard.innerHTML = text;
- 
-      let c = {
+      c = {
         fontFamily: "Retron2000",
         color: "black",
         fontSize: "2vw",
-        display: "block",
-        // cursor: "pointer",
+        // display: "block",
+        position: "relative",
         backgroundColor: "white",
-        // width: width,
-        height: "200px",
+        // aspectRatio: "1 / 1",
+        
+        width: "calc(25% - 15px)",
+        height: "0",
+        paddingBottom: "25%",
         textAlign: "center",
         border: "solid 2px black",
         marginLeft: "5px",
@@ -253,10 +279,81 @@
         flex: "1 0 calc(25% - 15px)",
         maxWidth: "calc(25% - 15px)",
         // height: "auto",
+        
+        // backgroundColor: "lightblue",
+
       }
       Object.keys(c).forEach(function (a) {
         menuCard.style[a] = c[a];
       });
+
+      cardImage = document.createElement("img");
+      c = {
+        width: "55%",
+        // height: "100%",
+        objectFit: "cover",
+        objectPosition: "center",
+      }
+      Object.keys(c).forEach(function (a) {
+        cardImage.style[a] = c[a];
+      });
+      cardImage.src = "https://cdn0.iconfinder.com/data/icons/web-development-47/64/feature-application-program-custom-512.png";
+      menuCard.appendChild(cardImage);
+
+      cardText = document.createElement("div");
+      c = {
+        fontFamily: "Retron2000",
+        color: "black",
+        fontSize: "2vw",
+        // display: "block",
+        // position: "relative",
+        backgroundColor: "white",
+      }
+      Object.keys(c).forEach(function (a) {
+        cardText.style[a] = c[a];
+      });
+      cardText.innerHTML = text;
+      menuCard.appendChild(cardText);
+
+      cardButtons = document.createElement("div"); 
+      c = {
+        display: "flex",
+        justifyContent: "space-between",
+        // padding: "5px",
+      }
+      Object.keys(c).forEach(function (a) {
+        cardButtons.style[a] = c[a];
+      });
+      cardButtons.className = "card-buttons";
+      cardButton1 = createNavButton("button1", "?", "13vw");
+      cardButton2 = createNavButton("button2", "⚙️", "13vw");
+      cardButton3 = createNavButton("button3", "⭐", "13vw");
+      cardButtons.appendChild(cardButton1);
+      cardButtons.appendChild(cardButton2);
+      cardButtons.appendChild(cardButton3);
+      menuCard.appendChild(cardButtons);
+
+      cardButtons2 = document.createElement("div"); 
+      c = {
+        display: "flex",
+        flex: "1",
+        // justifyContent: "space-between",
+        // padding: "5px",
+      }
+      Object.keys(c).forEach(function (a) {
+        cardButtons2.style[a] = c[a];
+      });
+      cardButton4 = createNavButton("button4", "Enabled", "18vw");
+      cardButton4.style.backgroundColor = "lightgreen";
+      cardButtons2.appendChild(cardButton4);
+      menuCard.appendChild(cardButtons2);
+
+
+
+        
+
+
+
       return menuCard;
     }
 
@@ -332,7 +429,7 @@
         // flex: "0 0 auto",
         // alignItems: "center",
         justifyContent: "space-between",
-        padding: "10px",
+        padding: "5px",
         // position: "relative",
         // backgroundColor: "#f2f2f2",
       }
@@ -351,7 +448,7 @@
       Object.keys(c).forEach(function (a) {
           logo.style[a] = c[a];
       });
-      logo.src = "../assets/img/dimensions.png";
+      logo.src = "../assets/img/home-icon.png";
       logo.onclick = function() {
           window.location.href = "../";
       }
@@ -376,7 +473,7 @@
           titleText.style[a] = c[a];
       });
       titleText.id = "title-text";
-      newContent = document.createTextNode("apple pie");
+      newContent = document.createTextNode("OvO Modloader");
       titleText.appendChild(newContent);
       navbar.appendChild(titleText);
 
@@ -415,12 +512,13 @@
           buttonContainer.style[a] = c[a];
       });
       buttonContainer.className = "button-container";
-      button1 = createMenuButton("button1", "t", "13vw");
-      button2 = createMenuButton("button2", "t", "13vw");
+      button1 = createNavButton("button1", "Mods", "13vw");
+      button2 = createNavButton("button2", "Settings", "13vw");
       button2.disabled = true;
-      button3 = createMenuButton("button3", "t", "13vw");
-      button4 = createMenuButton("button4", "t", "13vw");
-      button5 = createMenuButton("button5", "t", "13vw");
+      button3 = createNavButton("button3", "Profiles", "13vw");
+      button4 = createNavButton("button4", "Skins", "13vw");
+      button5 = createNavButton("button5", "Add Mod", "13vw");
+      button6 = createNavButton("button6", "Search", "13vw");
 
 
      
@@ -429,6 +527,7 @@
       buttonContainer.appendChild(button3);
       buttonContainer.appendChild(button4);
       buttonContainer.appendChild(button5);
+      buttonContainer.appendChild(button6);
 
 
       filtersAndCards = document.createElement("div");
@@ -456,25 +555,28 @@
         justifyContent: "space-between",
         padding: "10px",
         flexDirection: "column",
-        width: "19%",
-        // backgroundColor: "#f2f2f2",
+        // width: "10%",
+        borderTop: "solid 2px black",
+        // backgroundColor: "red",
         // position: "sticky",
         // marginRight: "2%",
       }
       Object.keys(c).forEach(function (a) {
           filtersDiv.style[a] = c[a];
       });
-      button6 = createMenuButton("button6", "t", "13vw");
-      button11 = createMenuButton("button6", "t", "13vw");
-      button16 = createMenuButton("button6", "t", "13vw");
-      button17 = createMenuButton("button6", "t", "13vw");
-      button18 = createMenuButton("button6", "t", "13vw");
+      button6 = createFilterButton("button6", "All", "13vw"); //fix so that font rescales
+      button11 = createFilterButton("button6", "Popular", "13vw");
+      button16 = createFilterButton("button6", "Favorites", "13vw");
+      button17 = createFilterButton("button6", "Custom", "13vw");
+      button18 = createFilterButton("button6", "Hacks", "13vw");
       
 
     
       filtersDiv.appendChild(button6);
       filtersDiv.appendChild(button11);
       filtersDiv.appendChild(button16);
+      filtersDiv.appendChild(button18);
+
 
       filtersAndCards.appendChild(filtersDiv);
       cardsDiv = document.createElement("div");
@@ -491,7 +593,7 @@
         // justifyContent: "space-between",
         // position: "relative",
         rowGap: "10px",
-        width: "79%",
+        width: "83%",
         flexWrap: "wrap",
         borderLeft: "solid 2px black",
         borderTop: "solid 2px black",
@@ -509,14 +611,14 @@
           cardsDiv.style[a] = c[a];
       });
       cardsDiv.id = "cards-div";
-      button7 = createMenuCard("button7", "t", "13vw");
-      button8 = createMenuCard("button8", "t", "13vw");
-      button9 = createMenuCard("button9", "t", "13vw");
-      button10 = createMenuCard("button10", "t", "13vw");
-      button12 = createMenuCard("button12", "t", "13vw");
-      button13 = createMenuCard("button13", "t", "13vw");
-      button14 = createMenuCard("button14", "t", "13vw");
-      button15 = createMenuCard("button15", "t", "13vw");
+      button7 = createMenuCard("button7", "Fly", "13vw");
+      button8 = createMenuCard("button8", "Chaos", "13vw");
+      button9 = createMenuCard("button9", "Gui", "13vw");
+      button10 = createMenuCard("button10", "Hurricane", "13vw");
+      button12 = createMenuCard("button12", "Level Selector", "13vw");
+      button13 = createMenuCard("button13", "Save State", "13vw");
+      button14 = createMenuCard("button14", "Random Level", "13vw");
+      button15 = createMenuCard("button15", "Random Keys", "13vw");
       button27 = createMenuCard("button16", "t", "13vw");
 
       
