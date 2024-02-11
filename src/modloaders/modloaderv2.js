@@ -209,6 +209,229 @@
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mobile' : 'pc';
 
 
+    let createConfirmMenu = () => {
+      //Create background div
+      let confirmBg = document.createElement("div");
+      confirmBg.id = "confirm-bg";
+
+      c = {
+          display: "block",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          backgroundColor: "white",
+          border: "solid",
+          borderColor: "black",
+          borderWidth: "2px",
+          fontFamily: "Retron2000",
+          cursor: "default",
+          color: "black",
+          fontSize: "10pt",
+          width: "35%",
+          // height: "15%",
+          overflow: "auto",
+          margin: "0",
+          padding: "5px",
+      };
+      Object.keys(c).forEach(function (a) {
+          confirmBg.style[a] = c[a];
+      });
+
+      infoText = document.createElement("div");
+      infoText.id = "asd";
+
+      c = {
+          backgroundColor: "white",
+          border: "none",
+          fontFamily: "Retron2000",
+          // position: "relative",
+          // top: "2%",
+          // left: "25%",
+          textAlign: "center",
+          //padding: "5px",
+          color: "black",
+          fontSize: "13pt",
+          cursor: "default",
+      };
+      Object.keys(c).forEach(function (a) {
+          infoText.style[a] = c[a];
+      });
+
+      content = document.createTextNode("This mod requires a reload to disable.");
+      infoText.appendChild(content);
+      
+      // Create buttons container
+      let buttonsContainer = document.createElement("div");
+      buttonsContainer.style.display = "flex";
+      buttonsContainer.style.flexWrap = "wrap";
+      buttonsContainer.style.justifyContent = "center";
+      buttonsContainer.style.alignItems = "center";
+      buttonsContainer.style.marginTop = "15px";
+      buttonsContainer.style.marginBottom = "10px";
+      buttonsContainer.style.gap = "10px";
+      // buttonsContainer.style.position = "relative";
+
+      // Create confirm button
+      let confirmButton = document.createElement("button");
+      confirmButton.innerHTML = "Reload now";
+      confirmButton.style.fontFamily = "Retron2000";
+      confirmButton.style.fontSize = "14pt";
+      confirmButton.style.backgroundColor = "rgb(45, 186, 47)";
+      confirmButton.style.color = "white";
+      confirmButton.style.border = "none";
+      confirmButton.style.padding = "5px 10px";
+      confirmButton.style.cursor = "pointer";
+      confirmButton.onclick = function() {
+          location.reload();
+      };
+
+      // Create cancel button
+      let cancelButton = document.createElement("button");
+      cancelButton.innerHTML = "Reload later";
+      cancelButton.style.fontFamily = "Retron2000";
+      cancelButton.style.fontSize = "14pt"
+      cancelButton.style.backgroundColor = "rgb(222, 48, 51)";
+      cancelButton.style.color = "white";
+      cancelButton.style.border = "none";
+      cancelButton.style.padding = "5px 10px";
+      cancelButton.style.cursor = "pointer";
+      cancelButton.onclick = function() {
+          console.log("cancel");
+
+          confirmBg.remove();
+          document.getElementById("menu-bg").style.pointerEvents = "auto";
+          document.getElementById("menu-bg").style.filter = "none";
+          document.getElementById("c2canvasdiv").style.filter = "none";
+
+          
+          // enableClick(map);   
+      };
+
+      // Append buttons to the buttons container
+      buttonsContainer.appendChild(confirmButton);
+      buttonsContainer.appendChild(cancelButton);
+
+
+      confirmBg.appendChild(infoText);
+      confirmBg.appendChild(buttonsContainer);
+      
+
+      // confirmBg.appendChild(xButton);
+      document.body.appendChild(confirmBg);
+  }
+
+  let createNotifyModal = (text) => {
+    //Create background div
+    let notifyBg = document.createElement("div");
+    notifyBg.id = "notify-bg";
+
+    c = {
+        display: "block",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "white",
+        border: "solid",
+        borderColor: "black",
+        borderWidth: "2px",
+        fontFamily: "Retron2000",
+        cursor: "default",
+        color: "black",
+        fontSize: "10pt",
+        width: "35%",
+        // height: "15%",
+        overflow: "auto",
+        margin: "0",
+        padding: "10px",
+    };
+    Object.keys(c).forEach(function (a) {
+      notifyBg.style[a] = c[a];
+    });
+
+    infoText = document.createElement("div");
+    infoText.id = "asd";
+
+    c = {
+        backgroundColor: "white",
+        border: "none",
+        fontFamily: "Retron2000",
+        // position: "relative",
+        // top: "2%",
+        // left: "25%",
+        textAlign: "center",
+        //padding: "5px",
+        color: "black",
+        fontSize: "2vw",
+        cursor: "default",
+    };
+    Object.keys(c).forEach(function (a) {
+        infoText.style[a] = c[a];
+    });
+
+    content = document.createTextNode(text);
+    infoText.appendChild(content);
+    
+    // Create buttons container
+    let buttonsContainer = document.createElement("div");
+    c = {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "15px",
+      marginBottom: "10px",
+      gap: "10px",
+    }
+    Object.keys(c).forEach(function (a) {
+      buttonsContainer.style[a] = c[a];
+    });
+
+
+    // Create confirm button
+    let okButton = document.createElement("button");
+    okButton.innerHTML = "Okay";
+    d = {
+      fontFamily: "Retron2000",
+      fontSize: "1.75vw",
+      backgroundColor: "#1c73e8",
+      color: "white",
+      border: "none",
+      padding: "5px 10px 5px 10px",
+      cursor: "pointer",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "10px",
+    }
+    Object.keys(d).forEach(function (a) {
+      okButton.style[a] = d[a];
+
+    });
+    okButton.onclick = function() {
+      notifyBg.remove();
+      document.getElementById("menu-bg").style.pointerEvents = "auto";
+      document.getElementById("menu-bg").style.filter = "none";
+      document.getElementById("c2canvasdiv").style.filter = "none";
+    };
+
+    // // Append buttons to the buttons container
+    buttonsContainer.appendChild(okButton);
+    // buttonsContainer.appendChild(cancelButton);
+
+
+    notifyBg.appendChild(infoText);
+    notifyBg.appendChild(buttonsContainer);
+    
+
+    // confirmBg.appendChild(xButton);
+    document.body.appendChild(notifyBg);
+}
+
     let createFilterButton = (id, text, width) => {
       let menuButton = document.createElement("button");
       menuButton.id = id;
@@ -222,8 +445,10 @@
         backgroundColor: "white",
         width: width,
         textAlign: "center",
-        marginTop: "15px",
-        border: "solid 2px black",
+        verticalAlign: "middle",
+        marginBottom: "15px",
+        border: "solid 3px black",
+        borderRadius: "10px",
 
         // height: "auto",
       }
@@ -269,31 +494,100 @@
 
     
     let createNavButton = (id, text, width) => {
-        let menuButton = document.createElement("button");
-        menuButton.id = id;
-        menuButton.innerHTML = "";
+      let menuButton = document.createElement("div");
+      menuButton.id = id;
+      let p = document.createElement("p");
+      p.innerHTML = text;
+      let d = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: width,
+        height: "3vw",
+        textAlign: "center",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        borderRadius: "10px 10px 10px 10px",
+        
+      }
+      Object.keys(d).forEach(function (a) {
+        menuButton.style[a] = d[a];
+      });
+      
+      menuButton.appendChild(p);
 
-        let c = {
-          fontFamily: "Retron2000",
-          color: "black",
-          fontSize: "2vw",
-          cursor: "pointer",
-          backgroundColor: "white",
-          width: width,
-          height: "3vw",
-          textAlign: "center",
-          border: "solid 2px black",
-          background: "url(https://cdn-icons-png.flaticon.com/128/1828/1828970.png)",
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
+      let c = {
+        fontFamily: "Retron2000",
+        color: "black",
+        fontSize: "2vw",
+        cursor: "pointer",
+        backgroundColor: "white",
+        
+        width: width,
+        height: "3vw",
+        textAlign: "center",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        // background: "url(https://cdn-icons-png.flaticon.com/128/1828/1828970.png)",
+        // backgroundSize: "contain",
+        // backgroundRepeat: "no-repeat",
+        // backgroundPosition: "center",
+        // borderRadius: "10px",
 
-          // height: "auto",
-        }
-        Object.keys(c).forEach(function (a) {
-          menuButton.style[a] = c[a];
-        });
-        return menuButton;
+        // height: "auto",
+      }
+      Object.keys(c).forEach(function (a) {
+        menuButton.style[a] = c[a];
+      });
+      return menuButton;
+    }
+
+    let createCardButton = (id, text, width) => {
+      let menuButton = document.createElement("div");
+      menuButton.id = id;
+      let p = document.createElement("p");
+      p.innerHTML = text;
+      let d = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: width,
+        height: "3vw",
+        textAlign: "center",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        
+      }
+      Object.keys(d).forEach(function (a) {
+        menuButton.style[a] = d[a];
+      });
+      
+      menuButton.appendChild(p);
+
+      let c = {
+        fontFamily: "Retron2000",
+        color: "black",
+        fontSize: "2vw",
+        cursor: "pointer",
+        backgroundColor: "white",
+        
+        width: width,
+        height: "3vw",
+        textAlign: "center",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        // background: "url(https://cdn-icons-png.flaticon.com/128/1828/1828970.png)",
+        // backgroundSize: "contain",
+        // backgroundRepeat: "no-repeat",
+        // backgroundPosition: "center",
+        // borderRadius: "10px",
+
+        // height: "auto",
+      }
+      Object.keys(c).forEach(function (a) {
+        menuButton.style[a] = c[a];
+      });
+      return menuButton;
     }
 
     let createMenuCard = (id, name, iconurl, enabled) => {
@@ -301,78 +595,107 @@
       menuCard.id = id;
       // menuCard.innerHTML = text;
       c = {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        // alignItems: "center",
+        width: "100%",
+        flexGrow: "0",
+        flexShrink: "0",
+
+        // padding: "0",
+        aspectRatio: "5 / 6",
         fontFamily: "Retron2000",
         color: "black",
-        fontSize: "2vw",
-        // display: "block",
-        position: "relative",
-        backgroundColor: "white",
-        // aspectRatio: "1 / 1",
-        
-        width: "calc(25% - 15px)",
-        height: "0",
-        paddingBottom: "25%",
+        // fontSize: "2vw",
+        backgroundColor: "white",  
         textAlign: "center",
-        border: "solid 2px black",
-        marginLeft: "5px",
-        marginRight: "5px",
-        flex: "1 0 calc(25% - 15px)",
-        maxWidth: "calc(25% - 15px)",
-        // height: "auto",
-        
-        // backgroundColor: "lightblue",
-
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        borderRadius: "10px 10px 13px 13px",
       }
       Object.keys(c).forEach(function (a) {
         menuCard.style[a] = c[a];
       });
 
+      
+
       cardImage = document.createElement("img");
       c = {
-        width: "55%",
-        // height: "100%",
-        objectFit: "cover",
-        objectPosition: "center",
+        width: "auto",
+        height: "auto",
+        maxWidth: "60%",
+        minWidth: "60%",
+        // aspectRatio: "1 / 1",
+        marginTop: "5%",
+        marginLeft: "auto",
+        marginRight: "auto",
+        // backgroundColor: "blue",
+
+        
       }
       Object.keys(c).forEach(function (a) {
         cardImage.style[a] = c[a];
       });
       cardImage.src = iconurl;
-      menuCard.appendChild(cardImage);
 
       cardText = document.createElement("p");
       c = {
         fontFamily: "Retron2000",
         color: "black",
-        fontSize: "clamp(1vw, 2vw, 3vw)",
-        whiteSpace: "nowrap",
+        fontSize: "2vw",
+        // maxWidth: "100%",
+        // whiteSpace: "nowrap",
         // display: "block",
         // position: "relative",
-        backgroundColor: "white",
+        // margin: "0",
+        // padding: "0",
+        // backgroundColor: "red",
+        // gridArea: "t",
       }
       Object.keys(c).forEach(function (a) {
         cardText.style[a] = c[a];
       });
       cardText.innerHTML = name;
-      menuCard.appendChild(cardText);
 
+      cardButtons = document.createElement("div");
+      c = {
+        display: "flex",
+        flexWrap: "wrap",  
+        justifyContent: "flex-end",
+      }
+      Object.keys(c).forEach(function (a) {
+        cardButtons.style[a] = c[a];
+      });
+      
       topCards = document.createElement("div"); 
       c = {
         display: "flex",
         justifyContent: "space-between",
+        width: "100%",
         // padding: "5px",
       }
       Object.keys(c).forEach(function (a) {
         topCards.style[a] = c[a];
       });
+
       topCards.className = "card-buttons";
-      cardButton1 = createNavButton("button1", "?", "13vw");
-      cardButton2 = createNavButton("button2", "⚙️", "13vw");
-      cardButton3 = createNavButton("button3", "⭐", "13vw");
-      topCards.appendChild(cardButton1);
-      topCards.appendChild(cardButton2);
-      topCards.appendChild(cardButton3);
-      menuCard.appendChild(topCards);
+      infoButton = createCardButton("button1", "t", "calc(100%/3)");
+      settingsButton = createCardButton("button2", "t", "calc(100%/3)");
+      favoriteButton = createCardButton("button3", "t", "calc(100%/3)");
+
+      infoButton.style.borderLeft = "none";
+      infoButton.style.borderRight = "none";
+      favoriteButton.style.borderLeft = "none"
+      favoriteButton.style.borderRight = "none";
+
+
+
+      topCards.appendChild(infoButton);
+      topCards.appendChild(settingsButton);
+      topCards.appendChild(favoriteButton);
+      cardButtons.appendChild(topCards);
+      
 
       bottomCards = document.createElement("div"); 
       c = {
@@ -385,14 +708,18 @@
         bottomCards.style[a] = c[a];
       });
       if(enabled) {
-        cardButton4 = createNavButton("button4", "Enabled", "18vw");
-        cardButton4.style.backgroundColor = "rgb(45, 186, 47)"; //lightgreen
+        enabledButton = createNavButton("button4", "Enabled", "100%");
+        enabledButton.style.backgroundColor = "rgb(45, 186, 47)"; //lightgreen
       } else {
-        cardButton4 = createNavButton("button4", "Disabled", "18vw");
-        cardButton4.style.backgroundColor = "rgb(222, 48, 51)";
+        enabledButton = createNavButton("button4", "Disabled", "100%");
+        enabledButton.style.backgroundColor = "rgb(222, 48, 51)";
       }
-      cardButton4.id = id + "-enable-button";
-      cardButton4.onclick = function() {
+      enabledButton.style.gridArea =  "b4";
+      enabledButton.style.border = "none";
+      enabledButton.style.borderRadius = "0px 0px 10px 10px";
+      enabledButton.id = id + "-enable-button";
+      enabledButton.onclick = function() {
+        
         console.log("clicked")
         console.log(JSON.parse(localStorage.getItem('modSettings'))[id]['enabled'])
         if(JSON.parse(localStorage.getItem('modSettings'))[id]['enabled']) {
@@ -412,11 +739,13 @@
           document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(45, 186, 47)";
         }
       }
-      bottomCards.appendChild(cardButton4);
-      menuCard.appendChild(bottomCards);
+      
+      bottomCards.appendChild(enabledButton);
+      cardButtons.appendChild(bottomCards);
 
-
-
+      menuCard.appendChild(cardImage);
+      menuCard.appendChild(cardText);
+      menuCard.appendChild(cardButtons);
         
 
 
@@ -436,7 +765,7 @@
           position: "absolute",
           cursor: "pointer",
           left: "4px",
-          top: "2px",
+          top: "3px",
           width: "100px",
           height: "100px",
           display: "block",
@@ -471,7 +800,7 @@
           backgroundColor: "white",
           border: "solid",
           borderColor: "black",
-          borderWidth: "2px",
+          borderWidth: "3px",
           fontFamily: "Retron2000",
           position: "absolute",
           cursor: "default",
@@ -541,7 +870,7 @@
           titleText.style[a] = c[a];
       });
       titleText.id = "title-text";
-      newContent = document.createTextNode("apple pie");
+      newContent = document.createTextNode("OvO Modloader");
       titleText.appendChild(newContent);
       navbar.appendChild(titleText);
 
@@ -582,12 +911,38 @@
       });
       buttonContainer.className = "button-container";
       button1 = createNavButton("button1", "Mods", "13vw");
+      button1.style.backgroundColor = "lightblue";
       button2 = createNavButton("button2", "Settings", "13vw");
-      button2.disabled = true;
+      button2.onclick = function() {
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        createNotifyModal("Settings are not available yet.");
+      }
+
       button3 = createNavButton("button3", "Profiles", "13vw");
+      button3.onclick = function() {
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        createNotifyModal("Profiles are not available yet.");
+      }
       button4 = createNavButton("button4", "Skins", "13vw");
+      button4.onclick = function() {
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        createNotifyModal("Skins are not available yet.");
+      }
       button5 = createNavButton("button5", "Add Mod", "13vw");
+      button5.onclick = function() {
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        createNotifyModal("Custom mods are not available yet.");
+      }
       button6 = createNavButton("button6", "Search", "13vw");
+      button6.onclick = function() {
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        createNotifyModal("Searching is not available yet.");
+      }
 
 
      
@@ -606,6 +961,7 @@
         flex: "1",
         alignItems: "start",
         overflow: "hidden",
+        scrollbarGutter: "stable",
         // height: "100%",
         // backgroundColor: "blue",
         // justifyContent: "space-between",
@@ -617,15 +973,29 @@
       });
       filtersDiv = document.createElement("div");
       filtersDiv.id = "filters-div";
+      filtersDiv.addEventListener('wheel', (e) => {
+        // console.log("hello)")
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        // e.preventDefault();
+        filtersDiv.focus();
+      });
       c = {
         display: "flex",
-        flex: "1",
+        // flex: "1",
         alignItems: "left",
         justifyContent: "space-between",
         padding: "10px",
         flexDirection: "column",
         // width: "10%",
-        borderTop: "solid 2px black",
+        borderTop: "solid 3px black",
+
+        height: "100%",
+        overflowY: "auto",
+        overflowX: "hidden",
+
+        scrollbarGutter: "stable",
+        scrollbarWidth: "thin",
         // backgroundColor: "red",
         // position: "sticky",
         // marginRight: "2%",
@@ -671,30 +1041,48 @@
         cardsDiv.focus();
       });
       c = {
-        display: "flex",
-        // alignItems: "start",
-        // justifyContent: "space-between",
-        // position: "relative",
-        rowGap: "10px",
-        width: "83%",
-        flexWrap: "wrap",
-        borderLeft: "solid 2px black",
-        borderTop: "solid 2px black",
-        height: "100%",
-        paddingTop: "10px",
-        // paddingBottom: "25%",
-        flex: "0 0 auto",
-        // backgroundColor: "red",
+        display: "grid",
+        padding: "10px",
+        gridTemplateColumns: "repeat(4, 0.25fr)", 
+        columnGap: "5%",
+        rowGap: "6%",
+        // gridTemplateRows: "1fr 1fr 1fr 1fr",
 
+        borderLeft: "solid 3px black",
+        borderTop: "solid 3px black",
+        width: "83%",
+        height: "100%",
         overflowY: "auto",
-        // overflowX: "hidden",
-        // scrollbarGutter: "stable",
-        // scrollbarWidth: "thin",
+        scrollbarGutter: "stable",
+        scrollbarWidth: "thin",
       }
       Object.keys(c).forEach(function (a) {
           cardsDiv.style[a] = c[a];
       });
       cardsDiv.id = "cards-div";
+      // d1 = document.createElement("div");
+      // d1.innerHTML = "hello";
+      // d2 = document.createElement("div");
+      // d2.innerHTML = "hello";
+      // d3 = document.createElement("div");
+      // d3.innerHTML = "hello";
+      // d4 = document.createElement("div");
+      // d4.innerHTML = "hello";
+      // d5 = document.createElement("div");
+      // d5.innerHTML = "hello";
+      // cardsDiv.append(d1);
+      // cardsDiv.append(d2);
+      // cardsDiv.append(d3);
+      // cardsDiv.append(d4);
+      // cardsDiv.append(d5);
+
+
+      // cardsDiv.append(d1);
+      // cardsDiv.append(d1);
+      // cardsDiv.append(d1);
+      // cardsDiv.append(d1);
+
+
 
       console.log(this.backendConfig['mods'])
       for (const [key] of Object.entries(this.backendConfig['mods'])) {
