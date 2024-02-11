@@ -470,16 +470,17 @@
           for (const [key] of Object.entries(backendConfig['mods'])) {
             if(key != "version" && key != "settings" && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
               if(this.currentFilter === 'all') {
-                b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
+                b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
                 cardsDiv.appendChild(b);
               } else if(this.currentFilter === 'favorite') {
-                if(JSON.parse(localStorage.getItem('modSettings'))[key]['favorite']) {
-                  b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
+                console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['favorite'])
+                if(JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['favorite']) {
+                  b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
                   cardsDiv.appendChild(b);
                 }
               } else {
                 if(backendConfig['mods'][key]['tags'].includes(this.currentFilter)) {
-                  b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
+                  b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
                   cardsDiv.appendChild(b);
                 }
               }
@@ -584,17 +585,18 @@
         if(id.includes("info")) {
           console.log("info")
         } else if(id.includes("settings")) {
-          console.log("settings")
-        } else if(id.includes("favorites")) {
-          console.log("favorites")
-          console.log(JSON.parse(localStorage.getItem('modSettings'))[id.split("-")[0]]['favorite'])
-          if(!JSON.parse(localStorage.getItem('modSettings'))[id.split("-")[0]]['favorite']) {
+          document.getElementById("menu-bg").style.pointerEvents = "none";
+          document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+          createNotifyModal("Settings are not available yet.");
+        } else if(id.includes("favorite")) {
+          console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id.split("-")[0]]['favorite'])
+          if(!JSON.parse(localStorage.getItem('modSettings'))['mods'][id.split("-")[0]]['favorite']) {
             document.getElementById(id).style.background = "url(https://cdn-icons-png.flaticon.com/128/1828/1828884.png)";
             document.getElementById(id).style.backgroundSize = "2.5vw";
             document.getElementById(id).style.backgroundRepeat = "no-repeat";
             document.getElementById(id).style.backgroundPosition = "center";
             modSettings = JSON.parse(localStorage.getItem('modSettings'));
-            modSettings[id.split("-")[0]]["favorite"] = true;
+            modSettings['mods'][id.split("-")[0]]["favorite"] = true;
             localStorage.setItem('modSettings', JSON.stringify(modSettings));
 
           } else {
@@ -603,7 +605,7 @@
             document.getElementById(id).style.backgroundRepeat = "no-repeat";
             document.getElementById(id).style.backgroundPosition = "center";
             modSettings = JSON.parse(localStorage.getItem('modSettings'));
-            modSettings[id.split("-")[0]]["favorite"] = false;
+            modSettings['mods'][id.split("-")[0]]["favorite"] = false;
             localStorage.setItem('modSettings', JSON.stringify(modSettings));
             
           }
@@ -706,7 +708,7 @@
       infoButton = createCardButton(id + "-info-btn", "https://cdn-icons-png.flaticon.com/128/157/157933.png", "calc(100%/3)");
       settingsButton = createCardButton(id + "-settings-btn", "https://cdn-icons-png.flaticon.com/128/2040/2040504.png", "calc(100%/3)");
       favoriteButton = createCardButton(id + "-favorites-btn", "https://cdn-icons-png.flaticon.com/128/1828/1828970.png", "calc(100%/3)");
-      if(JSON.parse(localStorage.getItem('modSettings'))[id]['favorite']) {
+      if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['favorite']) {
         favoriteButton.style.background = "url(https://cdn-icons-png.flaticon.com/128/1828/1828884.png)";
         favoriteButton.style.backgroundSize = "2.5vw";
         favoriteButton.style.backgroundRepeat = "no-repeat";
@@ -749,11 +751,11 @@
       enabledButton.onclick = function() {
         
         console.log("clicked")
-        console.log(JSON.parse(localStorage.getItem('modSettings'))[id]['enabled'])
-        if(JSON.parse(localStorage.getItem('modSettings'))[id]['enabled']) {
+        console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled'])
+        if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled']) {
           console.log("disabled")
           modSettings = JSON.parse(localStorage.getItem('modSettings'));
-          modSettings[id]["enabled"] = false;
+          modSettings['mods'][id]["enabled"] = false;
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
           document.getElementById(id + '-enable-button').innerHTML = "Disabled";
           document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(222, 48, 51)";
@@ -761,7 +763,7 @@
           console.log("enabled")
 
           modSettings = JSON.parse(localStorage.getItem('modSettings'));
-          modSettings[id]["enabled"] = true;
+          modSettings['mods'][id]["enabled"] = true;
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
           document.getElementById(id + '-enable-button').innerHTML = "Enabled";
           document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(45, 186, 47)";
@@ -1043,7 +1045,12 @@
 
       for(const filter of filters) {
         console.log(filter)
-        filterButton = createFilterButton(filter + "-filter-btn", filter.charAt(0).toUpperCase() + filter.slice(1), "13vw");
+        if(filter === 'favorite') {
+          filterButton = createFilterButton(filter + "-filter-btn", "Favorites", "13vw");
+        } else {
+          filterButton = createFilterButton(filter + "-filter-btn", filter.charAt(0).toUpperCase() + filter.slice(1), "13vw");
+
+        }
         if(filter === 'all') { //set initial filter to all
           filterButton.style.backgroundColor = "lightblue";
           this.currentFilter = 'all';
@@ -1095,7 +1102,7 @@
       for (const [key] of Object.entries(this.backendConfig['mods'])) {
         console.log(key)
         if(key != "version" && key != "settings" && this.backendConfig['mods'][key]['version'].includes(version) && this.backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
-          b = createMenuCard(key, this.backendConfig['mods'][key]['name'], this.backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
+          b = createMenuCard(key, this.backendConfig['mods'][key]['name'], this.backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
           cardsDiv.appendChild(b);
         }
       }
@@ -1172,7 +1179,7 @@
             });
 
 
-
+            localStorage.setItem('modSettings', JSON.stringify({}));
             
             // console.log(backendConfig['mods'])
 
@@ -1181,19 +1188,21 @@
             this.backendConfig = backendConfig;
             if(userConfig === null) {
                 //first time user
-                freshUserConfig = {}
+                freshUserConfig = {'mods': {}, 'settings': {}}
                 for (const [key] of Object.entries(backendConfig['mods'])) {
-                    freshUserConfig[key] = backendConfig["mods"][key]['defaultSettings'];
+                    freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
 
                 }
+                freshUserConfig['version'] = backendConfig['version'];
+                freshUserConfig['settings'] = backendConfig['settings'];
                 localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
             } else if(userConfig['version'] === undefined) {
                 //using old save format
-                freshUserConfig = {}
+                freshUserConfig = {'mods': {}, 'settings': {}}
                 for (const [key] of Object.entries(backendConfig['mods'])) {
-                    freshUserConfig[key] = backendConfig["mods"][key]['defaultSettings'];
+                    freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
                     if(userConfig[key] !== undefined) { //old save format didn't show mods that werent on version
-                        freshUserConfig[key]['enabled'] = userConfig[key]['enabled'];
+                        freshUserConfig['mods'][key]['enabled'] = userConfig[key]['enabled'];
                     }
                 }
                 //migrate old custom mods to current format
@@ -1205,23 +1214,33 @@
                         customModConfig['platform'] = ["pc", "mobile"];
                         customModConfig['version'] = ["1.4", "1.4.4", "CTLE"];
                         customModConfig['tags'] = ['custom'];
+                        customModConfig['reload'] = true;
                         customModConfig['settings'] = null;
-                        freshUserConfig[key] = customModConfig;
+                        freshUserConfig['mods'][key] = customModConfig;
                         customModNum++;
                     }
                 }
                 freshUserConfig['version'] = backendConfig['version'];
+                freshUserConfig['settings'] = backendConfig['settings'];
                 localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
             } else if(userConfig['version'] !== backendConfig['version']) {
                 //new version
-                freshUserConfig = {}
+                freshUserConfig = {'mods': {}, 'settings': {}}
                 for (const [key] of Object.entries(backendConfig['mods'])) {
-                    if(userConfig[key] === undefined) {
-                        freshUserConfig[key] = backendConfig["mods"][key]['defaultSettings'];
+                    if(userConfig['mods'][key] === undefined) {
+                        freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
                     } else {
-                        freshUserConfig[key] = userConfig[key];
+                        freshUserConfig['mods'][key] = userConfig['mods'][key];
                     }
                 }
+                for(const [key] of Object.entries(backendConfig['settings'])) {
+                    if(userConfig['settings'][key] === undefined) {
+                        freshUserConfig['settings'][key] = backendConfig['settings'][key];
+                    } else {
+                        freshUserConfig['settings'][key] = userConfig['settings'][key];
+                    }
+                }
+                freshUserConfig['version'] = backendConfig['version'];
                 localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
             }
             userConfig = JSON.parse(localStorage.getItem('modSettings'));
@@ -1230,9 +1249,9 @@
 
 
             //enable mods
-            for (const [key] of Object.entries(userConfig)) {
+            for (const [key] of Object.entries(userConfig['mods'])) {
                 // console.log(backendConfig['mods'][key])
-                if(userConfig[key]['enabled'] === true && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
+                if(userConfig['mods'][key]['enabled'] === true && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
                     if(backendConfig['mods'][key] === undefined || !backendConfig['mods'][key]['tags'].includes('visual')) { 
                         //non visual mods or custom mods are considered 'cheats'
                         document.getElementById("cheat-indicator").style.display = "block";
@@ -1240,7 +1259,7 @@
                     js = document.createElement("script");
                     js.type = "application/javascript";
                     if(key.startsWith("customMod")) {
-                        js.text = userConfig[key]["url"];
+                        js.text = userConfig['mods'][key]["url"];
                     } else {
 
                         js.src = backendConfig['mods'][key]["url"];
@@ -1257,7 +1276,6 @@
               console.log(backendConfig["mods"][key]['tags'])
               for(var i = 0; i < backendConfig["mods"][key]['tags'].length; i++) {
                 filters.add(backendConfig["mods"][key]['tags'][i]);
-                console.log("ooh ahah")
               }
             }
             console.log(filters)

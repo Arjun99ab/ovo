@@ -13,6 +13,7 @@
             "platforms": ["pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["hacks"],
+            "reload": false,
             "settings": {
                 "speed": {
                     "name": "Speed",
@@ -39,6 +40,7 @@
             "platforms": ["pc", "mobile"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["fun"],
+            "reload": true,
             "settings": null,
             "defaultSettings": {
                 "settings": null,
@@ -55,6 +57,7 @@
             "platforms": ["pc", "mobile"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
+            "reload": false,
             "settings": null,
             "defaultSettings": {
                 "settings": null,
@@ -71,6 +74,7 @@
             "platforms": ["pc", "mobile"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["fun"],
+            "reload": false,
             "settings": null,
             "defaultSettings": {
                 "settings": null,
@@ -79,7 +83,7 @@
             }
         }, 
         "levelselector": {
-            "name": "Level Selector",
+            "name": "Level",
             "author": "drakeerv",
             "desc": "Pick from all the levels and more!",
             "url": "../src/mods/modloader/levelselector.js",
@@ -87,6 +91,7 @@
             "platforms": ["pc", "mobile"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["fun"],
+            "reload": false,
             "settings": null,
             "defaultSettings": {
                 "settings": null,
@@ -103,6 +108,7 @@
             "platforms": ["pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["fun"],
+            "reload": false,
             "settings": {
                 "randomlevelkeybind": {
                     "name": "Move to Random Level",
@@ -127,6 +133,7 @@
             "platforms": ["pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["hacks"],
+            "reload": false,
             "settings": {
                 "createcheckpointkeybind": {
                     "name": "Create Checkpoint",
@@ -178,10 +185,11 @@
             "author": "Awesomeguy",
             "desc": "Randomizes your keybinds every minute.<br/>'Ctrl + k': Toggle randomization on/off<br/>'Shift + k': Show current keybinds",
             "url": "../src/mods/modloader/randomkeys.js",
-            "icon": "https://cdn-icons-png.flaticon.com/128/159/159602.png",
+            "icon": "https://cdn-icons-png.flaticon.com/128/724/724979.png",
             "platforms": ["pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["fun"],
+            "reload": false,
             "settings": {
                 "randomkeyskeybind": {
                     "name": "Toggle Randomization",
@@ -212,6 +220,7 @@
             "platforms": ["pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["hacks"],
+            "reload": true,
             "settings": null,
             "defaultSettings": {
                 "settings": null,
@@ -229,6 +238,7 @@
             "platforms": ["pc", "mobile"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
+            "reload": false,
             "settings": null,
             "defaultSettings": {
                 "settings": null,
@@ -245,6 +255,24 @@
             "platforms": ["pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["hacks"],
+            "reload": true,
+            "settings": null,
+            "defaultSettings": {
+                "settings": null,
+                "favorite": false,
+                "enabled": false
+            }
+        },
+        "taskeybinds": {
+            "name": "TAS Keybinds",
+            "author": "CoolTasDude",
+            "desc": "A mod for changing the game's timescale without having to put commands in devtools. <br/><br/>Join the <a href='https://discord.gg/ovo-speedrunning-community-645935373368688650' target='_blank'>Discord<a> for a list of keybinds. <br/><br/><b><u>Requires TAS Tools to be loaded</u></b>",
+            "url": "../src/mods/modloader/taskeybinds.js",
+            "icon": "https://cdn-icons-png.flaticon.com/128/159/159602.png",
+            "platforms": ["pc"],
+            "version": ["1.4", "1.4.4", "CTLE"],
+            "tags": ["hacks"],
+            "reload": false,
             "settings": null,
             "defaultSettings": {
                 "settings": null,
@@ -261,6 +289,7 @@
             "platforms": ["pc", "mobile"],
             "version": ["1.4.4", "CTLE"],
             "tags": ["fun"],
+            "reload": true,
             "settings": null,
             "defaultSettings": {
                 "settings": null,
@@ -277,6 +306,7 @@
             "platforms": ["pc"],
             "version": ["CTLE"],
             "tags": ["fun"],
+            "reload": false,
             "settings": {
                 "openlevelmenukeybind": {
                     "name": "Open Level Menu",
