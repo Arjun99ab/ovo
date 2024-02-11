@@ -468,7 +468,7 @@
             filterCards[0].remove();
           }
           for (const [key] of Object.entries(backendConfig['mods'])) {
-            if(key != "version" && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
+            if(key != "version" && key != "settings" && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
               if(this.currentFilter === 'all') {
                 b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
                 cardsDiv.appendChild(b);
@@ -542,11 +542,9 @@
       return menuButton;
     }
 
-    let createCardButton = (id, text, width) => {
-      let menuButton = document.createElement("div");
-      menuButton.id = id;
-      let p = document.createElement("p");
-      p.innerHTML = text;
+    let createCardButton = (id, url, width) => {
+      let cardButton = document.createElement("div");
+      cardButton.id = id;
       let d = {
         display: "flex",
         justifyContent: "center",
@@ -559,35 +557,60 @@
         
       }
       Object.keys(d).forEach(function (a) {
-        menuButton.style[a] = d[a];
+        cardButton.style[a] = d[a];
       });
       
-      menuButton.appendChild(p);
-
       let c = {
         fontFamily: "Retron2000",
         color: "black",
         fontSize: "2vw",
         cursor: "pointer",
         backgroundColor: "white",
-        
         width: width,
         height: "3vw",
         textAlign: "center",
         verticalAlign: "middle",
         border: "solid 3px black",
-        // background: "url(https://cdn-icons-png.flaticon.com/128/1828/1828970.png)",
-        // backgroundSize: "contain",
-        // backgroundRepeat: "no-repeat",
-        // backgroundPosition: "center",
-        // borderRadius: "10px",
-
-        // height: "auto",
+        background: "url(" + url + ")",
+        backgroundSize: "2.5vw", //or 50% 
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
       }
       Object.keys(c).forEach(function (a) {
-        menuButton.style[a] = c[a];
+        cardButton.style[a] = c[a];
       });
-      return menuButton;
+
+      cardButton.onclick = function() {
+        if(id.includes("info")) {
+          console.log("info")
+        } else if(id.includes("settings")) {
+          console.log("settings")
+        } else if(id.includes("favorites")) {
+          console.log("favorites")
+          console.log(JSON.parse(localStorage.getItem('modSettings'))[id.split("-")[0]]['favorite'])
+          if(!JSON.parse(localStorage.getItem('modSettings'))[id.split("-")[0]]['favorite']) {
+            document.getElementById(id).style.background = "url(https://cdn-icons-png.flaticon.com/128/1828/1828884.png)";
+            document.getElementById(id).style.backgroundSize = "2.5vw";
+            document.getElementById(id).style.backgroundRepeat = "no-repeat";
+            document.getElementById(id).style.backgroundPosition = "center";
+            modSettings = JSON.parse(localStorage.getItem('modSettings'));
+            modSettings[id.split("-")[0]]["favorite"] = true;
+            localStorage.setItem('modSettings', JSON.stringify(modSettings));
+
+          } else {
+            document.getElementById(id).style.background = "url(https://cdn-icons-png.flaticon.com/128/1828/1828970.png)";
+            document.getElementById(id).style.backgroundSize = "2.5vw";
+            document.getElementById(id).style.backgroundRepeat = "no-repeat";
+            document.getElementById(id).style.backgroundPosition = "center";
+            modSettings = JSON.parse(localStorage.getItem('modSettings'));
+            modSettings[id.split("-")[0]]["favorite"] = false;
+            localStorage.setItem('modSettings', JSON.stringify(modSettings));
+            
+          }
+
+        }
+      }
+      return cardButton;
     }
 
     let createMenuCard = (id, name, iconurl, enabled) => {
@@ -680,10 +703,15 @@
       });
 
       topCards.className = "card-buttons";
-      infoButton = createCardButton("button1", "t", "calc(100%/3)");
-      settingsButton = createCardButton("button2", "t", "calc(100%/3)");
-      favoriteButton = createCardButton("button3", "t", "calc(100%/3)");
-
+      infoButton = createCardButton(id + "-info-btn", "https://cdn-icons-png.flaticon.com/128/157/157933.png", "calc(100%/3)");
+      settingsButton = createCardButton(id + "-settings-btn", "https://cdn-icons-png.flaticon.com/128/2040/2040504.png", "calc(100%/3)");
+      favoriteButton = createCardButton(id + "-favorites-btn", "https://cdn-icons-png.flaticon.com/128/1828/1828970.png", "calc(100%/3)");
+      if(JSON.parse(localStorage.getItem('modSettings'))[id]['favorite']) {
+        favoriteButton.style.background = "url(https://cdn-icons-png.flaticon.com/128/1828/1828884.png)";
+        favoriteButton.style.backgroundSize = "2.5vw";
+        favoriteButton.style.backgroundRepeat = "no-repeat";
+        favoriteButton.style.backgroundPosition = "center";
+      }
       infoButton.style.borderLeft = "none";
       infoButton.style.borderRight = "none";
       favoriteButton.style.borderLeft = "none"
@@ -910,34 +938,34 @@
           buttonContainer.style[a] = c[a];
       });
       buttonContainer.className = "button-container";
-      button1 = createNavButton("button1", "Mods", "13vw");
+      button1 = createNavButton("nav-mods-btn", "Mods", "13vw");
       button1.style.backgroundColor = "lightblue";
-      button2 = createNavButton("button2", "Settings", "13vw");
+      button2 = createNavButton("nav-settings-btn", "Settings", "13vw");
       button2.onclick = function() {
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Settings are not available yet.");
       }
 
-      button3 = createNavButton("button3", "Profiles", "13vw");
+      button3 = createNavButton("nav-profiles-btn", "Profiles", "13vw");
       button3.onclick = function() {
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Profiles are not available yet.");
       }
-      button4 = createNavButton("button4", "Skins", "13vw");
+      button4 = createNavButton("nav-skins-btn", "Skins", "13vw");
       button4.onclick = function() {
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Skins are not available yet.");
       }
-      button5 = createNavButton("button5", "Add Mod", "13vw");
+      button5 = createNavButton("nav-addmod-btn", "Add Mod", "13vw");
       button5.onclick = function() {
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Custom mods are not available yet.");
       }
-      button6 = createNavButton("button6", "Search", "13vw");
+      button6 = createNavButton("nav-search-btn", "Search", "13vw");
       button6.onclick = function() {
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
@@ -1060,34 +1088,13 @@
           cardsDiv.style[a] = c[a];
       });
       cardsDiv.id = "cards-div";
-      // d1 = document.createElement("div");
-      // d1.innerHTML = "hello";
-      // d2 = document.createElement("div");
-      // d2.innerHTML = "hello";
-      // d3 = document.createElement("div");
-      // d3.innerHTML = "hello";
-      // d4 = document.createElement("div");
-      // d4.innerHTML = "hello";
-      // d5 = document.createElement("div");
-      // d5.innerHTML = "hello";
-      // cardsDiv.append(d1);
-      // cardsDiv.append(d2);
-      // cardsDiv.append(d3);
-      // cardsDiv.append(d4);
-      // cardsDiv.append(d5);
-
-
-      // cardsDiv.append(d1);
-      // cardsDiv.append(d1);
-      // cardsDiv.append(d1);
-      // cardsDiv.append(d1);
 
 
 
       console.log(this.backendConfig['mods'])
       for (const [key] of Object.entries(this.backendConfig['mods'])) {
         console.log(key)
-        if(key != "version" && this.backendConfig['mods'][key]['version'].includes(version) && this.backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
+        if(key != "version" && key != "settings" && this.backendConfig['mods'][key]['version'].includes(version) && this.backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
           b = createMenuCard(key, this.backendConfig['mods'][key]['name'], this.backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))[key]['enabled']);
           cardsDiv.appendChild(b);
         }
