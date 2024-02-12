@@ -83,7 +83,7 @@
             }
         }, 
         "levelselector": {
-            "name": "Level",
+            "name": "Selector",
             "author": "drakeerv",
             "desc": "Pick from all the levels and more!",
             "url": "../src/mods/modloader/levelselector.js",
@@ -298,7 +298,7 @@
             }
         },
         "community": {
-            "name": "Community Levels",
+            "name": "Community",
             "author": "Awesomeguy",
             "desc": "Play custom levels made by the community!<br/><br/> 'Shift + l' to open the level menu",
             "url": "../src/mods/modloader/community.js",

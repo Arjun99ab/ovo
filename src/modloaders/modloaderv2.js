@@ -743,13 +743,17 @@
       cardText.innerHTML = name;
 
       c = {
+        display: "block",
         fontFamily: "Retron2000",
         color: "black",
-        fontSize: "1.5vw",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
+        fontSize: "2vw",
         flexGrow: "0",
-        textOverflwo: "ellipsis",
+        flexShrink: "0",
+        flexBasis: "auto",
+        textAlign: "center",
+        verticalAlign: "middle",
+        margin: "0",
+        whiteSpace: "nowrap",
       }
       Object.keys(c).forEach(function (a) {
         cardText.style[a] = c[a];
