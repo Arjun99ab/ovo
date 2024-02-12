@@ -9,6 +9,7 @@
 
     var runtime;
     var filters = new Set();
+    var currentFilter = "all";
 
     function sleep (time) {
         return new Promise((resolve) => setTimeout(resolve, time));
@@ -208,8 +209,50 @@
     let detectDeviceType = () => 
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mobile' : 'pc';
 
+    let toggleMod = (modId, enabled) => {
+      console.log(modId)
+      if (!enabled) { //currently not enabled
+        console.log(document.getElementById(modId))
+        if(!!!document.getElementById(modId)) { // custom mods or mods that aren't in memory
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
+          console.log('sadghyfisatdgifuygasdyifg')
+          js = document.createElement("script");
+          js.type = "application/javascript";
+          if(modId.startsWith("customMod")) {
+              js.text = modSettings['mods'][modId]["url"];
+          } else {
+              js.src = modSettings['mods'][modId]["url"];
+          }
+          js.id = modId;
+          document.head.appendChild(js);    
 
-    let createConfirmMenu = () => {
+          modSettings['mods'][modId]["enabled"] = true;
+          localStorage.setItem('modSettings', JSON.stringify(modSettings));
+
+        } else { //mods that have been loaded before
+            modSettings = JSON.parse(localStorage.getItem('modSettings'));
+            modSettings['mods'][modId]["enabled"] = true;
+            localStorage.setItem('modSettings', JSON.stringify(modSettings));            
+            
+            // TODO - use globalThis to toggle mod
+        }
+      } else { //currently enabled, so we want to disable
+        console.log("hewwo")
+        modSettings = JSON.parse(localStorage.getItem('modSettings'));
+        modSettings['mods'][modId]["enabled"] = false;
+        localStorage.setItem('modSettings', JSON.stringify(modSettings));
+        if(backendConfig['mods'][modId]["reload"]) {
+          document.getElementById("menu-bg").style.pointerEvents = "none";
+          document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+          createConfirmReloadModal();
+        }
+        // TODO - use globalThis to toggle mod
+      }
+    }
+
+
+
+    let createConfirmReloadModal = () => {
       //Create background div
       let confirmBg = document.createElement("div");
       confirmBg.id = "confirm-bg";
@@ -230,7 +273,7 @@
           cursor: "default",
           color: "black",
           fontSize: "10pt",
-          width: "35%",
+          width: "40%",
           // height: "15%",
           overflow: "auto",
           margin: "0",
@@ -260,7 +303,7 @@
           infoText.style[a] = c[a];
       });
 
-      content = document.createTextNode("This mod requires a reload to disable.");
+      content = document.createTextNode("This mod requires a reload to disable. Would you like to reload now?");
       infoText.appendChild(content);
       
       // Create buttons container
@@ -276,7 +319,7 @@
 
       // Create confirm button
       let confirmButton = document.createElement("button");
-      confirmButton.innerHTML = "Reload now";
+      confirmButton.innerHTML = "Now";
       confirmButton.style.fontFamily = "Retron2000";
       confirmButton.style.fontSize = "14pt";
       confirmButton.style.backgroundColor = "rgb(45, 186, 47)";
@@ -290,7 +333,7 @@
 
       // Create cancel button
       let cancelButton = document.createElement("button");
-      cancelButton.innerHTML = "Reload later";
+      cancelButton.innerHTML = "Later";
       cancelButton.style.fontFamily = "Retron2000";
       cancelButton.style.fontSize = "14pt"
       cancelButton.style.backgroundColor = "rgb(222, 48, 51)";
@@ -344,7 +387,7 @@
         cursor: "default",
         color: "black",
         fontSize: "10pt",
-        width: "35%",
+        width: "40%",
         // height: "15%",
         overflow: "auto",
         margin: "0",
@@ -461,31 +504,63 @@
           filters.forEach((filter) => { //set all other filters to white
             document.getElementById(filter + "-filter-btn").style.backgroundColor = "white";
           });
-          this.currentFilter = id.split("-")[0]; //set currentFilter to this filter
+          currentFilter = id.split("-")[0]; //set currentFilter to this filter
+          console.log(currentFilter)
           document.getElementById(id).style.backgroundColor = "lightblue";
           filterCards = document.getElementById("cards-div").children;
           while(filterCards.length > 0) { //clear all cards
             filterCards[0].remove();
           }
+          cardsList = [];
           for (const [key] of Object.entries(backendConfig['mods'])) {
             if(key != "version" && key != "settings" && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
-              if(this.currentFilter === 'all') {
-                b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
-                cardsDiv.appendChild(b);
-              } else if(this.currentFilter === 'favorite') {
-                console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['favorite'])
+              if(currentFilter === 'all') {
+                cardsList.push(createMenuCard(key + '-card', backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']));
+              } else if(currentFilter === 'favorite') {
+                // console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['favorite'])
                 if(JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['favorite']) {
-                  b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
+                  b = createMenuCard(key + '-card', backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
                   cardsDiv.appendChild(b);
                 }
               } else {
-                if(backendConfig['mods'][key]['tags'].includes(this.currentFilter)) {
-                  b = createMenuCard(key, backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
-                  cardsDiv.appendChild(b);
+                if(backendConfig['mods'][key]['tags'].includes(currentFilter)) {
+                  cardsList.push(createMenuCard(key + '-card', backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']));
+                  // cardsDiv.appendChild(b);
                 }
               }
             }
           }
+          console.log("???/")
+          userConfig = JSON.parse(localStorage.getItem('modSettings'));
+          console.log(userConfig['mods'])
+          Object.keys(userConfig['mods']).forEach(function (key) {          
+            console.log(key)
+            if(key.startsWith("custom")) {
+              console.log(currentFilter)
+              if(currentFilter === 'all') {
+                cardsList.push(createMenuCard(key + '-card', userConfig['mods'][key]['name'], userConfig['mods'][key]['icon'], userConfig['mods'][key]['enabled']));
+                // cardsDiv.appendChild(b);
+              } else if(currentFilter === 'favorite') {
+                console.log(userConfig['mods'][key]['favorite'])
+                if(userConfig['mods'][key]['favorite']) {
+                  cardsList.push(createMenuCard(key + '-card', userConfig['mods'][key]['name'], userConfig['mods'][key]['icon'], userConfig['mods'][key]['enabled']));
+                  // cardsDiv.appendChild(b);
+                }
+              } else {
+                if(userConfig['mods'][key]['tags'].includes(currentFilter)) {
+                  cardsList.push(createMenuCard(key + '-card', userConfig['mods'][key]['name'], userConfig['mods'][key]['icon'], userConfig['mods'][key]['enabled']));
+                  // cardsDiv.appendChild(b);
+                }
+              }
+            }
+          }
+          );
+        cardsList.sort((a, b) => a.children[1].innerHTML.localeCompare(b.children[1].innerHTML));
+        cardsList.forEach((card) => {
+          cardsDiv.appendChild(card);
+        });
+        
+
 
 
         } 
@@ -618,6 +693,8 @@
     let createMenuCard = (id, name, iconurl, enabled) => {
       let menuCard = document.createElement("div");
       menuCard.id = id;
+      console.log(menuCard.id)
+      id = id.split("-")[0];
       // menuCard.innerHTML = text;
       c = {
         display: "flex",
@@ -625,8 +702,6 @@
         justifyContent: "space-between",
         // alignItems: "center",
         width: "100%",
-        flexGrow: "0",
-        flexShrink: "0",
 
         // padding: "0",
         aspectRatio: "5 / 6",
@@ -665,23 +740,20 @@
       cardImage.src = iconurl;
 
       cardText = document.createElement("p");
+      cardText.innerHTML = name;
+
       c = {
         fontFamily: "Retron2000",
         color: "black",
-        fontSize: "2vw",
-        // maxWidth: "100%",
-        // whiteSpace: "nowrap",
-        // display: "block",
-        // position: "relative",
-        // margin: "0",
-        // padding: "0",
-        // backgroundColor: "red",
-        // gridArea: "t",
+        fontSize: "1.5vw",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        flexGrow: "0",
+        textOverflwo: "ellipsis",
       }
       Object.keys(c).forEach(function (a) {
         cardText.style[a] = c[a];
       });
-      cardText.innerHTML = name;
 
       cardButtons = document.createElement("div");
       c = {
@@ -752,21 +824,18 @@
         
         console.log("clicked")
         console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled'])
-        if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled']) {
+        if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled']) { //if enabled, we want to disable
           console.log("disabled")
-          modSettings = JSON.parse(localStorage.getItem('modSettings'));
-          modSettings['mods'][id]["enabled"] = false;
-          localStorage.setItem('modSettings', JSON.stringify(modSettings));
           document.getElementById(id + '-enable-button').innerHTML = "Disabled";
           document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(222, 48, 51)";
-        } else {
+          toggleMod(id, true);
+        } else { //if disabled, we want to enable
           console.log("enabled")
 
-          modSettings = JSON.parse(localStorage.getItem('modSettings'));
-          modSettings['mods'][id]["enabled"] = true;
-          localStorage.setItem('modSettings', JSON.stringify(modSettings));
           document.getElementById(id + '-enable-button').innerHTML = "Enabled";
           document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(45, 186, 47)";
+          toggleMod(id, false);
+
         }
       }
       
@@ -820,6 +889,8 @@
     }
     let createModLoaderMenu = () => {
       //Create background div
+      
+
       menuBg = document.createElement("div")
       c = {
           // justifyContent: "center",
@@ -834,7 +905,7 @@
           fontFamily: "Retron2000",
           position: "absolute",
           cursor: "default",
-          padding: "5px",
+          padding: "0px",
           color: "black",
           fontSize: "10pt",
           // display: "block",
@@ -847,6 +918,23 @@
           menuBg.style[a] = c[a];
       });
       menuBg.id = "menu-bg";
+
+      versionText = document.createElement("div");
+      c = {
+
+          position: "absolute",
+          bottom: "3px",
+          left: "3px",
+          fontFamily: "Retron2000",
+          color: "black",
+          fontSize: "0.8vw",
+          cursor: "default",
+      }
+      Object.keys(c).forEach(function (a) {
+          versionText.style[a] = c[a];
+      });
+      versionText.innerHTML = "v" + backendConfig['version'];
+      document.body.appendChild(versionText);
       
 
       navbar = document.createElement("nav");
@@ -991,7 +1079,7 @@
         flex: "1",
         alignItems: "start",
         overflow: "hidden",
-        scrollbarGutter: "stable",
+        // scrollbarGutter: "stable",
         // height: "100%",
         // backgroundColor: "blue",
         // justifyContent: "space-between",
@@ -1053,7 +1141,7 @@
         }
         if(filter === 'all') { //set initial filter to all
           filterButton.style.backgroundColor = "lightblue";
-          this.currentFilter = 'all';
+          currentFilter = 'all';
 
         }
         filtersDiv.appendChild(filterButton);
@@ -1078,6 +1166,8 @@
       c = {
         display: "grid",
         padding: "10px",
+        paddingBottom: "30px",
+        // marginBottom: "20px",
         gridTemplateColumns: "repeat(4, 0.25fr)", 
         columnGap: "5%",
         rowGap: "6%",
@@ -1086,8 +1176,9 @@
         borderLeft: "solid 3px black",
         borderTop: "solid 3px black",
         width: "83%",
-        height: "100%",
+        height: "93%",
         overflowY: "auto",
+        overflowX: "hidden",
         scrollbarGutter: "stable",
         scrollbarWidth: "thin",
       }
@@ -1097,15 +1188,27 @@
       cardsDiv.id = "cards-div";
 
 
-
+      cardsList = [];
       console.log(this.backendConfig['mods'])
       for (const [key] of Object.entries(this.backendConfig['mods'])) {
-        console.log(key)
         if(key != "version" && key != "settings" && this.backendConfig['mods'][key]['version'].includes(version) && this.backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
-          b = createMenuCard(key, this.backendConfig['mods'][key]['name'], this.backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
-          cardsDiv.appendChild(b);
+          cardsList.push(createMenuCard(key + '-card', this.backendConfig['mods'][key]['name'], this.backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']))
         }
       }
+      for(const [key] of Object.entries(JSON.parse(localStorage.getItem('modSettings'))['mods'])) {
+        if(key.startsWith("custom")) {
+          cardsList.push(createMenuCard(key + '-card', JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['name'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']));
+        }
+      }
+      // Sort cardsList alphabetically by the 'name' property
+      cardsList.sort((a, b) => a.children[1].innerHTML.localeCompare(b.children[1].innerHTML));
+      // console.log(cardsList)
+
+      // Add sorted cards to the cardsDiv
+      for (const card of cardsList) {
+        cardsDiv.appendChild(card);
+      }
+      
 
 
 
@@ -1136,7 +1239,6 @@
     let cleanModLoader = {
         async init() {
             this.backendConfig = null;
-            this.currentFilter = null;
             var b=document.createElement("div")
             c={backgroundColor:"rgba(150,10,1,0.8)",width:"5px",height:"5px",position:"absolute",bottom:"5px",right:"5px", zIndex:"2147483647", display:"none"}
             Object.keys(c).forEach(function(a){b.style[a]=c[a]})
@@ -1179,7 +1281,7 @@
             });
 
 
-            localStorage.setItem('modSettings', JSON.stringify({}));
+            // localStorage.setItem('modSettings', JSON.stringify({}));
             
             // console.log(backendConfig['mods'])
 
@@ -1216,7 +1318,9 @@
                         customModConfig['tags'] = ['custom'];
                         customModConfig['reload'] = true;
                         customModConfig['settings'] = null;
+                        customModConfig['favorite'] = false;
                         freshUserConfig['mods'][key] = customModConfig;
+
                         customModNum++;
                     }
                 }
@@ -1233,6 +1337,11 @@
                         freshUserConfig['mods'][key] = userConfig['mods'][key];
                     }
                 }
+                for(const [key] of Object.entries(userConfig['mods'])) {
+                    if(backendConfig['mods'][key] === undefined) { //custom mod
+                        freshUserConfig['mods'][key] = userConfig['mods'][key];
+                    }
+                  }
                 for(const [key] of Object.entries(backendConfig['settings'])) {
                     if(userConfig['settings'][key] === undefined) {
                         freshUserConfig['settings'][key] = backendConfig['settings'][key];
@@ -1250,8 +1359,8 @@
 
             //enable mods
             for (const [key] of Object.entries(userConfig['mods'])) {
-                // console.log(backendConfig['mods'][key])
-                if(userConfig['mods'][key]['enabled'] === true && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
+                
+                if(!key.startsWith("custom") && userConfig['mods'][key]['enabled'] === true && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
                     if(backendConfig['mods'][key] === undefined || !backendConfig['mods'][key]['tags'].includes('visual')) { 
                         //non visual mods or custom mods are considered 'cheats'
                         document.getElementById("cheat-indicator").style.display = "block";
@@ -1266,6 +1375,13 @@
                     }
                     js.id = key;
                     document.head.appendChild(js);
+                } else if(key.startsWith("custom") && userConfig['mods'][key]['enabled'] === true) {
+                    js = document.createElement("script");
+                    js.type = "application/javascript";
+                    js.src = userConfig['mods'][key]["url"];
+                    js.id = key;
+                    document.head.appendChild(js);
+                    document.getElementById("cheat-indicator").style.display = "block";
                 }
             }
             console.log(filters)
