@@ -7,8 +7,19 @@
     let runtime = globalThis.sdk_runtime;
     globalThis.sdk_runtime = old;
 
+
+    globalThis.flymodToggle = function (enable) {
+        if (enable) {
+            document.addEventListener("keydown", ovoFlyMod.keyDown);
+            document.addEventListener("keyup", ovoFlyMod.keyUp);
+
+        } else {
+            document.removeEventListener("keydown", ovoFlyMod.keyDown);
+            document.removeEventListener("keyup", ovoFlyMod.keyUp);
+        }
+    }
+
     var modEnabled;
-    
     //get the player object
     let getPlayer = () => {
         return runtime.types_by_index
@@ -45,8 +56,8 @@
             this.override = false;
             
             //listen to key events
-            document.addEventListener("keydown", (event) => {this.keyDown(event)});
-            document.addEventListener("keyup", (event) => {this.keyUp(event)});
+            document.addEventListener("keydown", this.keyDown);
+            document.addEventListener("keyup", this.keyUp);
           
             runtime.tickMe(this);
           
@@ -57,18 +68,19 @@
         keyDown(event) {
             //check if mod is enabled & shift arrows => allow to fly
             let key = event.key.toLowerCase();
-            if(JSON.parse(localStorage.getItem('modSettings'))["flymod"]["enabled"]) {
-                if (key == "shift" && !this.override) {
-                    this.activatorKeyHeld = true;
-                } else if (event.keyCode >= 37 && event.keyCode <= 40 && this.activatorKeyHeld) {
-                    if (!this.activated) {
-                        this.startActivation();
-                        this.activated = true;
-                    }
-                    
-                    this.movementKeys[event.keyCode - 37] = true;
+            if (key == "shift" && !this.override) {
+                this.activatorKeyHeld = true;
+            } else if (event.keyCode >= 37 && event.keyCode <= 40 && this.activatorKeyHeld) {
+                if (!this.activated) {
+                    console.log(this.startActivation)
+                    console.log(this)
+                    this.startActivation();
+                    this.activated = true;
                 }
+                
+                this.movementKeys[event.keyCode - 37] = true;
             }
+            
             
             
             

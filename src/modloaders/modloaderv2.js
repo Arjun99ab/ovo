@@ -214,18 +214,18 @@
       if (!enabled) { //currently not enabled
         console.log(document.getElementById(modId))
         if(!!!document.getElementById(modId)) { // custom mods or mods that aren't in memory
-          modSettings = JSON.parse(localStorage.getItem('modSettings'));
           console.log('sadghyfisatdgifuygasdyifg')
           js = document.createElement("script");
           js.type = "application/javascript";
           if(modId.startsWith("customMod")) {
-              js.text = modSettings['mods'][modId]["url"];
+              js.text = backendConfig['mods'][modId]["url"];
           } else {
-              js.src = modSettings['mods'][modId]["url"];
+              js.src = backendConfig['mods'][modId]["url"];
           }
           js.id = modId;
           document.head.appendChild(js);    
 
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
           modSettings['mods'][modId]["enabled"] = true;
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
 
@@ -235,18 +235,23 @@
             localStorage.setItem('modSettings', JSON.stringify(modSettings));            
             
             // TODO - use globalThis to toggle mod
+            globalThis[modId + "Toggle"](true); //true is to toggle
+
         }
       } else { //currently enabled, so we want to disable
         console.log("hewwo")
         modSettings = JSON.parse(localStorage.getItem('modSettings'));
         modSettings['mods'][modId]["enabled"] = false;
         localStorage.setItem('modSettings', JSON.stringify(modSettings));
-        if(backendConfig['mods'][modId]["reload"]) {
+        if(backendConfig['mods'][modId]["reload"]) { //if mod requires reload
           document.getElementById("menu-bg").style.pointerEvents = "none";
           document.getElementById("menu-bg").style.filter = "blur(1.2px)";
           createConfirmReloadModal();
         }
         // TODO - use globalThis to toggle mod
+        else {
+          globalThis[modId + "Toggle"](false); //false
+        }
       }
     }
 
