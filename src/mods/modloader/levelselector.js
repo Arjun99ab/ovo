@@ -6,6 +6,24 @@
 
         var levelSelectorWindow = null
 
+        globalThis.levelselectorToggle = function (enable) {
+            if (enable) {
+                // Use the bound methods when adding the event listeners
+                document.addEventListener("keydown", levelSelector.boundKeyDown);
+                document.getElementById("ovo-levelselector-toggle-button").display = "block";
+            } else {
+                // Use the bound methods when removing the event listeners
+                console.log("removing event listener")
+                document.removeEventListener("keydown", levelSelector.boundKeyDown);
+                document.getElementById("ovo-levelselector-toggle-button").style.display = "none";
+                try {
+                    levelSelectorWindow.close();
+                } catch (e) {}
+
+
+            }
+        }
+
         let notify = (title, text, image = "./speedrunner.png") => {
             cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
                 runtime.types_by_index.find(
@@ -19,9 +37,10 @@
 
         let levelSelector = {
             init() {
-                document.addEventListener("keydown", (event) => {
-                    this.keyDown(event)
-                });
+                this.boundKeyDown = this.keyDown.bind(this);
+                
+                document.addEventListener("keydown", this.boundKeyDown);
+
 
                 this.initDomUI();
 
@@ -70,28 +89,14 @@
                 toggleButton.onclick = this.openLevelMenu;
                 document.body.appendChild(toggleButton);
 
-                let dummyDiv = document.createElement("div");
-                dummyDiv.id = "ovo-dummy-div";
-                dummyDiv.innerText = "";
-                dummyDiv.style.display = "none";
-
-                dummyDiv.onclick = function() {
-                    console.log(levelSelectorWindow)
-                    console.log(toggleButton)
-                    toggleButton.style.display = "none";
-                    levelSelectorWindow.close();
-
-                }
-                document.body.appendChild(dummyDiv);
+               
 
             },
 
             keyDown(event) {
-                if(JSON.parse(localStorage.getItem('modSettings'))["levelselector"]["enabled"]) {
-                    if (event.code === "KeyT") {
-                        if (event.shiftKey) {
-                            this.openLevelMenu();
-                        }
+                if (event.code === "KeyT") {
+                    if (event.shiftKey) {
+                        this.openLevelMenu();
                     }
                 }
                 

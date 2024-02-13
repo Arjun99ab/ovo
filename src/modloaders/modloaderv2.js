@@ -218,15 +218,15 @@
           console.log('sadghyfisatdgifuygasdyifg')
           js = document.createElement("script");
           js.type = "application/javascript";
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
           if(modId.startsWith("customMod")) {
-              js.text = backendConfig['mods'][modId]["url"];
+              js.text = modSettings['mods'][modId]["url"];
           } else {
               js.src = backendConfig['mods'][modId]["url"];
           }
           js.id = modId;
           document.head.appendChild(js);    
 
-          modSettings = JSON.parse(localStorage.getItem('modSettings'));
           modSettings['mods'][modId]["enabled"] = true;
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
 
@@ -613,6 +613,7 @@ let createDescPopup = (modId) => {
     image.src = "../src/mods/modloader/taskeybinds.png";
     image.style.width = "50%";
     image.style.height = "auto";
+    image.style.borderRadius = "10px";
     // image.style.margin = "auto";
 
     // image.style.transform = "translate(-50%, -50%)",
@@ -1149,7 +1150,7 @@ let createDescPopup = (modId) => {
           titleText.style[a] = c[a];
       });
       titleText.id = "title-text";
-      newContent = document.createTextNode(" mods");
+      newContent = document.createTextNode("OvO Modloader");
       titleText.appendChild(newContent);
       navbar.appendChild(titleText);
 
@@ -1563,15 +1564,14 @@ let createDescPopup = (modId) => {
                 this.keyDown(event)
                 
             });
-            document.addEventListener("keyup", (event) => {
-                this.keyUp(event)
-            });
 
 
             
             
             createModLoaderMenuBtn();
-            document.getElementById("menu-button").click();
+            // document.getElementById("menu-button").click();
+            runtime.tickMe(this);
+
 
             notify("QOL Modloader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
 
@@ -1596,12 +1596,6 @@ let createDescPopup = (modId) => {
             }
             
         },
-      
-        keyUp(event) {
-            
-            
-        },
-
         
 
         
@@ -1613,7 +1607,22 @@ let createDescPopup = (modId) => {
             player = playerInstances[0];
             
             try {
+              if(document.getElementById("menu-bg") === null) {
+                if(!isInLevel() && document.getElementById("menu-button").style.top === "45%") {
+                  document.getElementById("menu-button").style.top = "2px"
+                  
+                } else if(isPaused() && document.getElementById("menu-button").style.top === "2px"){
+                    document.getElementById("menu-button").style.top = "45%"
 
+                }
+                if((!isInLevel() && document.getElementById("menu-button").style.display === "none") || (isPaused() && document.getElementById("menu-button").style.display === "none")) {
+                    document.getElementById("menu-button").style.display = "block";
+                    
+                    console.log("hello")
+                } else if((isInLevel() && document.getElementById("menu-button").style.display === "block") && (!isPaused() && document.getElementById("menu-button").style.display === "block")) {
+                    document.getElementById("menu-button").style.display = "none";
+                }
+              }
                 
                 
             } catch (err) {

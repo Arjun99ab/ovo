@@ -43,30 +43,6 @@
     },
   };
 
-  // var b = document.createElement("div"),
-  //   c = {
-  //     backgroundColor: "white",
-  //     border: "solid",
-  //     borderColor: "black",
-  //     borderWidth: "6px",
-  //     fontFamily: "Retron2000",
-  //     position: "absolute",
-  //     top: "115px",
-  //     left: "86px",
-  //     padding: "10px",
-  //     color: "black",
-  //     fontSize: "20pt",
-  //   };
-  // Object.keys(c).forEach(function (a) {
-  //   b.style[a] = c[a];
-  // });
-  // b.id = "pos";
-  // const newContent = document.createTextNode("N/A");
-
-  // // add the text node to the newly created div
-  // b.appendChild(newContent);
-
-  // document.body.appendChild(b);
 
   g = globalThis.ovoExplorer = {
     init: function () {
@@ -177,69 +153,78 @@
     notify("Loaded player state", "State Loaded");
     runtime.loadInstanceFromJSON(player, state, true);
   };
-  document.addEventListener("keydown", (event) => {
-      if (!getFlag()) {
-          return;
-      }
+  // boundKeyDown = keyDown.bind();
+  
+  let keyDown = (event) => {
+    if (!getFlag()) {
+      return;
+    }
 
-      if(JSON.parse(localStorage.getItem('modSettings'))["savestate"]["enabled"]) {
-        if (event.code === "KeyS") {
-          if (event.shiftKey) {
-              curState = saveState();
-          } else if (curState != null) {
-              loadState(curState);
-          }
-        }
-        if (event.code === "KeyR" && event.shiftKey) {
-            curState = null;
-            runtime.changeLayout = runtime.runningLayout;
-            //runtime.attempts = runtime.attempts + 1;
-            notify("State reset by soft level reset (Shift + R)", "State Reset");
-        }
-        if (event.code === "KeyN") {
-            if (event.shiftKey) {
-                runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) + 1)]
-                setTimeout(() => {
-                    notify("Going to next level bypass (Shift + N)", "Next Level");
-                }, 300);
-            }
-        }
-        if (event.code === "KeyM") {
-            if (event.shiftKey) {
-                let player = getPlayer();
-                let flag = getFlag();
-                player.x = flag.x;
-                player.y = flag.y;
-                player.set_bbox_changed();
-                setTimeout(() => {
-                    notify("Going to next level (Shift + M)", "Next Level");
-                }, 300);
-            }
-        }
-        if (event.code === "KeyB") {
-            if (event.shiftKey) {
-                runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) - 1)]
-                setTimeout(() => {
-                    notify("Going to next level (Shift + N)", "Next Level");
-                }, 300);
-            }
-        }
-        if (event.code === "KeyC") {
-            if (event.shiftKey) {
-                let player = getPlayer();
-                let flag = getCoin();
-                player.x = flag.x;
-                player.y = flag.y;
-                player.set_bbox_changed();
-                setTimeout(() => {
-                    notify("Going to coin (Shift + C)", "Coin");
-                }, 300);
-            }
-        }
+    if (event.code === "KeyS") {
+      if (event.shiftKey) {
+          curState = saveState();
+      } else if (curState != null) {
+          loadState(curState);
       }
-      
-      
-  });
+    }
+    if (event.code === "KeyR" && event.shiftKey) {
+        curState = null;
+        runtime.changeLayout = runtime.runningLayout;
+        //runtime.attempts = runtime.attempts + 1;
+        notify("State reset by soft level reset (Shift + R)", "State Reset");
+    }
+    if (event.code === "KeyN") {
+        if (event.shiftKey) {
+            runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) + 1)]
+            setTimeout(() => {
+                notify("Going to next level bypass (Shift + N)", "Next Level");
+            }, 300);
+        }
+    }
+    if (event.code === "KeyM") {
+        if (event.shiftKey) {
+            let player = getPlayer();
+            let flag = getFlag();
+            player.x = flag.x;
+            player.y = flag.y;
+            player.set_bbox_changed();
+            setTimeout(() => {
+                notify("Going to next level (Shift + M)", "Next Level");
+            }, 300);
+        }
+    }
+    if (event.code === "KeyB") {
+        if (event.shiftKey) {
+            runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) - 1)]
+            setTimeout(() => {
+                notify("Going to next level (Shift + N)", "Next Level");
+            }, 300);
+        }
+    }
+    if (event.code === "KeyC") {
+        if (event.shiftKey) {
+            let player = getPlayer();
+            let flag = getCoin();
+            player.x = flag.x;
+            player.y = flag.y;
+            player.set_bbox_changed();
+            setTimeout(() => {
+                notify("Going to coin (Shift + C)", "Coin");
+            }, 300);
+        }
+    }
+    
+  }
+
+  globalThis.savestateToggle = function (enable) {
+    if (enable) {
+      document.addEventListener("keydown", keyDown);
+    } else {
+      document.removeEventListener("keydown", keyDown);
+    }
+  }
+  
+  document.addEventListener("keydown", keyDown);
 
   Object.values(runtime.layouts).forEach((layout) => {
     let oldFn = layout.startRunning.bind(layout);

@@ -9,7 +9,6 @@
 
 
     globalThis.flymodToggle = function (enable) {
-        console.log('jason liang')
         if (enable) {
             // Use the bound methods when adding the event listeners
             document.addEventListener("keydown", ovoFlyMod.boundKeyDown);
@@ -18,7 +17,6 @@
             // Use the bound methods when removing the event listeners
             document.removeEventListener("keydown", ovoFlyMod.boundKeyDown);
             document.removeEventListener("keyup", ovoFlyMod.boundKeyUp);
-            console.log('peterfun')
         }
     }
 
@@ -72,7 +70,6 @@
         },
 
         flymodToggle(enable) {
-            console.log('jason liang')
             if (enable) {
                 // Use the bound methods when adding the event listeners
                 document.addEventListener("keydown", this.boundKeyDown);
@@ -80,8 +77,6 @@
             } else {
                 // Use the bound methods when removing the event listeners
                 document.removeEventListener("keydown", this.boundKeyDown);
-                document.removeEventListener("keyup", this.boundKeyUp);
-                console.log('peterfun')
             }
         },
       

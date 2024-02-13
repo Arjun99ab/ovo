@@ -16,7 +16,7 @@
     };
   
     notify("timescale shortcut mod loaded");
-    document.addEventListener("keydown", (event) => {
+    let keyDown = (event) => {
       if (event.code === "KeyQ") {
         ovoTasTools.timescale = 1
           notify("timescale set to 1");
@@ -73,5 +73,16 @@
             notify("auto jump inputed");
         }
       }
-    });
+    };
+    globalThis.taskeybindsToggle = function (enable) {
+      if (enable) {
+        document.addEventListener("keydown", keyDown);
+      } else {
+        document.removeEventListener("keydown", keyDown);
+        try {
+          ovoTasTools.timescale = 1
+        } catch (e) {}
+      }
+    }
+    document.addEventListener("keydown", keyDown);
   })();

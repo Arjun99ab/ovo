@@ -12,7 +12,7 @@
     } else {
         enabled = false
     }
-}
+  }
 
 
   let notify = (title, text, image = "./speedrunner.png") => {
