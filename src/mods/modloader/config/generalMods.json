@@ -51,7 +51,7 @@
         "gui": {
             "name": "Gui",
             "author": "Awesomeguy",
-            "desc": "Customize your HUD! Move around elements, right click to edit them, pause the game to enable/disable and add custom text nodes!<br/><br/>PRESS THE GREEN CHECKMARKS TO SAVE SETTING",
+            "desc": "Customize your HUD! Move around elements, right click to edit them, pause the game to enable/disable and add custom text nodes!<br/><br/>WIP for mobile support.",
             "url": "../src/mods/modloader/gui.js",
             "icon": "https://cdn-icons-png.flaticon.com/128/1548/1548686.png",
             "platforms": ["pc", "mobile"],
@@ -266,7 +266,7 @@
         "taskeybinds": {
             "name": "TAS Keybinds",
             "author": "CoolTasDude",
-            "desc": "A mod for changing the game's timescale without having to put commands in devtools. <br/><br/>Join the <a href='https://discord.gg/ovo-speedrunning-community-645935373368688650' target='_blank'>Discord<a> for a list of keybinds. <br/><br/><b><u>Requires TAS Tools to be loaded</u></b>",
+            "desc": "A mod for changing the game's timescale without having to put commands in devtools. <br/><br/><b><u>Load ovo tas tools before attempting to use this mod</u></b><br/><br/> Keybinds positioned relative to the R key.",
             "url": "../src/mods/modloader/taskeybinds.js",
             "icon": "https://cdn-icons-png.flaticon.com/128/159/159602.png",
             "platforms": ["pc"],

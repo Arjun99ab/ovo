@@ -9,13 +9,16 @@
 
 
     globalThis.flymodToggle = function (enable) {
+        console.log('jason liang')
         if (enable) {
-            document.addEventListener("keydown", ovoFlyMod.keyDown);
-            document.addEventListener("keyup", ovoFlyMod.keyUp);
-
+            // Use the bound methods when adding the event listeners
+            document.addEventListener("keydown", ovoFlyMod.boundKeyDown);
+            document.addEventListener("keyup", ovoFlyMod.boundKeyUp);
         } else {
-            document.removeEventListener("keydown", ovoFlyMod.keyDown);
-            document.removeEventListener("keyup", ovoFlyMod.keyUp);
+            // Use the bound methods when removing the event listeners
+            document.removeEventListener("keydown", ovoFlyMod.boundKeyDown);
+            document.removeEventListener("keyup", ovoFlyMod.boundKeyUp);
+            console.log('peterfun')
         }
     }
 
@@ -54,15 +57,32 @@
             this.speed = {x: 10, y: 10};
             this.stored = [1500, true];
             this.override = false;
+
+            this.boundKeyDown = this.keyDown.bind(this);
+            this.boundKeyUp = this.keyUp.bind(this);
             
             //listen to key events
-            document.addEventListener("keydown", this.keyDown);
-            document.addEventListener("keyup", this.keyUp);
+            document.addEventListener("keydown", this.boundKeyDown);
+            document.addEventListener("keyup", this.boundKeyUp);
           
             runtime.tickMe(this);
           
             globalThis.ovoFlyMod = this;
             notify("Fly Mod Loaded", "Shift + [arrow keys]", "https://cdn-icons-png.flaticon.com/512/3125/3125683.png");
+        },
+
+        flymodToggle(enable) {
+            console.log('jason liang')
+            if (enable) {
+                // Use the bound methods when adding the event listeners
+                document.addEventListener("keydown", this.boundKeyDown);
+                document.addEventListener("keyup", this.boundKeyUp);
+            } else {
+                // Use the bound methods when removing the event listeners
+                document.removeEventListener("keydown", this.boundKeyDown);
+                document.removeEventListener("keyup", this.boundKeyUp);
+                console.log('peterfun')
+            }
         },
       
         keyDown(event) {
@@ -74,6 +94,8 @@
                 if (!this.activated) {
                     console.log(this.startActivation)
                     console.log(this)
+                    console.log(this.activated)
+
                     this.startActivation();
                     this.activated = true;
                 }

@@ -5,6 +5,15 @@
   let runtime = globalThis.sdk_runtime;
   globalThis.sdk_runtime = old;
   let counter = 0
+  let enabled = true
+  globalThis.hurricaneToggle = function (enable) {
+    if (enable) {
+        enabled = true
+    } else {
+        enabled = false
+    }
+}
+
 
   let notify = (title, text, image = "./speedrunner.png") => {
     cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
@@ -19,7 +28,7 @@
 
   let wind = {
     tick() {
-      if(JSON.parse(localStorage.getItem('modSettings'))["hurricane"]["enabled"]) {
+      if(enabled) {
         let playerInstances = runtime.types_by_index
         .filter(
           (x) =>

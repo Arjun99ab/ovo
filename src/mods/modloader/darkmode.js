@@ -38,10 +38,10 @@
 
     globalThis.darkmodeToggle = function (enable) {
         if (enable) {
-            div.style.backgroundColor = "black";
+            div.style.backgroundColor = "white";
             notify("Dark Mode Enabled", "", "https://static.thenounproject.com/png/2856481-200.png");
         } else {
-            div.style.backgroundColor = "white";
+            div.style.backgroundColor = "black";
             notify("Dark Mode Disabled", "", "https://static.thenounproject.com/png/2856481-200.png");
         }
     }

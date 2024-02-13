@@ -209,10 +209,11 @@
     let detectDeviceType = () => 
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mobile' : 'pc';
 
-    let toggleMod = (modId, enabled) => {
+    let toggleMod = (modId, enable) => {
       console.log(modId)
-      if (!enabled) { //currently not enabled
+      if (enable) { //want to enable
         console.log(document.getElementById(modId))
+        console.log(!!!document.getElementById(modId), !document.getElementById(modId))
         if(!!!document.getElementById(modId)) { // custom mods or mods that aren't in memory
           console.log('sadghyfisatdgifuygasdyifg')
           js = document.createElement("script");
@@ -235,6 +236,7 @@
             localStorage.setItem('modSettings', JSON.stringify(modSettings));            
             
             // TODO - use globalThis to toggle mod
+            console.log(modId)
             globalThis[modId + "Toggle"](true); //true is to toggle
 
         }
@@ -283,6 +285,7 @@
           overflow: "auto",
           margin: "0",
           padding: "5px",
+          borderRadius: "10px",
       };
       Object.keys(c).forEach(function (a) {
           confirmBg.style[a] = c[a];
@@ -397,6 +400,7 @@
         overflow: "auto",
         margin: "0",
         padding: "10px",
+        borderRadius: "10px",
     };
     Object.keys(c).forEach(function (a) {
       notifyBg.style[a] = c[a];
@@ -478,6 +482,151 @@
 
     // confirmBg.appendChild(xButton);
     document.body.appendChild(notifyBg);
+}
+
+let createDescPopup = (modId) => {
+  //Create background div
+  let descPopup = document.createElement("div");
+  descPopup.id = "descPopup-bg";
+
+  c = {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "white",
+      border: "solid",
+      borderColor: "black",
+      borderWidth: "2px",
+      fontFamily: "Retron2000",
+      cursor: "default",
+      color: "black",
+      fontSize: "10pt",
+      width: "auto",
+      height: "auto",
+      overflow: "auto",
+      margin: "0",
+      padding: "10px",
+      borderRadius: "10px",
+  };
+  Object.keys(c).forEach(function (a) {
+    descPopup.style[a] = c[a];
+  });
+
+  navbar = document.createElement("nav");
+
+  c = {
+    display: "flex",
+    // flex: "0 0 auto",
+    // alignItems: "center",
+    justifyContent: "space-between",
+    padding: "5px",
+    // position: "relative",
+    // backgroundColor: "#f2f2f2",
+  }
+  Object.keys(c).forEach(function (a) {
+      navbar.style[a] = c[a];
+  });
+  navbar.id = "navbar";
+
+  navbar.appendChild(document.createElement("div"));
+
+  //Title
+  headerText = document.createElement("div");
+  c = {
+      backgroundColor: "white",
+      border: "none",
+      fontFamily: "Retron2000",
+      // position: "relative",
+      // top: "2%",
+      //left: "35%",
+      color: "black",
+      cursor: "default",
+      // margin: "0",
+      textAlign: "center",
+
+  };
+  Object.keys(c).forEach(function (a) {
+      titleText.style[a] = c[a];
+  });
+  titleText = document.createElement("p");
+  titleText.style.fontSize = "2.3vw";
+  titleText.style.textAlign = "center";
+  titleText.innerHTML = backendConfig['mods'][modId]['name'];
+  headerText.appendChild(titleText);
+  if(backendConfig['mods'][modId]['author'] !== null) {
+    authorText = document.createElement("p");
+    authorText.style.fontSize = "1.3vw";
+    authorText.style.textAlign = "center";
+    authorText.innerHTML = "by " + backendConfig['mods'][modId]['author'];
+    headerText.appendChild(authorText);
+  }
+  
+  navbar.appendChild(headerText);
+
+  //X button CSS
+  xButton = document.createElement("button");
+  c = {
+    position: "absolute",
+    top: "5px",
+    right: "5px",
+    backgroundColor: "white",
+    border: "none",
+    fontFamily: "Retron2000",
+    color: "black",
+    fontSize: "2.3vw",
+    cursor: "pointer",
+  };
+  Object.keys(c).forEach(function (a) {
+      xButton.style[a] = c[a];
+  });
+
+  xButton.innerHTML = "❌";
+  xButton.id = "x-button";
+
+  xButton.onclick = function() {
+      descPopup.remove();
+      // enableClick(map);
+      document.getElementById("menu-bg").style.pointerEvents = "auto";
+      document.getElementById("menu-bg").style.filter = "none";
+  }
+  // navbar.appendChild(xButton);
+  descPopup.appendChild(xButton);
+  descPopup.appendChild(navbar);
+
+  descText = document.createElement("div");
+  descText.id = "descText";
+  descText.innerHTML = backendConfig['mods'][modId]['desc'];
+  descText.style.fontSize = "1.5vw";
+  descText.style.textAlign = "center";
+  descText.style.margin = "15px";
+  // descText.style.marginBottom = "10px";
+
+  descPopup.appendChild(descText);
+
+  if(modId === "taskeybinds") {
+    image = document.createElement("img");
+    image.src = "../src/mods/modloader/taskeybinds.png";
+    image.style.width = "50%";
+    image.style.height = "auto";
+    // image.style.margin = "auto";
+
+    // image.style.transform = "translate(-50%, -50%)",
+    // image.style.alignItems = "center";
+
+
+    descPopup.appendChild(image);
+  }
+
+  
+
+  
+
+  document.body.appendChild(descPopup);
 }
 
     let createFilterButton = (id, text, width) => {
@@ -663,7 +812,9 @@
 
       cardButton.onclick = function() {
         if(id.includes("info")) {
-          console.log("info")
+          document.getElementById("menu-bg").style.pointerEvents = "none";
+          document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+          createDescPopup(id.split("-")[0]);
         } else if(id.includes("settings")) {
           document.getElementById("menu-bg").style.pointerEvents = "none";
           document.getElementById("menu-bg").style.filter = "blur(1.2px)";
@@ -837,13 +988,13 @@
           console.log("disabled")
           document.getElementById(id + '-enable-button').innerHTML = "Disabled";
           document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(222, 48, 51)";
-          toggleMod(id, true);
+          toggleMod(id, false);
         } else { //if disabled, we want to enable
           console.log("enabled")
 
           document.getElementById(id + '-enable-button').innerHTML = "Enabled";
           document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(45, 186, 47)";
-          toggleMod(id, false);
+          toggleMod(id, true);
 
         }
       }
@@ -922,6 +1073,7 @@
           height: "90%",
           display: "flex",
           flexDirection: "column",
+          borderRadius: "10px",
       };
       Object.keys(c).forEach(function (a) {
           menuBg.style[a] = c[a];
@@ -997,7 +1149,7 @@
           titleText.style[a] = c[a];
       });
       titleText.id = "title-text";
-      newContent = document.createTextNode("OvO Modloader");
+      newContent = document.createTextNode(" mods");
       titleText.appendChild(newContent);
       navbar.appendChild(titleText);
 
