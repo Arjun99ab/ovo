@@ -3003,1657 +3003,1623 @@
       }
     );
   });
-  //# sourceMappingURL=cbfjs.umd.js.map
   
-  let random = (a) => crypto.getRandomValues(new Uint8Array(a)),
-    customRandom = (a, b, d) => {
-      let c = (2 << (Math.log(a.length - 1) / Math.LN2)) - 1,
-        e = -~((1.6 * c * b) / a.length);
-      return (h = b) => {
-        let f = "";
-        for (;;) {
-          let i = d(e),
-            g = e;
-          for (; g--; ) if ((f += a[i[g] & c] || "").length === h) return f;
-        }
-      };
-    },
-    customAlphabet = (a, b = 21) => customRandom(a, b, random),
-    nanoid = (a = 21) =>
-      crypto
-        .getRandomValues(new Uint8Array(a))
-        .reduce(
-          (a, b) => (
-            (b &= 63) < 36
-              ? (a += b.toString(36))
-              : b < 62
-              ? (a += (b - 26).toString(36).toUpperCase())
-              : b > 62
-              ? (a += "-")
-              : (a += "_"),
-            a
-          ),
-          ""
-        );
-  let customNanoId = customAlphabet("6789BCDFGHJKLMNPQRTWbcdfghjkmnpqrtwz", 6);
-  let getRandomOvORoomCode = () => {
-    return /*"ovo-multiplayer-" +*/ customNanoId();
-  };
+  (() => {
+    globalThis.ovoMultiplayerClient = {
+      initMod() {
+        (function () {
+          // Get runtime
+          let runtime = cr_getC2Runtime();
+          const VERSION = "0.3";
+          const THIS_PROMPT_ID = "beta-multiplayer-prompt";
+          let myUniqueHash = "";
   
-  globalThis.ovoMultiplayerClient = {
-    initMod() {
-      (function () {
-        // Get runtime
-        let runtime = cr_getC2Runtime();
-        const VERSION = "1.0";
-        const THIS_PROMPT_ID = "beta-multiplayer-prompt";
-        let myUniqueHash = "";
+          let filterArrSpaces = [
+            "2 girls 1 cup",
+            "alabama hot pocket",
+            "alaskan pipeline",
+            "ass hole",
+            "auto erotic",
+            "baby batter",
+            "baby juice",
+            "ball gag",
+            "ball gravy",
+            "ball kicking",
+            "ball licking",
+            "ball sack",
+            "ball sucking",
+            "barely legal",
+            "beaver cleaver",
+            "beaver lips",
+            "big black",
+            "big breasts",
+            "big knockers",
+            "big tits",
+            "black cock",
+            "blonde action",
+            "blonde on blonde action",
+            "blow job",
+            "blow your load",
+            "blue waffle",
+            "booty call",
+            "brown showers",
+            "brunette action",
+            "bull shit",
+            "bullet vibe",
+            "bung hole",
+            "bunny fucker",
+            "butt fuck",
+            "butt plug",
+            "camel toe",
+            "carpet muncher",
+            "chocolate rosebuds",
+            "cleveland steamer",
+            "clover clamps",
+            "cock sucker",
+            "date rape",
+            "deep throat",
+            "dirty pillows",
+            "dirty sanchez",
+            "dog style",
+            "doggie style",
+            "doggy style",
+            "donkey punch",
+            "double dong",
+            "double penetration",
+            "dp action",
+            "dry hump",
+            "dumb ass",
+            "eat my ass",
+            "f u c k",
+            "f u c k e r",
+            "female squirting",
+            "foot fetish",
+            "fuck buttons",
+            "fuck off",
+            "fudge packer",
+            "gang bang",
+            "gay sex",
+            "giant cock",
+            "girl on",
+            "girl on top",
+            "girls gone wild",
+            "god damn",
+            "golden shower",
+            "goo girl",
+            "group sex",
+            "hand job",
+            "hard core",
+            "hard on",
+            "hot carl",
+            "hot chick",
+            "how to kill",
+            "how to murder",
+            "huge fat",
+            "jack Off",
+            "jail bait",
+            "jelly donut",
+            "jerk off",
+            "jungle bunny",
+            "leather restraint",
+            "leather straight jacket",
+            "lemon party",
+            "make me come",
+            "male squirting",
+            "menage a trois",
+            "missionary position",
+            "mother fucker",
+            "mound of venus",
+            "mr hands",
+            "muff diver",
+            "nig nog",
+            "nob jokey",
+            "nsfw images",
+            "nut sack",
+            "one cup two girls",
+            "one guy one jar",
+            "phone sex",
+            "piece of shit",
+            "piss pig",
+            "pissed off",
+            "pleasure chest",
+            "pole smoker",
+            "poop chute",
+            "porch monkey",
+            "prince albert piercing",
+            "raging boner",
+            "reverse cowgirl",
+            "rosy palm",
+            "rosy palm and her 5 sisters",
+            "rusty trombone",
+            "s hit",
+            "sand nigger",
+            "shaved beaver",
+            "shaved pussy",
+            "splooge moose",
+            "spread legs",
+            "strap on",
+            "strip club",
+            "style doggy",
+            "suicide girls",
+            "sultry women",
+            "tainted love",
+            "taste my",
+            "tea bagging",
+            "tied up",
+            "tight white",
+            "tongue in a",
+            "tub girl",
+            "two girls one cup",
+            "urethra play",
+            "venus mound",
+            "violet wand",
+            "wet dream",
+            "white power",
+            "wrapping men",
+            "wrinkled starfish",
+            "yellow showers",
+          ];
+          let filterArrNoSpaces = [
+            "2g1c",
+            "4r5e",
+            "5h1t",
+            "5hit",
+            "a_s_s",
+            "a55",
+            "a55hole",
+            "acrotomophilia",
+            "aeolus",
+            "ahole",
+            "anal",
+            "analprobe",
+            "anilingus",
+            "anus",
+            "apeshit",
+            "ar5e",
+            "areola",
+            "areole",
+            "arian",
+            "arrse",
+            "arse",
+            "arsehole",
+            "aryan",
+            "ass",
+            "assbag",
+            "assbandit",
+            "assbang",
+            "assbanged",
+            "assbanger",
+            "assbangs",
+            "assbite",
+            "assclown",
+            "asscock",
+            "asscracker",
+            "asses",
+            "assface",
+            "assfuck",
+            "assfucker",
+            "ass-fucker",
+            "assfukka",
+            "assgoblin",
+            "assh0le",
+            "asshat",
+            "ass-hat",
+            "asshead",
+            "assho1e",
+            "asshole",
+            "assholes",
+            "asshopper",
+            "ass-jabber",
+            "assjacker",
+            "asslick",
+            "asslicker",
+            "assmaster",
+            "assmonkey",
+            "assmunch",
+            "assmuncher",
+            "assnigger",
+            "asspirate",
+            "ass-pirate",
+            "assshit",
+            "assshole",
+            "asssucker",
+            "asswad",
+            "asswhole",
+            "asswipe",
+            "asswipes",
+            "autoerotic",
+            "axwound",
+            "azazel",
+            "azz",
+            "b!tch",
+            "b00bs",
+            "b17ch",
+            "b1tch",
+            "babe",
+            "babeland",
+            "babes",
+            "balls",
+            "ballbag",
+            "ballsack",
+            "bampot",
+            "bang",
+            "bangbros",
+            "banger",
+            "bareback",
+            "barenaked",
+            "barf",
+            "bastard",
+            "bastardo",
+            "bastards",
+            "bastinado",
+            "bawdy",
+            "bbw",
+            "bdsm",
+            "beaner",
+            "beaners",
+            "beardedclam",
+            "beastial",
+            "beastiality",
+            "beatch",
+            "beater",
+            "beeyotch",
+            "bellend",
+            "beotch",
+            "bestial",
+            "bestiality",
+            "bi+ch",
+            "biatch",
+            "bigtits",
+            "bimbo",
+            "bimbos",
+            "birdlock",
+            "bitch",
+            "bitchass",
+            "bitched",
+            "bitcher",
+            "bitchers",
+            "bitches",
+            "bitchin",
+            "bitching",
+            "bitchtits",
+            "bitchy",
+            "blowjob",
+            "blowjobs",
+            "blumpkin",
+            "bod",
+            "bodily",
+            "boink",
+            "boiolas",
+            "bollock",
+            "bollocks",
+            "bollok",
+            "bollox",
+            "bondage",
+            "boned",
+            "boner",
+            "boners",
+            "bong",
+            "boob",
+            "boobies",
+            "boobs",
+            "booby",
+            "booger",
+            "bookie",
+            "booobs",
+            "boooobs",
+            "booooobs",
+            "booooooobs",
+            "bootee",
+            "bootie",
+            "booty",
+            "booze",
+            "boozer",
+            "boozy",
+            "bosom",
+            "bosomy",
+            "bra",
+            "brassiere",
+            "breast",
+            "breasts",
+            "breeder",
+            "brotherfucker",
+            "buceta",
+            "bugger",
+            "bukkake",
+            "bulldyke",
+            "bullshit",
+            "bullshits",
+            "bullshitted",
+            "bullturds",
+            "bum",
+            "bumblefuck",
+            "bung",
+            "bunghole",
+            "busty",
+            "butt",
+            "buttcheeks",
+            "buttfuck",
+            "buttfucka",
+            "buttfucker",
+            "butthole",
+            "buttmuch",
+            "butt-pirate",
+            "buttplug",
+            "c.0.c.k",
+            "c.o.c.k.",
+            "c.u.n.t",
+            "c0ck",
+            "c-0-c-k",
+            "c0cksucker",
+            "caca",
+            "cahone",
+            "cameltoe",
+            "camgirl",
+            "camslut",
+            "camwhore",
+            "carpetmuncher",
+            "cawk",
+            "cervix",
+            "chesticle",
+            "chinc",
+            "chincs",
+            "chink",
+            "choad",
+            "chode",
+            "chodes",
+            "cipa",
+            "circlejerk",
+            "cl1t",
+            "climax",
+            "clit",
+            "clitface",
+            "clitfuck",
+            "clitoris",
+            "clitorus",
+            "clits",
+            "clitty",
+            "clusterfuck",
+            "cnut",
+            "cocain",
+            "cocaine",
+            "cock",
+            "c-o-c-k",
+            "cockass",
+            "cockbite",
+            "cockblock",
+            "cockburger",
+            "cockeye",
+            "cockface",
+            "cockfucker",
+            "cockhead",
+            "cockholster",
+            "cockjockey",
+            "cockknocker",
+            "cockknoker",
+            "cocklump",
+            "cockmaster",
+            "cockmongler",
+            "cockmongruel",
+            "cockmonkey",
+            "cockmunch",
+            "cockmuncher",
+            "cocknose",
+            "cocknugget",
+            "cocks",
+            "cockshit",
+            "cocksmith",
+            "cocksmoke",
+            "cocksmoker",
+            "cocksniffer",
+            "cocksuck",
+            "cocksucked",
+            "cocksucker",
+            "cock-sucker",
+            "cocksucking",
+            "cocksucks",
+            "cocksuka",
+            "cocksukka",
+            "cockwaffle",
+            "coital",
+            "cok",
+            "cokmuncher",
+            "coksucka",
+            "commie",
+            "condom",
+            "coochie",
+            "coochy",
+            "coon",
+            "coons",
+            "cooter",
+            "coprolagnia",
+            "coprophilia",
+            "corksucker",
+            "cornhole",
+            "cox",
+            "crabs",
+            "crack",
+            "crackwhore",
+            "crap",
+            "crappy",
+            "creampie",
+            "crotte",
+            "cum",
+            "cumbubble",
+            "cumdumpster",
+            "cumguzzler",
+            "cumjockey",
+            "cummer",
+            "cummin",
+            "cumming",
+            "cums",
+            "cumshot",
+            "cumshots",
+            "cumslut",
+            "cumstain",
+            "cumtart",
+            "cunilingus",
+            "cunillingus",
+            "cunnie",
+            "cunnilingus",
+            "cunny",
+            "cunt",
+            "c-u-n-t",
+            "cuntass",
+            "cuntface",
+            "cunthole",
+            "cunthunter",
+            "cuntlick",
+            "cuntlicker",
+            "cuntlicking",
+            "cuntrag",
+            "cunts",
+            "cuntslut",
+            "cyalis",
+            "cyberfuc",
+            "cyberfuck",
+            "cyberfucked",
+            "cyberfucker",
+            "cyberfuckers",
+            "cyberfucking",
+            "d0ng",
+            "d0uch3",
+            "d0uche",
+            "d1ck",
+            "d1ld0",
+            "d1ldo",
+            "dago",
+            "dagos",
+            "darkie",
+            "damn",
+            "damned",
+            "dammit",
+            "daterape",
+            "dawgie-style",
+            "deepthroat",
+            "deggo",
+            "dendrophilia",
+            "dick",
+            "dickbag",
+            "dickbeaters",
+            "dickdipper",
+            "dickface",
+            "dickflipper",
+            "dickfuck",
+            "dickfucker",
+            "dickhead",
+            "dickheads",
+            "dickhole",
+            "dickish",
+            "dick-ish",
+            "dickjuice",
+            "dickmilkÂ ",
+            "dickmonger",
+            "dickripper",
+            "dicks",
+            "dicksipper",
+            "dickslap",
+            "dick-sneeze",
+            "dicksucker",
+            "dicksucking",
+            "dicktickler",
+            "dickwad",
+            "dickweasel",
+            "dickweed",
+            "dickwhipper",
+            "dickwod",
+            "dickzipper",
+            "diddle",
+            "dike",
+            "dildo",
+            "dildos",
+            "diligaf",
+            "dillweed",
+            "dimwit",
+            "dingle",
+            "dingleberries",
+            "dingleberry",
+            "dink",
+            "dinks",
+            "dipship",
+            "dipshit",
+            "dirsa",
+            "dlck",
+            "dog-fucker",
+            "doggiestyle",
+            "doggie-style",
+            "doggin",
+            "dogging",
+            "doggystyle",
+            "doggy-style",
+            "dolcett",
+            "domination",
+            "dominatrix",
+            "dommes",
+            "dong",
+            "donkeyribber",
+            "doochbag",
+            "doofus",
+            "dookie",
+            "doosh",
+            "dopey",
+            "doublelift",
+            "douch3",
+            "douche",
+            "douchebag",
+            "douchebags",
+            "douche-fag",
+            "douchewaffle",
+            "douchey",
+            "drunk",
+            "duche",
+            "dumass",
+            "dumbass",
+            "dumbasses",
+            "dumbcunt",
+            "dumbfuck",
+            "dumbshit",
+            "dummy",
+            "dumshit",
+            "dvda",
+            "dyke",
+            "dykes",
+            "ecchi",
+            "ejaculate",
+            "ejaculated",
+            "ejaculates",
+            "ejaculating",
+            "ejaculatings",
+            "ejaculation",
+            "ejakulate",
+            "enlargement",
+            "erect",
+            "erection",
+            "erotic",
+            "erotism",
+            "escort",
+            "essohbee",
+            "eunuch",
+            "extacy",
+            "extasy",
+            "f.u.c.k",
+            "f_u_c_k",
+            "f4nny",
+            "fack",
+            "fag",
+            "fagbag",
+            "fagfucker",
+            "fagg",
+            "fagged",
+            "fagging",
+            "faggit",
+            "faggitt",
+            "faggot",
+            "faggotcock",
+            "faggs",
+            "fagot",
+            "fagots",
+            "fags",
+            "fagtard",
+            "faig",
+            "faigt",
+            "fanny",
+            "fannybandit",
+            "fannyflaps",
+            "fannyfucker",
+            "fanyy",
+            "fartknocker",
+            "fatass",
+            "fcuk",
+            "fcuker",
+            "fcuking",
+            "fecal",
+            "feck",
+            "fecker",
+            "felch",
+            "felcher",
+            "felching",
+            "fellate",
+            "fellatio",
+            "feltch",
+            "feltcher",
+            "femdom",
+            "figging",
+            "fingerbang",
+            "fingerfuck",
+            "fingerfucked",
+            "fingerfucker",
+            "fingerfuckers",
+            "fingerfucking",
+            "fingerfucks",
+            "fingering",
+            "fisted",
+            "fistfuck",
+            "fistfucked",
+            "fistfucker",
+            "fistfuckers",
+            "fistfucking",
+            "fistfuckings",
+            "fistfucks",
+            "fisting",
+            "fisty",
+            "flamer",
+            "flange",
+            "floozy",
+            "foad",
+            "foah",
+            "fondle",
+            "foobar",
+            "fook",
+            "fooker",
+            "footjob",
+            "foreskin",
+            "freex",
+            "frigg",
+            "frigga",
+            "frotting",
+            "fubar",
+            "fuck",
+            "f-u-c-k",
+            "fucka",
+            "fuckass",
+            "fuckbag",
+            "fuckboy",
+            "fuckbrain",
+            "fuckbutt",
+            "fuckbutter",
+            "fucked",
+            "fucker",
+            "fuckers",
+            "fuckersucker",
+            "fuckface",
+            "fuckhead",
+            "fuckheads",
+            "fuckhole",
+            "fuckin",
+            "fucking",
+            "fuckings",
+            "fuckingshitmotherfucker",
+            "fuckme",
+            "fucknugget",
+            "fucknut",
+            "fucknutt",
+            "fuckoff",
+            "fucks",
+            "fuckstick",
+            "fucktard",
+            "fuck-tard",
+            "fucktards",
+            "fucktart",
+            "fucktwat",
+            "fuckup",
+            "fuckwad",
+            "fuckwhit",
+            "fuckwit",
+            "fuckwitt",
+            "fudgepacker",
+            "fuk",
+            "fuker",
+            "fukker",
+            "fukkin",
+            "fuks",
+            "fukwhit",
+            "fukwit",
+            "futanari",
+            "fux",
+            "fux0r",
+            "fvck",
+            "fxck",
+            "gae",
+            "gai",
+            "gangbang",
+            "gangbanged",
+            "gangbangs",
+            "ganja",
+            "gay",
+            "gayass",
+            "gaybob",
+            "gaydo",
+            "gayfuck",
+            "gayfuckist",
+            "gaylord",
+            "gays",
+            "gaysex",
+            "gaytard",
+            "gaywad",
+            "genitals",
+            "gey",
+            "gfy",
+            "ghay",
+            "ghey",
+            "gigolo",
+            "glans",
+            "goatcx",
+            "goatse",
+            "godamn",
+            "godamnit",
+            "goddam",
+            "god-dam",
+            "goddammit",
+            "goddamn",
+            "goddamned",
+            "god-damned",
+            "goddamnit",
+            "gokkun",
+            "goldenshower",
+            "gonad",
+            "gonads",
+            "gooch",
+            "goodpoop",
+            "gook",
+            "gooks",
+            "goregasm",
+            "gringo",
+            "grope",
+            "gspot",
+            "g-spot",
+            "gtfo",
+            "guido",
+            "guro",
+            "h0m0",
+            "h0mo",
+            "handjob",
+            "hardcore",
+            "hardcoresex",
+            "he11",
+            "heeb",
+            "hemp",
+            "hentai",
+            "heroin",
+            "herp",
+            "herpes",
+            "herpy",
+            "heshe",
+            "hitler",
+            "hiv",
+            "ho",
+            "hoar",
+            "hoare",
+            "hobag",
+            "hoe",
+            "hoer",
+            "hom0",
+            "homey",
+            "homo",
+            "homodumbshit",
+            "homoerotic",
+            "homoey",
+            "honkey",
+            "honky",
+            "hooch",
+            "hookah",
+            "hooker",
+            "hoor",
+            "hootch",
+            "hooter",
+            "hooters",
+            "hore",
+            "horniest",
+            "horny",
+            "hotsex",
+            "hump",
+            "humped",
+            "humping",
+            "hussy",
+            "hymen",
+            "inbred",
+            "incest",
+            "injun",
+            "intercourse",
+            "j3rk0ff",
+            "jackass",
+            "jackhole",
+            "jackoff",
+            "jack-off",
+            "jaggi",
+            "jagoff",
+            "jailbait",
+            "jap",
+            "japs",
+            "jerk",
+            "jerk0ff",
+            "jerkass",
+            "jerked",
+            "jerkoff",
+            "jerk-off",
+            "jigaboo",
+            "jiggaboo",
+            "jiggerboo",
+            "jism",
+            "jiz",
+            "jizm",
+            "jizz",
+            "jizzed",
+            "juggs",
+            "junglebunny",
+            "junkie",
+            "junky",
+            "kawk",
+            "kike",
+            "kikes",
+            "kinbaku",
+            "kinkster",
+            "kinky",
+            "kkk",
+            "knob",
+            "knobbing",
+            "knobead",
+            "knobed",
+            "knobend",
+            "knobhead",
+            "knobjocky",
+            "knobjokey",
+            "kock",
+            "kondum",
+            "kondums",
+            "kooch",
+            "kooches",
+            "kootch",
+            "kraut",
+            "kum",
+            "kummer",
+            "kumming",
+            "kums",
+            "kunilingus",
+            "kunja",
+            "kunt",
+            "kyke",
+            "l3i+ch",
+            "l3itch",
+            "labia",
+            "lameass",
+            "lardass",
+            "lech",
+            "leper",
+            "lesbian",
+            "lesbians",
+            "lesbo",
+            "lesbos",
+            "lez",
+            "lezbian",
+            "lezbians",
+            "lezbo",
+            "lezbos",
+            "lezzie",
+            "lezzies",
+            "lezzy",
+            "lmao",
+            "lmfao",
+            "loin",
+            "loins",
+            "lolita",
+            "lovemaking",
+            "lube",
+            "lust",
+            "lusting",
+            "lusty",
+            "m0f0",
+            "m0fo",
+            "m45terbate",
+            "ma5terb8",
+            "ma5terbate",
+            "mams",
+            "masochist",
+            "massa",
+            "masterb8",
+            "masterbat",
+            "masterbat3",
+            "masterbate",
+            "master-bate",
+            "masterbating",
+            "masterbation",
+            "masterbations",
+            "masturbate",
+            "masturbating",
+            "masturbation",
+            "maxi",
+            "mcfagget",
+            "menses",
+            "menstruate",
+            "menstruation",
+            "meth",
+            "m-fucking",
+            "mick",
+            "milf",
+            "minge",
+            "mof0",
+            "mofo",
+            "mo-fo",
+            "molest",
+            "moolie",
+            "moron",
+            "mothafuck",
+            "mothafucka",
+            "mothafuckas",
+            "mothafuckaz",
+            "mothafucked",
+            "mothafucker",
+            "mothafuckers",
+            "mothafuckin",
+            "mothafucking",
+            "mothafuckings",
+            "mothafucks",
+            "motherfuck",
+            "motherfucka",
+            "motherfucked",
+            "motherfucker",
+            "motherfuckers",
+            "motherfuckin",
+            "motherfucking",
+            "motherfuckings",
+            "motherfuckka",
+            "motherfucks",
+            "mtherfucker",
+            "mthrfucker",
+            "mthrfucking",
+            "muff",
+            "muffdiver",
+            "muffdiving",
+            "munging",
+            "murder",
+            "mutha",
+            "muthafecker",
+            "muthafuckaz",
+            "muthafucker",
+            "muthafuckker",
+            "muther",
+            "mutherfucker",
+            "mutherfucking",
+            "muthrfucking",
+            "n1gga",
+            "n1gger",
+            "nad",
+            "nads",
+            "naked",
+            "nambla",
+            "napalm",
+            "nappy",
+            "nawashi",
+            "nazi",
+            "nazism",
+            "negro",
+            "neonazi",
+            "nigaboo",
+            "nigg3r",
+            "nigg4h",
+            "nigga",
+            "niggah",
+            "niggas",
+            "niggaz",
+            "nigger",
+            "niggers",
+            "niggle",
+            "niglet",
+            "nimphomania",
+            "nimrod",
+            "ninny",
+            "nipple",
+            "nipples",
+            "nob",
+            "nobhead",
+            "nobjocky",
+            "nobjokey",
+            "nooky",
+            "nude",
+            "nudity",
+            "numbnuts",
+            "nutsack",
+            "nympho",
+            "nymphomania",
+            "octopussy",
+            "omorashi",
+            "opiate",
+            "opium",
+            "oral",
+            "orally",
+            "organ",
+            "orgasim",
+            "orgasims",
+            "orgasm",
+            "orgasmic",
+            "orgasms",
+            "orgies",
+            "orgy",
+            "ovary",
+            "ovum",
+            "ovums",
+            "p.u.s.s.y.",
+            "p0rn",
+            "paddy",
+            "paedophile",
+            "paki",
+            "panooch",
+            "pantie",
+            "panties",
+            "panty",
+            "pastie",
+            "pasty",
+            "pawn",
+            "pcp",
+            "pecker",
+            "peckerhead",
+            "pedo",
+            "pedobear",
+            "pedophile",
+            "pedophilia",
+            "pedophiliac",
+            "peepee",
+            "pegging",
+            "penetrate",
+            "penetration",
+            "penial",
+            "penile",
+            "penis",
+            "penisbanger",
+            "penisfucker",
+            "penispuffer",
+            "perversion",
+            "peyote",
+            "phalli",
+            "phallic",
+            "phonesex",
+            "phuck",
+            "phuk",
+            "phuked",
+            "phuking",
+            "phukked",
+            "phukking",
+            "phuks",
+            "phuq",
+            "pigfucker",
+            "pillowbiter",
+            "pimp",
+            "pimpis",
+            "pinko",
+            "pissed",
+            "pisser",
+            "pissers",
+            "pisses",
+            "pissflaps",
+            "pissin",
+            "pissing",
+            "pissoff",
+            "piss-off",
+            "pisspig",
+            "playboy",
+            "pms",
+            "polack",
+            "polesmoker",
+            "pollock",
+            "ponyplay",
+            "poof",
+            "poon",
+            "poonani",
+            "poonany",
+            "poontang",
+            "poop",
+            "poopchute",
+            "poopuncher",
+            "porchmonkey",
+            "porn",
+            "porno",
+            "pornography",
+            "pornos",
+            "potty",
+            "prick",
+            "pricks",
+            "prig",
+            "pron",
+            "prostitute",
+            "prude",
+            "pthc",
+            "pube",
+            "pubes",
+            "pubic",
+            "pubis",
+            "punanny",
+            "punany",
+            "punkass",
+            "punky",
+            "punta",
+            "puss",
+            "pusse",
+            "pussi",
+            "pussies",
+            "pussy",
+            "pussylicking",
+            "pussypounder",
+            "pussys",
+            "pust",
+            "puto",
+            "queaf",
+            "queef",
+            "queer",
+            "queerbait",
+            "queerhole",
+            "queero",
+            "queers",
+            "quicky",
+            "quim",
+            "racy",
+            "raghead",
+            "rape",
+            "raped",
+            "raper",
+            "raping",
+            "rapist",
+            "raunch",
+            "rectal",
+            "rectum",
+            "rectus",
+            "reefer",
+            "reetard",
+            "reich",
+            "renob",
+            "retard",
+            "retarded",
+            "revue",
+            "rimjaw",
+            "rimjob",
+            "rimming",
+            "ritard",
+            "rtard",
+            "r-tard",
+            "rump",
+            "rumprammer",
+            "ruski",
+            "s&m",
+            "s.h.i.t.",
+            "s.o.b.",
+            "s_h_i_t",
+            "s0b",
+            "sadism",
+            "sadist",
+            "sandler",
+            "sandnigger",
+            "sanger",
+            "santorum",
+            "scag",
+            "scantily",
+            "scat",
+            "schizo",
+            "schlong",
+            "scissoring",
+            "screw",
+            "screwed",
+            "screwing",
+            "scroat",
+            "scrog",
+            "scrot",
+            "scrote",
+            "scrotum",
+            "scrud",
+            "scum",
+            "seaman",
+            "seamen",
+            "seduce",
+            "seks",
+            "semen",
+            "sex",
+            "sexo",
+            "sexual",
+            "sexy",
+            "sh!+",
+            "sh!t",
+            "sh1t",
+            "s-h-1-t",
+            "shag",
+            "shagger",
+            "shaggin",
+            "shagging",
+            "shamedame",
+            "shemale",
+            "shi+",
+            "shibari",
+            "shit",
+            "s-h-i-t",
+            "shitass",
+            "shitbag",
+            "shitbagger",
+            "shitblimp",
+            "shitbrains",
+            "shitbreath",
+            "shitcanned",
+            "shitcunt",
+            "shitdick",
+            "shite",
+            "shiteater",
+            "shited",
+            "shitey",
+            "shitface",
+            "shitfaced",
+            "shitfuck",
+            "shitfull",
+            "shithead",
+            "shithole",
+            "shithouse",
+            "shiting",
+            "shitings",
+            "shits",
+            "shitspitter",
+            "shitstain",
+            "shitt",
+            "shitted",
+            "shitter",
+            "shitters",
+            "shittiest",
+            "shitting",
+            "shittings",
+            "shitty",
+            "shiz",
+            "shiznit",
+            "shota",
+            "shrimping",
+            "sissy",
+            "skag",
+            "skank",
+            "skeet",
+            "skullfuck",
+            "slag",
+            "slanteye",
+            "slave",
+            "sleaze",
+            "sleazy",
+            "slut",
+            "slutbag",
+            "slutdumper",
+            "slutkiss",
+            "sluts",
+            "smeg",
+            "smegma",
+            "smut",
+            "smutty",
+            "snatch",
+            "snowballing",
+            "snuff",
+            "s-o-b",
+            "sodom",
+            "sodomize",
+            "sodomy",
+            "son-of-a-bitch",
+            "souse",
+            "soused",
+            "spac",
+            "sperm",
+            "spic",
+            "spick",
+            "spik",
+            "spiks",
+            "splooge",
+            "spooge",
+            "spook",
+            "spunk",
+            "steamy",
+            "stfu",
+            "stiffy",
+            "stoned",
+            "strapon",
+            "strappado",
+            "strip",
+            "stroke",
+            "stupid",
+            "suck",
+            "suckass",
+            "sucked",
+            "sucking",
+            "sucks",
+            "sumofabiatch",
+            "swastika",
+            "swinger",
+            "t1t",
+            "t1tt1e5",
+            "t1tties",
+            "tampon",
+            "tard",
+            "tawdry",
+            "teabagging",
+            "teat",
+            "teets",
+            "teez",
+            "terd",
+            "teste",
+            "testee",
+            "testes",
+            "testical",
+            "testicle",
+            "testis",
+            "threesome",
+            "throating",
+            "thrust",
+            "thug",
+            "thundercunt",
+            "tinkle",
+            "tit",
+            "titfuck",
+            "titi",
+            "tits",
+            "titt",
+            "tittie5",
+            "tittiefucker",
+            "titties",
+            "titty",
+            "tittyfuck",
+            "tittyfucker",
+            "tittywank",
+            "titwank",
+            "toke",
+            "toots",
+            "topless",
+            "tosser",
+            "towelhead",
+            "tramp",
+            "tranny",
+            "transsexual",
+            "trashy",
+            "tribadism",
+            "tubgirl",
+            "turd",
+            "tush",
+            "tushy",
+            "tw4t",
+            "twat",
+            "twathead",
+            "twatlips",
+            "twats",
+            "twatty",
+            "twatwaffle",
+            "twink",
+            "twinkie",
+            "twunt",
+            "twunter",
+            "ugly",
+            "unclefucker",
+            "undies",
+            "undressing",
+            "unwed",
+            "upskirt",
+            "urinal",
+            "urine",
+            "urophilia",
+            "uterus",
+            "uzi",
+            "v14gra",
+            "v1gra",
+            "vag",
+            "vagina",
+            "vajayjay",
+            "va-j-j",
+            "valium",
+            "viagra",
+            "vibrator",
+            "virgin",
+            "vixen",
+            "vjayjay",
+            "vodka",
+            "vomit",
+            "vorarephilia",
+            "voyeur",
+            "vulgar",
+            "vulva",
+            "w00se",
+            "wad",
+            "wang",
+            "wank",
+            "wanker",
+            "wankjob",
+            "wanky",
+            "wazoo",
+            "wedgie",
+            "weed",
+            "weenie",
+            "weewee",
+            "weiner",
+            "weirdo",
+            "wench",
+            "wetback",
+            "wh0re",
+            "wh0reface",
+            "whitey",
+            "whiz",
+            "whoar",
+            "whoralicious",
+            "whore",
+            "whorealicious",
+            "whorebag",
+            "whored",
+            "whoreface",
+            "whorehopper",
+            "whorehouse",
+            "whores",
+            "whoring",
+            "wigger",
+            "willies",
+            "willy",
+            "womb",
+            "woody",
+            "wop",
+            "wtf",
+            "xrated",
+            "x-rated",
+            "xxx",
+            "yaoi",
+            "yeasty",
+            "yiffy",
+            "yobbo",
+            "zoophile",
+            "zoophilia",
+            "zubb",
+          ];
   
-        let filterArrSpaces = [
-          "2 girls 1 cup",
-          "alabama hot pocket",
-          "alaskan pipeline",
-          "ass hole",
-          "auto erotic",
-          "baby batter",
-          "baby juice",
-          "ball gag",
-          "ball gravy",
-          "ball kicking",
-          "ball licking",
-          "ball sack",
-          "ball sucking",
-          "barely legal",
-          "beaver cleaver",
-          "beaver lips",
-          "big black",
-          "big breasts",
-          "big knockers",
-          "big tits",
-          "black cock",
-          "blonde action",
-          "blonde on blonde action",
-          "blow job",
-          "blow your load",
-          "blue waffle",
-          "booty call",
-          "brown showers",
-          "brunette action",
-          "bull shit",
-          "bullet vibe",
-          "bung hole",
-          "bunny fucker",
-          "butt fuck",
-          "butt plug",
-          "camel toe",
-          "carpet muncher",
-          "chocolate rosebuds",
-          "cleveland steamer",
-          "clover clamps",
-          "cock sucker",
-          "date rape",
-          "deep throat",
-          "dirty pillows",
-          "dirty sanchez",
-          "dog style",
-          "doggie style",
-          "doggy style",
-          "donkey punch",
-          "double dong",
-          "double penetration",
-          "dp action",
-          "dry hump",
-          "dumb ass",
-          "eat my ass",
-          "f u c k",
-          "f u c k e r",
-          "female squirting",
-          "foot fetish",
-          "fuck buttons",
-          "fuck off",
-          "fudge packer",
-          "gang bang",
-          "gay sex",
-          "giant cock",
-          "girl on",
-          "girl on top",
-          "girls gone wild",
-          "god damn",
-          "golden shower",
-          "goo girl",
-          "group sex",
-          "hand job",
-          "hard core",
-          "hard on",
-          "hot carl",
-          "hot chick",
-          "how to kill",
-          "how to murder",
-          "huge fat",
-          "jack Off",
-          "jail bait",
-          "jelly donut",
-          "jerk off",
-          "jungle bunny",
-          "leather restraint",
-          "leather straight jacket",
-          "lemon party",
-          "make me come",
-          "male squirting",
-          "menage a trois",
-          "missionary position",
-          "mother fucker",
-          "mound of venus",
-          "mr hands",
-          "muff diver",
-          "nig nog",
-          "nob jokey",
-          "nsfw images",
-          "nut sack",
-          "one cup two girls",
-          "one guy one jar",
-          "phone sex",
-          "piece of shit",
-          "piss pig",
-          "pissed off",
-          "pleasure chest",
-          "pole smoker",
-          "poop chute",
-          "porch monkey",
-          "prince albert piercing",
-          "raging boner",
-          "reverse cowgirl",
-          "rosy palm",
-          "rosy palm and her 5 sisters",
-          "rusty trombone",
-          "s hit",
-          "sand nigger",
-          "shaved beaver",
-          "shaved pussy",
-          "splooge moose",
-          "spread legs",
-          "strap on",
-          "strip club",
-          "style doggy",
-          "suicide girls",
-          "sultry women",
-          "tainted love",
-          "taste my",
-          "tea bagging",
-          "tied up",
-          "tight white",
-          "tongue in a",
-          "tub girl",
-          "two girls one cup",
-          "urethra play",
-          "venus mound",
-          "violet wand",
-          "wet dream",
-          "white power",
-          "wrapping men",
-          "wrinkled starfish",
-          "yellow showers",
-        ];
-        let filterArrNoSpaces = [
-          "2g1c",
-          "4r5e",
-          "5h1t",
-          "5hit",
-          "a_s_s",
-          "a55",
-          "a55hole",
-          "acrotomophilia",
-          "aeolus",
-          "ahole",
-          "anal",
-          "analprobe",
-          "anilingus",
-          "anus",
-          "apeshit",
-          "ar5e",
-          "areola",
-          "areole",
-          "arian",
-          "arrse",
-          "arse",
-          "arsehole",
-          "aryan",
-          "ass",
-          "assbag",
-          "assbandit",
-          "assbang",
-          "assbanged",
-          "assbanger",
-          "assbangs",
-          "assbite",
-          "assclown",
-          "asscock",
-          "asscracker",
-          "asses",
-          "assface",
-          "assfuck",
-          "assfucker",
-          "ass-fucker",
-          "assfukka",
-          "assgoblin",
-          "assh0le",
-          "asshat",
-          "ass-hat",
-          "asshead",
-          "assho1e",
-          "asshole",
-          "assholes",
-          "asshopper",
-          "ass-jabber",
-          "assjacker",
-          "asslick",
-          "asslicker",
-          "assmaster",
-          "assmonkey",
-          "assmunch",
-          "assmuncher",
-          "assnigger",
-          "asspirate",
-          "ass-pirate",
-          "assshit",
-          "assshole",
-          "asssucker",
-          "asswad",
-          "asswhole",
-          "asswipe",
-          "asswipes",
-          "autoerotic",
-          "axwound",
-          "azazel",
-          "azz",
-          "b!tch",
-          "b00bs",
-          "b17ch",
-          "b1tch",
-          "babe",
-          "babeland",
-          "babes",
-          "balls",
-          "ballbag",
-          "ballsack",
-          "bampot",
-          "bang",
-          "bangbros",
-          "banger",
-          "bareback",
-          "barenaked",
-          "barf",
-          "bastard",
-          "bastardo",
-          "bastards",
-          "bastinado",
-          "bawdy",
-          "bbw",
-          "bdsm",
-          "beaner",
-          "beaners",
-          "beardedclam",
-          "beastial",
-          "beastiality",
-          "beatch",
-          "beater",
-          "beeyotch",
-          "bellend",
-          "beotch",
-          "bestial",
-          "bestiality",
-          "bi+ch",
-          "biatch",
-          "bigtits",
-          "bimbo",
-          "bimbos",
-          "birdlock",
-          "bitch",
-          "bitchass",
-          "bitched",
-          "bitcher",
-          "bitchers",
-          "bitches",
-          "bitchin",
-          "bitching",
-          "bitchtits",
-          "bitchy",
-          "blowjob",
-          "blowjobs",
-          "blumpkin",
-          "bod",
-          "bodily",
-          "boink",
-          "boiolas",
-          "bollock",
-          "bollocks",
-          "bollok",
-          "bollox",
-          "bondage",
-          "boned",
-          "boner",
-          "boners",
-          "bong",
-          "boob",
-          "boobies",
-          "boobs",
-          "booby",
-          "booger",
-          "bookie",
-          "booobs",
-          "boooobs",
-          "booooobs",
-          "booooooobs",
-          "bootee",
-          "bootie",
-          "booty",
-          "booze",
-          "boozer",
-          "boozy",
-          "bosom",
-          "bosomy",
-          "bra",
-          "brassiere",
-          "breast",
-          "breasts",
-          "breeder",
-          "brotherfucker",
-          "buceta",
-          "bugger",
-          "bukkake",
-          "bulldyke",
-          "bullshit",
-          "bullshits",
-          "bullshitted",
-          "bullturds",
-          "bum",
-          "bumblefuck",
-          "bung",
-          "bunghole",
-          "busty",
-          "butt",
-          "buttcheeks",
-          "buttfuck",
-          "buttfucka",
-          "buttfucker",
-          "butthole",
-          "buttmuch",
-          "butt-pirate",
-          "buttplug",
-          "c.0.c.k",
-          "c.o.c.k.",
-          "c.u.n.t",
-          "c0ck",
-          "c-0-c-k",
-          "c0cksucker",
-          "caca",
-          "cahone",
-          "cameltoe",
-          "camgirl",
-          "camslut",
-          "camwhore",
-          "carpetmuncher",
-          "cawk",
-          "cervix",
-          "chesticle",
-          "chinc",
-          "chincs",
-          "chink",
-          "choad",
-          "chode",
-          "chodes",
-          "cipa",
-          "circlejerk",
-          "cl1t",
-          "climax",
-          "clit",
-          "clitface",
-          "clitfuck",
-          "clitoris",
-          "clitorus",
-          "clits",
-          "clitty",
-          "clusterfuck",
-          "cnut",
-          "cocain",
-          "cocaine",
-          "cock",
-          "c-o-c-k",
-          "cockass",
-          "cockbite",
-          "cockblock",
-          "cockburger",
-          "cockeye",
-          "cockface",
-          "cockfucker",
-          "cockhead",
-          "cockholster",
-          "cockjockey",
-          "cockknocker",
-          "cockknoker",
-          "cocklump",
-          "cockmaster",
-          "cockmongler",
-          "cockmongruel",
-          "cockmonkey",
-          "cockmunch",
-          "cockmuncher",
-          "cocknose",
-          "cocknugget",
-          "cocks",
-          "cockshit",
-          "cocksmith",
-          "cocksmoke",
-          "cocksmoker",
-          "cocksniffer",
-          "cocksuck",
-          "cocksucked",
-          "cocksucker",
-          "cock-sucker",
-          "cocksucking",
-          "cocksucks",
-          "cocksuka",
-          "cocksukka",
-          "cockwaffle",
-          "coital",
-          "cok",
-          "cokmuncher",
-          "coksucka",
-          "commie",
-          "condom",
-          "coochie",
-          "coochy",
-          "coon",
-          "coons",
-          "cooter",
-          "coprolagnia",
-          "coprophilia",
-          "corksucker",
-          "cornhole",
-          "cox",
-          "crabs",
-          "crack",
-          "crackwhore",
-          "crap",
-          "crappy",
-          "creampie",
-          "crotte",
-          "cum",
-          "cumbubble",
-          "cumdumpster",
-          "cumguzzler",
-          "cumjockey",
-          "cummer",
-          "cummin",
-          "cumming",
-          "cums",
-          "cumshot",
-          "cumshots",
-          "cumslut",
-          "cumstain",
-          "cumtart",
-          "cunilingus",
-          "cunillingus",
-          "cunnie",
-          "cunnilingus",
-          "cunny",
-          "cunt",
-          "c-u-n-t",
-          "cuntass",
-          "cuntface",
-          "cunthole",
-          "cunthunter",
-          "cuntlick",
-          "cuntlicker",
-          "cuntlicking",
-          "cuntrag",
-          "cunts",
-          "cuntslut",
-          "cyalis",
-          "cyberfuc",
-          "cyberfuck",
-          "cyberfucked",
-          "cyberfucker",
-          "cyberfuckers",
-          "cyberfucking",
-          "d0ng",
-          "d0uch3",
-          "d0uche",
-          "d1ck",
-          "d1ld0",
-          "d1ldo",
-          "dago",
-          "dagos",
-          "darkie",
-          "damn",
-          "damned",
-          "dammit",
-          "daterape",
-          "dawgie-style",
-          "deepthroat",
-          "deggo",
-          "dendrophilia",
-          "dick",
-          "dickbag",
-          "dickbeaters",
-          "dickdipper",
-          "dickface",
-          "dickflipper",
-          "dickfuck",
-          "dickfucker",
-          "dickhead",
-          "dickheads",
-          "dickhole",
-          "dickish",
-          "dick-ish",
-          "dickjuice",
-          "dickmilkÂ ",
-          "dickmonger",
-          "dickripper",
-          "dicks",
-          "dicksipper",
-          "dickslap",
-          "dick-sneeze",
-          "dicksucker",
-          "dicksucking",
-          "dicktickler",
-          "dickwad",
-          "dickweasel",
-          "dickweed",
-          "dickwhipper",
-          "dickwod",
-          "dickzipper",
-          "diddle",
-          "dike",
-          "dildo",
-          "dildos",
-          "diligaf",
-          "dillweed",
-          "dimwit",
-          "dingle",
-          "dingleberries",
-          "dingleberry",
-          "dink",
-          "dinks",
-          "dipship",
-          "dipshit",
-          "dirsa",
-          "dlck",
-          "dog-fucker",
-          "doggiestyle",
-          "doggie-style",
-          "doggin",
-          "dogging",
-          "doggystyle",
-          "doggy-style",
-          "dolcett",
-          "domination",
-          "dominatrix",
-          "dommes",
-          "dong",
-          "donkeyribber",
-          "doochbag",
-          "doofus",
-          "dookie",
-          "doosh",
-          "dopey",
-          "doublelift",
-          "douch3",
-          "douche",
-          "douchebag",
-          "douchebags",
-          "douche-fag",
-          "douchewaffle",
-          "douchey",
-          "drunk",
-          "duche",
-          "dumass",
-          "dumbass",
-          "dumbasses",
-          "dumbcunt",
-          "dumbfuck",
-          "dumbshit",
-          "dummy",
-          "dumshit",
-          "dvda",
-          "dyke",
-          "dykes",
-          "ecchi",
-          "ejaculate",
-          "ejaculated",
-          "ejaculates",
-          "ejaculating",
-          "ejaculatings",
-          "ejaculation",
-          "ejakulate",
-          "enlargement",
-          "erect",
-          "erection",
-          "erotic",
-          "erotism",
-          "escort",
-          "essohbee",
-          "eunuch",
-          "extacy",
-          "extasy",
-          "f.u.c.k",
-          "f_u_c_k",
-          "f4nny",
-          "fack",
-          "fag",
-          "fagbag",
-          "fagfucker",
-          "fagg",
-          "fagged",
-          "fagging",
-          "faggit",
-          "faggitt",
-          "faggot",
-          "faggotcock",
-          "faggs",
-          "fagot",
-          "fagots",
-          "fags",
-          "fagtard",
-          "faig",
-          "faigt",
-          "fanny",
-          "fannybandit",
-          "fannyflaps",
-          "fannyfucker",
-          "fanyy",
-          "fartknocker",
-          "fatass",
-          "fcuk",
-          "fcuker",
-          "fcuking",
-          "fecal",
-          "feck",
-          "fecker",
-          "felch",
-          "felcher",
-          "felching",
-          "fellate",
-          "fellatio",
-          "feltch",
-          "feltcher",
-          "femdom",
-          "figging",
-          "fingerbang",
-          "fingerfuck",
-          "fingerfucked",
-          "fingerfucker",
-          "fingerfuckers",
-          "fingerfucking",
-          "fingerfucks",
-          "fingering",
-          "fisted",
-          "fistfuck",
-          "fistfucked",
-          "fistfucker",
-          "fistfuckers",
-          "fistfucking",
-          "fistfuckings",
-          "fistfucks",
-          "fisting",
-          "fisty",
-          "flamer",
-          "flange",
-          "floozy",
-          "foad",
-          "foah",
-          "fondle",
-          "foobar",
-          "fook",
-          "fooker",
-          "footjob",
-          "foreskin",
-          "freex",
-          "frigg",
-          "frigga",
-          "frotting",
-          "fubar",
-          "fuck",
-          "f-u-c-k",
-          "fucka",
-          "fuckass",
-          "fuckbag",
-          "fuckboy",
-          "fuckbrain",
-          "fuckbutt",
-          "fuckbutter",
-          "fucked",
-          "fucker",
-          "fuckers",
-          "fuckersucker",
-          "fuckface",
-          "fuckhead",
-          "fuckheads",
-          "fuckhole",
-          "fuckin",
-          "fucking",
-          "fuckings",
-          "fuckingshitmotherfucker",
-          "fuckme",
-          "fucknugget",
-          "fucknut",
-          "fucknutt",
-          "fuckoff",
-          "fucks",
-          "fuckstick",
-          "fucktard",
-          "fuck-tard",
-          "fucktards",
-          "fucktart",
-          "fucktwat",
-          "fuckup",
-          "fuckwad",
-          "fuckwhit",
-          "fuckwit",
-          "fuckwitt",
-          "fudgepacker",
-          "fuk",
-          "fuker",
-          "fukker",
-          "fukkin",
-          "fuks",
-          "fukwhit",
-          "fukwit",
-          "futanari",
-          "fux",
-          "fux0r",
-          "fvck",
-          "fxck",
-          "gae",
-          "gai",
-          "gangbang",
-          "gangbanged",
-          "gangbangs",
-          "ganja",
-          "gay",
-          "gayass",
-          "gaybob",
-          "gaydo",
-          "gayfuck",
-          "gayfuckist",
-          "gaylord",
-          "gays",
-          "gaysex",
-          "gaytard",
-          "gaywad",
-          "genitals",
-          "gey",
-          "gfy",
-          "ghay",
-          "ghey",
-          "gigolo",
-          "glans",
-          "goatcx",
-          "goatse",
-          "godamn",
-          "godamnit",
-          "goddam",
-          "god-dam",
-          "goddammit",
-          "goddamn",
-          "goddamned",
-          "god-damned",
-          "goddamnit",
-          "gokkun",
-          "goldenshower",
-          "gonad",
-          "gonads",
-          "gooch",
-          "goodpoop",
-          "gook",
-          "gooks",
-          "goregasm",
-          "gringo",
-          "grope",
-          "gspot",
-          "g-spot",
-          "gtfo",
-          "guido",
-          "guro",
-          "h0m0",
-          "h0mo",
-          "handjob",
-          "hardcore",
-          "hardcoresex",
-          "he11",
-          "heeb",
-          "hemp",
-          "hentai",
-          "heroin",
-          "herp",
-          "herpes",
-          "herpy",
-          "heshe",
-          "hitler",
-          "hiv",
-          "ho",
-          "hoar",
-          "hoare",
-          "hobag",
-          "hoe",
-          "hoer",
-          "hom0",
-          "homey",
-          "homo",
-          "homodumbshit",
-          "homoerotic",
-          "homoey",
-          "honkey",
-          "honky",
-          "hooch",
-          "hookah",
-          "hooker",
-          "hoor",
-          "hootch",
-          "hooter",
-          "hooters",
-          "hore",
-          "horniest",
-          "horny",
-          "hotsex",
-          "hump",
-          "humped",
-          "humping",
-          "hussy",
-          "hymen",
-          "inbred",
-          "incest",
-          "injun",
-          "intercourse",
-          "j3rk0ff",
-          "jackass",
-          "jackhole",
-          "jackoff",
-          "jack-off",
-          "jaggi",
-          "jagoff",
-          "jailbait",
-          "jap",
-          "japs",
-          "jerk",
-          "jerk0ff",
-          "jerkass",
-          "jerked",
-          "jerkoff",
-          "jerk-off",
-          "jigaboo",
-          "jiggaboo",
-          "jiggerboo",
-          "jism",
-          "jiz",
-          "jizm",
-          "jizz",
-          "jizzed",
-          "juggs",
-          "junglebunny",
-          "junkie",
-          "junky",
-          "kawk",
-          "kike",
-          "kikes",
-          "kinbaku",
-          "kinkster",
-          "kinky",
-          "kkk",
-          "knob",
-          "knobbing",
-          "knobead",
-          "knobed",
-          "knobend",
-          "knobhead",
-          "knobjocky",
-          "knobjokey",
-          "kock",
-          "kondum",
-          "kondums",
-          "kooch",
-          "kooches",
-          "kootch",
-          "kraut",
-          "kum",
-          "kummer",
-          "kumming",
-          "kums",
-          "kunilingus",
-          "kunja",
-          "kunt",
-          "kyke",
-          "l3i+ch",
-          "l3itch",
-          "labia",
-          "lameass",
-          "lardass",
-          "lech",
-          "leper",
-          "lesbian",
-          "lesbians",
-          "lesbo",
-          "lesbos",
-          "lez",
-          "lezbian",
-          "lezbians",
-          "lezbo",
-          "lezbos",
-          "lezzie",
-          "lezzies",
-          "lezzy",
-          "lmao",
-          "lmfao",
-          "loin",
-          "loins",
-          "lolita",
-          "lovemaking",
-          "lube",
-          "lust",
-          "lusting",
-          "lusty",
-          "m0f0",
-          "m0fo",
-          "m45terbate",
-          "ma5terb8",
-          "ma5terbate",
-          "mams",
-          "masochist",
-          "massa",
-          "masterb8",
-          "masterbat",
-          "masterbat3",
-          "masterbate",
-          "master-bate",
-          "masterbating",
-          "masterbation",
-          "masterbations",
-          "masturbate",
-          "masturbating",
-          "masturbation",
-          "maxi",
-          "mcfagget",
-          "menses",
-          "menstruate",
-          "menstruation",
-          "meth",
-          "m-fucking",
-          "mick",
-          "milf",
-          "minge",
-          "mof0",
-          "mofo",
-          "mo-fo",
-          "molest",
-          "moolie",
-          "moron",
-          "mothafuck",
-          "mothafucka",
-          "mothafuckas",
-          "mothafuckaz",
-          "mothafucked",
-          "mothafucker",
-          "mothafuckers",
-          "mothafuckin",
-          "mothafucking",
-          "mothafuckings",
-          "mothafucks",
-          "motherfuck",
-          "motherfucka",
-          "motherfucked",
-          "motherfucker",
-          "motherfuckers",
-          "motherfuckin",
-          "motherfucking",
-          "motherfuckings",
-          "motherfuckka",
-          "motherfucks",
-          "mtherfucker",
-          "mthrfucker",
-          "mthrfucking",
-          "muff",
-          "muffdiver",
-          "muffdiving",
-          "munging",
-          "murder",
-          "mutha",
-          "muthafecker",
-          "muthafuckaz",
-          "muthafucker",
-          "muthafuckker",
-          "muther",
-          "mutherfucker",
-          "mutherfucking",
-          "muthrfucking",
-          "n1gga",
-          "n1gger",
-          "nad",
-          "nads",
-          "naked",
-          "nambla",
-          "napalm",
-          "nappy",
-          "nawashi",
-          "nazi",
-          "nazism",
-          "negro",
-          "neonazi",
-          "nigaboo",
-          "nigg3r",
-          "nigg4h",
-          "nigga",
-          "niggah",
-          "niggas",
-          "niggaz",
-          "nigger",
-          "niggers",
-          "niggle",
-          "niglet",
-          "nimphomania",
-          "nimrod",
-          "ninny",
-          "nipple",
-          "nipples",
-          "nob",
-          "nobhead",
-          "nobjocky",
-          "nobjokey",
-          "nooky",
-          "nude",
-          "nudity",
-          "numbnuts",
-          "nutsack",
-          "nympho",
-          "nymphomania",
-          "octopussy",
-          "omorashi",
-          "opiate",
-          "opium",
-          "oral",
-          "orally",
-          "organ",
-          "orgasim",
-          "orgasims",
-          "orgasm",
-          "orgasmic",
-          "orgasms",
-          "orgies",
-          "orgy",
-          "ovary",
-          "ovum",
-          "ovums",
-          "p.u.s.s.y.",
-          "p0rn",
-          "paddy",
-          "paedophile",
-          "paki",
-          "panooch",
-          "pantie",
-          "panties",
-          "panty",
-          "pastie",
-          "pasty",
-          "pawn",
-          "pcp",
-          "pecker",
-          "peckerhead",
-          "pedo",
-          "pedobear",
-          "pedophile",
-          "pedophilia",
-          "pedophiliac",
-          "peepee",
-          "pegging",
-          "penetrate",
-          "penetration",
-          "penial",
-          "penile",
-          "penis",
-          "penisbanger",
-          "penisfucker",
-          "penispuffer",
-          "perversion",
-          "peyote",
-          "phalli",
-          "phallic",
-          "phonesex",
-          "phuck",
-          "phuk",
-          "phuked",
-          "phuking",
-          "phukked",
-          "phukking",
-          "phuks",
-          "phuq",
-          "pigfucker",
-          "pillowbiter",
-          "pimp",
-          "pimpis",
-          "pinko",
-          "pissed",
-          "pisser",
-          "pissers",
-          "pisses",
-          "pissflaps",
-          "pissin",
-          "pissing",
-          "pissoff",
-          "piss-off",
-          "pisspig",
-          "playboy",
-          "pms",
-          "polack",
-          "polesmoker",
-          "pollock",
-          "ponyplay",
-          "poof",
-          "poon",
-          "poonani",
-          "poonany",
-          "poontang",
-          "poop",
-          "poopchute",
-          "poopuncher",
-          "porchmonkey",
-          "porn",
-          "porno",
-          "pornography",
-          "pornos",
-          "potty",
-          "prick",
-          "pricks",
-          "prig",
-          "pron",
-          "prostitute",
-          "prude",
-          "pthc",
-          "pube",
-          "pubes",
-          "pubic",
-          "pubis",
-          "punanny",
-          "punany",
-          "punkass",
-          "punky",
-          "punta",
-          "puss",
-          "pusse",
-          "pussi",
-          "pussies",
-          "pussy",
-          "pussylicking",
-          "pussypounder",
-          "pussys",
-          "pust",
-          "puto",
-          "queaf",
-          "queef",
-          "queer",
-          "queerbait",
-          "queerhole",
-          "queero",
-          "queers",
-          "quicky",
-          "quim",
-          "racy",
-          "raghead",
-          "rape",
-          "raped",
-          "raper",
-          "raping",
-          "rapist",
-          "raunch",
-          "rectal",
-          "rectum",
-          "rectus",
-          "reefer",
-          "reetard",
-          "reich",
-          "renob",
-          "retard",
-          "retarded",
-          "revue",
-          "rimjaw",
-          "rimjob",
-          "rimming",
-          "ritard",
-          "rtard",
-          "r-tard",
-          "rump",
-          "rumprammer",
-          "ruski",
-          "s&m",
-          "s.h.i.t.",
-          "s.o.b.",
-          "s_h_i_t",
-          "s0b",
-          "sadism",
-          "sadist",
-          "sandler",
-          "sandnigger",
-          "sanger",
-          "santorum",
-          "scag",
-          "scantily",
-          "scat",
-          "schizo",
-          "schlong",
-          "scissoring",
-          "screw",
-          "screwed",
-          "screwing",
-          "scroat",
-          "scrog",
-          "scrot",
-          "scrote",
-          "scrotum",
-          "scrud",
-          "scum",
-          "seaman",
-          "seamen",
-          "seduce",
-          "seks",
-          "semen",
-          "sex",
-          "sexo",
-          "sexual",
-          "sexy",
-          "sh!+",
-          "sh!t",
-          "sh1t",
-          "s-h-1-t",
-          "shag",
-          "shagger",
-          "shaggin",
-          "shagging",
-          "shamedame",
-          "shemale",
-          "shi+",
-          "shibari",
-          "shit",
-          "s-h-i-t",
-          "shitass",
-          "shitbag",
-          "shitbagger",
-          "shitblimp",
-          "shitbrains",
-          "shitbreath",
-          "shitcanned",
-          "shitcunt",
-          "shitdick",
-          "shite",
-          "shiteater",
-          "shited",
-          "shitey",
-          "shitface",
-          "shitfaced",
-          "shitfuck",
-          "shitfull",
-          "shithead",
-          "shithole",
-          "shithouse",
-          "shiting",
-          "shitings",
-          "shits",
-          "shitspitter",
-          "shitstain",
-          "shitt",
-          "shitted",
-          "shitter",
-          "shitters",
-          "shittiest",
-          "shitting",
-          "shittings",
-          "shitty",
-          "shiz",
-          "shiznit",
-          "shota",
-          "shrimping",
-          "sissy",
-          "skag",
-          "skank",
-          "skeet",
-          "skullfuck",
-          "slag",
-          "slanteye",
-          "slave",
-          "sleaze",
-          "sleazy",
-          "slut",
-          "slutbag",
-          "slutdumper",
-          "slutkiss",
-          "sluts",
-          "smeg",
-          "smegma",
-          "smut",
-          "smutty",
-          "snatch",
-          "snowballing",
-          "snuff",
-          "s-o-b",
-          "sodom",
-          "sodomize",
-          "sodomy",
-          "son-of-a-bitch",
-          "souse",
-          "soused",
-          "spac",
-          "sperm",
-          "spic",
-          "spick",
-          "spik",
-          "spiks",
-          "splooge",
-          "spooge",
-          "spook",
-          "spunk",
-          "steamy",
-          "stfu",
-          "stiffy",
-          "stoned",
-          "strapon",
-          "strappado",
-          "strip",
-          "stroke",
-          "stupid",
-          "suck",
-          "suckass",
-          "sucked",
-          "sucking",
-          "sucks",
-          "sumofabiatch",
-          "swastika",
-          "swinger",
-          "t1t",
-          "t1tt1e5",
-          "t1tties",
-          "tampon",
-          "tard",
-          "tawdry",
-          "teabagging",
-          "teat",
-          "teets",
-          "teez",
-          "terd",
-          "teste",
-          "testee",
-          "testes",
-          "testical",
-          "testicle",
-          "testis",
-          "threesome",
-          "throating",
-          "thrust",
-          "thug",
-          "thundercunt",
-          "tinkle",
-          "tit",
-          "titfuck",
-          "titi",
-          "tits",
-          "titt",
-          "tittie5",
-          "tittiefucker",
-          "titties",
-          "titty",
-          "tittyfuck",
-          "tittyfucker",
-          "tittywank",
-          "titwank",
-          "toke",
-          "toots",
-          "topless",
-          "tosser",
-          "towelhead",
-          "tramp",
-          "tranny",
-          "transsexual",
-          "trashy",
-          "tribadism",
-          "tubgirl",
-          "turd",
-          "tush",
-          "tushy",
-          "tw4t",
-          "twat",
-          "twathead",
-          "twatlips",
-          "twats",
-          "twatty",
-          "twatwaffle",
-          "twink",
-          "twinkie",
-          "twunt",
-          "twunter",
-          "ugly",
-          "unclefucker",
-          "undies",
-          "undressing",
-          "unwed",
-          "upskirt",
-          "urinal",
-          "urine",
-          "urophilia",
-          "uterus",
-          "uzi",
-          "v14gra",
-          "v1gra",
-          "vag",
-          "vagina",
-          "vajayjay",
-          "va-j-j",
-          "valium",
-          "viagra",
-          "vibrator",
-          "virgin",
-          "vixen",
-          "vjayjay",
-          "vodka",
-          "vomit",
-          "vorarephilia",
-          "voyeur",
-          "vulgar",
-          "vulva",
-          "w00se",
-          "wad",
-          "wang",
-          "wank",
-          "wanker",
-          "wankjob",
-          "wanky",
-          "wazoo",
-          "wedgie",
-          "weed",
-          "weenie",
-          "weewee",
-          "weiner",
-          "weirdo",
-          "wench",
-          "wetback",
-          "wh0re",
-          "wh0reface",
-          "whitey",
-          "whiz",
-          "whoar",
-          "whoralicious",
-          "whore",
-          "whorealicious",
-          "whorebag",
-          "whored",
-          "whoreface",
-          "whorehopper",
-          "whorehouse",
-          "whores",
-          "whoring",
-          "wigger",
-          "willies",
-          "willy",
-          "womb",
-          "woody",
-          "wop",
-          "wtf",
-          "xrated",
-          "x-rated",
-          "xxx",
-          "yaoi",
-          "yeasty",
-          "yiffy",
-          "yobbo",
-          "zoophile",
-          "zoophilia",
-          "zubb",
-        ];
+          let skinsData = [];
+          (async () => {
+            skinsData = await (await fetch("./skins.json")).json();
+          })();
   
-        let skinsData = [];
-        (async () => {
-          skinsData = await (await fetch("./skins.json")).json();
-        })();
-  
-        let getSkinIconFromSkinName = (skinName = "") => {
-          let skin = skinsData.find((skin) => skin.skin === skinName);
-          if (skin) {
-            return "./" + skin.icon;
-          } else {
-            return "./default.png";
-          }
-        };
-  
-        // Util stuff
-        let notify = (title, text, image = "./speedrunner.png") => {
-          cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
-            runtime.types_by_index.find(
-              (type) => type.plugin instanceof cr.plugins_.sirg_notifications
-            ).instances[0],
-            title,
-            text,
-            image
-          );
-        };
-  
-        let removeProfanity = (text, listWords, listSentences) => {
-          let newText = "";
-          text = text.toLowerCase();
-          if (!listWords) {
-            listWords = filterArrNoSpaces;
-          }
-          if (!listSentences) {
-            listSentences = filterArrSpaces;
-          }
-  
-          // check if sentences from listSentences are in text
-  
-          listSentences.forEach((sentence) => {
-            if (text.includes(sentence)) {
-              // replace letters with *
-              text = text.replace(sentence, sentence.replace(/[^\s]/g, "*"));
-            }
-          });
-          let words = text.split(" ");
-  
-          for (let i = 0; i < words.length; i++) {
-            if (listWords.includes(words[i])) {
-              newText += "*".repeat(words[i].length) + " ";
+          let getSkinIconFromSkinName = (skinName = "") => {
+            let skin = skinsData.find((skin) => skin.skin === skinName);
+            if (skin) {
+              return "./" + skin.icon;
             } else {
-              newText += words[i] + (i == words.length - 1 ? "" : " ");
+              return "./default.png";
             }
-          }
-          return newText;
-        };
+          };
   
-        let disableClick = () => {
-          let map = [];
-          let mapUI = [];
-          let types = runtime.types_by_index.filter((x) =>
-            x.behaviors.some(
-              (y) => y.behavior instanceof cr.behaviors.aekiro_button
-            )
-          );
-          types.forEach((type) => {
-            type.instances.forEach((inst) => {
-              let behavior = inst.behavior_insts.find(
+          // Util stuff
+          let notify = (title, text, image = "./speedrunner.png") => {
+            cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
+              runtime.types_by_index.find(
+                (type) => type.plugin instanceof cr.plugins_.sirg_notifications
+              ).instances[0],
+              title,
+              text,
+              image
+            );
+          };
+  
+          let removeProfanity = (text, listWords, listSentences) => {
+            let newText = "";
+            text = text.toLowerCase();
+            if (!listWords) {
+              listWords = filterArrNoSpaces;
+            }
+            if (!listSentences) {
+              listSentences = filterArrSpaces;
+            }
+  
+            // check if sentences from listSentences are in text
+  
+            listSentences.forEach((sentence) => {
+              if (text.includes(sentence)) {
+                // replace letters with *
+                text = text.replace(sentence, sentence.replace(/[^\s]/g, "*"));
+              }
+            });
+            let words = text.split(" ");
+  
+            for (let i = 0; i < words.length; i++) {
+              if (listWords.includes(words[i])) {
+                newText += "*".repeat(words[i].length) + " ";
+              } else {
+                newText += words[i] + (i == words.length - 1 ? "" : " ");
+              }
+            }
+            return newText;
+          };
+  
+          let disableClick = () => {
+            // debugger;
+            let map = [];
+            let mapUI = [];
+            let types = runtime.types_by_index.filter((x) =>
+              x.behaviors.some(
+                (y) => y.behavior instanceof cr.behaviors.aekiro_button
+              )
+            );
+            types.forEach((type) => {
+              type.instances.forEach((inst) => {
+                let behavior = inst.behavior_insts.find(
+                  (x) => x.behavior instanceof cr.behaviors.aekiro_button
+                );
+                map.push({
+                  inst,
+                  oldState: behavior.isEnabled,
+                });
+                behavior.isEnabled = 0;
+              });
+            });
+            let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
+            if (layer) {
+              layer.instances.forEach((inst) => {
+                //save state to mapUI
+                mapUI.push({
+                  inst,
+                  oldState: {
+                    width: inst.width,
+                    height: inst.height,
+                  },
+                });
+                // set size to 0
+                inst.width = 0;
+                inst.height = 0;
+                inst.set_bbox_changed();
+              });
+            }
+            return {
+              map,
+              mapUI,
+            };
+          };
+  
+          let enableClick = ({ map, mapUI }) => {
+            map.forEach((x) => {
+              let inst = x.inst.behavior_insts.find(
                 (x) => x.behavior instanceof cr.behaviors.aekiro_button
               );
-              map.push({
-                inst,
-                oldState: behavior.isEnabled,
-              });
-              behavior.isEnabled = 0;
+              inst.isEnabled = inst.isEnabled ? 1 : x.oldState;
             });
-          });
-          let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
-          if (layer) {
-            layer.instances.forEach((inst) => {
-              //save state to mapUI
-              mapUI.push({
-                inst,
-                oldState: {
-                  width: inst.width,
-                  height: inst.height,
-                },
-              });
-              // set size to 0
-              inst.width = 0;
-              inst.height = 0;
-              inst.set_bbox_changed();
+            mapUI.forEach((x) => {
+              x.inst.width = x.oldState.width;
+              x.inst.height = x.oldState.height;
+              x.inst.set_bbox_changed();
             });
-          }
-          return {
-            map,
-            mapUI,
           };
-        };
   
-        let enableClick = ({ map, mapUI }) => {
-          map.forEach((x) => {
-            let inst = x.inst.behavior_insts.find(
-              (x) => x.behavior instanceof cr.behaviors.aekiro_button
-            );
-            inst.isEnabled = inst.isEnabled ? 1 : x.oldState;
-          });
-          mapUI.forEach((x) => {
-            x.inst.width = x.oldState.width;
-            x.inst.height = x.oldState.height;
-            x.inst.set_bbox_changed();
-          });
-        };
-  
-        // get all query strings
-        function getQueryString(url) {
-          var queryString = "";
-          let result = {};
-          // if url is given, get query string from url, else use location.search.substring(1);
-          if (url) {
-            queryString = url.indexOf("?") != -1 ? url.split("?")[1] : "";
-          } else {
-            queryString = location.search.substring(1);
+          // get all query strings
+          function getQueryString(url) {
+            var queryString = "";
+            let result = {};
+            // if url is given, get query string from url, else use location.search.substring(1);
+            if (url) {
+              queryString = url.indexOf("?") != -1 ? url.split("?")[1] : "";
+            } else {
+              queryString = location.search.substring(1);
+            }
+            let re = /([^&=]+)=([^&]*)/g;
+            let m;
+            while ((m = re.exec(queryString)) !== null) {
+              result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+            }
+            return result;
           }
-          let re = /([^&=]+)=([^&]*)/g;
-          let m;
-          while ((m = re.exec(queryString)) !== null) {
-            result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+  
+          function setQueryString(query) {
+            // set url to have query string
+            let url = new URL(window.location.href);
+            url.search = new URLSearchParams(query);
+            window.history.replaceState({}, "", url.href);
           }
-          return result;
-        }
   
-        function setQueryString(query) {
-          // set url to have query string
-          let url = new URL(window.location.href);
-          url.search = new URLSearchParams(query);
-          window.history.replaceState({}, "", url.href);
-        }
+          notiePending = [];
+          function addNotie() {
+            // add notie stylesheet to head from unpkg
+            let link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "https://unpkg.com/notie/dist/notie.min.css";
+            document.head.appendChild(link);
   
-        notiePending = [];
-        function addNotie() {
-          // add notie stylesheet to head from unpkg
-          let link = document.createElement("link");
-          link.rel = "stylesheet";
-          link.href = "./notie.min.css";
-          document.head.appendChild(link);
-  
-          // add stylesheet tag to head
-          let style = document.createElement("style");
-          style.innerHTML = `
+            // add stylesheet tag to head
+            let style = document.createElement("style");
+            style.innerHTML = `
             /* override styles here */
               .notie-container {
                 box-shadow: none;
@@ -4673,599 +4639,554 @@
                 border: solid 4px red;
               }
               `;
-          document.head.appendChild(style);
+            document.head.appendChild(style);
   
-          // add notie to bottom of body
-          let notieScript = document.createElement("script");
-          notieScript.src = "./notie.min.js";
-          document.body.appendChild(notieScript);
-          notieScript.onload = () => {
-            // call every pending functions
-            notiePending.forEach((func) => func());
-            notiePending = [];
-          };
-        }
-        addNotie();
+            // add notie to bottom of body
+            let notieScript = document.createElement("script");
+            notieScript.src = "https://unpkg.com/notie";
+            document.body.appendChild(notieScript);
+            notieScript.onload = () => {
+              // call every pending functions
+              notiePending.forEach((func) => func());
+              notiePending = [];
+            };
+          }
+          addNotie();
   
-        async function waitForNotie(fn) {
-          if (window.notie) fn();
-          else notiePending.push(fn);
-        }
+          async function waitForNotie(fn) {
+            if (window.notie) fn();
+            else notiePending.push(fn);
+          }
   
-        async function getDialogPrompt({
-          type = "text",
-          text = "Enter your name",
-          submitText = "Ok",
-          cancelText = "Cancel",
-          position = "top",
-          value = "",
-        } = {}) {
-          let response = new Promise((resolve, reject) => {
-            waitForNotie(() => {
-              let map = disableClick();
-              notie.input(
-                {
-                  type,
-                  text,
-                  submitText,
-                  cancelText,
-                  position,
-                  value,
-                },
-                (...args) => {
-                  enableClick(map);
-                  resolve(...args);
-                },
-                () => {
-                  enableClick(map);
-                  resolve(null);
-                }
-              );
-              // disable spellcheck from notie textbox
-              let textbox = document.querySelector(".notie-input-field");
-              textbox.setAttribute("spellcheck", "false");
-              textbox.onkeydown = (e) => {
-                // prevent default
-                e.stopPropagation();
-              };
+          async function getDialogPrompt({
+            type = "text",
+            text = "Enter your name",
+            submitText = "Ok",
+            cancelText = "Cancel",
+            position = "top",
+            value = "",
+          } = {}) {
+            let response = new Promise((resolve, reject) => {
+              waitForNotie(() => {
+                let map = disableClick();
+                notie.input(
+                  {
+                    type,
+                    text,
+                    submitText,
+                    cancelText,
+                    position,
+                    value,
+                  },
+                  (...args) => {
+                    enableClick(map);
+                    resolve(...args);
+                  },
+                  () => {
+                    enableClick(map);
+                    resolve(null);
+                  }
+                );
+                // disable spellcheck from notie textbox
+                let textbox = document.querySelector(".notie-input-field");
+                textbox.setAttribute("spellcheck", "false");
+                textbox.onkeydown = (e) => {
+                  // prevent default
+                  e.stopPropagation();
+                };
+              });
             });
-          });
-          return response;
-        }
+            return response;
+          }
   
-        async function getDialogAlert({
-          text = "",
-          type = "info",
-          position = "top",
-          buttonText = "Ok",
-        } = {}) {
-          await new Promise((resolve, reject) => {
-            waitForNotie(() => {
-              let map = disableClick();
-              notie.force(
-                {
-                  text,
-                  type,
-                  position,
-                  buttonText,
-                },
-                (...args) => {
-                  enableClick(map);
-                  resolve(...args);
-                }
-              );
+          async function getDialogAlert({
+            text = "",
+            type = "info",
+            position = "top",
+            buttonText = "Ok",
+          } = {}) {
+            await new Promise((resolve, reject) => {
+              waitForNotie(() => {
+                let map = disableClick();
+                notie.force(
+                  {
+                    text,
+                    type,
+                    position,
+                    buttonText,
+                  },
+                  (...args) => {
+                    enableClick(map);
+                    resolve(...args);
+                  }
+                );
+              });
             });
-          });
-          return;
-        }
+            return;
+          }
   
-        async function getDialogConfirm({
-          text = "",
-          type = "info",
-          position = "top",
-          buttonText = "Ok",
-          cancelText = "Cancel",
-        } = {}) {
-          let response = await new Promise((resolve, reject) => {
-            waitForNotie(() => {
-              let map = disableClick();
-              notie.confirm(
-                {
-                  text,
-                  type,
-                  position,
-                  buttonText,
-                  cancelText,
-                },
-                () => {
-                  enableClick(map);
-                  resolve(true);
-                },
-                () => {
-                  enableClick(map);
-                  resolve(false);
-                }
-              );
+          async function getDialogConfirm({
+            text = "",
+            type = "info",
+            position = "top",
+            buttonText = "Ok",
+            cancelText = "Cancel",
+          } = {}) {
+            let response = await new Promise((resolve, reject) => {
+              waitForNotie(() => {
+                let map = disableClick();
+                notie.confirm(
+                  {
+                    text,
+                    type,
+                    position,
+                    buttonText,
+                    cancelText,
+                  },
+                  () => {
+                    enableClick(map);
+                    resolve(true);
+                  },
+                  () => {
+                    enableClick(map);
+                    resolve(false);
+                  }
+                );
+              });
             });
-          });
-          return response;
-        }
+            return response;
+          }
   
-        let playerType = runtime.types_by_index.find(
-          (x) =>
-            !!x.animations &&
-            x.animations[0].frames[0].texture_file.includes("collider")
-        );
-  
-        let textType = runtime.types_by_index.find(
-          (x) =>
-            x.name === "TextAlign" ||
-            (x.plugin instanceof cr.plugins_.TextModded &&
-              x.vars_count === 8 &&
-              !x.is_family)
-        );
-  
-        let ghostArrType = runtime.types_by_index.find(
-          (x) =>
-            x.plugin instanceof cr.plugins_.Arr && x.default_instance[5][1] === 6
-        );
-  
-        let globalType = runtime.types_by_index.find(
-          (x) =>
-            x.plugin instanceof cr.plugins_.Globals &&
-            x.instvar_sids.length === 24
-        );
-  
-        let getPlayer = () =>
-          playerType.instances.filter(
-            (x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled
-          )[0];
-  
-        let getFlag = () =>
-          runtime.types_by_index.find(
+          let playerType = runtime.types_by_index.find(
             (x) =>
-              x.name === "EndFlag" ||
-              (x.plugin instanceof cr.plugins_.Sprite &&
-                x.all_frames &&
-                x.all_frames[0].texture_file.includes("endflag"))
-          ).instances[0];
+              !!x.animations &&
+              x.animations[0].frames[0].texture_file.includes("collider")
+          );
   
-        let addScript = (src, id, onload) => {
-          if (document.getElementById(id)) return;
-          let fjs = document.getElementsByTagName("script")[0];
-          let js = document.createElement("script");
-          js.id = id;
-          fjs.parentNode.insertBefore(js, fjs);
-          js.onload = onload;
-          js.src = src;
-        };
-  
-        let getCurLayout = () => runtime.running_layout.name;
-        let curLayout = runtime.running_layout.name;
-  
-        // Multiplayer methods
-  
-        const DATA_TYPES = {
-          PLAYER_DATA: "PLAYER_DATA",
-          HOST_DATA: "HOST_DATA",
-          CHAT: "CHAT",
-          PLAYER_JOIN: "PLAYER_JOIN",
-          PLAYER_LEAVE: "PLAYER_LEAVE",
-        };
-  
-        const types = {
-          TitleLogo: runtime.types_by_index.find(
-            (x) =>
-              x.name === "TitleLogo" ||
-              (x.plugin instanceof cr.plugins_.Sprite &&
-                x.all_frames &&
-                x.all_frames[0].texture_file.includes("titlelogo"))
-          ),
-          Text: runtime.types_by_index.find(
+          let textType = runtime.types_by_index.find(
             (x) =>
               x.name === "TextAlign" ||
               (x.plugin instanceof cr.plugins_.TextModded &&
                 x.vars_count === 8 &&
                 !x.is_family)
-          ),
-          SpriteFont: runtime.types_by_index.find(
-            (x) =>
-              x.plugin instanceof cr.plugins_.SkymenSFPlusPLus &&
-              x.behaviors.some(
-                (y) => y.behavior instanceof cr.behaviors.SkymenPin
-              )
-          ),
-          MobileArrows: runtime.types_by_index.find(
-            (x) =>
-              x.plugin instanceof cr.plugins_.Sprite &&
-              x.all_frames &&
-              x.all_frames[0].texture_file.startsWith("images/ui")
-          ),
-        };
-  
-        globalThis.spawnTextOnTitleLogo = () => {
-          // spawna text on title logo
-          let titleLogo = types.TitleLogo.instances[0];
-          if (!titleLogo) return;
-          titleLogo.angle = 0;
-          titleLogo.update_bbox();
-          let inst = runtime.createInstance(
-            types.SpriteFont,
-            titleLogo.layer,
-            titleLogo.x,
-            titleLogo.y - 10
           );
-          inst.text = "Online v" + VERSION;
-          inst.width = titleLogo.width / 2;
-          inst.height = titleLogo.height;
-          inst.hotspotX = titleLogo.hotspotX;
-          inst.hotspotY = titleLogo.hotspotY;
-          inst.halign = 0.5;
-          inst.valign = 0;
-          inst.characterScale = 1;
-          inst.update_bbox();
-          let pinToInst = (self, otherinst) => {
-            self.pinObject = otherinst;
-            self.pinAngle =
-              cr.angleTo(otherinst.x, otherinst.y, self.inst.x, self.inst.y) -
-              otherinst.angle;
-            self.pinDist = cr.distanceTo(
-              otherinst.x,
-              otherinst.y,
-              self.inst.x,
-              self.inst.y
-            );
-            self.myStartAngle = self.inst.angle;
-            self.lastKnownAngle = self.inst.angle;
-            self.theirStartAngle = otherinst.angle;
-            self.mode = 0;
+  
+          let ghostArrType = runtime.types_by_index.find(
+            (x) =>
+              x.plugin instanceof cr.plugins_.Arr &&
+              x.default_instance[5][1] === 6
+          );
+  
+          let globalType = runtime.types_by_index.find(
+            (x) =>
+              x.plugin instanceof cr.plugins_.Globals &&
+              x.instvar_sids.length === 24
+          );
+  
+          let getPlayer = () =>
+            playerType.instances.filter(
+              (x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled
+            )[0];
+  
+          let getFlag = () =>
+            runtime.types_by_index.find(
+              (x) =>
+                x.name === "EndFlag" ||
+                (x.plugin instanceof cr.plugins_.Sprite &&
+                  x.all_frames &&
+                  x.all_frames[0].texture_file.includes("endflag"))
+            ).instances[0];
+  
+          let addScript = (src, id, onload) => {
+            if (document.getElementById(id)) return;
+            let fjs = document.getElementsByTagName("script")[0];
+            let js = document.createElement("script");
+            js.id = id;
+            fjs.parentNode.insertBefore(js, fjs);
+            js.onload = onload;
+            js.src = src;
           };
-          pinToInst(
-            inst.behavior_insts.find(
-              (x) => x.behavior instanceof cr.behaviors.SkymenPin
+  
+          let getCurLayout = () => runtime.running_layout.name;
+          let curLayout = runtime.running_layout.name;
+  
+          // Multiplayer methods
+  
+          const DATA_TYPES = {
+            PLAYER_DATA: "PLAYER_DATA",
+            HOST_DATA: "HOST_DATA",
+            CHAT: "CHAT",
+            PLAYER_JOIN: "PLAYER_JOIN",
+            PLAYER_LEAVE: "PLAYER_LEAVE",
+          };
+  
+          const types = {
+            TitleLogo: runtime.types_by_index.find(
+              (x) =>
+                x.name === "TitleLogo" ||
+                (x.plugin instanceof cr.plugins_.Sprite &&
+                  x.all_frames &&
+                  x.all_frames[0].texture_file.includes("titlelogo"))
             ),
-            titleLogo
-          );
-        };
+            Text: runtime.types_by_index.find(
+              (x) =>
+                x.name === "TextAlign" ||
+                (x.plugin instanceof cr.plugins_.TextModded &&
+                  x.vars_count === 8 &&
+                  !x.is_family)
+            ),
+            SpriteFont: runtime.types_by_index.find(
+              (x) =>
+                x.plugin instanceof cr.plugins_.SkymenSFPlusPLus &&
+                x.behaviors.some(
+                  (y) => y.behavior instanceof cr.behaviors.SkymenPin
+                )
+            ),
+          };
   
-        function convertBase(value, from_range, to_range) {
-          var from_base = BigInt(from_range.length);
-          var to_base = BigInt(to_range.length);
-  
-          var dec_value = value
-            .split("")
-            .reverse()
-            .reduce(function (carry, digit, index) {
-              if (from_range.indexOf(digit) === -1)
-                throw new Error(
-                  "Invalid digit `" + digit + "` for base " + from_base + "."
-                );
-              return (carry +=
-                BigInt(from_range.indexOf(digit)) * from_base ** BigInt(index));
-            }, BigInt(0));
-  
-          var new_value = "";
-          while (dec_value > 0n) {
-            new_value = to_range[Number(dec_value % BigInt(to_base))] + new_value;
-            dec_value =
-              (dec_value - (dec_value % BigInt(to_base))) / BigInt(to_base);
-          }
-          return new_value || "0";
-        }
-  
-        function hexToBase64(value) {
-          return convertBase(
-            value,
-            "0123456789abcdef",
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
-          );
-        }
-  
-        function base64ToHex(value) {
-          return convertBase(
-            value,
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
-            "0123456789abcdef"
-          );
-        }
-  
-        function bigHexToUuid(value) {
-          if (value.length !== 32) {
-            // if value is under 32 characters, pad it with zeroes
-            if (value.length < 32) {
-              value =
-                "00000000000000000000000000000000".slice(0, 32 - value.length) +
-                value;
-            } else {
-              throw new Error("Invalid value length.");
-            }
-          }
-          // get first 8 chars, then 4, then 4, then 4, then 12 and join them with -
-          return (
-            value.substring(0, 8) +
-            "-" +
-            value.substring(8, 12) +
-            "-" +
-            value.substring(12, 16) +
-            "-" +
-            value.substring(16, 20) +
-            "-" +
-            value.substring(20, 32)
-          );
-        }
-  
-        function uuidToBase64(value) {
-          return hexToBase64(value.replace(/\-/g, ""));
-        }
-  
-        function base64ToUuid(value) {
-          return bigHexToUuid(base64ToHex(value));
-        }
-  
-        let multiplayer = {
-          init() {
-            // Init code
-            // notify("Mod loaded", "Multiplayer mod loaded");
-  
-            this.username = "";
-            this.initialUsername = "";
-            this.notifyWhenChatIsHidden = true;
-            this.bannedUsers = [];
-            this.permaBannedUsers = [];
-            this.mutedUsers = [];
-            this.hasClickedTooltip = false;
-            // get username from localstorage
-            this.loadPreferences();
-            this.usernameInsts = null;
-            this.connections = [];
-            this.initDomUI();
-            this.updateDomContainers();
-            this.updateDomUsername();
-            this.updateUserList();
-            this.chat = [];
-            this.initialised = true;
-            this.sendPlayerData = true;
-  
-            runtime.tickMe(this);
-            // only send player data 30 times a second
-            this.tickMe = setInterval(() => {
-              this.sendPlayerData = true;
-            }, 1000 / 30);
-  
-            //this.initWorker();
-  
-            globalThis.ovoMultiplayerClient = this;
-  
-            let thisPromptId = THIS_PROMPT_ID;
-            let lastPromptTime = localStorage.getItem("lastPromptTime");
-            let lastPromptId = localStorage.getItem("lastPromptId");
-  
-            let afterPrompt = () => {
-              //click "ovo-multiplayer-toggle-button"
-              let button = document.getElementById(
-                "ovo-multiplayer-toggle-button"
+          globalThis.spawnTextOnTitleLogo = () => {
+            // spawna text on title logo
+            let titleLogo = types.TitleLogo.instances[0];
+            if (!titleLogo) return;
+            titleLogo.angle = 0;
+            titleLogo.update_bbox();
+            let inst = runtime.createInstance(
+              types.SpriteFont,
+              titleLogo.layer,
+              titleLogo.x,
+              titleLogo.y - 10
+            );
+            inst.text = "Online Beta " + VERSION;
+            inst.width = titleLogo.width / 2;
+            inst.height = titleLogo.height;
+            inst.hotspotX = titleLogo.hotspotX;
+            inst.hotspotY = titleLogo.hotspotY;
+            inst.halign = 0.5;
+            inst.valign = 0;
+            inst.characterScale = 1;
+            inst.update_bbox();
+            let pinToInst = (self, otherinst) => {
+              self.pinObject = otherinst;
+              self.pinAngle =
+                cr.angleTo(otherinst.x, otherinst.y, self.inst.x, self.inst.y) -
+                otherinst.angle;
+              self.pinDist = cr.distanceTo(
+                otherinst.x,
+                otherinst.y,
+                self.inst.x,
+                self.inst.y
               );
-              if (button)
-                button.onclick(true).then(() => {
-                  // if query string has a roomCode, join it
-                  let queryStrings = getQueryString();
-                  if (queryStrings.roomCode) {
-                    this.joinRoom(queryStrings.roomCode);
-                  }
-                  if (!this.hasClickedTooltip) {
-                    setTimeout(() => {
-                      this.showTooltip();
-                    }, 1500);
-                  }
+              self.myStartAngle = self.inst.angle;
+              self.lastKnownAngle = self.inst.angle;
+              self.theirStartAngle = otherinst.angle;
+              self.mode = 0;
+            };
+            pinToInst(
+              inst.behavior_insts.find(
+                (x) => x.behavior instanceof cr.behaviors.SkymenPin
+              ),
+              titleLogo
+            );
+          };
+  
+          function convertBase(value, from_range, to_range) {
+            var from_base = BigInt(from_range.length);
+            var to_base = BigInt(to_range.length);
+  
+            var dec_value = value
+              .split("")
+              .reverse()
+              .reduce(function (carry, digit, index) {
+                if (from_range.indexOf(digit) === -1)
+                  throw new Error(
+                    "Invalid digit `" + digit + "` for base " + from_base + "."
+                  );
+                return (carry +=
+                  BigInt(from_range.indexOf(digit)) * from_base ** BigInt(index));
+              }, BigInt(0));
+  
+            var new_value = "";
+            while (dec_value > 0n) {
+              new_value =
+                to_range[Number(dec_value % BigInt(to_base))] + new_value;
+              dec_value =
+                (dec_value - (dec_value % BigInt(to_base))) / BigInt(to_base);
+            }
+            return new_value || "0";
+          }
+  
+          function hexToBase64(value) {
+            return convertBase(
+              value,
+              "0123456789abcdef",
+              "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+            );
+          }
+  
+          function base64ToHex(value) {
+            return convertBase(
+              value,
+              "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
+              "0123456789abcdef"
+            );
+          }
+  
+          function bigHexToUuid(value) {
+            if (value.length !== 32) {
+              // if value is under 32 characters, pad it with zeroes
+              if (value.length < 32) {
+                value =
+                  "00000000000000000000000000000000".slice(0, 32 - value.length) +
+                  value;
+              } else {
+                throw new Error("Invalid value length.");
+              }
+            }
+            // get first 8 chars, then 4, then 4, then 4, then 12 and join them with -
+            return (
+              value.substring(0, 8) +
+              "-" +
+              value.substring(8, 12) +
+              "-" +
+              value.substring(12, 16) +
+              "-" +
+              value.substring(16, 20) +
+              "-" +
+              value.substring(20, 32)
+            );
+          }
+  
+          function uuidToBase64(value) {
+            return hexToBase64(value.replace(/\-/g, ""));
+          }
+  
+          function base64ToUuid(value) {
+            return bigHexToUuid(base64ToHex(value));
+          }
+  
+          let multiplayer = {
+            init() {
+              // Init code
+              // notify("Mod loaded", "Multiplayer mod loaded");
+  
+              this.username = "";
+              this.initialUsername = "";
+              this.notifyWhenChatIsHidden = true;
+              this.bannedUsers = [];
+              this.permaBannedUsers = [];
+              this.mutedUsers = [];
+              // get username from localstorage
+              this.loadPreferences();
+              this.usernameInsts = null;
+              this.connections = [];
+              this.initDomUI();
+              this.updateDomContainers();
+              this.updateDomUsername();
+              this.updateUserList();
+              this.chat = [];
+              this.initialised = true;
+              this.sendPlayerData = true;
+  
+              runtime.tickMe(this);
+              // only send player data 30 times a second
+              this.tickMe = setInterval(() => {
+                this.sendPlayerData = true;
+              }, 1000 / 30);
+  
+              //this.initWorker();
+  
+              globalThis.ovoMultiplayerClient = this;
+  
+              let thisPromptId = THIS_PROMPT_ID;
+              let lastPromptTime = localStorage.getItem("lastPromptTime");
+              let lastPromptId = localStorage.getItem("lastPromptId");
+  
+              let afterPrompt = () => {
+                //click "ovo-multiplayer-toggle-button"
+                let button = document.getElementById(
+                  "ovo-multiplayer-toggle-button"
+                );
+                if (button)
+                  button.onclick(true).then(() => {
+                    // if query string has a roomCode, join it
+                    let queryStrings = getQueryString();
+                    if (queryStrings.roomCode) {
+                      this.joinRoom(queryStrings.roomCode);
+                    }
+                  });
+              };
+  
+              if (
+                !this.lastPromptId ||
+                this.lastPromptId !== thisPromptId ||
+                !this.lastPromptTime ||
+                Date.now() - parseInt(this.lastPromptTime) >
+                  1000 * 60 * 60 * 24 * 7
+              ) {
+                getDialogAlert({
+                  type: "success",
+                  text: "OvO Online is currently in open beta.<br>We will do our best to fix any issue as quickly as we can.<br>Thank you for playing!",
+                }).then(() => {
+                  this.lastPromptId = thisPromptId;
+                  this.lastPromptTime = Date.now();
+                  this.savePreferences();
+                  afterPrompt();
                 });
-            };
-  
-            if (
-              !this.lastPromptId ||
-              this.lastPromptId !== thisPromptId ||
-              !this.lastPromptTime ||
-              Date.now() - parseInt(this.lastPromptTime) > 1000 * 60 * 60 * 24 * 7
-            ) {
-              // getDialogAlert({
-              //   type: "success",
-              //   text: "OvO Online is currently in open beta.<br>We will do our best to fix any issue as quickly as we can.<br>Thank you for playing!",
-              // }).then(() => {
-              //   this.lastPromptId = thisPromptId;
-              //   this.lastPromptTime = Date.now();
-              //   this.hasClickedTooltip = false;
-              //   this.savePreferences();
-              //   afterPrompt();
-              // });
-              this.lastPromptId = thisPromptId;
-              this.lastPromptTime = Date.now();
-              this.hasClickedTooltip = false;
-              this.savePreferences();
-              afterPrompt();
-            } else {
-              afterPrompt();
-            }
-            // if layout is main menu, call spawnTextOnTitleLogo
-            if (getCurLayout() === "Main Menu") {
-              spawnTextOnTitleLogo();
-            }
-          },
-  
-          loadPreferences() {
-            // Load preferences
-            let data = localStorage.getItem("ovoMultiplayerData");
-            if (data) {
-              try {
-                data = JSON.parse(data);
-                if (
-                  data.username &&
-                  data.username.length < 20 &&
-                  data.username.toLowerCase() === removeProfanity(data.username)
-                ) {
-                  this.username = data.username;
-                }
-                if (data.notifyWhenChatIsHidden) {
-                  this.notifyWhenChatIsHidden = data.notifyWhenChatIsHidden;
-                }
-                if (data.lastPromptTime) {
-                  this.lastPromptTime = data.lastPromptTime;
-                }
-                if (data.lastPromptId) {
-                  this.lastPromptId = data.lastPromptId;
-                }
-                if (data.permaBannedUsers) {
-                  this.permaBannedUsers = data.permaBannedUsers;
-                }
-                if (data.hasClickedTooltip) {
-                  this.hasClickedTooltip = data.hasClickedTooltip;
-                }
-              } catch (e) {
-                console.error(e);
+              } else {
+                afterPrompt();
               }
-            }
-          },
+              // if layout is main menu, call spawnTextOnTitleLogo
+              if (getCurLayout() === "Main Menu") {
+                spawnTextOnTitleLogo();
+              }
+            },
   
-          canUserJoin(user) {
-            return this.userIsOnMyVersion(user) && !this.userIsBanned(user);
-          },
+            loadPreferences() {
+              // Load preferences
+              let data = localStorage.getItem("ovoMultiplayerData");
+              if (data) {
+                try {
+                  data = JSON.parse(data);
+                  if (
+                    data.username &&
+                    data.username.length < 20 &&
+                    data.username.toLowerCase() === removeProfanity(data.username)
+                  ) {
+                    this.username = data.username;
+                  }
+                  if (data.notifyWhenChatIsHidden) {
+                    this.notifyWhenChatIsHidden = data.notifyWhenChatIsHidden;
+                  }
+                  if (data.lastPromptTime) {
+                    this.lastPromptTime = data.lastPromptTime;
+                  }
+                  if (data.lastPromptId) {
+                    this.lastPromptId = data.lastPromptId;
+                  }
+                  if (data.permaBannedUsers) {
+                    this.permaBannedUsers = data.permaBannedUsers;
+                  }
+                } catch (e) {
+                  console.error(e);
+                }
+              }
+            },
   
-          canIJoinHost() {
-            if (!this.connectedToRoom) {
+            canUserJoin(user) {
+              return this.userIsOnMyVersion(user) && !this.userIsBanned(user);
+            },
+  
+            canIJoinHost() {
+              if (!this.connectedToRoom) {
+                return false;
+              }
+              if (this.isHost) {
+                return true;
+              }
+              // find host in connections
+              let host = this.connections.find((c) => c.data.isHost);
+              if (host) {
+                return host.data.version === VERSION;
+              }
               return false;
-            }
-            if (this.isHost) {
-              return true;
-            }
-            // find host in connections
-            let host = this.connections.find((c) => c.data.isHost);
-            if (host) {
-              return host.data.version === VERSION;
-            }
-            return false;
-          },
+            },
   
-          userIsOnMyVersion(user) {
-            if (!user) {
+            userIsOnMyVersion(user) {
+              if (!user) {
+                return false;
+              }
+              return user.version === VERSION;
+            },
+  
+            userIsBanned(user) {
+              if (!user) {
+                return false;
+              }
+              let bannedUser = this.bannedUsers.find((u) => u.UID === user.UID);
+              if (bannedUser) {
+                return true;
+              }
+              bannedUser = this.permaBannedUsers.find((u) => u.UID === user.UID);
+              if (bannedUser) {
+                return true;
+              }
               return false;
-            }
-            return user.version === VERSION;
-          },
+            },
   
-          userIsBanned(user) {
-            if (!user) {
-              return false;
-            }
-            let bannedUser = this.bannedUsers.find((u) => u.UID === user.UID);
-            if (bannedUser) {
-              return true;
-            }
-            bannedUser = this.permaBannedUsers.find((u) => u.UID === user.UID);
-            if (bannedUser) {
-              return true;
-            }
-            return false;
-          },
+            savePreferences() {
+              // Save preferences
+              let data = {
+                username: this.username,
+                notifyWhenChatIsHidden: this.notifyWhenChatIsHidden,
+                lastPromptId: this.lastPromptId,
+                lastPromptTime: this.lastPromptTime,
+                permaBannedUsers: this.permaBannedUsers,
+              };
+              localStorage.setItem("ovoMultiplayerData", JSON.stringify(data));
+            },
   
-          showTooltip(show = true) {
-            tooltip = document.getElementsByClassName("tooltiptext")[0];
-            tooltip.style.opacity = show ? 1 : 0;
-            this.hasClickedTooltip = !show;
-            this.savePreferences();
-          },
+            initWorker() {
+              this.wakerWorker = new Worker(
+                "data:text/javascript;base64,77u/InVzZSBzdHJpY3QiOw0KDQp2YXIgdGltZXJfaWQgPSAtMTsNCnZhciB0aW1lcl9ydW5uaW5nID0gZmFsc2U7DQoNCmZ1bmN0aW9uIHN0YXJ0VGltZXIoKQ0Kew0KCWlmICh0aW1lcl9ydW5uaW5nKQ0KCQlyZXR1cm47DQoJDQoJdGltZXJfcnVubmluZyA9IHRydWU7DQoJdGltZXJfaWQgPSBzZXRJbnRlcnZhbCh0aWNrLCAxNik7DQp9Ow0KDQpmdW5jdGlvbiBzdG9wVGltZXIoKQ0Kew0KCWlmICghdGltZXJfcnVubmluZykNCgkJcmV0dXJuOw0KCQ0KCXRpbWVyX3J1bm5pbmcgPSBmYWxzZTsNCgljbGVhckludGVydmFsKHRpbWVyX2lkKTsNCgl0aW1lcl9pZCA9IC0xOw0KfTsNCg0KZnVuY3Rpb24gdGljaygpDQp7DQoJaWYgKCF0aW1lcl9ydW5uaW5nKQ0KCQlyZXR1cm47DQoJDQoJc2VsZi5wb3N0TWVzc2FnZSgidGljayIpOw0KfTsNCg0Kc2VsZi5hZGRFdmVudExpc3RlbmVyKCJtZXNzYWdlIiwgZnVuY3Rpb24gKGUpDQp7DQoJdmFyIGNtZCA9IGUuZGF0YTsNCgkNCglpZiAoIWNtZCkNCgkJcmV0dXJuOw0KCQ0KCWlmIChjbWQgPT09ICJzdGFydCIpDQoJew0KCQlzdGFydFRpbWVyKCk7DQoJfQ0KCWVsc2UgaWYgKGNtZCA9PT0gInN0b3AiKQ0KCXsNCgkJc3RvcFRpbWVyKCk7DQoJfQ0KCQ0KfSwgZmFsc2UpOw=="
+              );
   
-          savePreferences() {
-            // Save preferences
-            let data = {
-              username: this.username,
-              notifyWhenChatIsHidden: this.notifyWhenChatIsHidden,
-              lastPromptId: this.lastPromptId,
-              lastPromptTime: this.lastPromptTime,
-              permaBannedUsers: this.permaBannedUsers,
-              hasClickedTooltip: this.hasClickedTooltip,
-            };
-            localStorage.setItem("ovoMultiplayerData", JSON.stringify(data));
-          },
+              this.wakerWorker.addEventListener(
+                "message",
+                function (e) {
+                  if (e.data === "tick" && runtime.isSuspended) {
+                    runtime.tick(true);
+                  }
+                },
+                false
+              );
   
-          initWorker() {
-            this.wakerWorker = new Worker(
-              "data:text/javascript;base64,77u/InVzZSBzdHJpY3QiOw0KDQp2YXIgdGltZXJfaWQgPSAtMTsNCnZhciB0aW1lcl9ydW5uaW5nID0gZmFsc2U7DQoNCmZ1bmN0aW9uIHN0YXJ0VGltZXIoKQ0Kew0KCWlmICh0aW1lcl9ydW5uaW5nKQ0KCQlyZXR1cm47DQoJDQoJdGltZXJfcnVubmluZyA9IHRydWU7DQoJdGltZXJfaWQgPSBzZXRJbnRlcnZhbCh0aWNrLCAxNik7DQp9Ow0KDQpmdW5jdGlvbiBzdG9wVGltZXIoKQ0Kew0KCWlmICghdGltZXJfcnVubmluZykNCgkJcmV0dXJuOw0KCQ0KCXRpbWVyX3J1bm5pbmcgPSBmYWxzZTsNCgljbGVhckludGVydmFsKHRpbWVyX2lkKTsNCgl0aW1lcl9pZCA9IC0xOw0KfTsNCg0KZnVuY3Rpb24gdGljaygpDQp7DQoJaWYgKCF0aW1lcl9ydW5uaW5nKQ0KCQlyZXR1cm47DQoJDQoJc2VsZi5wb3N0TWVzc2FnZSgidGljayIpOw0KfTsNCg0Kc2VsZi5hZGRFdmVudExpc3RlbmVyKCJtZXNzYWdlIiwgZnVuY3Rpb24gKGUpDQp7DQoJdmFyIGNtZCA9IGUuZGF0YTsNCgkNCglpZiAoIWNtZCkNCgkJcmV0dXJuOw0KCQ0KCWlmIChjbWQgPT09ICJzdGFydCIpDQoJew0KCQlzdGFydFRpbWVyKCk7DQoJfQ0KCWVsc2UgaWYgKGNtZCA9PT0gInN0b3AiKQ0KCXsNCgkJc3RvcFRpbWVyKCk7DQoJfQ0KCQ0KfSwgZmFsc2UpOw=="
-            );
+              this.wakerWorker.postMessage("");
   
-            this.wakerWorker.addEventListener(
-              "message",
-              function (e) {
-                if (e.data === "tick" && runtime.isSuspended) {
-                  runtime.tick(true);
+              runtime.addSuspendCallback((s) => {
+                // Suspending and is currently host: use a web worker to keep the game alive
+                if (s) {
+                  this.wakerWorker.postMessage("start");
                 }
-              },
-              false
-            );
-  
-            this.wakerWorker.postMessage("");
-  
-            runtime.addSuspendCallback((s) => {
-              // Suspending and is currently host: use a web worker to keep the game alive
-              if (s) {
-                this.wakerWorker.postMessage("start");
-              }
-              // Resuming and is currently host: stop using web worker to keep running, will revert to rAF
-              else {
-                this.wakerWorker.postMessage("stop");
-              }
-            });
-          },
-  
-          startOfLayout() {
-            if (!this.initialised) return;
-            this.usernameInsts = null;
-            this.connections.forEach((connection) => {
-              connection.player = null;
-            });
-            let button = document.getElementById("ovo-multiplayer-toggle-button");
-            let container = document.getElementById("ovo-multiplayer-container");
-            // remove all players instances from memory
-            if (!getFlag()) {
-              // not in a level, do nothing?
-              // if on mobile show multiplayer UI
-              if (
-                runtime.isMobile &&
-                button &&
-                container &&
-                container.style.display === "none"
-              ) {
-                button.onclick(true);
-              }
-            } else {
-              if (
-                runtime.isMobile &&
-                button &&
-                container &&
-                container.style.display !== "none"
-              ) {
-                button.onclick(true);
-              }
-              // in a level, create other players
-              this.connections.forEach((connection) => {
-                if (connection.data)
-                  connection.player = this.createGhostPlayer(connection.data);
+                // Resuming and is currently host: stop using web worker to keep running, will revert to rAF
+                else {
+                  this.wakerWorker.postMessage("stop");
+                }
               });
-            }
-          },
+            },
   
-          updateDomUsername() {
-            let text = document.getElementById("ovo-multiplayer-username");
-            if (text) text.innerText = "Username: " + this.username;
-          },
+            startOfLayout() {
+              if (!this.initialised) return;
+              this.usernameInsts = null;
+              this.connections.forEach((connection) => {
+                connection.player = null;
+              });
+              // remove all players instances from memory
+              if (!getFlag()) {
+                // not in a level, do nothing?
+              } else {
+                // in a level, create other players
+                this.connections.forEach((connection) => {
+                  if (connection.data)
+                    connection.player = this.createGhostPlayer(connection.data);
+                });
+              }
+            },
   
-          initDomUI() {
-            // inject button css
-            let style = document.createElement("style");
-            style.type = "text/css";
-            style.innerHTML = `
+            updateDomUsername() {
+              let text = document.getElementById("ovo-multiplayer-username");
+              if (text) text.innerText = "Username: " + this.username;
+            },
+  
+            initDomUI() {
+              // inject button css
+              let style = document.createElement("style");
+              style.type = "text/css";
+              style.innerHTML = `
                 .ovo-multiplayer-toggle-button {
                   background-color: transparent;
                   position: absolute;
                   top: 0;
-                  left: calc(50% - 20px);
+                  left: 0;
                   color: white;
                   border: none;
                   font-family: "Retron2000";
@@ -5512,304 +5433,151 @@
                 ::-webkit-scrollbar-thumb:hover {
                   background: #eee;
                 }
-  
-                /* Tooltip */
-                .tooltip {
-                  position: relative;
-                  border-bottom: 1px dotted black;
-                  font-family: "Retron2000";
-                  z-index: 9999999999999999;
-                }
-  
-                .tooltiptext {
-                  display: flex;
-                    flex-direction: column;
-                }
-  
-                .tooltip .tooltiptext {
-                  opacity: 0;
-                  width: 200px;
-                  background-color: white;
-                  color: black;
-                  font-size: 14pt;
-                  text-align: center;
-                  border-radius: 0px;
-                  border: solid 4px black;
-                  padding: 0.7em;
-                  position: absolute;
-                  z-index: 1;
-                  top: 150%;
-                  left: 50%;
-                  margin-left: -116px;
-                  margin-top: 45px;
-                  transition: opacity 0.3s;
-                  user-select: none;
-                }
-  
-                .tooltip .tooltiptext::after {
-                  content: "";
-                  position: absolute;
-                  bottom: calc(100% + 4px);
-                  left: 50%;
-                  margin-left: -5px;
-                  border-width: 5px;
-                  border-style: solid;
-                  border-color: transparent transparent black transparent;
-                }
-                .tooltipbutton {
-                  margin-top: 0.7em;
-                }
               `;
-            document.head.appendChild(style);
+              document.head.appendChild(style);
   
-            // user interface with create room button, join room button, set username button and chat box
-            let container = document.createElement("div");
-            container.id = "ovo-multiplayer-container";
-            container.style.position = "absolute";
-            container.style.top = "0";
-            container.style.left = "0";
-            container.style.width = "100%";
-            container.style.height = "100%";
-            container.style.backgroundColor = "rgba(0,0,0,0)";
-            container.style.zIndex = "9999999999";
-  
-            //first container, only visible when not in a room
-            let disconnectedContainer = document.createElement("div");
-            disconnectedContainer.id = "ovo-multiplayer-disconnected-container";
-            disconnectedContainer.style.position = "absolute";
-            disconnectedContainer.style.top = "0";
-            disconnectedContainer.style.left = "0";
-            disconnectedContainer.style.width = "100%";
-            disconnectedContainer.style.height = "100%";
-            disconnectedContainer.style.backgroundColor = "rgba(0,0,0,0)";
-            disconnectedContainer.style.zIndex = "9999999999";
-            container.appendChild(disconnectedContainer);
-            this.connectContainer = disconnectedContainer;
-  
-            let buttonsHolder = document.createElement("div");
-            buttonsHolder.classList.add("ovo-multiplayer-button-holder");
-            disconnectedContainer.appendChild(buttonsHolder);
-  
-            let createRoomButton = document.createElement("button");
-            createRoomButton.innerText = "Create Room";
-            //apply common style
-            createRoomButton.classList.add("ovo-multiplayer-button");
-            createRoomButton.onclick = () => {
-              this.createRoom();
-              //remove focus from button
-              createRoomButton.blur();
-            };
-            // stop immediate propagation
-            createRoomButton.addEventListener("click", (e) => {
-              e.stopImmediatePropagation();
-            });
-  
-            buttonsHolder.appendChild(createRoomButton);
-  
-            let joinRoomButton = document.createElement("button");
-            joinRoomButton.innerText = "Join Room";
-            //apply common style
-            joinRoomButton.classList.add("ovo-multiplayer-button");
-            joinRoomButton.onclick = async () => {
-              //prompt for room code
-              let roomCode = await getDialogPrompt({ text: "Enter room code" });
-              if (roomCode) this.joinRoom(roomCode);
-  
-              //remove focus from button
-              joinRoomButton.blur();
-            };
-            // stop immediate propagation
-            joinRoomButton.addEventListener("click", (e) => {
-              e.stopImmediatePropagation();
-            });
-  
-            buttonsHolder.appendChild(joinRoomButton);
-  
-            let setUsernameButton = document.createElement("button");
-            setUsernameButton.innerText = "Change Username";
-            //apply common style
-            setUsernameButton.classList.add("ovo-multiplayer-button");
-            setUsernameButton.onclick = async () => {
-              //prompt user for username
-              await this.setUsernamePrompt();
-  
-              //remove focus from button
-              setUsernameButton.blur();
-            };
-            // stop immediate propagation
-            setUsernameButton.addEventListener("click", (e) => {
-              e.stopImmediatePropagation();
-            });
-            buttonsHolder.appendChild(setUsernameButton);
-  
-            //text displaying current room id and user name at the bottom right corner
-            let text = document.createElement("p");
-            text.id = "ovo-multiplayer-username";
-            text.style.backgroundColor = "white";
-            text.style.zIndex = "9999999999";
-            text.style.fontSize = "14px";
-            text.style.color = "black";
-            text.style.textAlign = "left";
-            text.style.paddingLeft = "5px";
-            text.style.paddingBottom = "4px";
-            text.style.fontFamily = "Retron2000";
-            this.updateDomUsername();
-            buttonsHolder.appendChild(text);
-  
-            // other container, only visible when connected to a room
-            let connectedContainer = document.createElement("div");
-            connectedContainer.id = "ovo-multiplayer-other-container";
-            connectedContainer.style.position = "absolute";
-            connectedContainer.style.top = "0";
-            connectedContainer.style.left = "0";
-            connectedContainer.style.width = "100%";
-            connectedContainer.style.height = "100%";
-            connectedContainer.style.backgroundColor = "rgba(0,0,0,0)";
-            connectedContainer.style.zIndex = "9999999999";
-            container.appendChild(connectedContainer);
-            this.connectedContainer = connectedContainer;
-  
-            let buttonsHolder2 = document.createElement("div");
-            buttonsHolder2.classList.add("ovo-multiplayer-button-holder");
-            connectedContainer.appendChild(buttonsHolder2);
-  
-            let leaveRoomButton = document.createElement("button");
-            leaveRoomButton.innerText = "Leave Room";
-            //apply common style
-            leaveRoomButton.classList.add("ovo-multiplayer-button");
-            leaveRoomButton.onclick = () => {
-              this.leaveRoom();
-  
-              chatInput.value = "";
-              chatInput.blur();
+              // user interface with create room button, join room button, set username button and chat box
+              let container = document.createElement("div");
+              container.id = "ovo-multiplayer-container";
+              container.style.position = "absolute";
+              container.style.top = "0";
+              container.style.left = "0";
+              container.style.width = "100%";
+              container.style.height = "100%";
               container.style.backgroundColor = "rgba(0,0,0,0)";
-              chatInput.style.display = "none";
-              if (globalThis.ovoMultiplayerChatStateMap) {
-                enableClick(globalThis.ovoMultiplayerChatStateMap);
-                globalThis.ovoMultiplayerChatStateMap = null;
-              }
-              //remove focus from button
-              leaveRoomButton.blur();
-            };
-            // stop immediate propagation
-            leaveRoomButton.addEventListener("click", (e) => {
-              e.stopImmediatePropagation();
-            });
-            buttonsHolder2.appendChild(leaveRoomButton);
+              container.style.zIndex = "9999999999";
   
-            //copy room code button
-            let copyRoomCodeButton = document.createElement("button");
-            copyRoomCodeButton.innerText = "Invite Friends";
-            //apply common style
-            copyRoomCodeButton.classList.add("ovo-multiplayer-button");
-            copyRoomCodeButton.onclick = () => {
-              this.copyRoomCode();
+              //first container, only visible when not in a room
+              let disconnectedContainer = document.createElement("div");
+              disconnectedContainer.id = "ovo-multiplayer-disconnected-container";
+              disconnectedContainer.style.position = "absolute";
+              disconnectedContainer.style.top = "0";
+              disconnectedContainer.style.left = "0";
+              disconnectedContainer.style.width = "100%";
+              disconnectedContainer.style.height = "100%";
+              disconnectedContainer.style.backgroundColor = "rgba(0,0,0,0)";
+              disconnectedContainer.style.zIndex = "9999999999";
+              container.appendChild(disconnectedContainer);
+              this.connectContainer = disconnectedContainer;
   
-              chatInput.value = "";
-              chatInput.blur();
-              container.style.backgroundColor = "rgba(0,0,0,0)";
-              chatInput.style.display = "none";
-              if (globalThis.ovoMultiplayerChatStateMap) {
-                enableClick(globalThis.ovoMultiplayerChatStateMap);
-                globalThis.ovoMultiplayerChatStateMap = null;
-              }
+              let buttonsHolder = document.createElement("div");
+              buttonsHolder.classList.add("ovo-multiplayer-button-holder");
+              disconnectedContainer.appendChild(buttonsHolder);
   
-              //remove focus from button
-              copyRoomCodeButton.blur();
-            };
-            // stop immediate propagation
-            copyRoomCodeButton.addEventListener("click", (e) => {
-              e.stopImmediatePropagation();
-            });
-            buttonsHolder2.appendChild(copyRoomCodeButton);
+              let createRoomButton = document.createElement("button");
+              createRoomButton.innerText = "Create Room";
+              //apply common style
+              createRoomButton.classList.add("ovo-multiplayer-button");
+              createRoomButton.onclick = () => {
+                this.createRoom();
+                //remove focus from button
+                createRoomButton.blur();
+              };
+              // stop immediate propagation
+              createRoomButton.addEventListener("click", (e) => {
+                e.stopImmediatePropagation();
+              });
   
-            // set username button
-            let setUsernameButton2 = document.createElement("button");
-            setUsernameButton2.innerText = "Change Username";
-            //apply common style
-            setUsernameButton2.classList.add("ovo-multiplayer-button");
-            setUsernameButton2.onclick = async () => {
-              chatInput.value = "";
-              chatInput.blur();
-              container.style.backgroundColor = "rgba(0,0,0,0)";
-              chatInput.style.display = "none";
-              if (globalThis.ovoMultiplayerChatStateMap) {
-                enableClick(globalThis.ovoMultiplayerChatStateMap);
-                globalThis.ovoMultiplayerChatStateMap = null;
-              }
-              //prompt user for username
-              await this.setUsernamePrompt();
+              buttonsHolder.appendChild(createRoomButton);
   
-              //remove focus from button
-              setUsernameButton2.blur();
-            };
-            // stop immediate propagation
-            setUsernameButton2.addEventListener("click", (e) => {
-              e.stopImmediatePropagation();
-            });
-            // buttonsHolder2.appendChild(setUsernameButton2);
+              let joinRoomButton = document.createElement("button");
+              joinRoomButton.innerText = "Join Room";
+              //apply common style
+              joinRoomButton.classList.add("ovo-multiplayer-button");
+              joinRoomButton.onclick = async () => {
+                //prompt for room code
+                let roomCode = await getDialogPrompt({ text: "Enter room code" });
+                if (roomCode) this.joinRoom(roomCode);
   
-            let chatBox = document.createElement("div");
-            let chatInput = document.createElement("textarea");
+                //remove focus from button
+                joinRoomButton.blur();
+              };
+              // stop immediate propagation
+              joinRoomButton.addEventListener("click", (e) => {
+                e.stopImmediatePropagation();
+              });
   
-            // create 3 tabs
-            let tabContainer = document.createElement("div");
-            tabContainer.id = "ovo-multiplayer-tab-container";
-            tabContainer.style.position = "absolute";
-            tabContainer.style.bottom = "320px";
-            tabContainer.style.left = "0";
-            tabContainer.style.width = "388px";
-            tabContainer.style.height = "20px";
-            tabContainer.style.display = "flex";
-            tabContainer.style.flexDirection = "row";
-            tabContainer.style.justifyContent = "flex-start";
-            tabContainer.style.backgroundColor = "rgba(0,0,0,0)";
-            tabContainer.style.zIndex = "9999999999";
-            connectedContainer.appendChild(tabContainer);
+              buttonsHolder.appendChild(joinRoomButton);
   
-            let tabIndex = 0;
-            this.selectedTab = -1;
-            let tabs = [];
-            let tabContents = [];
-            let addTab = (name, content) => {
-              let thisIndex = tabIndex;
-              let tab = document.createElement("div");
-              tab.id = "ovo-multiplayer-tab-" + tabIndex;
-              tab.classList.add("ovo-multiplayer-tab");
-              tab.innerText = name;
-              tab.style.height = "20px";
-              tab.style.left = "0";
-              tab.style.top = "0";
-              tab.style.backgroundColor = "rgba(0,0,0,1)";
-              tab.style.color = "white";
-              tab.style.fontSize = "10pt";
-              tab.style.fontFamily = "Retron2000";
-              tab.style.cursor = "pointer";
-              tab.style.paddingLeft = "10px";
-              tab.style.paddingRight = "10px";
-              tab.style.paddingTop = "3px";
-              tab.style.paddingBottom = "3px";
-              tab.style.textAlign = "center";
-              tab.style.cursor = "pointer";
-              tab.style.zIndex = "9999999999";
-              tab.onclick = () => {
-                if (this.selectedTab === thisIndex) {
-                  return;
+              let setUsernameButton = document.createElement("button");
+              setUsernameButton.innerText = "Change Username";
+              //apply common style
+              setUsernameButton.classList.add("ovo-multiplayer-button");
+              setUsernameButton.onclick = async () => {
+                //prompt user for username
+                await this.setUsernamePrompt();
+  
+                //remove focus from button
+                setUsernameButton.blur();
+              };
+              // stop immediate propagation
+              setUsernameButton.addEventListener("click", (e) => {
+                e.stopImmediatePropagation();
+              });
+              buttonsHolder.appendChild(setUsernameButton);
+  
+              //text displaying current room id and user name at the bottom right corner
+              let text = document.createElement("p");
+              text.id = "ovo-multiplayer-username";
+              text.style.backgroundColor = "white";
+              text.style.zIndex = "9999999999";
+              text.style.fontSize = "14px";
+              text.style.color = "black";
+              text.style.textAlign = "left";
+              text.style.paddingLeft = "5px";
+              text.style.paddingBottom = "4px";
+              text.style.fontFamily = "Retron2000";
+              this.updateDomUsername();
+              buttonsHolder.appendChild(text);
+  
+              // other container, only visible when connected to a room
+              let connectedContainer = document.createElement("div");
+              connectedContainer.id = "ovo-multiplayer-other-container";
+              connectedContainer.style.position = "absolute";
+              connectedContainer.style.top = "0";
+              connectedContainer.style.left = "0";
+              connectedContainer.style.width = "100%";
+              connectedContainer.style.height = "100%";
+              connectedContainer.style.backgroundColor = "rgba(0,0,0,0)";
+              connectedContainer.style.zIndex = "9999999999";
+              container.appendChild(connectedContainer);
+              this.connectedContainer = connectedContainer;
+  
+              let buttonsHolder2 = document.createElement("div");
+              buttonsHolder2.classList.add("ovo-multiplayer-button-holder");
+              connectedContainer.appendChild(buttonsHolder2);
+  
+              let leaveRoomButton = document.createElement("button");
+              leaveRoomButton.innerText = "Leave Room";
+              //apply common style
+              leaveRoomButton.classList.add("ovo-multiplayer-button");
+              leaveRoomButton.onclick = () => {
+                this.leaveRoom();
+  
+                chatInput.value = "";
+                chatInput.blur();
+                container.style.backgroundColor = "rgba(0,0,0,0)";
+                chatInput.style.display = "none";
+                if (globalThis.ovoMultiplayerChatStateMap) {
+                  enableClick(globalThis.ovoMultiplayerChatStateMap);
+                  globalThis.ovoMultiplayerChatStateMap = null;
                 }
-                //hide all tabs
-                for (let i = 0; i < tabContents.length; i++) {
-                  tabContents[i].style.display = "none";
-                }
-                //show this tab
-                content.style.display = "block";
-                //change tab color
-                for (let i = 0; i < tabs.length; i++) {
-                  tabs[i].style.backgroundColor = "rgba(255,255,255,0.8)";
-                  tabs[i].style.color = "black";
-                }
-                tab.style.backgroundColor = "rgba(0,0,0,1)";
-                tab.style.color = "white";
-                this.selectedTab = thisIndex;
+                //remove focus from button
+                leaveRoomButton.blur();
+              };
+              // stop immediate propagation
+              leaveRoomButton.addEventListener("click", (e) => {
+                e.stopImmediatePropagation();
+              });
+              buttonsHolder2.appendChild(leaveRoomButton);
+  
+              //copy room code button
+              let copyRoomCodeButton = document.createElement("button");
+              copyRoomCodeButton.innerText = "Invite Friends";
+              //apply common style
+              copyRoomCodeButton.classList.add("ovo-multiplayer-button");
+              copyRoomCodeButton.onclick = () => {
+                this.copyRoomCode();
   
                 chatInput.value = "";
                 chatInput.blur();
@@ -5820,103 +5588,22 @@
                   globalThis.ovoMultiplayerChatStateMap = null;
                 }
   
-                if (thisIndex === 0) {
-                  //scroll to bottom
-                  let chatBox = document.getElementById(
-                    "ovo-multiplayer-chat-box"
-                  );
-                  if (chatBox) {
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                  }
-                }
+                //remove focus from button
+                copyRoomCodeButton.blur();
               };
-              tabContainer.appendChild(tab);
-              tabs.push(tab);
-              tabContents.push(content);
-              tabIndex++;
-            };
-  
-            let selectTab = (index) => {
-              if (
-                index === this.selectedTab ||
-                index < 0 ||
-                index >= tabContents.length
-              ) {
-                return;
-              }
-              tabs[index].onclick();
-            };
-  
-            // chat tab
-            let chatTab = document.createElement("div");
-            addTab("Chat", chatTab);
-            connectedContainer.appendChild(chatTab);
-  
-            // user list tab
-            let userListTab = document.createElement("div");
-            addTab("User list", userListTab);
-            connectedContainer.appendChild(userListTab);
-  
-            // settings tab
-            let settingsTab = document.createElement("div");
-            addTab("Ban list", settingsTab);
-            connectedContainer.appendChild(settingsTab);
-  
-            let tipsTab = document.createElement("div");
-            addTab("Info", tipsTab);
-            connectedContainer.appendChild(tipsTab);
-  
-            selectTab(0);
-  
-            //show chat messages in a read only text area
-            chatBox.id = "ovo-multiplayer-chat-box";
-            //apply common style
-            chatBox.classList.add("ovo-multiplayer-text-box");
-            chatBox.style.border = "none";
-            chatBox.style.padding = "6px";
-            chatBox.style.bottom = "65px";
-            chatBox.style.color = "black";
-            chatBox.style.left = "0";
-            chatBox.style.width = "388px";
-            chatBox.style.height = "238px";
-            chatBox.style.resize = "none";
-            chatBox.style.display = "block";
-            chatBox.style.textShadow = "0 0 5px white";
-            chatBox.innerHTML = "No chat messages yet...";
-            chatBox.style.overflow = "auto scroll";
-            chatBox.style.textAlign = "left";
-  
-            chatBox.addEventListener("wheel", (e) => {
-              e.stopImmediatePropagation();
-            });
-            chatTab.appendChild(chatBox);
-  
-            chatInput.id = "ovo-multiplayer-chat-input";
-            //apply common style
-            chatInput.classList.add("ovo-multiplayer-chat-input");
-            chatInput.placeholder = "Type here...";
-            chatInput.onkeydown = (e) => {
-              if (e.key === "Enter") {
-                // if shift is pressed do nothing
+              // stop immediate propagation
+              copyRoomCodeButton.addEventListener("click", (e) => {
                 e.stopImmediatePropagation();
-                if (e.shiftKey) return;
-                this.sendChat({
-                  message: chatInput.value.trim(),
-                });
+              });
+              buttonsHolder2.appendChild(copyRoomCodeButton);
   
-                //wait for a bit before clearing the input
-                setTimeout(() => {
-                  chatInput.value = "";
-                  // chatInput.blur();
-                  // container.style.backgroundColor = "rgba(0,0,0,0)";
-                  // chatInput.style.display = "none";
-                  // if (globalThis.ovoMultiplayerChatStateMap) {
-                  //   enableClick(globalThis.ovoMultiplayerChatStateMap);
-                  //   globalThis.ovoMultiplayerChatStateMap = null;
-                  // }
-                }, 100);
-              }
-              if (e.key === "Escape") {
+              // set username button
+              let setUsernameButton2 = document.createElement("button");
+              setUsernameButton2.innerText = "Change Username";
+              //apply common style
+              setUsernameButton2.classList.add("ovo-multiplayer-button");
+              setUsernameButton2.onclick = async () => {
+                chatInput.value = "";
                 chatInput.blur();
                 container.style.backgroundColor = "rgba(0,0,0,0)";
                 chatInput.style.display = "none";
@@ -5924,78 +5611,265 @@
                   enableClick(globalThis.ovoMultiplayerChatStateMap);
                   globalThis.ovoMultiplayerChatStateMap = null;
                 }
-              }
+                //prompt user for username
+                await this.setUsernamePrompt();
   
-              e.stopPropagation();
-            };
-            chatTab.appendChild(chatInput);
+                //remove focus from button
+                setUsernameButton2.blur();
+              };
+              // stop immediate propagation
+              setUsernameButton2.addEventListener("click", (e) => {
+                e.stopImmediatePropagation();
+              });
+              // buttonsHolder2.appendChild(setUsernameButton2);
   
-            //show user list in a read only text area
-            let userList = document.createElement("div");
-            userList.id = "ovo-multiplayer-user-list";
-            //apply common style
-            userList.classList.add("ovo-multiplayer-text-box");
-            userList.style.border = "none";
-            userList.style.padding = "6px";
-            userList.style.bottom = "50px";
-            userList.style.color = "black";
-            userList.style.left = "0";
-            userList.style.width = "388px";
-            userList.style.height = "252px";
-            userList.style.resize = "none";
-            userList.style.display = "block";
-            userList.style.textShadow = "0 0 5px white";
-            userList.style.overflow = "auto scroll";
-            userList.style.textAlign = "left";
+              let chatBox = document.createElement("div");
+              let chatInput = document.createElement("textarea");
   
-            userList.addEventListener("wheel", (e) => {
-              e.stopImmediatePropagation();
-            });
-            userListTab.appendChild(userList);
+              // create 3 tabs
+              let tabContainer = document.createElement("div");
+              tabContainer.id = "ovo-multiplayer-tab-container";
+              tabContainer.style.position = "absolute";
+              tabContainer.style.bottom = "320px";
+              tabContainer.style.left = "0";
+              tabContainer.style.width = "388px";
+              tabContainer.style.height = "20px";
+              tabContainer.style.display = "flex";
+              tabContainer.style.flexDirection = "row";
+              tabContainer.style.justifyContent = "flex-start";
+              tabContainer.style.backgroundColor = "rgba(0,0,0,0)";
+              tabContainer.style.zIndex = "9999999999";
+              connectedContainer.appendChild(tabContainer);
   
-            //show user list in a read only text area
-            let settings = document.createElement("div");
-            settings.id = "ovo-multiplayer-settings";
-            //apply common style
-            settings.classList.add("ovo-multiplayer-text-box");
-            settings.style.border = "none";
-            settings.style.padding = "6px";
-            settings.style.bottom = "50px";
-            settings.style.color = "black";
-            settings.style.left = "0";
-            settings.style.width = "388px";
-            settings.style.height = "252px";
-            settings.style.resize = "none";
-            settings.style.display = "block";
-            settings.style.textShadow = "0 0 5px white";
-            settings.style.overflow = "auto scroll";
-            settings.style.textAlign = "left";
-            settings.innerHTML = "No banned users (yet).";
+              let tabIndex = 0;
+              this.selectedTab = -1;
+              let tabs = [];
+              let tabContents = [];
+              let addTab = (name, content) => {
+                let thisIndex = tabIndex;
+                let tab = document.createElement("div");
+                tab.id = "ovo-multiplayer-tab-" + tabIndex;
+                tab.classList.add("ovo-multiplayer-tab");
+                tab.innerText = name;
+                tab.style.height = "20px";
+                tab.style.left = "0";
+                tab.style.top = "0";
+                tab.style.backgroundColor = "rgba(0,0,0,1)";
+                tab.style.color = "white";
+                tab.style.fontSize = "10pt";
+                tab.style.fontFamily = "Retron2000";
+                tab.style.cursor = "pointer";
+                tab.style.paddingLeft = "10px";
+                tab.style.paddingRight = "10px";
+                tab.style.paddingTop = "3px";
+                tab.style.paddingBottom = "3px";
+                tab.style.textAlign = "center";
+                tab.style.cursor = "pointer";
+                tab.style.zIndex = "9999999999";
+                tab.onclick = () => {
+                  if (this.selectedTab === thisIndex) {
+                    return;
+                  }
+                  //hide all tabs
+                  for (let i = 0; i < tabContents.length; i++) {
+                    tabContents[i].style.display = "none";
+                  }
+                  //show this tab
+                  content.style.display = "block";
+                  //change tab color
+                  for (let i = 0; i < tabs.length; i++) {
+                    tabs[i].style.backgroundColor = "rgba(255,255,255,0.8)";
+                    tabs[i].style.color = "black";
+                  }
+                  tab.style.backgroundColor = "rgba(0,0,0,1)";
+                  tab.style.color = "white";
+                  this.selectedTab = thisIndex;
   
-            settings.addEventListener("wheel", (e) => {
-              e.stopImmediatePropagation();
-            });
-            settingsTab.appendChild(settings);
+                  chatInput.value = "";
+                  chatInput.blur();
+                  container.style.backgroundColor = "rgba(0,0,0,0)";
+                  chatInput.style.display = "none";
+                  if (globalThis.ovoMultiplayerChatStateMap) {
+                    enableClick(globalThis.ovoMultiplayerChatStateMap);
+                    globalThis.ovoMultiplayerChatStateMap = null;
+                  }
   
-            //show user list in a read only text area
-            let tips = document.createElement("div");
-            tips.id = "ovo-multiplayer-tips";
-            //apply common style
-            tips.classList.add("ovo-multiplayer-text-box");
-            tips.style.border = "none";
-            tips.style.padding = "6px";
-            tips.style.bottom = "50px";
-            tips.style.color = "black";
-            tips.style.left = "0";
-            tips.style.width = "388px";
-            tips.style.height = "252px";
-            tips.style.resize = "none";
-            tips.style.display = "block";
-            tips.style.textShadow = "0 0 5px white";
-            tips.style.overflow = "auto scroll";
-            tips.style.textAlign = "left";
-            // display tips
-            tips.innerHTML = `
+                  if (thisIndex === 0) {
+                    //scroll to bottom
+                    let chatBox = document.getElementById(
+                      "ovo-multiplayer-chat-box"
+                    );
+                    if (chatBox) {
+                      chatBox.scrollTop = chatBox.scrollHeight;
+                    }
+                  }
+                };
+                tabContainer.appendChild(tab);
+                tabs.push(tab);
+                tabContents.push(content);
+                tabIndex++;
+              };
+  
+              let selectTab = (index) => {
+                if (
+                  index === this.selectedTab ||
+                  index < 0 ||
+                  index >= tabContents.length
+                ) {
+                  return;
+                }
+                tabs[index].onclick();
+              };
+  
+              // chat tab
+              let chatTab = document.createElement("div");
+              addTab("Chat", chatTab);
+              connectedContainer.appendChild(chatTab);
+  
+              // user list tab
+              let userListTab = document.createElement("div");
+              addTab("User list", userListTab);
+              connectedContainer.appendChild(userListTab);
+  
+              // settings tab
+              let settingsTab = document.createElement("div");
+              addTab("Ban list", settingsTab);
+              connectedContainer.appendChild(settingsTab);
+  
+              let tipsTab = document.createElement("div");
+              addTab("Info", tipsTab);
+              connectedContainer.appendChild(tipsTab);
+  
+              selectTab(0);
+  
+              //show chat messages in a read only text area
+              chatBox.id = "ovo-multiplayer-chat-box";
+              //apply common style
+              chatBox.classList.add("ovo-multiplayer-text-box");
+              chatBox.style.border = "none";
+              chatBox.style.padding = "6px";
+              chatBox.style.bottom = "65px";
+              chatBox.style.color = "black";
+              chatBox.style.left = "0";
+              chatBox.style.width = "388px";
+              chatBox.style.height = "238px";
+              chatBox.style.resize = "none";
+              chatBox.style.display = "block";
+              chatBox.style.textShadow = "0 0 5px white";
+              chatBox.innerHTML = "No chat messages yet...";
+              chatBox.style.overflow = "auto scroll";
+              chatBox.style.textAlign = "left";
+  
+              chatBox.addEventListener("wheel", (e) => {
+                e.stopImmediatePropagation();
+              });
+              chatTab.appendChild(chatBox);
+  
+              chatInput.id = "ovo-multiplayer-chat-input";
+              //apply common style
+              chatInput.classList.add("ovo-multiplayer-chat-input");
+              chatInput.placeholder = "Type here...";
+              chatInput.onkeydown = (e) => {
+                if (e.key === "Enter") {
+                  // if shift is pressed do nothing
+                  e.stopImmediatePropagation();
+                  if (e.shiftKey) return;
+                  this.sendChat({
+                    message: chatInput.value.trim(),
+                  });
+  
+                  //wait for a bit before clearing the input
+                  setTimeout(() => {
+                    chatInput.value = "";
+                    // chatInput.blur();
+                    // container.style.backgroundColor = "rgba(0,0,0,0)";
+                    // chatInput.style.display = "none";
+                    // if (globalThis.ovoMultiplayerChatStateMap) {
+                    //   enableClick(globalThis.ovoMultiplayerChatStateMap);
+                    //   globalThis.ovoMultiplayerChatStateMap = null;
+                    // }
+                  }, 100);
+                }
+                if (e.key === "Escape") {
+                  chatInput.blur();
+                  container.style.backgroundColor = "rgba(0,0,0,0)";
+                  chatInput.style.display = "none";
+                  if (globalThis.ovoMultiplayerChatStateMap) {
+                    enableClick(globalThis.ovoMultiplayerChatStateMap);
+                    globalThis.ovoMultiplayerChatStateMap = null;
+                  }
+                }
+  
+                e.stopPropagation();
+              };
+              chatTab.appendChild(chatInput);
+  
+              //show user list in a read only text area
+              let userList = document.createElement("div");
+              userList.id = "ovo-multiplayer-user-list";
+              //apply common style
+              userList.classList.add("ovo-multiplayer-text-box");
+              userList.style.border = "none";
+              userList.style.padding = "6px";
+              userList.style.bottom = "50px";
+              userList.style.color = "black";
+              userList.style.left = "0";
+              userList.style.width = "388px";
+              userList.style.height = "252px";
+              userList.style.resize = "none";
+              userList.style.display = "block";
+              userList.style.textShadow = "0 0 5px white";
+              userList.style.overflow = "auto scroll";
+              userList.style.textAlign = "left";
+  
+              userList.addEventListener("wheel", (e) => {
+                e.stopImmediatePropagation();
+              });
+              userListTab.appendChild(userList);
+  
+              //show user list in a read only text area
+              let settings = document.createElement("div");
+              settings.id = "ovo-multiplayer-settings";
+              //apply common style
+              settings.classList.add("ovo-multiplayer-text-box");
+              settings.style.border = "none";
+              settings.style.padding = "6px";
+              settings.style.bottom = "50px";
+              settings.style.color = "black";
+              settings.style.left = "0";
+              settings.style.width = "388px";
+              settings.style.height = "252px";
+              settings.style.resize = "none";
+              settings.style.display = "block";
+              settings.style.textShadow = "0 0 5px white";
+              settings.style.overflow = "auto scroll";
+              settings.style.textAlign = "left";
+              settings.innerHTML = "No banned users (yet).";
+  
+              settings.addEventListener("wheel", (e) => {
+                e.stopImmediatePropagation();
+              });
+              settingsTab.appendChild(settings);
+  
+              //show user list in a read only text area
+              let tips = document.createElement("div");
+              tips.id = "ovo-multiplayer-tips";
+              //apply common style
+              tips.classList.add("ovo-multiplayer-text-box");
+              tips.style.border = "none";
+              tips.style.padding = "6px";
+              tips.style.bottom = "50px";
+              tips.style.color = "black";
+              tips.style.left = "0";
+              tips.style.width = "388px";
+              tips.style.height = "252px";
+              tips.style.resize = "none";
+              tips.style.display = "block";
+              tips.style.textShadow = "0 0 5px white";
+              tips.style.overflow = "auto scroll";
+              tips.style.textAlign = "left";
+              // display tips
+              tips.innerHTML = `
               <h3 style="padding-left: 14px;">Info & Tips</h3>
               <br>
               <p>
@@ -6023,1365 +5897,1378 @@
               </p>
             `;
   
-            tips.addEventListener("wheel", (e) => {
-              e.stopImmediatePropagation();
-            });
-            tipsTab.appendChild(tips);
+              tips.addEventListener("wheel", (e) => {
+                e.stopImmediatePropagation();
+              });
+              tipsTab.appendChild(tips);
   
-            let chatButton = document.createElement("button");
-            chatButton.innerText = "Open Chat";
-            //apply common style
-            chatButton.classList.add("ovo-multiplayer-button");
-            let toggleChatBox = () => {
-              //do nothing if not connected to room
-              if (!this.connectedToRoom) return;
+              let chatButton = document.createElement("button");
+              chatButton.innerText = "Open Chat";
+              //apply common style
+              chatButton.classList.add("ovo-multiplayer-button");
+              let toggleChatBox = () => {
+                //do nothing if not connected to room
+                if (!this.connectedToRoom) return;
   
-              // if (chatInput.value) {
-              //   this.sendChat({
-              //     username: this.username,
-              //     message: chatInput.value,
-              //   });
+                // if (chatInput.value) {
+                //   this.sendChat({
+                //     username: this.username,
+                //     message: chatInput.value,
+                //   });
   
-              //   //wait for a bit before clearing the input
-              //   setTimeout(() => {
-              //     chatInput.value = "";
-              //     chatInput.blur();
-              //     container.style.backgroundColor = "rgba(0,0,0,0)";
-              //     chatInput.style.display = "none";
-              //     if (globalThis.ovoMultiplayerChatStateMap) {
-              //       enableClick(globalThis.ovoMultiplayerChatStateMap);
-              //       globalThis.ovoMultiplayerChatStateMap = null;
-              //     }
-              //   }, 100);
-              // }
+                //   //wait for a bit before clearing the input
+                //   setTimeout(() => {
+                //     chatInput.value = "";
+                //     chatInput.blur();
+                //     container.style.backgroundColor = "rgba(0,0,0,0)";
+                //     chatInput.style.display = "none";
+                //     if (globalThis.ovoMultiplayerChatStateMap) {
+                //       enableClick(globalThis.ovoMultiplayerChatStateMap);
+                //       globalThis.ovoMultiplayerChatStateMap = null;
+                //     }
+                //   }, 100);
+                // }
   
-              if (chatInput.style.display === "none") {
-                selectTab(0);
-                chatInput.style.display = "block";
-                container.style.backgroundColor = "rgba(0,0,0,0.5)";
-                globalThis.ovoMultiplayerChatStateMap = disableClick();
-                setTimeout(() => {
-                  chatInput.focus();
-                }, 100);
-              } else {
-                chatInput.style.display = "none";
-                chatInput.blur();
-                container.style.backgroundColor = "rgba(0,0,0,0)";
-                if (globalThis.ovoMultiplayerChatStateMap) {
-                  enableClick(globalThis.ovoMultiplayerChatStateMap);
-                  globalThis.ovoMultiplayerChatStateMap = null;
-                }
-              }
-            };
-            chatButton.onclick = () => {
-              toggleChatBox();
-              //remove focus from button
-              chatButton.blur();
-            };
-            // stop immediate propagation
-            chatButton.addEventListener("click", (e) => {
-              e.stopImmediatePropagation();
-            });
-            // open chatbox on T key only if chatInput is not focused
-            document.addEventListener("keydown", (e) => {
-              if (e.key === "Enter" && chatInput.style.display === "none") {
-                toggleChatBox();
-              }
-            });
-            buttonsHolder2.appendChild(chatButton);
-  
-            document.body.appendChild(container);
-  
-            // a button at the top left corner that toggles the entire UI
-            let toggleButton = document.createElement("button");
-            toggleButton.id = "ovo-multiplayer-toggle-button";
-            toggleButton.innerText = "";
-            // little globe icon in the button
-            let globeIcon = document.createElement("img");
-            // use web icon from material design icons
-            globeIcon.src =
-              "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE2LjM2LDE0QzE2LjQ0LDEzLjM0IDE2LjUsMTIuNjggMTYuNSwxMkMxNi41LDExLjMyIDE2LjQ0LDEwLjY2IDE2LjM2LDEwSDE5Ljc0QzE5LjksMTAuNjQgMjAsMTEuMzEgMjAsMTJDMjAsMTIuNjkgMTkuOSwxMy4zNiAxOS43NCwxNE0xNC41OSwxOS41NkMxNS4xOSwxOC40NSAxNS42NSwxNy4yNSAxNS45NywxNkgxOC45MkMxNy45NiwxNy42NSAxNi40MywxOC45MyAxNC41OSwxOS41Nk0xNC4zNCwxNEg5LjY2QzkuNTYsMTMuMzQgOS41LDEyLjY4IDkuNSwxMkM5LjUsMTEuMzIgOS41NiwxMC42NSA5LjY2LDEwSDE0LjM0QzE0LjQzLDEwLjY1IDE0LjUsMTEuMzIgMTQuNSwxMkMxNC41LDEyLjY4IDE0LjQzLDEzLjM0IDE0LjM0LDE0TTEyLDE5Ljk2QzExLjE3LDE4Ljc2IDEwLjUsMTcuNDMgMTAuMDksMTZIMTMuOTFDMTMuNSwxNy40MyAxMi44MywxOC43NiAxMiwxOS45Nk04LDhINS4wOEM2LjAzLDYuMzQgNy41Nyw1LjA2IDkuNCw0LjQ0QzguOCw1LjU1IDguMzUsNi43NSA4LDhNNS4wOCwxNkg4QzguMzUsMTcuMjUgOC44LDE4LjQ1IDkuNCwxOS41NkM3LjU3LDE4LjkzIDYuMDMsMTcuNjUgNS4wOCwxNk00LjI2LDE0QzQuMSwxMy4zNiA0LDEyLjY5IDQsMTJDNCwxMS4zMSA0LjEsMTAuNjQgNC4yNiwxMEg3LjY0QzcuNTYsMTAuNjYgNy41LDExLjMyIDcuNSwxMkM3LjUsMTIuNjggNy41NiwxMy4zNCA3LjY0LDE0TTEyLDQuMDNDMTIuODMsNS4yMyAxMy41LDYuNTcgMTMuOTEsOEgxMC4wOUMxMC41LDYuNTcgMTEuMTcsNS4yMyAxMiw0LjAzTTE4LjkyLDhIMTUuOTdDMTUuNjUsNi43NSAxNS4xOSw1LjU1IDE0LjU5LDQuNDRDMTYuNDMsNS4wNyAxNy45Niw2LjM0IDE4LjkyLDhNMTIsMkM2LjQ3LDIgMiw2LjUgMiwxMkExMCwxMCAwIDAsMCAxMiwyMkExMCwxMCAwIDAsMCAyMiwxMkExMCwxMCAwIDAsMCAxMiwyWiIgLz48L3N2Zz4=";
-            globeIcon.classList.add("ovo-multiplayer-toggle-icon");
-            toggleButton.appendChild(globeIcon);
-            //apply common style
-            toggleButton.classList.add("ovo-multiplayer-toggle-button");
-            toggleButton.onclick = async (mute = false) => {
-              // on first click, prompt for username
-              if (this.username === "") {
-                await this.setUsernamePrompt();
-              }
-              container.style.display =
-                container.style.display === "none" ? "block" : "none";
-              if (!mute) {
-                notify(
-                  "OvO Online",
-                  "OvO Online is now " +
-                    (container.style.display === "none" ? "hidden" : "visible")
-                );
-              }
-              //remove focus from button when clicked
-              toggleButton.blur();
-            };
-            // stop immediate propagation
-            toggleButton.addEventListener("click", (e) => {
-              e.stopImmediatePropagation();
-            });
-            // set containter style to none
-            container.style.display = "none";
-            document.body.appendChild(toggleButton);
-  
-            // add a tooltip to the button
-            let tooltip = document.createElement("div");
-            tooltip.classList.add("tooltip");
-            let tooltipText = document.createElement("div");
-            tooltipText.classList.add("tooltiptext");
-            let tooltipTextspan = document.createElement("span");
-            tooltipTextspan.innerHTML =
-              "Click the globe to toggle the multiplayer UI";
-            let tooltipButton = document.createElement("button");
-            tooltipButton.classList.add("ovo-multiplayer-button");
-            tooltipButton.classList.add("tooltipbutton");
-            tooltipButton.innerHTML = "Got it !";
-            tooltipButton.onclick = () => {
-              this.showTooltip(false);
-            };
-            tooltipText.appendChild(tooltipTextspan);
-            tooltipText.appendChild(tooltipButton);
-            tooltip.appendChild(tooltipText);
-            document.body.appendChild(tooltip);
-          },
-  
-          updateUserList(force = false) {
-            if (!force && this.selectedTab !== 1) {
-              return;
-            }
-            // update user list
-            const userList = document.getElementById("ovo-multiplayer-user-list");
-  
-            let createUserElement = () => {
-              let userElement = document.createElement("div");
-              userElement.className = "ovo-multiplayer-user-element";
-              let userSubElement = document.createElement("div");
-              userSubElement.className = "ovo-multiplayer-user-sub-element";
-              let userSubSubElement = document.createElement("div");
-              userSubSubElement.className =
-                "ovo-multiplayer-user-sub-sub-element";
-              let userButtonsDiv = document.createElement("div");
-              userButtonsDiv.className = "ovo-multiplayer-user-buttons";
-  
-              // add kick, ban and perma ban buttons
-              let muteButton = document.createElement("button");
-              muteButton.className = "ovo-multiplayer-user-button";
-              muteButton.innerHTML = "Mute";
-              userButtonsDiv.appendChild(muteButton);
-  
-              // add kick, ban and perma ban buttons
-              let kickButton = document.createElement("button");
-              kickButton.className = "ovo-multiplayer-user-button";
-              kickButton.innerHTML = "Kick";
-              kickButton.disabled = true;
-              userButtonsDiv.appendChild(kickButton);
-  
-              let banButton = document.createElement("button");
-              banButton.className = "ovo-multiplayer-user-button";
-              banButton.innerHTML = "Ban";
-              banButton.disabled = true;
-              userButtonsDiv.appendChild(banButton);
-  
-              let permaBanButton = document.createElement("button");
-              permaBanButton.className = "ovo-multiplayer-user-button";
-              permaBanButton.innerHTML = "Perma Ban";
-              permaBanButton.disabled = true;
-              userButtonsDiv.appendChild(permaBanButton);
-  
-              let changeUsername = document.createElement("button");
-              changeUsername.className = "ovo-multiplayer-user-button";
-              changeUsername.innerHTML = "Change Username";
-              changeUsername.disabled = true;
-              userButtonsDiv.appendChild(changeUsername);
-  
-              let userUsername = document.createElement("div");
-              userUsername.className = "ovo-multiplayer-user-username";
-              let userExtraData = document.createElement("div");
-              userExtraData.className = "ovo-multiplayer-user-extra";
-              let userIcon = document.createElement("img");
-              userIcon.className = "ovo-multiplayer-chat-icon";
-              userElement.appendChild(userIcon);
-              userElement.appendChild(userSubElement);
-              userSubElement.appendChild(userUsername);
-              userSubElement.appendChild(userSubSubElement);
-              userSubSubElement.appendChild(userExtraData);
-              userSubSubElement.appendChild(userButtonsDiv);
-              return {
-                elementDiv: userElement,
-                usernameDiv: userUsername,
-                extraDataDiv: userExtraData,
-                buttonsDiv: userButtonsDiv,
-                muteButton: muteButton,
-                kickButton: kickButton,
-                banButton: banButton,
-                permaBanButton: permaBanButton,
-                changeUsername: changeUsername,
-                iconElement: userIcon,
-              };
-            };
-  
-            let updateUserElementData = (
-              userElement,
-              user,
-              isMe = false,
-              connection
-            ) => {
-              userElement.usernameDiv.innerHTML = user.username;
-              userElement.extraDataDiv.innerHTML =
-                (user.isHost ? "(host) - " : "") +
-                (user.username === user.initialUsername
-                  ? ""
-                  : "(" + user.initialUsername + ") - ") +
-                (isMe ? "You - " : (user.ping || "?") + "ms - ") +
-                user.UID;
-              userElement.iconElement.src = getSkinIconFromSkinName(user.skin);
-              if (!isMe) {
-                userElement.muteButton.innerHTML = this.userIsMuted(connection.id)
-                  ? "Unmute"
-                  : "Mute";
-              }
-              // set buttons
-              if (this.isHost && !isMe) {
-                userElement.muteButton.style.display = "block";
-                userElement.muteButton.disabled = false;
-                userElement.kickButton.style.display = "block";
-                userElement.kickButton.disabled = false;
-                userElement.banButton.style.display = "block";
-                userElement.banButton.disabled = false;
-                userElement.permaBanButton.style.display = "block";
-                userElement.permaBanButton.disabled = false;
-                userElement.changeUsername.style.display = "none";
-                userElement.changeUsername.disabled = true;
-                // add click listeners
-                userElement.muteButton.onclick = () => {
-                  this.toggleMuteUser(connection.id);
-                };
-                userElement.kickButton.onclick = () => {
-                  this.kickUser(user, connection);
-                };
-                userElement.banButton.onclick = () => {
-                  this.banUser(user, connection);
-                };
-                userElement.permaBanButton.onclick = () => {
-                  this.permaBanUser(user, connection);
-                };
-                userElement.changeUsername.onclick = () => {};
-              } else if (!isMe) {
-                // only show mute button
-                userElement.muteButton.style.display = "block";
-                userElement.muteButton.disabled = false;
-                userElement.kickButton.style.display = "none";
-                userElement.kickButton.disabled = true;
-                userElement.banButton.style.display = "none";
-                userElement.banButton.disabled = true;
-                userElement.permaBanButton.style.display = "none";
-                userElement.permaBanButton.disabled = true;
-                userElement.changeUsername.style.display = "none";
-                userElement.changeUsername.disabled = true;
-                // add click listener
-                userElement.muteButton.onclick = () => {
-                  this.toggleMuteUser(connection.id);
-                };
-                userElement.kickButton.onclick = () => {};
-                userElement.banButton.onclick = () => {};
-                userElement.permaBanButton.onclick = () => {};
-                userElement.changeUsername.onclick = () => {};
-              } else {
-                // hide all buttons
-                userElement.muteButton.style.display = "none";
-                userElement.muteButton.disabled = true;
-                userElement.kickButton.style.display = "none";
-                userElement.kickButton.disabled = true;
-                userElement.banButton.style.display = "none";
-                userElement.banButton.disabled = true;
-                userElement.permaBanButton.style.display = "none";
-                userElement.permaBanButton.disabled = true;
-                userElement.changeUsername.style.display = "block";
-                userElement.changeUsername.disabled = false;
-                // add click listeners
-                userElement.muteButton.onclick = () => {};
-                userElement.kickButton.onclick = () => {};
-                userElement.banButton.onclick = () => {};
-                userElement.permaBanButton.onclick = () => {};
-                userElement.changeUsername.onclick = async () => {
-                  let chatInput = document.getElementById(
-                    "ovo-multiplayer-chat-input"
-                  );
-                  let container = document.getElementById(
-                    "ovo-multiplayer-container"
-                  );
-                  chatInput.value = "";
+                if (chatInput.style.display === "none") {
+                  selectTab(0);
+                  chatInput.style.display = "block";
+                  container.style.backgroundColor = "rgba(0,0,0,0.5)";
+                  globalThis.ovoMultiplayerChatStateMap = disableClick();
+                  setTimeout(() => {
+                    chatInput.focus();
+                  }, 100);
+                } else {
+                  chatInput.style.display = "none";
                   chatInput.blur();
                   container.style.backgroundColor = "rgba(0,0,0,0)";
-                  chatInput.style.display = "none";
                   if (globalThis.ovoMultiplayerChatStateMap) {
                     enableClick(globalThis.ovoMultiplayerChatStateMap);
                     globalThis.ovoMultiplayerChatStateMap = null;
                   }
-                  //prompt user for username
-                  await this.setUsernamePrompt();
-                  //update user element
-                  user.username = this.username;
-                  updateUserElementData(userElement, user, isMe, connection);
-  
-                  //remove focus from button
-                  userElement.blur();
-                };
-              }
-            };
-  
-            if (!this.roomUsers) {
-              this.roomUsers = [
-                {
-                  connection: null, // my user element
-                  userElement: createUserElement(),
-                },
-              ];
-            }
-            // add all connection users if they don't already exist in the list
-            for (let i = 0; i < this.connections.length; i++) {
-              let connection = this.connections[i];
-              let userExists = false;
-              for (let j = 0; j < this.roomUsers.length; j++) {
-                if (this.roomUsers[j].connection === connection) {
-                  userExists = true;
-                  break;
                 }
-              }
-              if (!userExists) {
-                this.roomUsers.push({
-                  connection: connection,
-                  userElement: createUserElement(),
-                });
-              }
-            }
+              };
+              chatButton.onclick = () => {
+                toggleChatBox();
+                //remove focus from button
+                chatButton.blur();
+              };
+              // stop immediate propagation
+              chatButton.addEventListener("click", (e) => {
+                e.stopImmediatePropagation();
+              });
+              // open chatbox on T key only if chatInput is not focused
+              document.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" && chatInput.style.display === "none") {
+                  toggleChatBox();
+                }
+              });
+              buttonsHolder2.appendChild(chatButton);
   
-            // remove all users that don't have a connection
-            for (let i = 0; i < this.roomUsers.length; i++) {
-              let user = this.roomUsers[i];
-              if (user.connection) {
-                // if connection is in connections list, skip
-                let connectionExists = false;
-                for (let j = 0; j < this.connections.length; j++) {
-                  if (this.connections[j] === user.connection) {
-                    connectionExists = true;
+              document.body.appendChild(container);
+  
+              // a button at the top left corner that toggles the entire UI
+              let toggleButton = document.createElement("button");
+              toggleButton.id = "ovo-multiplayer-toggle-button";
+              toggleButton.innerText = "";
+              // little globe icon in the button
+              let globeIcon = document.createElement("img");
+              // use web icon from material design icons
+              globeIcon.src =
+                "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE2LjM2LDE0QzE2LjQ0LDEzLjM0IDE2LjUsMTIuNjggMTYuNSwxMkMxNi41LDExLjMyIDE2LjQ0LDEwLjY2IDE2LjM2LDEwSDE5Ljc0QzE5LjksMTAuNjQgMjAsMTEuMzEgMjAsMTJDMjAsMTIuNjkgMTkuOSwxMy4zNiAxOS43NCwxNE0xNC41OSwxOS41NkMxNS4xOSwxOC40NSAxNS42NSwxNy4yNSAxNS45NywxNkgxOC45MkMxNy45NiwxNy42NSAxNi40MywxOC45MyAxNC41OSwxOS41Nk0xNC4zNCwxNEg5LjY2QzkuNTYsMTMuMzQgOS41LDEyLjY4IDkuNSwxMkM5LjUsMTEuMzIgOS41NiwxMC42NSA5LjY2LDEwSDE0LjM0QzE0LjQzLDEwLjY1IDE0LjUsMTEuMzIgMTQuNSwxMkMxNC41LDEyLjY4IDE0LjQzLDEzLjM0IDE0LjM0LDE0TTEyLDE5Ljk2QzExLjE3LDE4Ljc2IDEwLjUsMTcuNDMgMTAuMDksMTZIMTMuOTFDMTMuNSwxNy40MyAxMi44MywxOC43NiAxMiwxOS45Nk04LDhINS4wOEM2LjAzLDYuMzQgNy41Nyw1LjA2IDkuNCw0LjQ0QzguOCw1LjU1IDguMzUsNi43NSA4LDhNNS4wOCwxNkg4QzguMzUsMTcuMjUgOC44LDE4LjQ1IDkuNCwxOS41NkM3LjU3LDE4LjkzIDYuMDMsMTcuNjUgNS4wOCwxNk00LjI2LDE0QzQuMSwxMy4zNiA0LDEyLjY5IDQsMTJDNCwxMS4zMSA0LjEsMTAuNjQgNC4yNiwxMEg3LjY0QzcuNTYsMTAuNjYgNy41LDExLjMyIDcuNSwxMkM3LjUsMTIuNjggNy41NiwxMy4zNCA3LjY0LDE0TTEyLDQuMDNDMTIuODMsNS4yMyAxMy41LDYuNTcgMTMuOTEsOEgxMC4wOUMxMC41LDYuNTcgMTEuMTcsNS4yMyAxMiw0LjAzTTE4LjkyLDhIMTUuOTdDMTUuNjUsNi43NSAxNS4xOSw1LjU1IDE0LjU5LDQuNDRDMTYuNDMsNS4wNyAxNy45Niw2LjM0IDE4LjkyLDhNMTIsMkM2LjQ3LDIgMiw2LjUgMiwxMkExMCwxMCAwIDAsMCAxMiwyMkExMCwxMCAwIDAsMCAyMiwxMkExMCwxMCAwIDAsMCAxMiwyWiIgLz48L3N2Zz4=";
+              globeIcon.classList.add("ovo-multiplayer-toggle-icon");
+              toggleButton.appendChild(globeIcon);
+              //apply common style
+              toggleButton.classList.add("ovo-multiplayer-toggle-button");
+              toggleButton.onclick = async (mute = false) => {
+                // on first click, prompt for username
+                if (this.username === "") {
+                  await this.setUsernamePrompt();
+                }
+                container.style.display =
+                  container.style.display === "none" ? "block" : "none";
+                if (!mute) {
+                  notify(
+                    "OvO Online",
+                    "OvO Online is now " +
+                      (container.style.display === "none" ? "hidden" : "visible")
+                  );
+                }
+                //remove focus from button when clicked
+                toggleButton.blur();
+              };
+              // stop immediate propagation
+              toggleButton.addEventListener("click", (e) => {
+                e.stopImmediatePropagation();
+              });
+              // set containter style to none
+              container.style.display = "none";
+              document.body.appendChild(toggleButton);
+            },
+  
+            updateUserList(force = false) {
+              if (!force && this.selectedTab !== 1) {
+                return;
+              }
+              // update user list
+              const userList = document.getElementById(
+                "ovo-multiplayer-user-list"
+              );
+  
+              let createUserElement = () => {
+                let userElement = document.createElement("div");
+                userElement.className = "ovo-multiplayer-user-element";
+                let userSubElement = document.createElement("div");
+                userSubElement.className = "ovo-multiplayer-user-sub-element";
+                let userSubSubElement = document.createElement("div");
+                userSubSubElement.className =
+                  "ovo-multiplayer-user-sub-sub-element";
+                let userButtonsDiv = document.createElement("div");
+                userButtonsDiv.className = "ovo-multiplayer-user-buttons";
+  
+                // add kick, ban and perma ban buttons
+                let muteButton = document.createElement("button");
+                muteButton.className = "ovo-multiplayer-user-button";
+                muteButton.innerHTML = "Mute";
+                userButtonsDiv.appendChild(muteButton);
+  
+                // add kick, ban and perma ban buttons
+                let kickButton = document.createElement("button");
+                kickButton.className = "ovo-multiplayer-user-button";
+                kickButton.innerHTML = "Kick";
+                kickButton.disabled = true;
+                userButtonsDiv.appendChild(kickButton);
+  
+                let banButton = document.createElement("button");
+                banButton.className = "ovo-multiplayer-user-button";
+                banButton.innerHTML = "Ban";
+                banButton.disabled = true;
+                userButtonsDiv.appendChild(banButton);
+  
+                let permaBanButton = document.createElement("button");
+                permaBanButton.className = "ovo-multiplayer-user-button";
+                permaBanButton.innerHTML = "Perma Ban";
+                permaBanButton.disabled = true;
+                userButtonsDiv.appendChild(permaBanButton);
+  
+                let changeUsername = document.createElement("button");
+                changeUsername.className = "ovo-multiplayer-user-button";
+                changeUsername.innerHTML = "Change Username";
+                changeUsername.disabled = true;
+                userButtonsDiv.appendChild(changeUsername);
+  
+                let userUsername = document.createElement("div");
+                userUsername.className = "ovo-multiplayer-user-username";
+                let userExtraData = document.createElement("div");
+                userExtraData.className = "ovo-multiplayer-user-extra";
+                let userIcon = document.createElement("img");
+                userIcon.className = "ovo-multiplayer-chat-icon";
+                userElement.appendChild(userIcon);
+                userElement.appendChild(userSubElement);
+                userSubElement.appendChild(userUsername);
+                userSubElement.appendChild(userSubSubElement);
+                userSubSubElement.appendChild(userExtraData);
+                userSubSubElement.appendChild(userButtonsDiv);
+                return {
+                  elementDiv: userElement,
+                  usernameDiv: userUsername,
+                  extraDataDiv: userExtraData,
+                  buttonsDiv: userButtonsDiv,
+                  muteButton: muteButton,
+                  kickButton: kickButton,
+                  banButton: banButton,
+                  permaBanButton: permaBanButton,
+                  changeUsername: changeUsername,
+                  iconElement: userIcon,
+                };
+              };
+  
+              let updateUserElementData = (
+                userElement,
+                user,
+                isMe = false,
+                connection
+              ) => {
+                userElement.usernameDiv.innerHTML = user.username;
+                userElement.extraDataDiv.innerHTML =
+                  (user.isHost ? "(host) - " : "") +
+                  (user.username === user.initialUsername
+                    ? ""
+                    : "(" + user.initialUsername + ") - ") +
+                  (isMe ? "You - " : (user.ping || "?") + "ms - ") +
+                  user.UID;
+                userElement.iconElement.src = getSkinIconFromSkinName(user.skin);
+                if (!isMe) {
+                  userElement.muteButton.innerHTML = this.userIsMuted(
+                    connection.id
+                  )
+                    ? "Unmute"
+                    : "Mute";
+                }
+                // set buttons
+                if (this.isHost && !isMe) {
+                  userElement.muteButton.style.display = "block";
+                  userElement.muteButton.disabled = false;
+                  userElement.kickButton.style.display = "block";
+                  userElement.kickButton.disabled = false;
+                  userElement.banButton.style.display = "block";
+                  userElement.banButton.disabled = false;
+                  userElement.permaBanButton.style.display = "block";
+                  userElement.permaBanButton.disabled = false;
+                  userElement.changeUsername.style.display = "none";
+                  userElement.changeUsername.disabled = true;
+                  // add click listeners
+                  userElement.muteButton.onclick = () => {
+                    this.toggleMuteUser(connection.id);
+                  };
+                  userElement.kickButton.onclick = () => {
+                    this.kickUser(user, connection);
+                  };
+                  userElement.banButton.onclick = () => {
+                    this.banUser(user, connection);
+                  };
+                  userElement.permaBanButton.onclick = () => {
+                    this.permaBanUser(user, connection);
+                  };
+                  userElement.changeUsername.onclick = () => {};
+                } else if (!isMe) {
+                  // only show mute button
+                  userElement.muteButton.style.display = "block";
+                  userElement.muteButton.disabled = false;
+                  userElement.kickButton.style.display = "none";
+                  userElement.kickButton.disabled = true;
+                  userElement.banButton.style.display = "none";
+                  userElement.banButton.disabled = true;
+                  userElement.permaBanButton.style.display = "none";
+                  userElement.permaBanButton.disabled = true;
+                  userElement.changeUsername.style.display = "none";
+                  userElement.changeUsername.disabled = true;
+                  // add click listener
+                  userElement.muteButton.onclick = () => {
+                    this.toggleMuteUser(connection.id);
+                  };
+                  userElement.kickButton.onclick = () => {};
+                  userElement.banButton.onclick = () => {};
+                  userElement.permaBanButton.onclick = () => {};
+                  userElement.changeUsername.onclick = () => {};
+                } else {
+                  // hide all buttons
+                  userElement.muteButton.style.display = "none";
+                  userElement.muteButton.disabled = true;
+                  userElement.kickButton.style.display = "none";
+                  userElement.kickButton.disabled = true;
+                  userElement.banButton.style.display = "none";
+                  userElement.banButton.disabled = true;
+                  userElement.permaBanButton.style.display = "none";
+                  userElement.permaBanButton.disabled = true;
+                  userElement.changeUsername.style.display = "block";
+                  userElement.changeUsername.disabled = false;
+                  // add click listeners
+                  userElement.muteButton.onclick = () => {};
+                  userElement.kickButton.onclick = () => {};
+                  userElement.banButton.onclick = () => {};
+                  userElement.permaBanButton.onclick = () => {};
+                  userElement.changeUsername.onclick = async () => {
+                    let chatInput = document.getElementById(
+                      "ovo-multiplayer-chat-input"
+                    );
+                    let container = document.getElementById(
+                      "ovo-multiplayer-container"
+                    );
+                    chatInput.value = "";
+                    chatInput.blur();
+                    container.style.backgroundColor = "rgba(0,0,0,0)";
+                    chatInput.style.display = "none";
+                    if (globalThis.ovoMultiplayerChatStateMap) {
+                      enableClick(globalThis.ovoMultiplayerChatStateMap);
+                      globalThis.ovoMultiplayerChatStateMap = null;
+                    }
+                    //prompt user for username
+                    await this.setUsernamePrompt();
+                    //update user element
+                    user.username = this.username;
+                    updateUserElementData(userElement, user, isMe, connection);
+  
+                    //remove focus from button
+                    userElement.blur();
+                  };
+                }
+              };
+  
+              if (!this.roomUsers) {
+                this.roomUsers = [
+                  {
+                    connection: null, // my user element
+                    userElement: createUserElement(),
+                  },
+                ];
+              }
+              // add all connection users if they don't already exist in the list
+              for (let i = 0; i < this.connections.length; i++) {
+                let connection = this.connections[i];
+                let userExists = false;
+                for (let j = 0; j < this.roomUsers.length; j++) {
+                  if (this.roomUsers[j].connection === connection) {
+                    userExists = true;
                     break;
                   }
                 }
-                if (!connectionExists) {
-                  // remove userElement from parent
-                  if (user.userElement.elementDiv.parentNode) {
-                    user.userElement.elementDiv.parentNode.removeChild(
-                      user.userElement.elementDiv
-                    );
-                  }
-                  // remove user from list
-                  this.roomUsers.splice(i, 1);
-                  i--;
+                if (!userExists) {
+                  this.roomUsers.push({
+                    connection: connection,
+                    userElement: createUserElement(),
+                  });
                 }
               }
-            }
   
-            if (this.roomUsers && this.roomUsers.length > 0) {
-              this.roomUsers.forEach((user) => {
-                if (user.connection && !user.connection.data) return; // skip if no data
-                updateUserElementData(
-                  user.userElement,
-                  user.connection ? user.connection.data : this.getMyData(),
-                  !user.connection,
-                  user.connection
-                );
-                // append element if it's not already in the list
-                if (user.userElement.elementDiv.parentNode !== userList) {
-                  userList.appendChild(user.userElement.elementDiv);
+              // remove all users that don't have a connection
+              for (let i = 0; i < this.roomUsers.length; i++) {
+                let user = this.roomUsers[i];
+                if (user.connection) {
+                  // if connection is in connections list, skip
+                  let connectionExists = false;
+                  for (let j = 0; j < this.connections.length; j++) {
+                    if (this.connections[j] === user.connection) {
+                      connectionExists = true;
+                      break;
+                    }
+                  }
+                  if (!connectionExists) {
+                    // remove userElement from parent
+                    if (user.userElement.elementDiv.parentNode) {
+                      user.userElement.elementDiv.parentNode.removeChild(
+                        user.userElement.elementDiv
+                      );
+                    }
+                    // remove user from list
+                    this.roomUsers.splice(i, 1);
+                    i--;
+                  }
                 }
-              });
-            }
-          },
+              }
   
-          updateBanlist() {
-            // update user list
-            const settings = document.getElementById("ovo-multiplayer-settings");
-            settings.innerHTML = "";
+              if (this.roomUsers && this.roomUsers.length > 0) {
+                this.roomUsers.forEach((user) => {
+                  if (user.connection && !user.connection.data) return; // skip if no data
+                  updateUserElementData(
+                    user.userElement,
+                    user.connection ? user.connection.data : this.getMyData(),
+                    !user.connection,
+                    user.connection
+                  );
+                  // append element if it's not already in the list
+                  if (user.userElement.elementDiv.parentNode !== userList) {
+                    userList.appendChild(user.userElement.elementDiv);
+                  }
+                });
+              }
+            },
   
-            let createUserElement = () => {
-              let userElement = document.createElement("div");
-              userElement.className = "ovo-multiplayer-user-element";
-              let userSubElement = document.createElement("div");
-              userSubElement.className = "ovo-multiplayer-user-sub-element";
-              let userSubSubElement = document.createElement("div");
-              userSubSubElement.className =
-                "ovo-multiplayer-banlist-sub-sub-element";
-              let userButtonsDiv = document.createElement("div");
-              userButtonsDiv.className = "ovo-multiplayer-banlist-buttons";
+            updateBanlist() {
+              // update user list
+              const settings = document.getElementById(
+                "ovo-multiplayer-settings"
+              );
+              settings.innerHTML = "";
   
-              // add kick, ban and perma ban buttons
-              let unbanButton = document.createElement("button");
-              unbanButton.className = "ovo-multiplayer-user-button";
-              unbanButton.innerHTML = "Unban";
-              userButtonsDiv.appendChild(unbanButton);
+              let createUserElement = () => {
+                let userElement = document.createElement("div");
+                userElement.className = "ovo-multiplayer-user-element";
+                let userSubElement = document.createElement("div");
+                userSubElement.className = "ovo-multiplayer-user-sub-element";
+                let userSubSubElement = document.createElement("div");
+                userSubSubElement.className =
+                  "ovo-multiplayer-banlist-sub-sub-element";
+                let userButtonsDiv = document.createElement("div");
+                userButtonsDiv.className = "ovo-multiplayer-banlist-buttons";
   
-              let userUsername = document.createElement("div");
-              userUsername.className = "ovo-multiplayer-user-username";
-              let userExtraData = document.createElement("div");
-              userExtraData.className = "ovo-multiplayer-user-extra";
-              let userIcon = document.createElement("img");
-              userIcon.className = "ovo-multiplayer-chat-icon";
-              userElement.appendChild(userIcon);
-              userElement.appendChild(userSubElement);
-              userSubElement.appendChild(userUsername);
-              userSubElement.appendChild(userSubSubElement);
-              userSubSubElement.appendChild(userButtonsDiv);
-              userSubSubElement.appendChild(userExtraData);
-              return {
-                elementDiv: userElement,
-                usernameDiv: userUsername,
-                extraDataDiv: userExtraData,
-                buttonsDiv: userButtonsDiv,
-                unbanButton: unbanButton,
-                iconElement: userIcon,
-              };
-            };
+                // add kick, ban and perma ban buttons
+                let unbanButton = document.createElement("button");
+                unbanButton.className = "ovo-multiplayer-user-button";
+                unbanButton.innerHTML = "Unban";
+                userButtonsDiv.appendChild(unbanButton);
   
-            let updateUserElementData = (userElement, user, type) => {
-              userElement.usernameDiv.innerText = user.username;
-              userElement.extraDataDiv.innerText =
-                (user.username === user.initialUsername
-                  ? ""
-                  : "(" + user.initialUsername + ") - ") +
-                " Type: " +
-                (type === "ban" ? "Session Ban" : "Perma Ban");
-              userElement.iconElement.src = getSkinIconFromSkinName(user.skin);
-              userElement.unbanButton.onclick = () => {
-                this.unbanUser(user);
-              };
-            };
-  
-            let banList = [
-              ...this.bannedUsers.map((user) => {
+                let userUsername = document.createElement("div");
+                userUsername.className = "ovo-multiplayer-user-username";
+                let userExtraData = document.createElement("div");
+                userExtraData.className = "ovo-multiplayer-user-extra";
+                let userIcon = document.createElement("img");
+                userIcon.className = "ovo-multiplayer-chat-icon";
+                userElement.appendChild(userIcon);
+                userElement.appendChild(userSubElement);
+                userSubElement.appendChild(userUsername);
+                userSubElement.appendChild(userSubSubElement);
+                userSubSubElement.appendChild(userButtonsDiv);
+                userSubSubElement.appendChild(userExtraData);
                 return {
-                  type: "ban",
-                  user: user,
+                  elementDiv: userElement,
+                  usernameDiv: userUsername,
+                  extraDataDiv: userExtraData,
+                  buttonsDiv: userButtonsDiv,
+                  unbanButton: unbanButton,
+                  iconElement: userIcon,
                 };
-              }),
-              ...this.permaBannedUsers.map((user) => {
-                return {
-                  type: "permaBan",
-                  user: user,
+              };
+  
+              let updateUserElementData = (userElement, user, type) => {
+                userElement.usernameDiv.innerText = user.username;
+                userElement.extraDataDiv.innerText =
+                  (user.username === user.initialUsername
+                    ? ""
+                    : "(" + user.initialUsername + ") - ") +
+                  " Type: " +
+                  (type === "ban" ? "Session Ban" : "Perma Ban");
+                userElement.iconElement.src = getSkinIconFromSkinName(user.skin);
+                userElement.unbanButton.onclick = () => {
+                  this.unbanUser(user);
                 };
-              }),
-            ];
+              };
   
-            if (banList && banList.length > 0) {
-              // create elements for each user
-              banList.forEach((ban) => {
-                let userElement = createUserElement();
-                updateUserElementData(userElement, ban.user, ban.type);
-                settings.appendChild(userElement.elementDiv);
-              });
-            } else {
-              settings.innerHTML = "No banned users (yet).";
-            }
-          },
+              let banList = [
+                ...this.bannedUsers.map((user) => {
+                  return {
+                    type: "ban",
+                    user: user,
+                  };
+                }),
+                ...this.permaBannedUsers.map((user) => {
+                  return {
+                    type: "permaBan",
+                    user: user,
+                  };
+                }),
+              ];
   
-          toggleMuteUser(UID) {
-            if (this.mutedUsers.includes(UID)) {
-              this.mutedUsers.splice(this.mutedUsers.indexOf(UID), 1);
-            } else {
-              this.mutedUsers.push(UID);
-            }
-          },
+              if (banList && banList.length > 0) {
+                // create elements for each user
+                banList.forEach((ban) => {
+                  let userElement = createUserElement();
+                  updateUserElementData(userElement, ban.user, ban.type);
+                  settings.appendChild(userElement.elementDiv);
+                });
+              } else {
+                settings.innerHTML = "No banned users (yet).";
+              }
+            },
   
-          userIsMuted(UID) {
-            return this.mutedUsers.includes(UID);
-          },
+            toggleMuteUser(UID) {
+              if (this.mutedUsers.includes(UID)) {
+                this.mutedUsers.splice(this.mutedUsers.indexOf(UID), 1);
+              } else {
+                this.mutedUsers.push(UID);
+              }
+            },
   
-          async kickUser(user, connection, force = false) {
-            if (!force) {
+            userIsMuted(UID) {
+              return this.mutedUsers.includes(UID);
+            },
+  
+            async kickUser(user, connection, force = false) {
+              if (!force) {
+                if (
+                  await getDialogConfirm({
+                    text: `Are you sure you want to kick ${user.username}? This will remove them from the room.`,
+                    buttonText: "Yes",
+                    cancelText: "No",
+                  })
+                ) {
+                  this.kickUser(user, connection, true);
+                }
+              } else {
+                // force close connection
+                connection.conn.close();
+              }
+            },
+  
+            async banUser(user, connection) {
               if (
-                await getDialogConfirm({
-                  text: `Are you sure you want to kick ${user.username}? This will remove them from the room.`,
+                !(await getDialogConfirm({
+                  text: `Are you sure you want to ban ${user.username}? This will ban them from this room.`,
                   buttonText: "Yes",
                   cancelText: "No",
-                })
+                }))
               ) {
-                this.kickUser(user, connection, true);
+                return;
               }
-            } else {
-              // force close connection
-              connection.conn.close();
-            }
-          },
+              // kick user and add it to banned list
+              this.kickUser(user, connection, true);
+              this.bannedUsers.push(JSON.parse(JSON.stringify(user)));
+              this.updateBanlist();
+            },
   
-          async banUser(user, connection) {
-            if (
-              !(await getDialogConfirm({
-                text: `Are you sure you want to ban ${user.username}? This will ban them from this room.`,
-                buttonText: "Yes",
-                cancelText: "No",
-              }))
-            ) {
-              return;
-            }
-            // kick user and add it to banned list
-            this.kickUser(user, connection, true);
-            this.bannedUsers.push(JSON.parse(JSON.stringify(user)));
-            this.updateBanlist();
-          },
+            async permaBanUser(user, connection) {
+              if (
+                !(await getDialogConfirm({
+                  text: `Are you sure you want to ban ${user.username}? This will also ban them from all future rooms you create.`,
+                  buttonText: "Yes",
+                  cancelText: "No",
+                }))
+              ) {
+                return;
+              }
+              // kick user and add it to banned list
+              this.kickUser(user, connection, true);
+              this.permaBannedUsers.push(JSON.parse(JSON.stringify(user)));
+              this.updateBanlist();
+              this.savePreferences();
+            },
   
-          async permaBanUser(user, connection) {
-            if (
-              !(await getDialogConfirm({
-                text: `Are you sure you want to ban ${user.username}? This will also ban them from all future rooms you create.`,
-                buttonText: "Yes",
-                cancelText: "No",
-              }))
-            ) {
-              return;
-            }
-            // kick user and add it to banned list
-            this.kickUser(user, connection, true);
-            this.permaBannedUsers.push(JSON.parse(JSON.stringify(user)));
-            this.updateBanlist();
-            this.savePreferences();
-          },
-  
-          async unbanUser(user) {
-            if (
-              !(await getDialogConfirm({
-                text: `Are you sure you want to unban ${user.username}?`,
-                buttonText: "Yes",
-                cancelText: "No",
-              }))
-            ) {
-              return;
-            }
-            // remove user from banned list
-            this.bannedUsers = this.bannedUsers.filter((bannedUser) => {
-              return bannedUser.UID !== user.UID;
-            });
-            this.permaBannedUsers = this.permaBannedUsers.filter((bannedUser) => {
-              return bannedUser.UID !== user.UID;
-            });
-            this.updateBanlist();
-            this.savePreferences();
-          },
-  
-          getRoomCode() {
-            let roomCode;
-            if (!this.connectedToRoom) return;
-            if (this.isHost) {
-              roomCode = this.peer.id;
-            } else {
-              roomCode = this.conn.peer;
-            }
-            return roomCode;
-            let base64RoomCode = uuidToBase64(roomCode);
-            if (base64ToUuid(base64RoomCode) !== roomCode) {
-              return roomCode;
-            } else {
-              return base64RoomCode;
-            }
-          },
-  
-          copyRoomCode() {
-            let toCopy = this.getRoomCode();
-            if (
-              WebSdkWrapper.currentSdk &&
-              WebSdkWrapper.currentSdk.name === "CrazyGames"
-            ) {
-              toCopy = WebSdkWrapper.currentSdk.sdk.inviteLink({
-                roomCode: toCopy,
+            async unbanUser(user) {
+              if (
+                !(await getDialogConfirm({
+                  text: `Are you sure you want to unban ${user.username}?`,
+                  buttonText: "Yes",
+                  cancelText: "No",
+                }))
+              ) {
+                return;
+              }
+              // remove user from banned list
+              this.bannedUsers = this.bannedUsers.filter((bannedUser) => {
+                return bannedUser.UID !== user.UID;
               });
-            }
-            if (toCopy) {
-              let textArea = document.createElement("textarea");
-              textArea.value = toCopy;
-              document.body.appendChild(textArea);
-              textArea.select();
-              document.execCommand("copy");
-              textArea.remove();
-              notify("Room code copied to clipboard");
-            }
-          },
+              this.permaBannedUsers = this.permaBannedUsers.filter(
+                (bannedUser) => {
+                  return bannedUser.UID !== user.UID;
+                }
+              );
+              this.updateBanlist();
+              this.savePreferences();
+            },
   
-          tick() {
-            if (!this.initialised) return;
-            let player = getPlayer();
-            if (player && getFlag()) {
-              if (!this.usernameInsts) {
-                this.usernameInsts = this.createUsernameInstances(
-                  player.layer,
-                  player.x,
-                  player.y,
+            getRoomCode() {
+              let roomCode;
+              if (!this.connectedToRoom) return;
+              if (this.isHost) {
+                roomCode = this.peer.id;
+              } else {
+                roomCode = this.conn.peer;
+              }
+              let base64RoomCode = uuidToBase64(roomCode);
+              if (base64ToUuid(base64RoomCode) !== roomCode) {
+                return roomCode;
+              } else {
+                return base64RoomCode;
+              }
+            },
+  
+            copyRoomCode() {
+              let toCopy = this.getRoomCode();
+              if (
+                WebSdkWrapper.currentSdk &&
+                WebSdkWrapper.currentSdk.name === "CrazyGames"
+              ) {
+                toCopy = WebSdkWrapper.currentSdk.sdk.inviteLink({
+                  roomCode: toCopy,
+                });
+              }
+              if (toCopy) {
+                let textArea = document.createElement("textarea");
+                textArea.value = toCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                textArea.remove();
+                notify("Room code copied to clipboard");
+              }
+            },
+  
+            tick() {
+              if (!this.initialised) return;
+              let player = getPlayer();
+              if (player && getFlag()) {
+                if (!this.usernameInsts) {
+                  this.usernameInsts = this.createUsernameInstances(
+                    player.layer,
+                    player.x,
+                    player.y,
+                    this.username
+                  );
+                }
+  
+                this.updateUsernamePosition(
+                  this.usernameInsts,
+                  player.x - 100,
+                  player.y - 55,
                   this.username
                 );
               }
   
-              this.updateUsernamePosition(
-                this.usernameInsts,
-                player.x - 100,
-                player.y - 55,
-                this.username
-              );
-            }
-  
-            if (this.connectedToRoom && this.sendPlayerData) {
-              this.sendPlayerData = false;
-              this.destroyNonPlayerGhosts();
-              this.connections.forEach((connection) => {
-                if (!connection.data) return;
-                if (!connection.player) {
-                  connection.player = this.createGhostPlayer(connection.data);
-                } else if (connection.data.layout !== getCurLayout()) {
-                  //destroy player
-                  this.destroyGhostPlayer(connection.player);
-                  connection.player = null;
-                } else {
-                  this.loadPlayerData(connection.player, connection.data);
-                }
-              });
-              if (this.isHost) {
-                let otherData = {};
+              if (this.connectedToRoom && this.sendPlayerData) {
+                this.sendPlayerData = false;
+                this.destroyNonPlayerGhosts();
                 this.connections.forEach((connection) => {
-                  otherData[connection.id] = connection.data;
+                  if (!connection.data) return;
+                  if (!connection.player) {
+                    connection.player = this.createGhostPlayer(connection.data);
+                  } else if (connection.data.layout !== getCurLayout()) {
+                    //destroy player
+                    this.destroyGhostPlayer(connection.player);
+                    connection.player = null;
+                  } else {
+                    this.loadPlayerData(connection.player, connection.data);
+                  }
                 });
-                //add my data with my id to other data
-                otherData[this.peer.id] = this.getMyData();
-  
-                //send all player data you received
-                this.connections.forEach((connection) => {
-                  connection.conn.send({
-                    type: DATA_TYPES.HOST_DATA,
-                    payload: otherData,
+                if (this.isHost) {
+                  let otherData = {};
+                  this.connections.forEach((connection) => {
+                    otherData[connection.id] = connection.data;
                   });
-                });
-              } else {
-                //send only your player data
-                this.conn.send({
-                  type: DATA_TYPES.PLAYER_DATA,
-                  payload: this.getMyData(),
-                });
+                  //add my data with my id to other data
+                  otherData[this.peer.id] = this.getMyData();
+  
+                  //send all player data you received
+                  this.connections.forEach((connection) => {
+                    connection.conn.send({
+                      type: DATA_TYPES.HOST_DATA,
+                      payload: otherData,
+                    });
+                  });
+                } else {
+                  //send only your player data
+                  this.conn.send({
+                    type: DATA_TYPES.PLAYER_DATA,
+                    payload: this.getMyData(),
+                  });
+                }
               }
-            }
-          },
+            },
   
-          updateUsernamePosition(usernames, x, y, username) {
-            usernames[0].x = x - 2;
-            usernames[0].y = y;
-            usernames[0].text = username;
-            usernames[0].updateFont();
-            usernames[0].set_bbox_changed();
-            usernames[1].x = x + 2;
-            usernames[1].y = y;
-            usernames[1].text = username;
-            usernames[1].updateFont();
-            usernames[1].set_bbox_changed();
-            usernames[2].x = x;
-            usernames[2].y = y - 2;
-            usernames[2].text = username;
-            usernames[2].updateFont();
-            usernames[2].set_bbox_changed();
-            usernames[3].x = x;
-            usernames[3].y = y + 2;
-            usernames[3].text = username;
-            usernames[3].updateFont();
-            usernames[3].set_bbox_changed();
-            usernames[4].x = x;
-            usernames[4].y = y;
-            usernames[4].text = username;
-            usernames[4].updateFont();
-            usernames[4].set_bbox_changed();
-          },
+            updateUsernamePosition(usernames, x, y, username) {
+              usernames[0].x = x - 2;
+              usernames[0].y = y;
+              usernames[0].text = username;
+              usernames[0].updateFont();
+              usernames[0].set_bbox_changed();
+              usernames[1].x = x + 2;
+              usernames[1].y = y;
+              usernames[1].text = username;
+              usernames[1].updateFont();
+              usernames[1].set_bbox_changed();
+              usernames[2].x = x;
+              usernames[2].y = y - 2;
+              usernames[2].text = username;
+              usernames[2].updateFont();
+              usernames[2].set_bbox_changed();
+              usernames[3].x = x;
+              usernames[3].y = y + 2;
+              usernames[3].text = username;
+              usernames[3].updateFont();
+              usernames[3].set_bbox_changed();
+              usernames[4].x = x;
+              usernames[4].y = y;
+              usernames[4].text = username;
+              usernames[4].updateFont();
+              usernames[4].set_bbox_changed();
+            },
   
-          updateDomContainers() {
-            this.updateChatBox();
-            if (this.connectedToRoom) {
-              this.connectedContainer.style.display = "block";
-              this.connectContainer.style.display = "none";
-            } else {
-              this.connectedContainer.style.display = "none";
-              this.connectContainer.style.display = "block";
-            }
-          },
+            updateDomContainers() {
+              this.updateChatBox();
+              if (this.connectedToRoom) {
+                this.connectedContainer.style.display = "block";
+                this.connectContainer.style.display = "none";
+              } else {
+                this.connectedContainer.style.display = "none";
+                this.connectContainer.style.display = "block";
+              }
+            },
   
-          async setUsernamePrompt() {
-            let defaultName = this.username === "" ? "OvO Player" : this.username;
-            let isDone = false;
-            while (!isDone) {
-              let username = await getDialogPrompt({
-                text: "Enter your username",
-                value: defaultName,
-              });
-              // if username is empty, or if username has profanity, show error message and try again
-              if (username === "") {
-                await getDialogAlert({
-                  type: "error",
-                  text: "Username cannot be empty",
+            async setUsernamePrompt() {
+              let defaultName =
+                this.username === "" ? "OvO Player" : this.username;
+              let isDone = false;
+              while (!isDone) {
+                let username = await getDialogPrompt({
+                  text: "Enter your username",
+                  value: defaultName,
                 });
-              } else if (username === null) {
-                //if user clicks cancel, check if this.username is empty
-                if (this.username === "") {
+                // if username is empty, or if username has profanity, show error message and try again
+                if (username === "") {
                   await getDialogAlert({
                     type: "error",
                     text: "Username cannot be empty",
                   });
+                } else if (username === null) {
+                  //if user clicks cancel, check if this.username is empty
+                  if (this.username === "") {
+                    await getDialogAlert({
+                      type: "error",
+                      text: "Username cannot be empty",
+                    });
+                  } else {
+                    isDone = true;
+                  }
+                } else if (username.length > 20) {
+                  defaultName = username;
+                  await getDialogAlert({
+                    type: "error",
+                    text: "Username cannot be longer than 20 characters",
+                  });
+                } else if (username.toLowerCase() !== removeProfanity(username)) {
+                  defaultName = username;
+                  await getDialogAlert({
+                    type: "error",
+                    text: "Username cannot contain profanity",
+                  });
                 } else {
                   isDone = true;
+                  this.setUsername(username);
                 }
-              } else if (username.length > 20) {
-                defaultName = username;
-                await getDialogAlert({
-                  type: "error",
-                  text: "Username cannot be longer than 20 characters",
+              }
+            },
+  
+            setUsername(name) {
+              this.username = name;
+              if (this.usernameInsts)
+                this.usernameInsts.forEach((inst) => {
+                  inst.text = name;
+                  inst.updateFont();
                 });
-              } else if (username.toLowerCase() !== removeProfanity(username)) {
-                defaultName = username;
-                await getDialogAlert({
-                  type: "error",
-                  text: "Username cannot contain profanity",
+              this.updateDomUsername();
+              this.savePreferences();
+              // save username to local storage
+            },
+  
+            sendChat(data) {
+              if (!this.connectedToRoom || data.message.trim() === "") return;
+              this.pushChat(
+                {
+                  username: this.username,
+                  initialUsername: this.initialUsername,
+                  message: data.message,
+                  timestamp: Date.now(),
+                  id: this.peer.id,
+                  skin: globalType.instances[0].instance_vars[8],
+                },
+                true
+              );
+            },
+  
+            updateChatBox() {
+              let chatBox = document.getElementById("ovo-multiplayer-chat-box");
+              chatBox.innerHTML = "";
+              let createChatElement = (chat) => {
+                let chatElement = document.createElement("div");
+                chatElement.className = "ovo-multiplayer-chat-element";
+                let chatSubElement = document.createElement("div");
+                chatSubElement.className = "ovo-multiplayer-chat-sub-element";
+                let chatSubSubElement = document.createElement("div");
+                chatSubSubElement.className =
+                  "ovo-multiplayer-chat-sub-sub-element";
+                let chatText = document.createElement("div");
+                chatText.className = "ovo-multiplayer-chat-text";
+                chatText.innerHTML = chat.message;
+                let chatUsername = document.createElement("div");
+                chatUsername.className = "ovo-multiplayer-chat-username";
+                chatUsername.innerText = chat.username;
+                let chatTimestamp = document.createElement("div");
+                chatTimestamp.className = "ovo-multiplayer-chat-timestamp";
+                chatTimestamp.innerText =
+                  (chat.username === chat.initialUsername
+                    ? ""
+                    : "(" + chat.initialUsername + ") - ") +
+                  new Date(chat.timestamp).toLocaleTimeString();
+                let chatIcon = document.createElement("img");
+                chatIcon.className = "ovo-multiplayer-chat-icon";
+                chatIcon.src = getSkinIconFromSkinName(chat.skin);
+                chatElement.appendChild(chatIcon);
+                chatElement.appendChild(chatSubElement);
+                chatSubElement.appendChild(chatSubSubElement);
+                chatSubElement.appendChild(chatText);
+                chatSubSubElement.appendChild(chatUsername);
+                chatSubSubElement.appendChild(chatTimestamp);
+                return chatElement;
+              };
+              if (this.chat && this.chat.length > 0) {
+                this.chat.forEach((chat) => {
+                  chatBox.appendChild(createChatElement(chat));
                 });
               } else {
-                isDone = true;
-                this.setUsername(username);
+                chatBox.innerHTML = "No chat messages yet...";
               }
-            }
-          },
+              //scroll to bottom
+              chatBox.scrollTop = chatBox.scrollHeight;
+            },
   
-          setUsername(name) {
-            this.username = name;
-            if (this.usernameInsts)
-              this.usernameInsts.forEach((inst) => {
-                inst.text = name;
-                inst.updateFont();
-              });
-            this.updateDomUsername();
-            this.savePreferences();
-            // save username to local storage
-          },
-  
-          sendChat(data) {
-            if (!this.connectedToRoom || data.message.trim() === "") return;
-            this.pushChat(
-              {
-                username: this.username,
-                initialUsername: this.initialUsername,
+            pushChat(data, transmit = false) {
+              data.message = data.message.toString().replace(/<[^>]*>/g, "");
+              data.message = removeProfanity(data.message);
+              let chatData = {
+                username: data.username,
+                initialUsername: data.initialUsername,
                 message: data.message,
-                timestamp: Date.now(),
-                id: this.peer.id,
-                skin: globalType.instances[0].instance_vars[8],
-              },
-              true
-            );
-          },
-  
-          updateChatBox() {
-            let chatBox = document.getElementById("ovo-multiplayer-chat-box");
-            chatBox.innerHTML = "";
-            let createChatElement = (chat) => {
-              let chatElement = document.createElement("div");
-              chatElement.className = "ovo-multiplayer-chat-element";
-              let chatSubElement = document.createElement("div");
-              chatSubElement.className = "ovo-multiplayer-chat-sub-element";
-              let chatSubSubElement = document.createElement("div");
-              chatSubSubElement.className =
-                "ovo-multiplayer-chat-sub-sub-element";
-              let chatText = document.createElement("div");
-              chatText.className = "ovo-multiplayer-chat-text";
-              chatText.innerHTML = chat.message;
-              let chatUsername = document.createElement("div");
-              chatUsername.className = "ovo-multiplayer-chat-username";
-              chatUsername.innerText = chat.username;
-              let chatTimestamp = document.createElement("div");
-              chatTimestamp.className = "ovo-multiplayer-chat-timestamp";
-              chatTimestamp.innerText =
-                (chat.username === chat.initialUsername
-                  ? ""
-                  : "(" + chat.initialUsername + ") - ") +
-                new Date(chat.timestamp).toLocaleTimeString();
-              let chatIcon = document.createElement("img");
-              chatIcon.className = "ovo-multiplayer-chat-icon";
-              chatIcon.src = getSkinIconFromSkinName(chat.skin);
-              chatElement.appendChild(chatIcon);
-              chatElement.appendChild(chatSubElement);
-              chatSubElement.appendChild(chatSubSubElement);
-              chatSubElement.appendChild(chatText);
-              chatSubSubElement.appendChild(chatUsername);
-              chatSubSubElement.appendChild(chatTimestamp);
-              return chatElement;
-            };
-            if (this.chat && this.chat.length > 0) {
-              this.chat.forEach((chat) => {
-                chatBox.appendChild(createChatElement(chat));
-              });
-            } else {
-              chatBox.innerHTML = "No chat messages yet...";
-            }
-            //scroll to bottom
-            chatBox.scrollTop = chatBox.scrollHeight;
-          },
-  
-          pushChat(data, transmit = false) {
-            data.message = data.message.toString().replace(/<[^>]*>/g, "");
-            data.message = removeProfanity(data.message);
-            let chatData = {
-              username: data.username,
-              initialUsername: data.initialUsername,
-              message: data.message,
-              id: data.id,
-              skin: data.skin,
-              timestamp: data.timestamp,
-            };
-            // forward chat if host
-            if (this.isHost) {
-              if (!this.userIsMuted(data.id)) {
+                id: data.id,
+                skin: data.skin,
+                timestamp: data.timestamp,
+              };
+              // forward chat if host
+              if (this.isHost) {
+                if (!this.userIsMuted(data.id)) {
+                  this.chat.push(chatData);
+                  this.updateChatBox();
+                  this.maybeNotifyChat(data);
+                }
+                this.connections.forEach((connection) => {
+                  connection.conn.send({
+                    type: DATA_TYPES.CHAT,
+                    payload: data,
+                  });
+                });
+              } else if (transmit) {
+                this.conn.send({
+                  type: DATA_TYPES.CHAT,
+                  payload: data,
+                });
+              } else {
+                // if user is muted, ignore
+                if (this.userIsMuted(data.id)) return;
                 this.chat.push(chatData);
                 this.updateChatBox();
                 this.maybeNotifyChat(data);
               }
-              this.connections.forEach((connection) => {
-                connection.conn.send({
-                  type: DATA_TYPES.CHAT,
-                  payload: data,
+            },
+  
+            maybeNotifyChat(data) {
+              if (data.id === this.peer.id) return;
+              //Only notify if "ovo-multiplayer-container" is display none
+              if (
+                (this.notifyWhenChatIsHidden &&
+                  document.getElementById("ovo-multiplayer-container").style
+                    .display === "none") ||
+                this.selectedTab !== 0
+              ) {
+                notify(
+                  data.username + " sent:",
+                  data.message,
+                  getSkinIconFromSkinName(data.skin)
+                );
+              }
+            },
+  
+            notifyPlayerUpdate(name, skin, hasJoined = true) {
+              let skinImage = getSkinIconFromSkinName(skin);
+              if (hasJoined) {
+                notify(name, "has joined the room", skinImage);
+              } else {
+                notify(name, "has left the room", skinImage);
+              }
+            },
+  
+            createRoom() {
+              this.connectedToRoom = true;
+              this.isHost = true;
+              this.chat = [];
+              this.bannedUsers = [];
+              this.mutedUsers = [];
+              this.updateBanlist();
+              // this.peer = new Peer(undefined, {
+              //   host: "localhost",
+              //   port: 9000,
+              //   path: "/",
+              //   secure: false,
+              //   debug: 3,
+              // });
+              this.peer = new Peer();
+              this.peer.on("open", (id) => {
+                // Show the ID on screen and allow players to copy it;
+                this.copyRoomCode();
+                notify("Room created", "Room ID: " + this.getRoomCode());
+                this.updateDomContainers();
+                this.updateQueryStrings();
+                this.initialUsername = this.username;
+                this.updateUserList(true);
+              });
+              this.peer.on("connection", (conn) => {
+                let myConnObject = {
+                  conn,
+                  id: conn.peer,
+                  data: null,
+                  player: null,
+                };
+                this.connections.push(myConnObject);
+                let isBannedUser = false;
+                conn.on("open", () => {
+                  // Receive messages
+                  conn.on("data", (data) => {
+                    if (data.type === DATA_TYPES.CHAT) {
+                      this.pushChat(data.payload, true);
+                    } else if (data.type === DATA_TYPES.PLAYER_DATA) {
+                      if (myConnObject.data === null) {
+                        //check if user can join
+                        if (!this.canUserJoin(data.payload)) {
+                          isBannedUser = true;
+                          conn.close();
+                          return;
+                        }
+  
+                        this.notifyPlayerUpdate(
+                          data.payload.username,
+                          data.payload.skin,
+                          true
+                        );
+                        // let every one else know they joined
+                        this.connections.forEach((connection) => {
+                          if (connection.conn !== conn) {
+                            connection.conn.send({
+                              type: DATA_TYPES.PLAYER_JOIN,
+                              payload: {
+                                username: data.payload.username,
+                                skin: data.payload.skin,
+                              },
+                            });
+                          }
+                        });
+                      }
+                      myConnObject.data = data.payload;
+                      if (data.payload && data.payload.timestamp) {
+                        myConnObject.data.ping =
+                          Date.now() - data.payload.timestamp;
+                      }
+                      this.updateUserList();
+                      // create/delete/update player
+                    }
+                  });
+                  let closeConn = () => {
+                    if (!isBannedUser) {
+                      this.notifyPlayerUpdate(
+                        myConnObject?.data?.username ?? "Player",
+                        myConnObject?.data?.skin ?? "default",
+                        false
+                      );
+                    }
+                    this.destroyGhostPlayer(myConnObject.player);
+                    //remove connection from list
+                    this.connections.splice(
+                      this.connections.findIndex((x) => x.id === conn.peer),
+                      1
+                    );
+                    this.updateUserList();
+                    // let other connections know this one dropped
+                    this.connections.forEach((connection) => {
+                      connection.conn.send({
+                        type: DATA_TYPES.PLAYER_LEAVE,
+                        payload: {
+                          id: conn.peer,
+                        },
+                      });
+                    });
+                  };
+                  conn.on("close", closeConn);
+                  conn.on("error", closeConn);
                 });
               });
-            } else if (transmit) {
-              this.conn.send({
-                type: DATA_TYPES.CHAT,
-                payload: data,
-              });
-            } else {
-              // if user is muted, ignore
-              if (this.userIsMuted(data.id)) return;
-              this.chat.push(chatData);
-              this.updateChatBox();
-              this.maybeNotifyChat(data);
-            }
-          },
+            },
   
-          maybeNotifyChat(data) {
-            if (data.id === this.peer.id) return;
-            //Only notify if "ovo-multiplayer-container" is display none
-            if (
-              (this.notifyWhenChatIsHidden &&
-                document.getElementById("ovo-multiplayer-container").style
-                  .display === "none") ||
-              this.selectedTab !== 0
-            ) {
-              notify(
-                data.username + " sent:",
-                data.message,
-                getSkinIconFromSkinName(data.skin)
-              );
-            }
-          },
+            joinRoom(roomId) {
+              // check if roomid is url using regex
+              if (
+                roomId.match(
+                  /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
+                )
+              ) {
+                roomId = getQueryString(roomId).roomCode;
+              }
+              if (!roomId) return;
   
-          notifyPlayerUpdate(name, skin, hasJoined = true) {
-            let skinImage = getSkinIconFromSkinName(skin);
-            if (hasJoined) {
-              notify(name, "has joined the room", skinImage);
-            } else {
-              notify(name, "has left the room", skinImage);
-            }
-          },
+              var initRoomId = roomId;
   
-          createRoom() {
-            this.connectedToRoom = true;
-            this.isHost = true;
-            this.chat = [];
-            this.bannedUsers = [];
-            this.mutedUsers = [];
-            this.updateBanlist();
-            // this.peer = new Peer(undefined, {
-            //   host: "localhost",
-            //   port: 9000,
-            //   path: "/",
-            //   secure: false,
-            //   debug: 3,
-            // });
-            this.peer = new Peer(getRandomOvORoomCode());
-            this.peer.on("open", (id) => {
-              // Show the ID on screen and allow players to copy it;
-              console.log("My peer ID is: " + id);
-              notify("Room created", "My peer ID is: " + id);
-              this.updateDomContainers();
-              this.updateQueryStrings();
-              this.initialUsername = this.username;
-              this.updateUserList(true);
-            });
-            this.peer.on("connection", (conn) => {
-              let myConnObject = {
-                conn,
-                id: conn.peer,
-                data: null,
-                player: null,
-              };
-              this.connections.push(myConnObject);
-              let isBannedUser = false;
-              conn.on("open", () => {
-                // Receive messages
-                conn.on("data", (data) => {
-                  if (data.type === DATA_TYPES.CHAT) {
-                    this.pushChat(data.payload, true);
-                  } else if (data.type === DATA_TYPES.PLAYER_DATA) {
-                    if (myConnObject.data === null) {
-                      //check if user can join
-                      if (!this.canUserJoin(data.payload)) {
-                        isBannedUser = true;
-                        conn.close();
-                        return;
+              if (roomId.length <= 22) {
+                roomId = base64ToUuid(roomId);
+              }
+  
+              this.isHost = false;
+              // this.peer = new Peer(undefined, {
+              //   host: "localhost",
+              //   port: 9000,
+              //   path: "/",
+              //   secure: false,
+              //   debug: 3,
+              // });
+              this.peer = new Peer();
+              this.peer.on("open", (id) => {
+                this.conn = this.peer.connect(roomId);
+  
+                this.conn.on("open", () => {
+                  this.initialUsername = this.username;
+                  this.connectedToRoom = true;
+                  let firstData = true;
+                  this.updateQueryStrings();
+                  this.updateDomContainers();
+                  notify("Joined room", "Connected to room " + roomId);
+                  // Receive messages
+                  this.conn.on("data", (data) => {
+                    if (data.type === DATA_TYPES.HOST_DATA) {
+                      //update other players besides me
+                      let otherData = data.payload;
+                      Object.keys(otherData).forEach((id) => {
+                        if (id === this.peer.id) return;
+                        let connection = this.connections.find(
+                          (connection) => connection.id === id
+                        );
+                        let playerData = otherData[id];
+                        playerData.ping = Date.now() - playerData.timestamp;
+  
+                        // if (connection.data === null) {
+                        //   // user first joined, notify
+                        //   notify("Player joined", `${playerData.username} joined`);
+                        // }
+  
+                        if (!connection) {
+                          connection = {
+                            id: id,
+                            data: playerData,
+                            player: null,
+                          };
+                          this.connections.push(connection);
+                        } else {
+                          connection.data = playerData;
+                        }
+                        //create player if needed
+                        if (!connection.player) {
+                          connection.player = this.createGhostPlayer(playerData);
+                        } else if (playerData.layout !== getCurLayout()) {
+                          //destroy player
+                          this.destroyGhostPlayer(connection.player);
+                          connection.player = null;
+                        } else {
+                          this.loadPlayerData(connection.player, playerData);
+                        }
+                      });
+                      this.updateUserList();
+                      if (firstData) {
+                        firstData = false;
+                        if (!this.canIJoinHost()) {
+                          this.conn.close();
+                        }
                       }
-  
+                    } else if (data.type === DATA_TYPES.CHAT) {
+                      console.log(data);
+                      this.pushChat(data.payload, false);
+                    } else if (data.type === DATA_TYPES.PLAYER_JOIN) {
                       this.notifyPlayerUpdate(
                         data.payload.username,
                         data.payload.skin,
                         true
                       );
-                      // let every one else know they joined
-                      this.connections.forEach((connection) => {
-                        if (connection.conn !== conn) {
-                          connection.conn.send({
-                            type: DATA_TYPES.PLAYER_JOIN,
-                            payload: {
-                              username: data.payload.username,
-                              skin: data.payload.skin,
-                            },
-                          });
-                        }
-                      });
-                    }
-                    myConnObject.data = data.payload;
-                    if (data.payload && data.payload.timestamp) {
-                      myConnObject.data.ping =
-                        Date.now() - data.payload.timestamp;
-                    }
-                    this.updateUserList();
-                    // create/delete/update player
-                  }
-                });
-                let closeConn = () => {
-                  if (!isBannedUser) {
-                    this.notifyPlayerUpdate(
-                      myConnObject?.data?.username ?? "Player",
-                      myConnObject?.data?.skin ?? "default",
-                      false
-                    );
-                  }
-                  this.destroyGhostPlayer(myConnObject.player);
-                  //remove connection from list
-                  this.connections.splice(
-                    this.connections.findIndex((x) => x.id === conn.peer),
-                    1
-                  );
-                  this.updateUserList();
-                  // let other connections know this one dropped
-                  this.connections.forEach((connection) => {
-                    connection.conn.send({
-                      type: DATA_TYPES.PLAYER_LEAVE,
-                      payload: {
-                        id: conn.peer,
-                      },
-                    });
-                  });
-                };
-                conn.on("close", closeConn);
-                conn.on("error", closeConn);
-              });
-            });
-          },
-  
-          joinRoom(roomId) {
-            // check if roomid is url using regex
-            if (
-              roomId.match(
-                /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
-              )
-            ) {
-              roomId = getQueryString(roomId).roomCode;
-            }
-            if (!roomId) return;
-  
-            if (false && roomId.length <= 22) {
-              roomId = base64ToUuid(roomId);
-            }
-  
-            this.isHost = false;
-            // this.peer = new Peer(undefined, {
-            //   host: "localhost",
-            //   port: 9000,
-            //   path: "/",
-            //   secure: false,
-            //   debug: 3,
-            // });
-            this.peer = new Peer();
-            this.peer.on("open", (id) => {
-              this.conn = this.peer.connect(roomId);
-  
-              this.conn.on("open", () => {
-                this.initialUsername = this.username;
-                this.connectedToRoom = true;
-                let firstData = true;
-                this.updateQueryStrings();
-                this.updateDomContainers();
-                notify("Joined room", "Connected to room " + roomId);
-                // Receive messages
-                this.conn.on("data", (data) => {
-                  if (data.type === DATA_TYPES.HOST_DATA) {
-                    //update other players besides me
-                    let otherData = data.payload;
-                    Object.keys(otherData).forEach((id) => {
-                      if (id === this.peer.id) return;
-                      let connection = this.connections.find(
-                        (connection) => connection.id === id
+                    } else if (data.type === DATA_TYPES.PLAYER_LEAVE) {
+                      let connectionId = this.connections.findIndex(
+                        (connection) => connection.id === data.payload.id
                       );
-                      let playerData = otherData[id];
-                      playerData.ping = Date.now() - playerData.timestamp;
+                      let connection = this.connections[connectionId];
   
-                      // if (connection.data === null) {
-                      //   // user first joined, notify
-                      //   notify("Player joined", `${playerData.username} joined`);
-                      // }
-  
-                      if (!connection) {
-                        connection = {
-                          id: id,
-                          data: playerData,
-                          player: null,
-                        };
-                        this.connections.push(connection);
-                      } else {
-                        connection.data = playerData;
-                      }
-                      //create player if needed
-                      if (!connection.player) {
-                        connection.player = this.createGhostPlayer(playerData);
-                      } else if (playerData.layout !== getCurLayout()) {
-                        //destroy player
-                        this.destroyGhostPlayer(connection.player);
-                        connection.player = null;
-                      } else {
-                        this.loadPlayerData(connection.player, playerData);
-                      }
-                    });
-                    this.updateUserList();
-                    if (firstData) {
-                      firstData = false;
-                      if (!this.canIJoinHost()) {
-                        this.conn.close();
-                      }
+                      this.notifyPlayerUpdate(
+                        connection.data.username,
+                        connection.data.skin,
+                        false
+                      );
+                      this.destroyGhostPlayer(connection.player);
+                      // remove connection from list
+                      this.connections.splice(connectionId, 1);
+                      this.updateUserList();
                     }
-                  } else if (data.type === DATA_TYPES.CHAT) {
-                    console.log(data);
-                    this.pushChat(data.payload, false);
-                  } else if (data.type === DATA_TYPES.PLAYER_JOIN) {
-                    this.notifyPlayerUpdate(
-                      data.payload.username,
-                      data.payload.skin,
-                      true
+                  });
+                  let closeConn = () => {
+                    if (!this.connectedToRoom) return;
+                    notify(
+                      "Connection lost",
+                      "Host left the room, or you left the room"
                     );
-                  } else if (data.type === DATA_TYPES.PLAYER_LEAVE) {
-                    let connectionId = this.connections.findIndex(
-                      (connection) => connection.id === data.payload.id
-                    );
-                    let connection = this.connections[connectionId];
-  
-                    this.notifyPlayerUpdate(
-                      connection.data.username,
-                      connection.data.skin,
-                      false
-                    );
-                    this.destroyGhostPlayer(connection.player);
-                    // remove connection from list
-                    this.connections.splice(connectionId, 1);
-                    this.updateUserList();
-                  }
+                    this.leaveRoom();
+                  };
+                  this.conn.on("close", closeConn);
                 });
-                let closeConn = () => {
-                  if (!this.connectedToRoom) return;
-                  notify(
-                    "Connection lost",
-                    "Host left the room, or you left the room"
-                  );
-                  this.leaveRoom();
-                };
-                this.conn.on("close", closeConn);
               });
-            });
-          },
   
-          leaveRoom() {
-            if (!this.connectedToRoom) return;
-            this.isHost = false;
-            this.connectedToRoom = false;
-            this.updateQueryStrings();
-            this.peer.destroy();
-            this.peer = null;
-            this.conn = null;
-            this.connections.forEach((connection) => {
-              this.destroyGhostPlayer(connection.player);
-            });
-            this.connections = [];
-            this.updateDomContainers();
-            this.updateUserList();
-            notify("Left room");
-            if (this.initialUsername && this.initialUsername !== this.username) {
-              this.username = this.initialUsername;
-            }
-          },
+              this.peer.on("error", (err) => {
+                notify(
+                  "Connection error",
+                  "Could not connect to room " + initRoomId
+                );
+                this.leaveRoom();
+              });
+            },
   
-          updateQueryStrings() {
-            let queryStrings = {};
-            if (this.connectedToRoom) {
-              queryStrings.roomCode = this.getRoomCode();
-            }
-            if (
-              WebSdkWrapper.currentSdk &&
-              WebSdkWrapper.currentSdk.name === "CrazyGames"
-            ) {
-              WebSdkWrapper.currentSdk.sdk.inviteLink(queryStrings);
-            } else {
-              setQueryString(queryStrings);
-            }
-          },
+            leaveRoom() {
+              if (!this.connectedToRoom) return;
+              this.isHost = false;
+              this.connectedToRoom = false;
+              this.updateQueryStrings();
+              this.peer.destroy();
+              this.peer = null;
+              this.conn = null;
+              this.connections.forEach((connection) => {
+                this.destroyGhostPlayer(connection.player);
+              });
+              this.connections = [];
+              this.updateDomContainers();
+              this.updateUserList();
+              notify("Left room");
+              if (
+                this.initialUsername &&
+                this.initialUsername !== this.username
+              ) {
+                this.username = this.initialUsername;
+              }
+            },
   
-          getMyData() {
-            let player = getPlayer();
-            if (!player)
+            updateQueryStrings() {
+              let queryStrings = {};
+              if (this.connectedToRoom) {
+                queryStrings.roomCode = this.getRoomCode();
+              }
+              if (
+                WebSdkWrapper.currentSdk &&
+                WebSdkWrapper.currentSdk.name === "CrazyGames"
+              ) {
+                WebSdkWrapper.currentSdk.sdk.inviteLink(queryStrings);
+              } else {
+                setQueryString(queryStrings);
+              }
+            },
+  
+            getMyData() {
+              let player = getPlayer();
+              if (!player)
+                return {
+                  layout: getCurLayout(),
+                  skin: globalType.instances[0].instance_vars[8],
+                  username: this.username,
+                  UID: myUniqueHash,
+                  initialUsername: this.initialUsername,
+                  isHost: this.isHost,
+                  timestamp: Date.now(),
+                  version: VERSION,
+                };
               return {
+                x: player.x,
+                y: player.y,
+                angle: player.angle,
+                state: player.instance_vars[0],
                 layout: getCurLayout(),
-                skin: globalType.instances[0].instance_vars[8],
+                layer: player.layer.name,
                 username: this.username,
                 UID: myUniqueHash,
                 initialUsername: this.initialUsername,
                 isHost: this.isHost,
                 timestamp: Date.now(),
                 version: VERSION,
+                side: player.instance_vars[2],
+                skin: player.instance_vars[12],
+                frame: player.cur_frame,
               };
-            return {
-              x: player.x,
-              y: player.y,
-              angle: player.angle,
-              state: player.instance_vars[0],
-              layout: getCurLayout(),
-              layer: player.layer.name,
-              username: this.username,
-              UID: myUniqueHash,
-              initialUsername: this.initialUsername,
-              isHost: this.isHost,
-              timestamp: Date.now(),
-              version: VERSION,
-              side: player.instance_vars[2],
-              skin: player.instance_vars[12],
-              frame: player.cur_frame,
-            };
-          },
+            },
   
-          destroyGhostPlayer(player) {
-            if (!player) return;
-            if (player.instance) {
-              player.instance.siblings.forEach((sibling) => {
-                cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
-                  sibling.behaviorSkins[0]
-                );
-              });
-              runtime.DestroyInstance(player.instance);
-            }
-            if (player.usernames)
-              player.usernames.forEach((username) => {
-                runtime.DestroyInstance(username);
-              });
-          },
-  
-          destroyNonPlayerGhosts() {
-            if (!getFlag()) return;
-            let ghosts = playerType.instances.filter(
-              (x) => x.instance_vars[16] && x.instance_vars[17] !== ""
-            );
-            if (!ghosts) return;
-            ghosts.forEach((ghost) => {
-              runtime.DestroyInstance(ghost);
-              ghost.siblings.forEach((sibling) => {
-                cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
-                  sibling.behaviorSkins[0]
-                );
-              });
-            });
-            let ghostArr = ghostArrType.instances[0];
-            ghostArr.setSize(0, ghostArr.cy, ghostArr.cz);
-            runtime.eventsheets.Player.events[2].subevents[2].subevents[1].actions.length = 0;
-          },
-  
-          createGhostPlayer(data) {
-            if (!data || data.layout !== getCurLayout()) return null;
-            let layer = runtime.running_layout.layers.find(
-              (layer) => layer.name === data.layer
-            );
-            if (!layer) return null;
-            this.destroyNonPlayerGhosts();
-            let instance = runtime.createInstance(
-              playerType,
-              layer,
-              data.x,
-              data.y
-            );
-            instance.visible = false;
-            instance.instance_vars[16] = 1;
-            instance.instance_vars[17] = "";
-            instance.instance_vars[12] = data.skin;
-            setTimeout(() => {
-              if (!getFlag()) return;
-              instance.siblings.forEach((sibling) => {
-                if (data.skin === "") {
+            destroyGhostPlayer(player) {
+              if (!player) return;
+              if (player.instance) {
+                player.instance.siblings.forEach((sibling) => {
                   cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
                     sibling.behaviorSkins[0]
                   );
-                } else {
-                  cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(
-                    sibling.behaviorSkins[0],
-                    data.skin
+                });
+                runtime.DestroyInstance(player.instance);
+              }
+              if (player.usernames)
+                player.usernames.forEach((username) => {
+                  runtime.DestroyInstance(username);
+                });
+            },
+  
+            destroyNonPlayerGhosts() {
+              if (!getFlag()) return;
+              let ghosts = playerType.instances.filter(
+                (x) => x.instance_vars[16] && x.instance_vars[17] !== ""
+              );
+              if (!ghosts) return;
+              ghosts.forEach((ghost) => {
+                runtime.DestroyInstance(ghost);
+                ghost.siblings.forEach((sibling) => {
+                  cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
+                    sibling.behaviorSkins[0]
                   );
-                }
+                });
               });
-            }, 200);
+              let ghostArr = ghostArrType.instances[0];
+              ghostArr.setSize(0, ghostArr.cy, ghostArr.cz);
+              runtime.eventsheets.Player.events[2].subevents[2].subevents[1].actions.length = 0;
+            },
   
-            let usernames = this.createUsernameInstances(
-              layer,
-              data.x - 100,
-              data.y - 55,
-              data.username
-            );
-            return {
-              instance,
-              usernames,
-            };
-          },
+            createGhostPlayer(data) {
+              if (!data || data.layout !== getCurLayout()) return null;
+              let layer = runtime.running_layout.layers.find(
+                (layer) => layer.name === data.layer
+              );
+              if (!layer) return null;
+              this.destroyNonPlayerGhosts();
+              let instance = runtime.createInstance(
+                playerType,
+                layer,
+                data.x,
+                data.y
+              );
+              instance.visible = false;
+              instance.instance_vars[16] = 1;
+              instance.instance_vars[17] = "";
+              instance.instance_vars[12] = data.skin;
+              setTimeout(() => {
+                if (!getFlag()) return;
+                instance.siblings.forEach((sibling) => {
+                  if (data.skin === "") {
+                    cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
+                      sibling.behaviorSkins[0]
+                    );
+                  } else {
+                    cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(
+                      sibling.behaviorSkins[0],
+                      data.skin
+                    );
+                  }
+                });
+              }, 200);
   
-          createUsernameInstances(layer, x, y, username) {
-            let ret = [];
+              let usernames = this.createUsernameInstances(
+                layer,
+                data.x - 100,
+                data.y - 55,
+                data.username
+              );
+              return {
+                instance,
+                usernames,
+              };
+            },
   
-            let inst = runtime.createInstance(textType, layer, x - 2, y);
-            inst.text = username;
-            inst.height = 25;
-            inst.width = 200;
-            inst.facename = "Retron2000";
-            inst.halign = 50;
-            inst.valign = 50;
-            inst.color = "rgb(0,0,0)";
-            inst.fontstyle = "bold";
-            inst.updateFont();
-            inst.set_bbox_changed();
-            ret.push(inst);
+            createUsernameInstances(layer, x, y, username) {
+              let ret = [];
   
-            inst = runtime.createInstance(textType, layer, x + 2, y);
-            inst.text = username;
-            inst.height = 25;
-            inst.width = 200;
-            inst.facename = "Retron2000";
-            inst.halign = 50;
-            inst.valign = 50;
-            inst.color = "rgb(0,0,0)";
-            inst.fontstyle = "bold";
-            inst.updateFont();
-            inst.set_bbox_changed();
-            ret.push(inst);
+              let inst = runtime.createInstance(textType, layer, x - 2, y);
+              inst.text = username;
+              inst.height = 25;
+              inst.width = 200;
+              inst.facename = "Retron2000";
+              inst.halign = 50;
+              inst.valign = 50;
+              inst.color = "rgb(0,0,0)";
+              inst.fontstyle = "bold";
+              inst.updateFont();
+              inst.set_bbox_changed();
+              ret.push(inst);
   
-            inst = runtime.createInstance(textType, layer, x, y - 2);
-            inst.text = username;
-            inst.height = 25;
-            inst.width = 200;
-            inst.facename = "Retron2000";
-            inst.halign = 50;
-            inst.valign = 50;
-            inst.color = "rgb(0,0,0)";
-            inst.fontstyle = "bold";
-            inst.updateFont();
-            inst.set_bbox_changed();
-            ret.push(inst);
+              inst = runtime.createInstance(textType, layer, x + 2, y);
+              inst.text = username;
+              inst.height = 25;
+              inst.width = 200;
+              inst.facename = "Retron2000";
+              inst.halign = 50;
+              inst.valign = 50;
+              inst.color = "rgb(0,0,0)";
+              inst.fontstyle = "bold";
+              inst.updateFont();
+              inst.set_bbox_changed();
+              ret.push(inst);
   
-            inst = runtime.createInstance(textType, layer, x, y + 2);
-            inst.text = username;
-            inst.height = 25;
-            inst.width = 200;
-            inst.facename = "Retron2000";
-            inst.halign = 50;
-            inst.valign = 50;
-            inst.color = "rgb(0,0,0)";
-            inst.fontstyle = "bold";
-            inst.updateFont();
-            inst.set_bbox_changed();
-            ret.push(inst);
+              inst = runtime.createInstance(textType, layer, x, y - 2);
+              inst.text = username;
+              inst.height = 25;
+              inst.width = 200;
+              inst.facename = "Retron2000";
+              inst.halign = 50;
+              inst.valign = 50;
+              inst.color = "rgb(0,0,0)";
+              inst.fontstyle = "bold";
+              inst.updateFont();
+              inst.set_bbox_changed();
+              ret.push(inst);
   
-            inst = runtime.createInstance(textType, layer, x, y);
-            inst.text = username;
-            inst.height = 25;
-            inst.width = 200;
-            inst.facename = "Retron2000";
-            inst.halign = 50;
-            inst.valign = 50;
-            inst.color = "rgb(255,255,255)";
-            inst.fontstyle = "";
-            inst.updateFont();
-            inst.set_bbox_changed();
-            ret.push(inst);
+              inst = runtime.createInstance(textType, layer, x, y + 2);
+              inst.text = username;
+              inst.height = 25;
+              inst.width = 200;
+              inst.facename = "Retron2000";
+              inst.halign = 50;
+              inst.valign = 50;
+              inst.color = "rgb(0,0,0)";
+              inst.fontstyle = "bold";
+              inst.updateFont();
+              inst.set_bbox_changed();
+              ret.push(inst);
   
-            return ret;
-          },
+              inst = runtime.createInstance(textType, layer, x, y);
+              inst.text = username;
+              inst.height = 25;
+              inst.width = 200;
+              inst.facename = "Retron2000";
+              inst.halign = 50;
+              inst.valign = 50;
+              inst.color = "rgb(255,255,255)";
+              inst.fontstyle = "";
+              inst.updateFont();
+              inst.set_bbox_changed();
+              ret.push(inst);
   
-          loadPlayerData(player, data) {
-            if (data.layout !== getCurLayout()) return;
-            this.updateUsernamePosition(
-              player.usernames,
-              data.x - 100,
-              data.y - 55,
-              data.username
-            );
-            player.instance.x = data.x;
-            player.instance.y = data.y;
-            player.instance.angle = data.angle;
-            player.instance.instance_vars[0] = data.state;
-            player.instance.instance_vars[2] = data.side;
-            if (data.side > 0) {
-              c2_callFunction("Player > Unmirror", [player.instance.uid]);
-            }
-            if (data.side < 0) {
-              c2_callFunction("Player > Mirror", [player.instance.uid]);
-            }
-            cr.plugins_.Sprite.prototype.acts.SetAnimFrame.call(
-              player.instance,
-              data.frame
-            );
-            player.instance.y = data.y;
-            player.instance.set_bbox_changed();
-          },
-        };
+              return ret;
+            },
   
-        // Override layout code to instantiate distant players if any
-        Object.values(runtime.layouts).forEach((layout) => {
-          let oldFn = layout.startRunning.bind(layout);
-          layout.startRunning = () => {
-            oldFn();
-            curLayout = layout.name;
-            multiplayer.startOfLayout();
-            if (globalThis.crazyMidRoll /* && getFlag() */) {
-              globalThis.crazyMidRoll();
-            }
-            spawnTextOnTitleLogo();
+            loadPlayerData(player, data) {
+              if (data.layout !== getCurLayout()) return;
+              this.updateUsernamePosition(
+                player.usernames,
+                data.x - 100,
+                data.y - 55,
+                data.username
+              );
+              player.instance.x = data.x;
+              player.instance.y = data.y;
+              player.instance.angle = data.angle;
+              player.instance.instance_vars[0] = data.state;
+              player.instance.instance_vars[2] = data.side;
+              if (data.side > 0) {
+                c2_callFunction("Player > Unmirror", [player.instance.uid]);
+              }
+              if (data.side < 0) {
+                c2_callFunction("Player > Mirror", [player.instance.uid]);
+              }
+              cr.plugins_.Sprite.prototype.acts.SetAnimFrame.call(
+                player.instance,
+                data.frame
+              );
+              player.instance.y = data.y;
+              player.instance.set_bbox_changed();
+            },
           };
-        });
   
-        addScript("./peerjs.min.js", "peerJs", () => {
-          new CBFjs().get(function (hash, components) {
-            console.log(hash);
-            myUniqueHash = hash;
-            multiplayer.init();
+          // Override layout code to instantiate distant players if any
+          Object.values(runtime.layouts).forEach((layout) => {
+            let oldFn = layout.startRunning.bind(layout);
+            layout.startRunning = () => {
+              oldFn();
+              curLayout = layout.name;
+              multiplayer.startOfLayout();
+              if (globalThis.WebSdkWrapper && getFlag()) {
+                globalThis.WebSdkWrapper.interstitial();
+              }
+              spawnTextOnTitleLogo();
+            };
           });
-        });
-      })();
-    },
-  };
+  
+          addScript(
+            "//unpkg.com/peerjs@1.3.1/dist/peerjs.min.js",
+            "peerJs",
+            () => {
+              new CBFjs().get(function (hash, components) {
+                console.log(hash);
+                myUniqueHash = hash;
+                multiplayer.init();
+              });
+            }
+          );
+        })();
+      },
+    };
+  
+    if (globalThis.cr_getC2Runtime) {
+      let runtime = cr_getC2Runtime();
+      if (runtime && runtime.loadingprogress) {
+        globalThis.ovoMultiplayerClient.initMod();
+      }
+    }
+  })();
