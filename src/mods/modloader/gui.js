@@ -1614,6 +1614,9 @@
         
         //keyup listener
         keyUp(event) {
+            if(event.keyCode === 75) {
+                console.log(ovoMultiplayerClient.connections)
+            }
             //if the key pressed is a movement key, change the color of the key to the on color
             if (this.movementKeys.includes(event.keyCode)) {
                 arrow = this.arrows[this.movementKeys.indexOf(event.keyCode)]
