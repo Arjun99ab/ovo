@@ -485,151 +485,181 @@
     document.body.appendChild(notifyBg);
 }
 
-let createDescPopup = (modId) => {
+
   //Create background div
-  let descPopup = document.createElement("div");
-  descPopup.id = "descPopup-bg";
-
-  c = {
+  let createDescPopup = (modId) => {
+    //Create background div
+    let descPopup = document.createElement("div");
+    descPopup.id = "descPopup-bg";
+  
+    c = {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "white",
+        border: "solid",
+        borderColor: "black",
+        borderWidth: "2px",
+        fontFamily: "Retron2000",
+        cursor: "default",
+        color: "black",
+        fontSize: "10pt",
+        width: "auto",
+        height: "auto",
+        overflow: "auto",
+        margin: "0",
+        padding: "10px",
+        borderRadius: "10px",
+    };
+    Object.keys(c).forEach(function (a) {
+      descPopup.style[a] = c[a];
+    });
+  
+    navbar = document.createElement("nav");
+  
+    c = {
       display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
+      // flex: "0 0 auto",
+      // alignItems: "center",
+      justifyContent: "space-between",
+      padding: "5px",
+      // position: "relative",
+      // backgroundColor: "#f2f2f2",
+    }
+    Object.keys(c).forEach(function (a) {
+        navbar.style[a] = c[a];
+    });
+    navbar.id = "navbar";
+  
+    navbar.appendChild(document.createElement("div"));
+  
+    //Title
+    headerText = document.createElement("div");
+    c = {
+        backgroundColor: "white",
+        border: "none",
+        fontFamily: "Retron2000",
+        // position: "relative",
+        // top: "2%",
+        //left: "35%",
+        color: "black",
+        cursor: "default",
+        // margin: "0",
+        textAlign: "center",
+  
+    };
+    Object.keys(c).forEach(function (a) {
+        titleText.style[a] = c[a];
+    });
+  
+    //X button CSS
+    xButton = document.createElement("button");
+    c = {
       position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      backgroundColor: "white",
-      border: "solid",
-      borderColor: "black",
-      borderWidth: "2px",
-      fontFamily: "Retron2000",
-      cursor: "default",
-      color: "black",
-      fontSize: "10pt",
-      width: "auto",
-      height: "auto",
-      overflow: "auto",
-      margin: "0",
-      padding: "10px",
-      borderRadius: "10px",
-  };
-  Object.keys(c).forEach(function (a) {
-    descPopup.style[a] = c[a];
-  });
-
-  navbar = document.createElement("nav");
-
-  c = {
-    display: "flex",
-    // flex: "0 0 auto",
-    // alignItems: "center",
-    justifyContent: "space-between",
-    padding: "5px",
-    // position: "relative",
-    // backgroundColor: "#f2f2f2",
-  }
-  Object.keys(c).forEach(function (a) {
-      navbar.style[a] = c[a];
-  });
-  navbar.id = "navbar";
-
-  navbar.appendChild(document.createElement("div"));
-
-  //Title
-  headerText = document.createElement("div");
-  c = {
+      top: "5px",
+      right: "5px",
       backgroundColor: "white",
       border: "none",
       fontFamily: "Retron2000",
-      // position: "relative",
-      // top: "2%",
-      //left: "35%",
       color: "black",
-      cursor: "default",
-      // margin: "0",
-      textAlign: "center",
-
-  };
-  Object.keys(c).forEach(function (a) {
-      titleText.style[a] = c[a];
-  });
-  titleText = document.createElement("p");
-  titleText.style.fontSize = "2.3vw";
-  titleText.style.textAlign = "center";
-  titleText.innerHTML = backendConfig['mods'][modId]['name'];
-  headerText.appendChild(titleText);
-  if(backendConfig['mods'][modId]['author'] !== null) {
-    authorText = document.createElement("p");
-    authorText.style.fontSize = "1.3vw";
-    authorText.style.textAlign = "center";
-    authorText.innerHTML = "by " + backendConfig['mods'][modId]['author'];
-    headerText.appendChild(authorText);
-  }
+      fontSize: "2.3vw",
+      cursor: "pointer",
+    };
+    Object.keys(c).forEach(function (a) {
+        xButton.style[a] = c[a];
+    });
   
-  navbar.appendChild(headerText);
-
-  //X button CSS
-  xButton = document.createElement("button");
-  c = {
-    position: "absolute",
-    top: "5px",
-    right: "5px",
-    backgroundColor: "white",
-    border: "none",
-    fontFamily: "Retron2000",
-    color: "black",
-    fontSize: "2.3vw",
-    cursor: "pointer",
-  };
-  Object.keys(c).forEach(function (a) {
-      xButton.style[a] = c[a];
-  });
-
-  xButton.innerHTML = "❌";
-  xButton.id = "x-button";
-
-  xButton.onclick = function() {
-      descPopup.remove();
-      // enableClick(map);
-      document.getElementById("menu-bg").style.pointerEvents = "auto";
-      document.getElementById("menu-bg").style.filter = "none";
-  }
-  // navbar.appendChild(xButton);
-  descPopup.appendChild(xButton);
-  descPopup.appendChild(navbar);
-
-  descText = document.createElement("div");
-  descText.id = "descText";
-  descText.innerHTML = backendConfig['mods'][modId]['desc'];
-  descText.style.fontSize = "1.5vw";
-  descText.style.textAlign = "center";
-  descText.style.margin = "15px";
-  // descText.style.marginBottom = "10px";
-
-  descPopup.appendChild(descText);
-
-  if(modId === "taskeybinds") {
-    image = document.createElement("img");
-    image.src = "../src/mods/modloader/taskeybinds.png";
-    image.style.width = "50%";
-    image.style.height = "auto";
-    image.style.borderRadius = "10px";
-    // image.style.margin = "auto";
-
-    // image.style.transform = "translate(-50%, -50%)",
-    // image.style.alignItems = "center";
-
-
-    descPopup.appendChild(image);
-  }
-
+    xButton.innerHTML = "❌";
+    xButton.id = "x-button";
   
-
+    xButton.onclick = function() {
+        descPopup.remove();
+        // enableClick(map);
+        document.getElementById("menu-bg").style.pointerEvents = "auto";
+        document.getElementById("menu-bg").style.filter = "none";
+    }
+    // navbar.appendChild(xButton);
+    descPopup.appendChild(xButton);
   
-
-  document.body.appendChild(descPopup);
-}
+    if(modId.startsWith("customMod")) {
+      modSettings = JSON.parse(localStorage.getItem('modSettings'));
+      
+      titleText = document.createElement("p");
+      titleText.style.fontSize = "2.3vw";
+      titleText.style.textAlign = "center";
+      titleText.innerHTML = modSettings['mods'][modId]['name'];
+      headerText.appendChild(titleText);
+      if(modSettings['mods'][modId]['author'] !== null) {
+        authorText = document.createElement("p");
+        authorText.style.fontSize = "1.3vw";
+        authorText.style.textAlign = "center";
+        authorText.innerHTML = "by " + modSettings['mods'][modId]['author'];
+        headerText.appendChild(authorText);
+      }
+      
+      navbar.appendChild(headerText);
+  
+      
+      descPopup.appendChild(navbar);
+  
+      descText = document.createElement("div");
+      descText.id = "descText";
+      descText.innerHTML = modSettings['mods'][modId]['desc'];
+      descText.style.fontSize = "1.5vw";
+      descText.style.textAlign = "center";
+      descText.style.margin = "15px";
+  
+      descPopup.appendChild(descText);
+  
+    } else {
+      titleText = document.createElement("p");
+      titleText.style.fontSize = "2.3vw";
+      titleText.style.textAlign = "center";
+      titleText.innerHTML = backendConfig['mods'][modId]['name'];
+      headerText.appendChild(titleText);
+      if(backendConfig['mods'][modId]['author'] !== null) {
+        authorText = document.createElement("p");
+        authorText.style.fontSize = "1.3vw";
+        authorText.style.textAlign = "center";
+        authorText.innerHTML = "by " + backendConfig['mods'][modId]['author'];
+        headerText.appendChild(authorText);
+      }
+      
+      navbar.appendChild(headerText);
+  
+      
+      descPopup.appendChild(navbar);
+  
+      descText = document.createElement("div");
+      descText.id = "descText";
+      descText.innerHTML = backendConfig['mods'][modId]['desc'];
+      descText.style.fontSize = "1.5vw";
+      descText.style.textAlign = "center";
+      descText.style.margin = "15px";
+  
+      descPopup.appendChild(descText);
+  
+      if(modId === "taskeybinds") {
+        image = document.createElement("img");
+        image.src = "../src/mods/modloader/taskeybinds.png";
+        image.style.width = "50%";
+        image.style.height = "auto";
+        image.style.borderRadius = "10px";
+        descPopup.appendChild(image);
+      }
+    }
+  
+    
+  
+    
+  
+    document.body.appendChild(descPopup);
+  }
 
     let createFilterButton = (id, text, width) => {
       let menuButton = document.createElement("button");
@@ -898,6 +928,9 @@ let createDescPopup = (modId) => {
       cardImage.src = iconurl;
 
       cardText = document.createElement("p");
+      if(id.startsWith("customMod") && JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['name'].length > 10) {
+        name = JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['name'].substring(0, 9) + "-";
+      }
       cardText.innerHTML = name;
 
       c = {
