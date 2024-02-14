@@ -284,7 +284,7 @@
             "name": "Multiplayer",
             "author": "skymen",
             "desc": "Play or speedrun against your friends!",
-            "url": "../src/mods/modloader/multiplayerREALSKY.js",
+            "url": "../src/mods/modloader/multiplayer.js",
             "icon": "https://static.thenounproject.com/png/3734259-200.png",
             "platforms": ["pc", "mobile"],
             "version": ["1.4.4", "CTLE"],

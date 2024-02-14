@@ -553,20 +553,6 @@ let createDescPopup = (modId) => {
   Object.keys(c).forEach(function (a) {
       titleText.style[a] = c[a];
   });
-  titleText = document.createElement("p");
-  titleText.style.fontSize = "2.3vw";
-  titleText.style.textAlign = "center";
-  titleText.innerHTML = backendConfig['mods'][modId]['name'];
-  headerText.appendChild(titleText);
-  if(backendConfig['mods'][modId]['author'] !== null) {
-    authorText = document.createElement("p");
-    authorText.style.fontSize = "1.3vw";
-    authorText.style.textAlign = "center";
-    authorText.innerHTML = "by " + backendConfig['mods'][modId]['author'];
-    headerText.appendChild(authorText);
-  }
-  
-  navbar.appendChild(headerText);
 
   //X button CSS
   xButton = document.createElement("button");
@@ -596,31 +582,73 @@ let createDescPopup = (modId) => {
   }
   // navbar.appendChild(xButton);
   descPopup.appendChild(xButton);
-  descPopup.appendChild(navbar);
 
-  descText = document.createElement("div");
-  descText.id = "descText";
-  descText.innerHTML = backendConfig['mods'][modId]['desc'];
-  descText.style.fontSize = "1.5vw";
-  descText.style.textAlign = "center";
-  descText.style.margin = "15px";
-  // descText.style.marginBottom = "10px";
+  if(modId.startsWith("customMod")) {
+    modSettings = JSON.parse(localStorage.getItem('modSettings'));
+    
+    titleText = document.createElement("p");
+    titleText.style.fontSize = "2.3vw";
+    titleText.style.textAlign = "center";
+    titleText.innerHTML = modSettings['mods'][modId]['name'];
+    headerText.appendChild(titleText);
+    if(modSettings['mods'][modId]['author'] !== null) {
+      authorText = document.createElement("p");
+      authorText.style.fontSize = "1.3vw";
+      authorText.style.textAlign = "center";
+      authorText.innerHTML = "by " + modSettings['mods'][modId]['author'];
+      headerText.appendChild(authorText);
+    }
+    
+    navbar.appendChild(headerText);
 
-  descPopup.appendChild(descText);
+    
+    descPopup.appendChild(navbar);
 
-  if(modId === "taskeybinds") {
-    image = document.createElement("img");
-    image.src = "../src/mods/modloader/taskeybinds.png";
-    image.style.width = "50%";
-    image.style.height = "auto";
-    image.style.borderRadius = "10px";
-    // image.style.margin = "auto";
+    descText = document.createElement("div");
+    descText.id = "descText";
+    descText.innerHTML = modSettings['mods'][modId]['desc'];
+    descText.style.fontSize = "1.5vw";
+    descText.style.textAlign = "center";
+    descText.style.margin = "15px";
 
-    // image.style.transform = "translate(-50%, -50%)",
-    // image.style.alignItems = "center";
+    descPopup.appendChild(descText);
 
+  } else {
+    titleText = document.createElement("p");
+    titleText.style.fontSize = "2.3vw";
+    titleText.style.textAlign = "center";
+    titleText.innerHTML = backendConfig['mods'][modId]['name'];
+    headerText.appendChild(titleText);
+    if(backendConfig['mods'][modId]['author'] !== null) {
+      authorText = document.createElement("p");
+      authorText.style.fontSize = "1.3vw";
+      authorText.style.textAlign = "center";
+      authorText.innerHTML = "by " + backendConfig['mods'][modId]['author'];
+      headerText.appendChild(authorText);
+    }
+    
+    navbar.appendChild(headerText);
 
-    descPopup.appendChild(image);
+    
+    descPopup.appendChild(navbar);
+
+    descText = document.createElement("div");
+    descText.id = "descText";
+    descText.innerHTML = backendConfig['mods'][modId]['desc'];
+    descText.style.fontSize = "1.5vw";
+    descText.style.textAlign = "center";
+    descText.style.margin = "15px";
+
+    descPopup.appendChild(descText);
+
+    if(modId === "taskeybinds") {
+      image = document.createElement("img");
+      image.src = "../src/mods/modloader/taskeybinds.png";
+      image.style.width = "50%";
+      image.style.height = "auto";
+      image.style.borderRadius = "10px";
+      descPopup.appendChild(image);
+    }
   }
 
   
@@ -870,6 +898,7 @@ let createDescPopup = (modId) => {
         verticalAlign: "middle",
         border: "solid 3px black",
         borderRadius: "10px 10px 13px 13px",
+        // overflowX: "hidden",
       }
       Object.keys(c).forEach(function (a) {
         menuCard.style[a] = c[a];
@@ -897,20 +926,27 @@ let createDescPopup = (modId) => {
       cardImage.src = iconurl;
 
       cardText = document.createElement("p");
+      if(id.startsWith("customMod") && JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['name'].length > 10) {
+        name = JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['name'].substring(0, 9) + "-";
+      }
       cardText.innerHTML = name;
 
       c = {
-        display: "block",
+        // display: "block",
         fontFamily: "Retron2000",
         color: "black",
         fontSize: "2vw",
         flexGrow: "0",
         flexShrink: "0",
-        flexBasis: "auto",
+        // flexBasis: "auto",
         textAlign: "center",
         verticalAlign: "middle",
         margin: "0",
+        width: "100%",
         whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+
       }
       Object.keys(c).forEach(function (a) {
         cardText.style[a] = c[a];
@@ -1479,7 +1515,7 @@ let createDescPopup = (modId) => {
                         customModConfig['version'] = ["1.4", "1.4.4", "CTLE"];
                         customModConfig['tags'] = ['custom'];
                         customModConfig['reload'] = true;
-                        customModConfig['settings'] = null;
+                        customModConfig['settings'] = {"delete": 0};
                         customModConfig['favorite'] = false;
                         freshUserConfig['mods'][key] = customModConfig;
 
