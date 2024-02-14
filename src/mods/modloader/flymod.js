@@ -7,8 +7,20 @@
     let runtime = globalThis.sdk_runtime;
     globalThis.sdk_runtime = old;
 
+
+    globalThis.flymodToggle = function (enable) {
+        if (enable) {
+            // Use the bound methods when adding the event listeners
+            document.addEventListener("keydown", ovoFlyMod.boundKeyDown);
+            document.addEventListener("keyup", ovoFlyMod.boundKeyUp);
+        } else {
+            // Use the bound methods when removing the event listeners
+            document.removeEventListener("keydown", ovoFlyMod.boundKeyDown);
+            document.removeEventListener("keyup", ovoFlyMod.boundKeyUp);
+        }
+    }
+
     var modEnabled;
-    
     //get the player object
     let getPlayer = () => {
         return runtime.types_by_index
@@ -43,32 +55,49 @@
             this.speed = {x: 10, y: 10};
             this.stored = [1500, true];
             this.override = false;
+
+            this.boundKeyDown = this.keyDown.bind(this);
+            this.boundKeyUp = this.keyUp.bind(this);
             
             //listen to key events
-            document.addEventListener("keydown", (event) => {this.keyDown(event)});
-            document.addEventListener("keyup", (event) => {this.keyUp(event)});
+            document.addEventListener("keydown", this.boundKeyDown);
+            document.addEventListener("keyup", this.boundKeyUp);
           
             runtime.tickMe(this);
           
             globalThis.ovoFlyMod = this;
             notify("Fly Mod Loaded", "Shift + [arrow keys]", "https://cdn-icons-png.flaticon.com/512/3125/3125683.png");
         },
+
+        flymodToggle(enable) {
+            if (enable) {
+                // Use the bound methods when adding the event listeners
+                document.addEventListener("keydown", this.boundKeyDown);
+                document.addEventListener("keyup", this.boundKeyUp);
+            } else {
+                // Use the bound methods when removing the event listeners
+                document.removeEventListener("keydown", this.boundKeyDown);
+            }
+        },
       
         keyDown(event) {
             //check if mod is enabled & shift arrows => allow to fly
             let key = event.key.toLowerCase();
-            if(JSON.parse(localStorage.getItem('modSettings'))["flymod"]["enabled"]) {
-                if (key == "shift" && !this.override) {
-                    this.activatorKeyHeld = true;
-                } else if (event.keyCode >= 37 && event.keyCode <= 40 && this.activatorKeyHeld) {
-                    if (!this.activated) {
-                        this.startActivation();
-                        this.activated = true;
-                    }
-                    
-                    this.movementKeys[event.keyCode - 37] = true;
+            if (key == "shift" && !this.override) {
+                this.activatorKeyHeld = true;
+            } else if (event.keyCode >= 37 && event.keyCode <= 40 && this.activatorKeyHeld) {
+                if (!this.activated) {
+                    console.log(this.startActivation)
+                    console.log(this)
+                    console.log(this.activated)
+
+                    this.startActivation();
+                    this.activated = true;
                 }
+                
+                this.movementKeys[event.keyCode - 37] = true;
             }
+            
             
             
             

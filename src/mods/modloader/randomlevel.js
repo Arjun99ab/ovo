@@ -14,23 +14,31 @@
             image
         );
     };
+    globalThis.randomlevelToggle = function (enable) {
+        if (enable) {
+            // Use the bound methods when adding the event listeners
+            document.addEventListener("keydown", randomlevel.boundKeyDown);
+        } else {
+            // Use the bound methods when removing the event listeners
+            document.removeEventListener("keydown", randomlevel.boundKeyDown);
+        }
+    }
 
     let randomlevel = {
         init() {
-            document.addEventListener("keydown", (event) => {
-                if(JSON.parse(localStorage.getItem('modSettings'))["randomlevel"]["enabled"]) {
-                    if (event.code === "KeyY") {
-                        if (event.shiftKey) {
-                            this.loadRandomLevel();
-                        }
-                    }
-                }
-                
-            });
+            this.boundKeyDown = this.keyDown.bind(this);
+            document.addEventListener("keydown", this.boundKeyDown);
 
             this.interval = null;
             globalThis.ovoRandomLevel = this;
             notify("Random Level Mod loaded", "Shift + Y", "./tutorials.png");
+        },
+        keyDown(event) {
+            if (event.code === "KeyY") {
+                if (event.shiftKey) {
+                    this.loadRandomLevel();
+                }
+            }
         },
 
         loadRandomLevel() {

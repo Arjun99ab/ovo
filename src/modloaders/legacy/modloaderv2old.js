@@ -222,7 +222,6 @@
           if(modId.startsWith("customMod")) {
               js.text = modSettings['mods'][modId]["url"];
           } else {
-              console.log(backendConfig['mods'][modId]["url"])
               js.src = backendConfig['mods'][modId]["url"];
           }
           js.id = modId;
@@ -485,181 +484,179 @@
     document.body.appendChild(notifyBg);
 }
 
-
+let createDescPopup = (modId) => {
   //Create background div
-  let createDescPopup = (modId) => {
-    //Create background div
-    let descPopup = document.createElement("div");
-    descPopup.id = "descPopup-bg";
-  
-    c = {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "white",
-        border: "solid",
-        borderColor: "black",
-        borderWidth: "2px",
-        fontFamily: "Retron2000",
-        cursor: "default",
-        color: "black",
-        fontSize: "10pt",
-        width: "auto",
-        height: "auto",
-        overflow: "auto",
-        margin: "0",
-        padding: "10px",
-        borderRadius: "10px",
-    };
-    Object.keys(c).forEach(function (a) {
-      descPopup.style[a] = c[a];
-    });
-  
-    navbar = document.createElement("nav");
-  
-    c = {
+  let descPopup = document.createElement("div");
+  descPopup.id = "descPopup-bg";
+
+  c = {
       display: "flex",
-      // flex: "0 0 auto",
-      // alignItems: "center",
-      justifyContent: "space-between",
-      padding: "5px",
-      // position: "relative",
-      // backgroundColor: "#f2f2f2",
-    }
-    Object.keys(c).forEach(function (a) {
-        navbar.style[a] = c[a];
-    });
-    navbar.id = "navbar";
-  
-    navbar.appendChild(document.createElement("div"));
-  
-    //Title
-    headerText = document.createElement("div");
-    c = {
-        backgroundColor: "white",
-        border: "none",
-        fontFamily: "Retron2000",
-        // position: "relative",
-        // top: "2%",
-        //left: "35%",
-        color: "black",
-        cursor: "default",
-        // margin: "0",
-        textAlign: "center",
-  
-    };
-    Object.keys(c).forEach(function (a) {
-        titleText.style[a] = c[a];
-    });
-  
-    //X button CSS
-    xButton = document.createElement("button");
-    c = {
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
       position: "absolute",
-      top: "5px",
-      right: "5px",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "white",
+      border: "solid",
+      borderColor: "black",
+      borderWidth: "2px",
+      fontFamily: "Retron2000",
+      cursor: "default",
+      color: "black",
+      fontSize: "10pt",
+      width: "auto",
+      height: "auto",
+      overflow: "auto",
+      margin: "0",
+      padding: "10px",
+      borderRadius: "10px",
+  };
+  Object.keys(c).forEach(function (a) {
+    descPopup.style[a] = c[a];
+  });
+
+  navbar = document.createElement("nav");
+
+  c = {
+    display: "flex",
+    // flex: "0 0 auto",
+    // alignItems: "center",
+    justifyContent: "space-between",
+    padding: "5px",
+    // position: "relative",
+    // backgroundColor: "#f2f2f2",
+  }
+  Object.keys(c).forEach(function (a) {
+      navbar.style[a] = c[a];
+  });
+  navbar.id = "navbar";
+
+  navbar.appendChild(document.createElement("div"));
+
+  //Title
+  headerText = document.createElement("div");
+  c = {
       backgroundColor: "white",
       border: "none",
       fontFamily: "Retron2000",
+      // position: "relative",
+      // top: "2%",
+      //left: "35%",
       color: "black",
-      fontSize: "2.3vw",
-      cursor: "pointer",
-    };
-    Object.keys(c).forEach(function (a) {
-        xButton.style[a] = c[a];
-    });
-  
-    xButton.innerHTML = "❌";
-    xButton.id = "x-button";
-  
-    xButton.onclick = function() {
-        descPopup.remove();
-        // enableClick(map);
-        document.getElementById("menu-bg").style.pointerEvents = "auto";
-        document.getElementById("menu-bg").style.filter = "none";
-    }
-    // navbar.appendChild(xButton);
-    descPopup.appendChild(xButton);
-  
-    if(modId.startsWith("customMod")) {
-      modSettings = JSON.parse(localStorage.getItem('modSettings'));
-      
-      titleText = document.createElement("p");
-      titleText.style.fontSize = "2.3vw";
-      titleText.style.textAlign = "center";
-      titleText.innerHTML = modSettings['mods'][modId]['name'];
-      headerText.appendChild(titleText);
-      if(modSettings['mods'][modId]['author'] !== null) {
-        authorText = document.createElement("p");
-        authorText.style.fontSize = "1.3vw";
-        authorText.style.textAlign = "center";
-        authorText.innerHTML = "by " + modSettings['mods'][modId]['author'];
-        headerText.appendChild(authorText);
-      }
-      
-      navbar.appendChild(headerText);
-  
-      
-      descPopup.appendChild(navbar);
-  
-      descText = document.createElement("div");
-      descText.id = "descText";
-      descText.innerHTML = modSettings['mods'][modId]['desc'];
-      descText.style.fontSize = "1.5vw";
-      descText.style.textAlign = "center";
-      descText.style.margin = "15px";
-  
-      descPopup.appendChild(descText);
-  
-    } else {
-      titleText = document.createElement("p");
-      titleText.style.fontSize = "2.3vw";
-      titleText.style.textAlign = "center";
-      titleText.innerHTML = backendConfig['mods'][modId]['name'];
-      headerText.appendChild(titleText);
-      if(backendConfig['mods'][modId]['author'] !== null) {
-        authorText = document.createElement("p");
-        authorText.style.fontSize = "1.3vw";
-        authorText.style.textAlign = "center";
-        authorText.innerHTML = "by " + backendConfig['mods'][modId]['author'];
-        headerText.appendChild(authorText);
-      }
-      
-      navbar.appendChild(headerText);
-  
-      
-      descPopup.appendChild(navbar);
-  
-      descText = document.createElement("div");
-      descText.id = "descText";
-      descText.innerHTML = backendConfig['mods'][modId]['desc'];
-      descText.style.fontSize = "1.5vw";
-      descText.style.textAlign = "center";
-      descText.style.margin = "15px";
-  
-      descPopup.appendChild(descText);
-  
-      if(modId === "taskeybinds") {
-        image = document.createElement("img");
-        image.src = "../src/mods/modloader/taskeybinds.png";
-        image.style.width = "50%";
-        image.style.height = "auto";
-        image.style.borderRadius = "10px";
-        descPopup.appendChild(image);
-      }
-    }
-  
-    
-  
-    
-  
-    document.body.appendChild(descPopup);
+      cursor: "default",
+      // margin: "0",
+      textAlign: "center",
+
+  };
+  Object.keys(c).forEach(function (a) {
+      titleText.style[a] = c[a];
+  });
+
+  //X button CSS
+  xButton = document.createElement("button");
+  c = {
+    position: "absolute",
+    top: "5px",
+    right: "5px",
+    backgroundColor: "white",
+    border: "none",
+    fontFamily: "Retron2000",
+    color: "black",
+    fontSize: "2.3vw",
+    cursor: "pointer",
+  };
+  Object.keys(c).forEach(function (a) {
+      xButton.style[a] = c[a];
+  });
+
+  xButton.innerHTML = "❌";
+  xButton.id = "x-button";
+
+  xButton.onclick = function() {
+      descPopup.remove();
+      // enableClick(map);
+      document.getElementById("menu-bg").style.pointerEvents = "auto";
+      document.getElementById("menu-bg").style.filter = "none";
   }
+  // navbar.appendChild(xButton);
+  descPopup.appendChild(xButton);
+
+  if(modId.startsWith("customMod")) {
+    modSettings = JSON.parse(localStorage.getItem('modSettings'));
+    
+    titleText = document.createElement("p");
+    titleText.style.fontSize = "2.3vw";
+    titleText.style.textAlign = "center";
+    titleText.innerHTML = modSettings['mods'][modId]['name'];
+    headerText.appendChild(titleText);
+    if(modSettings['mods'][modId]['author'] !== null) {
+      authorText = document.createElement("p");
+      authorText.style.fontSize = "1.3vw";
+      authorText.style.textAlign = "center";
+      authorText.innerHTML = "by " + modSettings['mods'][modId]['author'];
+      headerText.appendChild(authorText);
+    }
+    
+    navbar.appendChild(headerText);
+
+    
+    descPopup.appendChild(navbar);
+
+    descText = document.createElement("div");
+    descText.id = "descText";
+    descText.innerHTML = modSettings['mods'][modId]['desc'];
+    descText.style.fontSize = "1.5vw";
+    descText.style.textAlign = "center";
+    descText.style.margin = "15px";
+
+    descPopup.appendChild(descText);
+
+  } else {
+    titleText = document.createElement("p");
+    titleText.style.fontSize = "2.3vw";
+    titleText.style.textAlign = "center";
+    titleText.innerHTML = backendConfig['mods'][modId]['name'];
+    headerText.appendChild(titleText);
+    if(backendConfig['mods'][modId]['author'] !== null) {
+      authorText = document.createElement("p");
+      authorText.style.fontSize = "1.3vw";
+      authorText.style.textAlign = "center";
+      authorText.innerHTML = "by " + backendConfig['mods'][modId]['author'];
+      headerText.appendChild(authorText);
+    }
+    
+    navbar.appendChild(headerText);
+
+    
+    descPopup.appendChild(navbar);
+
+    descText = document.createElement("div");
+    descText.id = "descText";
+    descText.innerHTML = backendConfig['mods'][modId]['desc'];
+    descText.style.fontSize = "1.5vw";
+    descText.style.textAlign = "center";
+    descText.style.margin = "15px";
+
+    descPopup.appendChild(descText);
+
+    if(modId === "taskeybinds") {
+      image = document.createElement("img");
+      image.src = "../src/mods/modloader/taskeybinds.png";
+      image.style.width = "50%";
+      image.style.height = "auto";
+      image.style.borderRadius = "10px";
+      descPopup.appendChild(image);
+    }
+  }
+
+  
+
+  
+
+  document.body.appendChild(descPopup);
+}
 
     let createFilterButton = (id, text, width) => {
       let menuButton = document.createElement("button");
@@ -901,6 +898,7 @@
         verticalAlign: "middle",
         border: "solid 3px black",
         borderRadius: "10px 10px 13px 13px",
+        // overflowX: "hidden",
       }
       Object.keys(c).forEach(function (a) {
         menuCard.style[a] = c[a];
@@ -934,17 +932,21 @@
       cardText.innerHTML = name;
 
       c = {
-        display: "block",
+        // display: "block",
         fontFamily: "Retron2000",
         color: "black",
         fontSize: "2vw",
         flexGrow: "0",
         flexShrink: "0",
-        flexBasis: "auto",
+        // flexBasis: "auto",
         textAlign: "center",
         verticalAlign: "middle",
         margin: "0",
+        width: "100%",
         whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+
       }
       Object.keys(c).forEach(function (a) {
         cardText.style[a] = c[a];
@@ -1470,7 +1472,7 @@
             
             `);
 
-            backendConfig = await fetch('../src/mods/modloader/config/backend.json')
+            backendConfig = await fetch('../src/mods/modloader/config/generalMods.json')
             .then((response) => response.json())
             .then(jsondata => {
                 return jsondata;
@@ -1513,7 +1515,7 @@
                         customModConfig['version'] = ["1.4", "1.4.4", "CTLE"];
                         customModConfig['tags'] = ['custom'];
                         customModConfig['reload'] = true;
-                        customModConfig['settings'] = null;
+                        customModConfig['settings'] = {"delete": 0};
                         customModConfig['favorite'] = false;
                         freshUserConfig['mods'][key] = customModConfig;
 

@@ -18,6 +18,26 @@
     var scale = 1;
     var customTextNum = 0;
 
+    let guiEnabled = true
+    globalThis.guiToggle = function (enable) {
+        if (enable) {
+            guiEnabled = true
+            elements = document.querySelectorAll('.gui');
+            elements.forEach(element => {
+                element.style.display = "block";
+                displayNone.forEach(id2 => {
+                    document.getElementById(id2).style.display = "none";
+                });
+            });
+        } else {
+            guiEnabled = false
+            elements = document.querySelectorAll('.gui');
+            elements.forEach(element => {
+                element.style.display = "none";
+            });
+        }
+    }
+
     //check if there are existing gui settings, and if so, modify the starting customTextNum so that it doesn't overlap with existing custom mods
     if(localStorage.getItem('guiSettings') !== null) {
         guiSettings = JSON.parse(localStorage.getItem('guiSettings'));
@@ -1624,7 +1644,7 @@
                 
                 
                 
-                if(JSON.parse(localStorage.getItem('modSettings'))["gui"]["enabled"]) {
+                if(guiEnabled) {
                     //if a gui element is currently being moved, move it
                     if(elementMoving !== null) {
                     

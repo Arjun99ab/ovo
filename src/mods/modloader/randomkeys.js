@@ -294,6 +294,17 @@
 
     var countdown;
 
+    globalThis.randomkeysToggle = function (enable) {
+        if (enable) {
+            // Use the bound methods when adding the event listeners
+            document.addEventListener("keydown", ovoRandomKeys.boundKeyDown);
+        } else {
+            // Use the bound methods when removing the event listeners
+            document.removeEventListener("keydown", ovoRandomKeys.boundKeyDown);
+            clearInterval(countdown);
+        }
+    }
+
     function timer(){
         var sec = 60;
         countdown = setInterval(function(){
@@ -322,44 +333,43 @@
         }, 1000);
     }
   
-    let randomKeys = {
+    let ovoRandomKeys = {
         init() {
-          
-            notify("Mod Loaded", "Random Keys mod loaded");
+            this.boundKeyDown = this.keyDown.bind(this);
+            
+            document.addEventListener("keydown", this.boundKeyDown);
+            notify("Mod Loaded", "Random Keys Mod loaded");
+        },
+        keyDown(event) {
+            if (event.code === "KeyK") {
+                if (event.ctrlKey) {
+                    clearInterval(countdown);
+    
+                    user_keys = []
+                    while(user_keys.length < 4) {
+                        key = allowed_keys[Math.floor(Math.random()*allowed_keys.length)];
+                        if(!user_keys.includes(key)) {
+                            user_keys.push(key);
+                        }
+                    }
+                    
+    
+                    runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[0] = user_keys[0]
+                    runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[1] = user_keys[1]
+                    runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[2] = user_keys[2]
+                    runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[3] = user_keys[3]
+    
+                    notify("Resetting Timer and Keys<br/>These reset in a minute!", `Left: ${keyboardMap[user_keys[0]]}<br/>Up: ${keyboardMap[user_keys[1]]}<br/>Right: ${keyboardMap[user_keys[2]]}<br/>Down: ${keyboardMap[user_keys[3]]}`);
+                    
+                    timer();
+                    
+                }
+                if(event.shiftKey) {
+                    notify("Current Keys:", `Left: ${keyboardMap[runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[0]]}<br/>Up: ${keyboardMap[runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[1]]}<br/>Right: ${keyboardMap[runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[2]]}<br/>Down: ${keyboardMap[runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[3]]}`);
+    
+                }
+            }
         }
     };
-    document.addEventListener("keydown", (event) => { 
-        if (event.code === "KeyK" && JSON.parse(localStorage.getItem('modSettings'))["randomkeys"]["enabled"]) {
-            if (event.ctrlKey) {
-                console.log("2394712983478912")
-                clearInterval(countdown);
-
-                user_keys = []
-                while(user_keys.length < 4) {
-                    key = allowed_keys[Math.floor(Math.random()*allowed_keys.length)];
-                    if(!user_keys.includes(key)) {
-                        user_keys.push(key);
-                    }
-                }
-                
-
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[0] = user_keys[0]
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[1] = user_keys[1]
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[2] = user_keys[2]
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[3] = user_keys[3]
-
-                notify("Resetting Timer and Keys<br/>These reset in a minute!", `Left: ${keyboardMap[user_keys[0]]}<br/>Up: ${keyboardMap[user_keys[1]]}<br/>Right: ${keyboardMap[user_keys[2]]}<br/>Down: ${keyboardMap[user_keys[3]]}`);
-                
-                timer();
-                
-            }
-            if(event.shiftKey) {
-                notify("Current Keys:", `Left: ${keyboardMap[runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[0]]}<br/>Up: ${keyboardMap[runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[1]]}<br/>Right: ${keyboardMap[runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[2]]}<br/>Down: ${keyboardMap[runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals && x.instvar_sids.length === 6).instances[0].instance_vars[3]]}`);
-
-            }
-        }
-    });
-    
-
-    randomKeys.init();
+    ovoRandomKeys.init();
 })();

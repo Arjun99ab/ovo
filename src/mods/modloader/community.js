@@ -11,9 +11,22 @@
     var map2 = null;
     var levelData;
     
-    
-    
-  
+    //modloader enable
+    globalThis.communityToggle = function (enable) {
+      if (enable) {
+        document.addEventListener("keydown", communityLevelsMod.keyDown);
+      } else {
+        if (document.getElementById("community-menu") !== null) { //if menu exists
+          document.getElementById("community-menu").remove();
+          enableClick(map);
+        }
+        console.log("cmon bruh")
+        console.log(communityLevelsMod.keyDown)
+        document.removeEventListener("keydown", communityLevelsMod.keyDown);
+      }
+    }
+      
+    //
     let getPlayer = () => {
         return runtime.types_by_index
             .filter(
@@ -62,7 +75,7 @@
             let behavior = inst.behavior_insts.find(
               (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
             );
-            console.log(behavior)
+            // console.log(behavior)
             map.push({
               inst,
               oldState: behavior.scroll.isEnabled,
@@ -72,7 +85,7 @@
           });
         });
         let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
-        console.log(layer)
+        // console.log(layer)
         if (layer) {
           layer.instances.forEach((inst) => {
             //save state to mapUI
@@ -84,7 +97,7 @@
               },
             });
             // set size to 0
-            console.log(inst)
+            // console.log(inst)
             inst.width = 0;
             inst.height = 0;
             inst.set_bbox_changed();
@@ -95,7 +108,7 @@
             let behavior = inst.behavior_insts.find(
               (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
             );
-            console.log(behavior)
+            // console.log(behavior)
           });
         });
         return {
@@ -113,7 +126,7 @@
           )
         );
         types.forEach((type) => {
-          console.log(type);
+          // console.log(type);
           type.instances.forEach((inst) => {
             let behavior = inst.behavior_insts.find(
               (x) => x.behavior instanceof cr.behaviors.aekiro_button
@@ -126,7 +139,7 @@
           });
         });
         let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
-        console.log(layer)
+        // console.log(layer)
         if (layer) {
           layer.instances.forEach((inst) => {
             //save state to mapUI
@@ -148,7 +161,6 @@
             let behavior = inst.behavior_insts.find(
               (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
             );
-            console.log(behavior)
           });
         });
         return {
@@ -192,7 +204,7 @@
     let renderListLevels = (levelsQueried) => {
       var levelsList = document.createElement('div');
       levelsList.addEventListener('wheel', (e) => {
-        console.log("hello)")
+        // console.log("hello)")
         e.stopImmediatePropagation()
         e.stopPropagation();
         // e.preventDefault();
@@ -432,14 +444,14 @@
         });
 
         searchInput.onclick = (e) => { //ensure that input box focus
-            console.log("please");
+            // console.log("please");
             e.stopImmediatePropagation()
             e.stopPropagation();
             e.preventDefault();
             searchInput.focus()
         }
         searchInput.onkeydown = (e) => { // ensures that user is able to type in input box
-            console.log("pleasev2");
+            // console.log("pleasev2");
             e.stopImmediatePropagation()
             e.stopPropagation();
             if(e.keyCode === 13) {
@@ -473,9 +485,9 @@
         searchBtn.id = "search-btn";
         searchBtn.onclick = async function() {
             let query = searchInput.value;
-            console.log("searching" + query);
+            // console.log("searching" + query);
             var levelsQueried = await queryDatabase(query);
-            console.log(levelsQueried);
+            // console.log(levelsQueried);
             if(document.getElementById('levels-list') !== null) { //are there levels already displayed?
                 document.getElementById('levels-list').remove(); //if so remove them
             }
@@ -592,8 +604,8 @@
         icon.style.height = '40%';
         icon.style.border = '1px solid red';
         icon.style.position = "relative";
-        console.log(icon.offsetWidth)
-        console.log(icon.offsetHeight)
+        // console.log(icon.offsetWidth)
+        // console.log(icon.offsetHeight)
         iconImg = document.createElement('img');
         iconImg.src = "https://static.thenounproject.com/png/17448-200.png";
         iconImg.style.flexShrink = "0";
@@ -651,26 +663,26 @@
 
 
 
-            console.log(ovoLevelEditor)
+            // console.log(ovoLevelEditor)
 
             levelData = await fetch('../src/communitylevels/config/data.json')
               .then((response) => response.json())
               .then(jsondata => {
-                  console.log(jsondata)
+                  // console.log(jsondata)
                   return jsondata;
               });
-            console.log(levelData)
+            // console.log(levelData)
 
             
             
 
-            document.addEventListener("keydown", (event) => {this.keyDown(event)});
-
+            document.addEventListener("keydown", this.keyDown);
+            
             notify("Community Levels Loaded", "by Awesomeguy<br/>Shift + L to open the levels menu", "https://static.thenounproject.com/png/4306405-200.png")
 
         },
         keyDown(event) {
-          if (event.shiftKey && event.code === "KeyL" && JSON.parse(localStorage.getItem('modSettings'))["community"]["enabled"]) {
+          if (event.shiftKey && event.code === "KeyL") {
             if (document.getElementById("community-menu") === null) { //if menu doesn't exist
               map = disableClick();
               createCommunityMenu()

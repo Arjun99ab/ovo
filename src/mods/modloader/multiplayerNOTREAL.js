@@ -3637,11 +3637,9 @@ let getRandomOvORoomCode = () => {
             }
             // if layout is main menu, call spawnTextOnTitleLogo
             if (getCurLayout() === "Main Menu") {
-              if(!JSON.parse(localStorage.getItem('modSettings'))["multiplayer"]["enabled"]) { //if mod disabled
-                spawnTextOnTitleLogo(text="");
-              } else {
-                spawnTextOnTitleLogo();
-              }
+              
+              spawnTextOnTitleLogo();
+              
             }
           },
 
@@ -5160,72 +5158,67 @@ let getRandomOvORoomCode = () => {
           },
 
           tick() {
-            if(JSON.parse(localStorage.getItem('modSettings'))["multiplayer"]["enabled"]) {
-              if (!this.initialised) return;
-              let player = getPlayer();
-              if (player && getFlag()) {
-                if (!this.usernameInsts) {
-                  this.usernameInsts = this.createUsernameInstances(
-                    player.layer,
-                    player.x,
-                    player.y,
-                    this.username
-                  );
-                }
-
-                this.updateUsernamePosition(
-                  this.usernameInsts,
-                  player.x - 100,
-                  player.y - 55,
+            if (!this.initialised) return;
+            let player = getPlayer();
+            if (player && getFlag()) {
+              if (!this.usernameInsts) {
+                this.usernameInsts = this.createUsernameInstances(
+                  player.layer,
+                  player.x,
+                  player.y,
                   this.username
                 );
               }
 
-              if (this.connectedToRoom && this.sendPlayerData) {
-                this.sendPlayerData = false;
-                this.destroyNonPlayerGhosts();
-                this.connections.forEach((connection) => {
-                  if (!connection.data) return;
-                  if (!connection.player) {
-                    connection.player = this.createGhostPlayer(connection.data);
-                    console.log(connection.data)
-                  } else if (connection.data.layout !== getCurLayout()) {
-                    //destroy player
-                    this.destroyGhostPlayer(connection.player);
-                    connection.player = null;
-                  } else {
-                    this.loadPlayerData(connection.player, connection.data);
-                  }
-                });
-                if (this.isHost) {
-                  let otherData = {};
-                  this.connections.forEach((connection) => {
-                    otherData[connection.id] = connection.data;
-                  });
-                  //add my data with my id to other data
-                  otherData[this.peer.id] = this.getMyData();
+              this.updateUsernamePosition(
+                this.usernameInsts,
+                player.x - 100,
+                player.y - 55,
+                this.username
+              );
+            }
 
-                  //send all player data you received
-                  this.connections.forEach((connection) => {
-                    connection.conn.send({
-                      type: DATA_TYPES.HOST_DATA,
-                      payload: otherData,
-                    });
-                  });
+            if (this.connectedToRoom && this.sendPlayerData) {
+              this.sendPlayerData = false;
+              this.destroyNonPlayerGhosts();
+              this.connections.forEach((connection) => {
+                if (!connection.data) return;
+                if (!connection.player) {
+                  connection.player = this.createGhostPlayer(connection.data);
+                  console.log(connection.data)
+                } else if (connection.data.layout !== getCurLayout()) {
+                  //destroy player
+                  this.destroyGhostPlayer(connection.player);
+                  connection.player = null;
                 } else {
-                  //send only your player data
-                  this.conn.send({
-                    type: DATA_TYPES.PLAYER_DATA,
-                    payload: this.getMyData(),
-                  });
-                  //console.log(this.getMyData())
+                  this.loadPlayerData(connection.player, connection.data);
                 }
-              }
-            } else {
-              if(this.connectedToRoom) {
-                this.leaveRoom();
+              });
+              if (this.isHost) {
+                let otherData = {};
+                this.connections.forEach((connection) => {
+                  otherData[connection.id] = connection.data;
+                });
+                //add my data with my id to other data
+                otherData[this.peer.id] = this.getMyData();
+
+                //send all player data you received
+                this.connections.forEach((connection) => {
+                  connection.conn.send({
+                    type: DATA_TYPES.HOST_DATA,
+                    payload: otherData,
+                  });
+                });
+              } else {
+                //send only your player data
+                this.conn.send({
+                  type: DATA_TYPES.PLAYER_DATA,
+                  payload: this.getMyData(),
+                });
+                //console.log(this.getMyData())
               }
             }
+            
             
           },
 
@@ -5920,11 +5913,8 @@ let getRandomOvORoomCode = () => {
             oldFn();
             curLayout = layout.name;
             multiplayer.startOfLayout();
-            if(!JSON.parse(localStorage.getItem('modSettings'))["multiplayer"]["enabled"]) { //if mod disabled
-              spawnTextOnTitleLogo(text="");
-            } else {
-              spawnTextOnTitleLogo();
-            }
+            spawnTextOnTitleLogo();
+            
           };
         });
 
