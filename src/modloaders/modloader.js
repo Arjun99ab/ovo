@@ -660,6 +660,37 @@
   
     document.body.appendChild(descPopup);
   }
+  let searchMods = (search, filter = "all") => {
+    search = search.toLowerCase();
+    console.log(filter)
+    
+
+    filterCards = document.getElementById("cards-div").children;
+    while(filterCards.length > 0) { //clear all cards
+      filterCards[0].remove();
+    }
+    cardsList = [];
+    userConfig = JSON.parse(localStorage.getItem('modSettings'));
+    for (const [key] of Object.entries(backendConfig['mods'])) {
+      if(key != "version" && key != "settings" && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platform'].includes(detectDeviceType()) && backendConfig['mods'][key]['name'].toLowerCase().includes(search) && (backendConfig['mods'][key]['tags'].includes(filter) || filter === "all" || userConfig['mods'][key]['favorite'] === true)) {
+        cardsList.push(createMenuCard(key + '-card', backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']));
+      }
+    }
+    Object.keys(userConfig['mods']).forEach(function (key) {
+      if(key.startsWith("custom")) {
+        console.log(userConfig['mods'][key])
+        if(userConfig['mods'][key]['name'].toLowerCase().includes(search) && userConfig['mods'][key]['version'].includes(version) && userConfig['mods'][key]['platform'].includes(detectDeviceType()) && (userConfig['mods'][key]['tags'].includes(filter) || filter === "all" || userConfig['mods'][key]['favorite'] === true)) {
+          cardsList.push(createMenuCard(key + '-card', userConfig['mods'][key]['name'], userConfig['mods'][key]['icon'], userConfig['mods'][key]['enabled']));
+        }
+      }
+    }
+    );
+    console.log(cardsList)
+    cardsList.sort((a, b) => a.children[1].innerHTML.localeCompare(b.children[1].innerHTML));
+
+    return cardsList;
+  }
+
 
     let createFilterButton = (id, text, width) => {
       let menuButton = document.createElement("button");
@@ -699,7 +730,7 @@
           }
           cardsList = [];
           for (const [key] of Object.entries(backendConfig['mods'])) {
-            if(key != "version" && key != "settings" && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
+            if(key != "version" && key != "settings" && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platform'].includes(detectDeviceType())) {
               if(currentFilter === 'all') {
                 cardsList.push(createMenuCard(key + '-card', backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']));
               } else if(currentFilter === 'favorite') {
@@ -766,9 +797,14 @@
         alignItems: "center",
         width: width,
         height: "3vw",
+        cursor: "pointer",
+        backgroundColor: "white",
         textAlign: "center",
         verticalAlign: "middle",
         border: "solid 3px black",
+        fontSize: "2vw",
+        color: "black",
+        fontFamily: "Retron2000",
         borderRadius: "10px 10px 10px 10px",
         
       }
@@ -778,29 +814,6 @@
       
       menuButton.appendChild(p);
 
-      let c = {
-        fontFamily: "Retron2000",
-        color: "black",
-        fontSize: "2vw",
-        cursor: "pointer",
-        backgroundColor: "white",
-        
-        width: width,
-        height: "3vw",
-        textAlign: "center",
-        verticalAlign: "middle",
-        border: "solid 3px black",
-        // background: "url(https://cdn-icons-png.flaticon.com/128/1828/1828970.png)",
-        // backgroundSize: "contain",
-        // backgroundRepeat: "no-repeat",
-        // backgroundPosition: "center",
-        // borderRadius: "10px",
-
-        // height: "auto",
-      }
-      Object.keys(c).forEach(function (a) {
-        menuButton.style[a] = c[a];
-      });
       return menuButton;
     }
 
@@ -1251,12 +1264,65 @@
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Custom mods are not available yet.");
       }
-      button6 = createNavButton("nav-search-btn", "Search", "13vw");
-      button6.onclick = function() {
-        document.getElementById("menu-bg").style.pointerEvents = "none";
-        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-        createNotifyModal("Searching is not available yet.");
+      let searchBar = document.createElement("input");
+      searchBar.id = 'nav-search-bar';
+      searchBar.placeholder = "Search...";
+      let d = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "13vw",
+        height: "3vw",
+        cursor: "pointer",
+        backgroundColor: "white",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        fontSize: "2vw",
+        color: "black",
+        fontFamily: "Retron2000",
+        paddingLeft: "10px",
+        borderRadius: "10px 10px 10px 10px",
+        
       }
+      Object.keys(d).forEach(function (a) {
+        searchBar.style[a] = d[a];
+      });
+      searchBar.onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        e.preventDefault();
+        searchBar.focus()
+      }
+      menuBg.onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        searchBar.blur()
+      }
+      searchBar.onkeydown = (e) => { // ensures that user is able to type in input box
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        if(e.keyCode === 27) {
+          searchBar.blur();
+        }
+        if(e.keyCode === 13) {
+          searchBar.blur();
+        } 
+      };
+      searchBar.onkeyup = (e) => {
+        console.log(currentFilter)
+        console.log(searchBar.value)
+        cardsList = searchMods(searchBar.value, currentFilter);
+        filterCards = document.getElementById("cards-div").children;
+        while(filterCards.length > 0) { //clear all cards
+          filterCards[0].remove();
+        }
+        cardsDiv = document.getElementById("cards-div");
+        console.log(cardsDiv)
+        cardsList.forEach((card) => {
+          cardsDiv.appendChild(card);
+        });
+      }
+      
 
 
      
@@ -1265,7 +1331,7 @@
       buttonContainer.appendChild(button3);
       buttonContainer.appendChild(button4);
       buttonContainer.appendChild(button5);
-      buttonContainer.appendChild(button6);
+      buttonContainer.appendChild(searchBar);
 
 
       filtersAndCards = document.createElement("div");
@@ -1387,7 +1453,7 @@
       cardsList = [];
       console.log(this.backendConfig['mods'])
       for (const [key] of Object.entries(this.backendConfig['mods'])) {
-        if(key != "version" && key != "settings" && this.backendConfig['mods'][key]['version'].includes(version) && this.backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
+        if(key != "version" && key != "settings" && this.backendConfig['mods'][key]['version'].includes(version) && this.backendConfig['mods'][key]['platform'].includes(detectDeviceType())) {
           cardsList.push(createMenuCard(key + '-card', this.backendConfig['mods'][key]['name'], this.backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']))
         }
       }
@@ -1556,7 +1622,7 @@
             //enable mods
             for (const [key] of Object.entries(userConfig['mods'])) {
                 
-                if(!key.startsWith("custom") && userConfig['mods'][key]['enabled'] === true && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platforms'].includes(detectDeviceType())) {
+                if(!key.startsWith("custom") && userConfig['mods'][key]['enabled'] === true && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platform'].includes(detectDeviceType())) {
                     if(backendConfig['mods'][key] === undefined || !backendConfig['mods'][key]['tags'].includes('visual')) { 
                         //non visual mods or custom mods are considered 'cheats'
                         document.getElementById("cheat-indicator").style.display = "block";
