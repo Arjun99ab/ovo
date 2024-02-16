@@ -1059,7 +1059,7 @@
           position: "absolute",
           cursor: "pointer",
           left: "4px",
-          top: "3px",
+          top: "200px",
           width: "100px",
           height: "100px",
           display: "block",
