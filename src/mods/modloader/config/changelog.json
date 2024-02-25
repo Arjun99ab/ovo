@@ -1,0 +1,20 @@
+{
+    "2.0.0": {
+        "changes": [
+            "Completely new UI"
+        ]
+    },
+    "2.0.1": {
+        "changes": [
+            "Search bar for mods",
+            "Bug fixes"
+        ]
+    },
+    "2.0.2": {
+        "changes": [
+            "Ability to add/delete your custom mods",
+            "Bug fixes"
+        ]
+    }
+
+}

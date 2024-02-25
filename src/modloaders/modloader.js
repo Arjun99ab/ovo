@@ -16,6 +16,21 @@
     function sleep (time) {
         return new Promise((resolve) => setTimeout(resolve, time));
     }
+    function arraysEqual(a, b) {
+      if (a === b) return true;
+      if (a == null || b == null) return false;
+      if (a.length !== b.length) return false;
+    
+      // If you don't care about the order of the elements inside
+      // the array, you should sort both arrays here.
+      // Please note that calling sort on an array will modify that array.
+      // you might want to clone your array first.
+    
+      for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
+    }
 
     let onFinishLoad = () => {
         if ((cr_getC2Runtime() || {isloading: true}).isloading) {
@@ -215,8 +230,8 @@
       console.log(modId)
       if (enable) { //want to enable
         console.log(document.getElementById(modId))
-        console.log(!!!document.getElementById(modId), !document.getElementById(modId))
-        if(!!!document.getElementById(modId)) { // custom mods or mods that aren't in memory
+        console.log(!document.getElementById(modId), !document.getElementById(modId))
+        if(!document.getElementById(modId)) { // custom mods or mods that aren't in memory
           console.log('sadghyfisatdgifuygasdyifg')
           js = document.createElement("script");
           js.type = "application/javascript";
@@ -616,6 +631,140 @@
 
     // confirmBg.appendChild(xButton);
     document.body.appendChild(notifyBg);
+}
+
+let createChangelogPopup = (changelog, userVersion, currentVersion) => {
+  //Create background div
+  let changelogPopup = document.createElement("div");
+  changelogPopup.id = "changelogPopup-bg";
+
+  c = {
+      display: "flex",
+      flexDirection: "column",
+      // justifyContent: "center",
+      // alignItems: "center",
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "white",
+      border: "solid",
+      borderColor: "black",
+      borderWidth: "2px",
+      fontFamily: "Retron2000",
+      cursor: "default",
+      color: "black",
+      fontSize: "10pt",
+      width: "40%",
+      height: "auto",
+      overflow: "auto",
+      margin: "0",
+      padding: "10px",
+      borderRadius: "10px",
+  };
+  Object.keys(c).forEach(function (a) {
+    changelogPopup.style[a] = c[a];
+  });
+
+  
+
+  //Title
+  titleText = document.createElement("div");
+  c = {
+      backgroundColor: "white",
+      border: "none",
+      fontFamily: "Retron2000",
+      // position: "relative",
+      // top: "2%",
+      //left: "35%",
+      color: "black",
+      fontSize: "3vw",
+      textAlign: "center",
+      cursor: "default",
+      // margin: "0",
+      // textAlign: "center",
+  };
+  Object.keys(c).forEach(function (a) {
+      titleText.style[a] = c[a];
+  });
+  titleText.id = "title-text";
+  newContent = document.createTextNode("Changelog");
+  titleText.appendChild(newContent);
+
+  changelogPopup.appendChild(titleText);
+
+  //X button CSS
+  xButton = document.createElement("button");
+  c = {
+    position: "absolute",
+    top: "5px",
+    right: "5px",
+    backgroundColor: "white",
+    border: "none",
+    fontFamily: "Retron2000",
+    color: "black",
+    fontSize: "2.3vw",
+    cursor: "pointer",
+  };
+  Object.keys(c).forEach(function (a) {
+      xButton.style[a] = c[a];
+  });
+
+  xButton.innerHTML = "❌";
+  xButton.id = "x-button";
+
+  xButton.onclick = function() {
+    changelogPopup.remove();
+      // enableClick(map);
+      document.getElementById("menu-bg").style.pointerEvents = "auto";
+      document.getElementById("menu-bg").style.filter = "none";
+  }
+  // navbar.appendChild(xButton);
+  changelogPopup.appendChild(xButton);
+
+  modSettings = JSON.parse(localStorage.getItem('modSettings'));
+ 
+  
+
+  descText = document.createElement("div");
+  descText.id = "descText";
+  descText.style.fontSize = "1.5vw";
+  descText.style.textAlign = "left";
+  descText.style.margin = "10px";
+  changelogVersions = Object.keys(changelog);
+  currentVersionIndex = changelogVersions.indexOf(currentVersion);
+  userVersionIndex = changelogVersions.indexOf(userVersion);
+  console.log(currentVersionIndex, userVersionIndex)
+  if(userVersionIndex === -1) {
+    return;
+  }
+  if(currentVersionIndex < userVersionIndex) {
+    return
+  }
+  for(i = currentVersionIndex; i > userVersionIndex; i--) {
+    descText.innerHTML += "<h3>" + changelogVersions[i] + "</h3>";
+    descText.innerHTML += "<ul>";
+    console.log(changelog[changelogVersions[i]])
+    changelog[changelogVersions[i]]['changes'].forEach((change) => {
+      descText.innerHTML += "<li>" + change + "</li>";
+    });
+    descText.innerHTML += "</ul>";
+    if(i !== userVersionIndex + 1){ 
+      descText.innerHTML += "<br>";
+    }
+  }
+
+
+
+  changelogPopup.appendChild(descText);
+
+  
+
+  
+
+  
+
+  document.body.appendChild(changelogPopup);
 }
 
 
@@ -2005,6 +2154,11 @@
             .then(jsondata => {
                 return jsondata;
             });
+            changelog = await fetch('../src/mods/modloader/config/changelog.json')
+            .then((response) => response.json())
+            .then(jsondata => {
+                return jsondata;
+            });
 
 
             // localStorage.setItem('modSettings', JSON.stringify({}));
@@ -2053,21 +2207,40 @@
                 freshUserConfig['version'] = backendConfig['version'];
                 freshUserConfig['settings'] = backendConfig['settings'];
                 localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
-            } else if(userConfig['version'] !== backendConfig['version']) {
+            } else  { //
                 //new version
+                if(userConfig['version'] !== backendConfig['version']) {
+                  createChangelogPopup(changelog, userConfig['version'], backendConfig['version']);
+                }
+                console.log("new version")
                 freshUserConfig = {'mods': {}, 'settings': {}}
                 for (const [key] of Object.entries(backendConfig['mods'])) {
                     if(userConfig['mods'][key] === undefined) {
-                        freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
+                      freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
                     } else {
-                        freshUserConfig['mods'][key] = userConfig['mods'][key];
+                      console.log(key)
+                      if (backendConfig['mods'][key]['defaultSettings']['settings'] !== null) {
+                        backendModSettings = Object.keys(backendConfig['mods'][key]['defaultSettings']['settings'])
+                        userModSettings = Object.keys(userConfig['mods'][key]['settings'])
+                        if(!arraysEqual(backendModSettings, userModSettings)) {
+                          newMods = backendModSettings.filter(x => !userModSettings.includes(x))
+                          badMods = userModSettings.filter(x => !backendModSettings.includes(x))
+                          for(const mod of newMods) {
+                            userConfig['mods'][key]['settings'][mod] = backendConfig['mods'][key]['defaultSettings']['settings'][mod]
+                          }
+                          for(const mod of badMods) {
+                            delete userConfig['mods'][key]['settings'][mod]
+                          }
+                        }
+                      }
+                      freshUserConfig['mods'][key] = userConfig['mods'][key];
                     }
                 }
                 for(const [key] of Object.entries(userConfig['mods'])) {
                     if(key.startsWith("custom")) { //custom mod
                         freshUserConfig['mods'][key] = userConfig['mods'][key];
                     } else {
-                      delete userConfig['mods'][key];
+                      delete userConfig['mods'][key]; //if mod is not in backend, delete it
                     }
                   }
                 for(const [key] of Object.entries(backendConfig['settings'])) {
