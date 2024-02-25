@@ -248,7 +248,7 @@
         modSettings = JSON.parse(localStorage.getItem('modSettings'));
         modSettings['mods'][modId]["enabled"] = false;
         localStorage.setItem('modSettings', JSON.stringify(modSettings));
-        if(backendConfig['mods'][modId]["reload"]) { //if mod requires reload
+        if(modId.startsWith("custom") || backendConfig['mods'][modId]["reload"]) { //if mod requires reload
           document.getElementById("menu-bg").style.pointerEvents = "none";
           document.getElementById("menu-bg").style.filter = "blur(1.2px)";
           createConfirmReloadModal();
@@ -259,6 +259,137 @@
         }
       }
     }
+
+    let createConfirmDeleteModal = (modId) => {
+      //Create background div
+      let confirmBg = document.createElement("div");
+      confirmBg.id = "confirm-delete-bg";
+
+      c = {
+          display: "block",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          backgroundColor: "white",
+          border: "solid",
+          borderColor: "black",
+          borderWidth: "2px",
+          fontFamily: "Retron2000",
+          cursor: "default",
+          color: "black",
+          fontSize: "10pt",
+          width: "40%",
+          // height: "15%",
+          overflow: "auto",
+          margin: "0",
+          padding: "5px",
+          borderRadius: "10px",
+      };
+      Object.keys(c).forEach(function (a) {
+          confirmBg.style[a] = c[a];
+      });
+
+      infoText = document.createElement("div");
+      infoText.id = "asd";
+
+      c = {
+          backgroundColor: "white",
+          border: "none",
+          fontFamily: "Retron2000",
+          // position: "relative",
+          // top: "2%",
+          // left: "25%",
+          textAlign: "center",
+          //padding: "5px",
+          color: "black",
+          fontSize: "13pt",
+          cursor: "default",
+      };
+      Object.keys(c).forEach(function (a) {
+          infoText.style[a] = c[a];
+      });
+
+      content = document.createTextNode("Are you sure you want to delete this mod?");
+      infoText.appendChild(content);
+      
+      // Create buttons container
+      let buttonsContainer = document.createElement("div");
+      buttonsContainer.style.display = "flex";
+      buttonsContainer.style.flexWrap = "wrap";
+      buttonsContainer.style.justifyContent = "center";
+      buttonsContainer.style.alignItems = "center";
+      buttonsContainer.style.marginTop = "15px";
+      buttonsContainer.style.marginBottom = "10px";
+      buttonsContainer.style.gap = "10px";
+      // buttonsContainer.style.position = "relative";
+
+      // Create confirm button
+      let confirmButton = document.createElement("button");
+      confirmButton.innerHTML = "Yes";
+      confirmButton.style.fontFamily = "Retron2000";
+      confirmButton.style.fontSize = "14pt";
+      confirmButton.style.backgroundColor = "rgb(45, 186, 47)";
+      confirmButton.style.color = "white";
+      confirmButton.style.border = "none";
+      confirmButton.style.padding = "5px 10px";
+      confirmButton.style.cursor = "pointer";
+      confirmButton.onclick = function() {
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
+          
+          if(modSettings['mods'][modId]["enabled"] === true) { //if mod is enabled, disable it (which will anyway reload)
+            confirmBg.remove();
+            toggleMod(modId, false);
+            delete modSettings['mods'][modId];
+            localStorage.setItem('modSettings', JSON.stringify(modSettings));
+          } else {
+            delete modSettings['mods'][modId];
+            localStorage.setItem('modSettings', JSON.stringify(modSettings));
+            document.getElementById('nav-mods-btn').click(); //refresh the mods page
+            document.getElementById("confirm-delete-bg").remove();
+            document.getElementById("menu-bg").style.pointerEvents = "auto";
+            document.getElementById("menu-bg").style.filter = "none";
+          }
+          
+
+      };
+
+      // Create cancel button
+      let cancelButton = document.createElement("button");
+      cancelButton.innerHTML = "No";
+      cancelButton.style.fontFamily = "Retron2000";
+      cancelButton.style.fontSize = "14pt"
+      cancelButton.style.backgroundColor = "rgb(222, 48, 51)";
+      cancelButton.style.color = "white";
+      cancelButton.style.border = "none";
+      cancelButton.style.padding = "5px 10px";
+      cancelButton.style.cursor = "pointer";
+      cancelButton.onclick = function() {
+          console.log("cancel");
+
+          confirmBg.remove();
+          document.getElementById("menu-bg").style.pointerEvents = "auto";
+          document.getElementById("menu-bg").style.filter = "none";
+          document.getElementById("c2canvasdiv").style.filter = "none";
+
+          
+          // enableClick(map);   
+      };
+
+      // Append buttons to the buttons container
+      buttonsContainer.appendChild(confirmButton);
+      buttonsContainer.appendChild(cancelButton);
+
+
+      confirmBg.appendChild(infoText);
+      confirmBg.appendChild(buttonsContainer);
+      
+
+      // confirmBg.appendChild(xButton);
+      document.body.appendChild(confirmBg);
+  }
 
 
 
@@ -920,6 +1051,10 @@
             
           }
 
+        } else if(id.includes("delete")) {
+          document.getElementById("menu-bg").style.pointerEvents = "none";
+          document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+          createConfirmDeleteModal(id.split("-")[0]);
         }
       }
       return cardButton;
@@ -1020,7 +1155,11 @@
 
       topCards.className = "card-buttons";
       infoButton = createCardButton(id + "-info-btn", "https://cdn-icons-png.flaticon.com/128/157/157933.png", "calc(100%/3)");
-      settingsButton = createCardButton(id + "-settings-btn", "https://cdn-icons-png.flaticon.com/128/2040/2040504.png", "calc(100%/3)");
+      if(id.startsWith("customMod")) {
+        deleteButton = createCardButton(id + "-delete-btn", "https://cdn-icons-png.flaticon.com/128/3096/3096673.png", "calc(100%/3)");
+      } else {
+        settingsButton = createCardButton(id + "-settings-btn", "https://cdn-icons-png.flaticon.com/128/2040/2040504.png", "calc(100%/3)");
+      }
       favoriteButton = createCardButton(id + "-favorites-btn", "https://cdn-icons-png.flaticon.com/128/1828/1828970.png", "calc(100%/3)");
       if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['favorite']) {
         favoriteButton.style.background = "url(https://cdn-icons-png.flaticon.com/128/1828/1828884.png)";
@@ -1036,7 +1175,11 @@
 
 
       topCards.appendChild(infoButton);
-      topCards.appendChild(settingsButton);
+      if(id.startsWith("customMod")) {
+        topCards.appendChild(deleteButton);
+      } else {
+        topCards.appendChild(settingsButton);
+      }
       topCards.appendChild(favoriteButton);
       cardButtons.appendChild(topCards);
       
@@ -1282,7 +1425,7 @@
           elements[i].style.backgroundColor = 'white';
         }
         modsButton.style.backgroundColor = "lightblue";
-        hydrateModsMenu(filtersDiv, cardsDiv);
+        renderModsMenu(filtersDiv, cardsDiv);
 
       }
       settingsButton = createNavButton("nav-settings-btn", "Settings", "13vw");
@@ -1313,7 +1456,7 @@
           elements[i].style.backgroundColor = 'white';
         }
         addmodButton.style.backgroundColor = "lightblue";
-        hydrateAddModMenu(filtersDiv, cardsDiv);
+        renderAddModMenu(filtersDiv, cardsDiv);
         
       }
       let searchBar = document.createElement("input");
@@ -1420,6 +1563,56 @@
         // e.preventDefault();
         filtersDiv.focus();
       });
+      
+
+
+      ////
+
+
+      
+
+
+    
+
+
+      
+      cardsDiv = document.createElement("div");
+      cardsDiv.addEventListener('wheel', (e) => {
+        // console.log("hello)")
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        // e.preventDefault();
+        cardsDiv.focus();
+      });
+      
+      cardsDiv.id = "cards-div";
+
+
+      //default menu, when users open the modmenu
+      renderModsMenu(filtersDiv, cardsDiv)
+
+
+      filtersAndCards.appendChild(filtersDiv);
+      filtersAndCards.appendChild(cardsDiv);
+
+
+      
+
+
+      
+
+      menuBg.appendChild(navbar);
+      menuBg.appendChild(buttonContainer);
+      menuBg.appendChild(filtersAndCards);
+      document.body.appendChild(menuBg);
+
+      
+      
+      
+
+    } 
+
+    let renderModsMenu = (filtersDiv, cardsDiv) => {
       c = {
         display: "flex",
         // flex: "1",
@@ -1444,25 +1637,6 @@
           filtersDiv.style[a] = c[a];
       });
 
-
-      ////
-
-
-      
-
-
-    
-
-
-      
-      cardsDiv = document.createElement("div");
-      cardsDiv.addEventListener('wheel', (e) => {
-        // console.log("hello)")
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        // e.preventDefault();
-        cardsDiv.focus();
-      });
       c = {
         display: "grid",
         padding: "10px",
@@ -1485,34 +1659,6 @@
       Object.keys(c).forEach(function (a) {
           cardsDiv.style[a] = c[a];
       });
-      cardsDiv.id = "cards-div";
-
-
-      //default menu, when users open the modmenu
-      hydrateModsMenu(filtersDiv, cardsDiv)
-
-
-      filtersAndCards.appendChild(filtersDiv);
-      filtersAndCards.appendChild(cardsDiv);
-
-
-      
-
-
-      
-
-      menuBg.appendChild(navbar);
-      menuBg.appendChild(buttonContainer);
-      menuBg.appendChild(filtersAndCards);
-      document.body.appendChild(menuBg);
-
-      
-      
-      
-
-    } 
-
-    let hydrateModsMenu = (filtersDiv, cardsDiv) => {
       
       while (filtersDiv.firstChild) {
         filtersDiv.removeChild(filtersDiv.lastChild);
@@ -1522,7 +1668,7 @@
         cardsDiv.removeChild(cardsDiv.lastChild);
       }
 
-      console.log(filters)
+      // filterArr = Array.from(filters)
       for(const filter of filters) {
         console.log(filter)
         if(filter === 'favorite') {
@@ -1561,7 +1707,50 @@
       }
     }
 
-    let hydrateAddModMenu = (filtersDiv, cardsDiv) => {
+    let renderAddModMenu = (filtersDiv, cardsDiv) => {
+
+      c = {
+        display: "flex",
+        // flex: "1",
+        alignItems: "left",
+        justifyContent: "center",
+        padding: "10px",
+        flexDirection: "column",
+        // width: "10%",
+        borderTop: "solid 3px black",
+
+        height: "100%",
+        overflowY: "auto",
+        overflowX: "hidden",
+
+        scrollbarGutter: "stable",
+        scrollbarWidth: "thin",
+        // backgroundColor: "red",
+        // position: "sticky",
+        // marginRight: "2%",
+      }
+      Object.keys(c).forEach(function (a) {
+          filtersDiv.style[a] = c[a];
+      });
+
+      c = {
+        display: "flex",
+        padding: "10px",
+        paddingBottom: "30px",
+        flexDirection: "column",
+
+        borderLeft: "solid 3px black",
+        borderTop: "solid 3px black",
+        width: "83%",
+        height: "93%",
+        overflowY: "auto",
+        overflowX: "hidden",
+        scrollbarGutter: "stable",
+        scrollbarWidth: "thin",
+      }
+      Object.keys(c).forEach(function (a) {
+          cardsDiv.style[a] = c[a];
+      });
       
       while (filtersDiv.firstChild) {
         filtersDiv.removeChild(filtersDiv.lastChild);
@@ -1572,40 +1761,196 @@
 
       
 
-      let jumpsCss = {
+      let saveButtonCss = {
         fontFamily: "Retron2000",
         color: "black",
         fontSize: "2vw",
         cursor: "pointer",
-        backgroundColor: "white",
+        backgroundColor: "lightgreen",
         width: "13vw",
         textAlign: "center",
         verticalAlign: "middle",
         marginBottom: "15px",
         border: "solid 3px black",
         borderRadius: "10px",
-
-        // height: "auto",
       }
 
-      let jumptoNameButton = document.createElement("button");
-      jumptoNameButton.innerHTML = "Name";
-
-      let jumptoCodeButton = document.createElement("button");
-      jumptoCodeButton.innerHTML = "Code";
-
-      let jumptoDescButton = document.createElement("button");
-      jumptoDescButton.innerHTML = "Desc";
-
-      Object.keys(jumpsCss).forEach(function (a) {
-        jumptoNameButton.style[a] = jumpsCss[a];
-        jumptoCodeButton.style[a] = jumpsCss[a];
-        jumptoDescButton.style[a] = jumpsCss[a];
+      let saveButton = document.createElement("button");
+      saveButton.innerHTML = "Save Mod";
+      Object.keys(saveButtonCss).forEach(function (a) {
+        saveButton.style[a] = saveButtonCss[a];
       });
-      //
-      filtersDiv.appendChild(jumptoNameButton);
-      filtersDiv.appendChild(jumptoCodeButton);
-      filtersDiv.appendChild(jumptoDescButton);
+
+      saveButton.onclick = function() {
+        if(addModName.value !== "" && addModCode.value !== "") {
+          customModNum++;
+          console.log("brand new mod")
+
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
+          customModConfig = {};
+          customModConfig['author'] = null;
+          customModConfig['icon'] = "https://cdn0.iconfinder.com/data/icons/web-development-47/64/feature-application-program-custom-512.png"
+          customModConfig['platform'] = ["pc", "mobile"];
+          customModConfig['version'] = ["1.4", "1.4.4", "CTLE"];
+          customModConfig['tags'] = ['custom'];
+          customModConfig['reload'] = true;
+          customModConfig['settings'] = null;
+          customModConfig['favorite'] = false;
+          customModConfig['name'] = addModName.value;
+          customModConfig['desc'] = addModDesc.value;
+          customModConfig['enabled'] = false;
+          customModConfig['url'] = addModCode.value;
+          modSettings['mods']['customMod' + customModNum] = customModConfig;
+          localStorage.setItem('modSettings', JSON.stringify(modSettings));
+
+          document.getElementById("nav-mods-btn").click();
+
+
+        } 
+      }
+
+
+      filtersDiv.appendChild(saveButton);
+
+      let addModName = document.createElement("input");
+      addModName.placeholder = "Mod Name";
+      let d = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "13vw",
+        height: "3vw",
+        cursor: "pointer",
+        backgroundColor: "white",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        fontSize: "2vw",
+        color: "black",
+        fontFamily: "Retron2000",
+        paddingLeft: "10px",
+        borderRadius: "10px 10px 10px 10px",
+        
+      }
+      Object.keys(d).forEach(function (a) {
+        addModName.style[a] = d[a];
+      });
+      addModName.onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        e.preventDefault();
+        addModName.focus()
+      }
+      document.getElementById('menu-bg').onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        addModName.blur()
+      }
+      addModName.onkeydown = (e) => { // ensures that user is able to type in input box
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        if(e.keyCode === 27) {
+          addModName.blur();
+        }
+        if(e.keyCode === 13) {
+          addModName.blur();
+        } 
+      };
+
+      let addModCode = document.createElement("textarea");
+      addModCode.placeholder = "Mod Code";
+      addModCode.rows = "10";
+      addModCode.cols = "50";
+      let e = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "90%",
+        height: "50%",
+        cursor: "pointer",
+        backgroundColor: "white",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        fontSize: "2vw",
+        color: "black",
+        fontFamily: "Retron2000",
+        paddingLeft: "10px",
+        borderRadius: "10px 10px 10px 10px",
+        
+      }
+      Object.keys(d).forEach(function (a) {
+        addModCode.style[a] = e[a];
+      });
+      addModCode.onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        e.preventDefault();
+        addModCode.focus()
+      }
+      document.getElementById('menu-bg').onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+      }
+      addModCode.onkeydown = (e) => { // ensures that user is able to type in input box
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        if(e.keyCode === 27) {
+          addModCode.blur();
+        }
+      };
+
+      let addModDesc = document.createElement("textarea");
+      addModDesc.placeholder = "Mod Description";
+      addModDesc.rows = "10";
+      addModDesc.cols = "50"; 
+      let f = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "60%",
+        height: "50%",
+        cursor: "pointer",
+        backgroundColor: "white",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        fontSize: "2vw",
+        color: "black",
+        fontFamily: "Retron2000",
+        paddingLeft: "10px",
+        borderRadius: "10px 10px 10px 10px",
+        
+      }
+      Object.keys(d).forEach(function (a) {
+        addModDesc.style[a] = f[a];
+      });
+      addModDesc.onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        e.preventDefault();
+        addModDesc.focus()
+      }
+      
+      addModDesc.onkeydown = (e) => { // ensures that user is able to type in input box
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        if(e.keyCode === 27) {
+          addModDesc.blur();
+        }
+      };
+
+
+      document.getElementById('menu-bg').onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        addModName.blur()
+        addModCode.blur()
+        addModDesc.blur()
+      }
+
+      cardsDiv.appendChild(addModName); 
+      cardsDiv.appendChild(addModCode);
+      cardsDiv.appendChild(addModDesc);
+
+      
 
 
       
@@ -1690,7 +2035,7 @@
                 }
                 //migrate old custom mods to current format
                 for(const [key] of Object.entries(userConfig)) {
-                    if(backendConfig['mods'][key] === undefined) { //custom mod
+                    if(key.startsWith("custom")) { //custom mod
                         customModConfig = userConfig[key];
                         customModConfig['author'] = null;
                         customModConfig['icon'] = "https://cdn0.iconfinder.com/data/icons/web-development-47/64/feature-application-program-custom-512.png"
@@ -1747,7 +2092,7 @@
               // console.log(key)
               // console.log(backendConfig['mods'][key]['version'])
               if(!key.startsWith("custom") && userConfig['mods'][key]['enabled'] === true && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platform'].includes(detectDeviceType())) {
-                  if(backendConfig['mods'][key] === undefined || !backendConfig['mods'][key]['tags'].includes('visual')) { 
+                  if(key.startsWith("custom") || !backendConfig['mods'][key]['tags'].includes('visual')) { 
                       //non visual mods or custom mods are considered 'cheats'
                       document.getElementById("cheat-indicator").style.display = "block";
                   }
@@ -1781,6 +2126,7 @@
               }
             }
             console.log(filters)
+            filters = Array.from(filters);
             
                         
 
