@@ -715,9 +715,8 @@ let createChangelogPopup = (changelog, userVersion, currentVersion) => {
 
   xButton.onclick = function() {
     changelogPopup.remove();
-      // enableClick(map);
-      document.getElementById("menu-bg").style.pointerEvents = "auto";
-      document.getElementById("menu-bg").style.filter = "none";
+    // document.getElementById("c2canvasdiv").style.filter = "none";
+    // enableClick(map);
   }
   // navbar.appendChild(xButton);
   changelogPopup.appendChild(xButton);
@@ -736,9 +735,13 @@ let createChangelogPopup = (changelog, userVersion, currentVersion) => {
   userVersionIndex = changelogVersions.indexOf(userVersion);
   console.log(currentVersionIndex, userVersionIndex)
   if(userVersionIndex === -1) {
+    // document.getElementById("c2canvasdiv").style.filter = "none";
+    // enableClick(map);
     return;
   }
   if(currentVersionIndex < userVersionIndex) {
+    // document.getElementById("c2canvasdiv").style.filter = "none";
+    // enableClick(map);
     return
   }
   for(i = currentVersionIndex; i > userVersionIndex; i--) {
@@ -2210,6 +2213,8 @@ let createChangelogPopup = (changelog, userVersion, currentVersion) => {
             } else  { //
                 //new version
                 if(userConfig['version'] !== backendConfig['version']) {
+                  // document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
+                  // map = disableClick();
                   createChangelogPopup(changelog, userConfig['version'], backendConfig['version']);
                 }
                 console.log("new version")
