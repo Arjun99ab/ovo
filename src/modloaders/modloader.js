@@ -1942,7 +1942,7 @@ let createModSettingsPopup = (modId) => {
           position: "absolute",
           cursor: "pointer",
           left: "4px",
-          top: "100px",
+          top: "4px",
           width: "100px",
           height: "100px",
           display: "block",

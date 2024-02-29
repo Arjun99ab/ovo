@@ -64,10 +64,16 @@
             // console.log(event.target.tagName)
             if (event.target.tagName === 'CANVAS') {
                 // this.touching = true;
-                console.log("touchstart")
-                console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].x, runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].y)
-                console.log(getArrow(1).behavior_insts[0].xleft, getArrow(1).behavior_insts[0].xright, getArrow(1).behavior_insts[0].ytop, getArrow(1).behavior_insts[0].ybottom)
-                console.log(getArrow(1).width, getArrow(1).x, getArrow(1).y)
+                // console.log("touchstart")
+                // console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].x, runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].y)
+                // console.log(getArrow(1).behavior_insts[0].xleft, getArrow(1).behavior_insts[0].xright, getArrow(1).behavior_insts[0].ytop, getArrow(1).behavior_insts[0].ybottom)
+                // console.log(getArrow(1).width, getArrow(1).x, getArrow(1).y)
+
+                let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
+                let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
+                if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
+                    console.log(uiDirection.getFirstPicked().instance_vars[0])
+                }
                 
                 
                 // console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0])
@@ -79,9 +85,14 @@
         touchend(event) {
             if (event.target.tagName === 'CANVAS') {
                 // this.touching = true;
-                console.log("touchend")
-                console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].x, runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].y)
+                // console.log("touchend")
+                // console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].x, runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].y)
                 // console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches)
+                let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
+                let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
+                if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
+                    console.log(uiDirection.getFirstPicked().instance_vars[0])
+                }
             }
             // this.touching = false;
             // console.log('touchend')
