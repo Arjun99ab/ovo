@@ -38,6 +38,32 @@
           image
         );
       };
+      let createGuiElement = (id1, top, left, name) => {
+        b = document.createElement("div")
+        c = {
+            backgroundColor: "white",
+            border: "2px solid black",
+            fontFamily: "Retron2000",
+            position: "absolute",
+            top: top.toString() + "px",
+            left: left.toString() + "px",
+            padding: "15px",
+            color: "black",
+            fontSize: "10pt",
+            display: "block",
+            cursor: "pointer",
+        };
+        Object.keys(c).forEach(function (a) {
+            b.style[a] = c[a];
+        });
+        b.id = id1;
+        const newContent = document.createTextNode(name);
+
+        // add the text node to the newly created div
+        b.appendChild(newContent);
+        // console.log('hi guys')
+        document.body.appendChild(b);
+    }
     
     let mod = {
         init() {
@@ -49,6 +75,14 @@
             document.addEventListener("touchend", (event) => {
                 this.touchend(event)
             });
+
+            document.addEventListener("mousedown", (event) => {
+                this.touchstart(event)
+            });
+            document.addEventListener("mouseup", (event) => {
+                this.touchend(event)
+            });
+
             document.addEventListener("keydown", (event) => {
                 if (event.keyCode === 71) {
                     console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].x, runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].y)
@@ -57,46 +91,74 @@
                     // console.log(getPlayer());
                 }
             });
+            createGuiElement("up", 150, 150, " ");
+            createGuiElement("down", 200, 150, " " );
+            createGuiElement("left", 200, 100, " ");
+            createGuiElement("right", 200, 200, " ");
+
+
+            
             // runtime.tickMe(this);
         },
         touchstart(event) {
-            // console.log('touchstart')
-            // console.log(event.target.tagName)
             if (event.target.tagName === 'CANVAS') {
-                // this.touching = true;
-                // console.log("touchstart")
-                // console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].x, runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].y)
-                // console.log(getArrow(1).behavior_insts[0].xleft, getArrow(1).behavior_insts[0].xright, getArrow(1).behavior_insts[0].ytop, getArrow(1).behavior_insts[0].ybottom)
-                // console.log(getArrow(1).width, getArrow(1).x, getArrow(1).y)
-
+                console.log("touchstart")
                 let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
                 let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
+                // console.log(uiDirection)
+                
                 if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
-                    console.log(uiDirection.getFirstPicked().instance_vars[0])
+                    console.log("start", uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]))
+                    
+                    pressed = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0])
+                    if(pressed.includes("up")) {
+                        document.getElementById("up").style.backgroundColor = "red";
+                    }
+                    if(pressed.includes("down")) {
+                        document.getElementById("down").style.backgroundColor = "red";
+                    }
+                    if(pressed.includes("left")) {
+                        document.getElementById("left").style.backgroundColor = "red";
+                    }
+                    if(pressed.includes("right")) {
+                        document.getElementById("right").style.backgroundColor = "red";
+                    }
+
+                    // console.log(uiDirection.getCurrentSol().instances)
                 }
-                
-                
-                // console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0])
+                console.log("-------------------------")
             }
+
             
 
             
         },
         touchend(event) {
             if (event.target.tagName === 'CANVAS') {
-                // this.touching = true;
-                // console.log("touchend")
-                // console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].x, runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches[0].y)
-                // console.log(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0].touches)
+                console.log("touchend")
                 let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
                 let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
-                if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
-                    console.log(uiDirection.getFirstPicked().instance_vars[0])
+                pressed = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0])
+                if(pressed.includes("up")) {
+                    document.getElementById("up").style.backgroundColor = "white";
                 }
-            }
-            // this.touching = false;
-            // console.log('touchend')
-            
+                if(pressed.includes("down")) {
+                    document.getElementById("down").style.backgroundColor = "white";
+                }
+                if(pressed.includes("left")) {
+                    document.getElementById("left").style.backgroundColor = "white";
+                }
+                if(pressed.includes("right")) {
+                    document.getElementById("right").style.backgroundColor = "white";
+                }
+                // if (!cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
+                //     console.log("if end", uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]))
+                    
+                //     // console.log("end", uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars))
+                // }
+                console.log("-------------------------")
+
+            }   
         },
       
       
