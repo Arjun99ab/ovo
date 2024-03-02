@@ -1,6 +1,7 @@
-import { version } from "../../../modloader.js";
+import { version, filters, backendConfig, currentFilter} from "../../../modloader.js";
 import {createMenuCard} from "./cards.js"
-
+import {createFilterButton} from "./filters.js"
+// export let currentFilter;
 
 let renderModsMenu = (filtersDiv, cardsDiv) => {
     let c = {

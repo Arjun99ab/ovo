@@ -3,6 +3,10 @@ import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify } f
 import {detectDeviceType} from './util/utils.js';
 
 export let version = VERSION.version();
+export let filters = new Set();
+export let backendConfig;
+export let currentFilter = "all";
+export let runtime;
 (function() {
     // export let version = VERSION.version() //1.4, 1.4.4, or CTLE
     let timers;
@@ -12,11 +16,11 @@ export let version = VERSION.version();
         timers = [100, 2000]
     }
 
-    let runtime;
-    let filters = new Set();
-    let currentFilter = "all";
+    // let runtime;
+    // let filters = new Set();
+    // let currentFilter = "all";
 
-    let backendConfig;
+    // let backendConfig;
 
     let menus = ["mods", "settings", "profiles", "skins", "addmod"];
 
