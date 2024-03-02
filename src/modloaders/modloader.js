@@ -1,12 +1,16 @@
 import {createNotifyModal, createChangelogPopup, createConfirmDeleteModal, createConfirmReloadModal} from './util/modals.js';
 import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify } from './util/ovo.js';
-import {detectDeviceType} from './util/utils.js';
+import {sleep, arraysEqual, detectDeviceType} from './util/utils.js';
+import {currentFilter, setFilter} from './util/pages/mods/filters.js';
+import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/render.js';
+import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
 
+//constants
 export let version = VERSION.version();
 export let filters = new Set();
 export let backendConfig;
-export let currentFilter = "all";
 export let runtime;
+
 (function() {
     // export let version = VERSION.version() //1.4, 1.4.4, or CTLE
     let timers;
@@ -17,290 +21,16 @@ export let runtime;
     }
 
     // let runtime;
-    // let filters = new Set();
-    // let currentFilter = "all";
+    // let filters = new Set()
+    // currentFilter = "apple";
 
     // let backendConfig;
 
     let menus = ["mods", "settings", "profiles", "skins", "addmod"];
 
-    let keyboardMap = [
-      "", // [0]
-      "", // [1]
-      "", // [2]
-      "CANCEL", // [3]
-      "", // [4]
-      "", // [5]
-      "HELP", // [6]
-      "", // [7]
-      "BACK_SPACE", // [8]
-      "TAB", // [9]
-      "", // [10]
-      "", // [11]
-      "CLEAR", // [12]
-      "ENTER", // [13]
-      "ENTER_SPECIAL", // [14]
-      "", // [15]
-      "SHIFT", // [16]
-      "CONTROL", // [17]
-      "ALT", // [18]
-      "PAUSE", // [19]
-      "CAPS_LOCK", // [20]
-      "KANA", // [21]
-      "EISU", // [22]
-      "JUNJA", // [23]
-      "FINAL", // [24]
-      "HANJA", // [25]
-      "", // [26]
-      "ESCAPE", // [27]
-      "CONVERT", // [28]
-      "NONCONVERT", // [29]
-      "ACCEPT", // [30]
-      "MODECHANGE", // [31]
-      "space", // [32]
-      "PAGE_UP", // [33]
-      "PAGE_DOWN", // [34]
-      "END", // [35]
-      "HOME", // [36]
-      "←", // [37]
-      "↑", // [38]
-      "→", // [39]
-      "↓", // [40]
-      "SELECT", // [41]
-      "PRINT", // [42]
-      "EXECUTE", // [43]
-      "PRINTSCREEN", // [44]
-      "INSERT", // [45]
-      "DELETE", // [46]
-      "", // [47]
-      "0", // [48]
-      "1", // [49]
-      "2", // [50]
-      "3", // [51]
-      "4", // [52]
-      "5", // [53]
-      "6", // [54]
-      "7", // [55]
-      "8", // [56]
-      "9", // [57]
-      ":", // [58]
-      ";", // [59]
-      "<", // [60]
-      "=", // [61]
-      ">", // [62]
-      "?", // [63]
-      "AT", // [64]
-      "A", // [65]
-      "B", // [66]
-      "C", // [67]
-      "D", // [68]
-      "E", // [69]
-      "F", // [70]
-      "G", // [71]
-      "H", // [72]
-      "I", // [73]
-      "J", // [74]
-      "K", // [75]
-      "L", // [76]
-      "M", // [77]
-      "N", // [78]
-      "O", // [79]
-      "P", // [80]
-      "Q", // [81]
-      "R", // [82]
-      "S", // [83]
-      "T", // [84]
-      "U", // [85]
-      "V", // [86]
-      "W", // [87]
-      "X", // [88]
-      "Y", // [89]
-      "Z", // [90]
-      "OS_KEY", // [91] Windows Key (Windows) or Command Key (Mac)
-      "", // [92]
-      "CONTEXT_MENU", // [93]
-      "", // [94]
-      "SLEEP", // [95]
-      "NUMPAD0", // [96]
-      "NUMPAD1", // [97]
-      "NUMPAD2", // [98]
-      "NUMPAD3", // [99]
-      "NUMPAD4", // [100]
-      "NUMPAD5", // [101]
-      "NUMPAD6", // [102]
-      "NUMPAD7", // [103]
-      "NUMPAD8", // [104]
-      "NUMPAD9", // [105]
-      "MULTIPLY", // [106]
-      "ADD", // [107]
-      "SEPARATOR", // [108]
-      "SUBTRACT", // [109]
-      "DECIMAL", // [110]
-      "DIVIDE", // [111]
-      "F1", // [112]
-      "F2", // [113]
-      "F3", // [114]
-      "F4", // [115]
-      "F5", // [116]
-      "F6", // [117]
-      "F7", // [118]
-      "F8", // [119]
-      "F9", // [120]
-      "F10", // [121]
-      "F11", // [122]
-      "F12", // [123]
-      "F13", // [124]
-      "F14", // [125]
-      "F15", // [126]
-      "F16", // [127]
-      "F17", // [128]
-      "F18", // [129]
-      "F19", // [130]
-      "F20", // [131]
-      "F21", // [132]
-      "F22", // [133]
-      "F23", // [134]
-      "F24", // [135]
-      "", // [136]
-      "", // [137]
-      "", // [138]
-      "", // [139]
-      "", // [140]
-      "", // [141]
-      "", // [142]
-      "", // [143]
-      "NUM_LOCK", // [144]
-      "SCROLL_LOCK", // [145]
-      "WIN_OEM_FJ_JISHO", // [146]
-      "WIN_OEM_FJ_MASSHOU", // [147]
-      "WIN_OEM_FJ_TOUROKU", // [148]
-      "WIN_OEM_FJ_LOYA", // [149]
-      "WIN_OEM_FJ_ROYA", // [150]
-      "", // [151]
-      "", // [152]
-      "", // [153]
-      "", // [154]
-      "", // [155]
-      "", // [156]
-      "", // [157]
-      "", // [158]
-      "", // [159]
-      "CIRCUMFLEX", // [160]
-      "EXCLAMATION", // [161]
-      "DOUBLE_QUOTE", // [162]
-      "HASH", // [163]
-      "DOLLAR", // [164]
-      "PERCENT", // [165]
-      "AMPERSAND", // [166]
-      "UNDERSCORE", // [167]
-      "OPEN_PAREN", // [168]
-      "CLOSE_PAREN", // [169]
-      "ASTERISK", // [170]
-      "PLUS", // [171]
-      "PIPE", // [172]
-      "HYPHEN_MINUS", // [173]
-      "OPEN_CURLY_BRACKET", // [174]
-      "CLOSE_CURLY_BRACKET", // [175]
-      "TILDE", // [176]
-      "", // [177]
-      "", // [178]
-      "", // [179]
-      "", // [180]
-      "VOLUME_MUTE", // [181]
-      "VOLUME_DOWN", // [182]
-      "VOLUME_UP", // [183]
-      "", // [184]
-      "", // [185]
-      "SEMICOLON", // [186]
-      "EQUALS", // [187]
-      "COMMA", // [188]
-      "MINUS", // [189]
-      "PERIOD", // [190]
-      "SLASH", // [191]
-      "BACK_QUOTE", // [192]
-      "", // [193]
-      "", // [194]
-      "", // [195]
-      "", // [196]
-      "", // [197]
-      "", // [198]
-      "", // [199]
-      "", // [200]
-      "", // [201]
-      "", // [202]
-      "", // [203]
-      "", // [204]
-      "", // [205]
-      "", // [206]
-      "", // [207]
-      "", // [208]
-      "", // [209]
-      "", // [210]
-      "", // [211]
-      "", // [212]
-      "", // [213]
-      "", // [214]
-      "", // [215]
-      "", // [216]
-      "", // [217]
-      "", // [218]
-      "OPEN_BRACKET", // [219]
-      "BACK_SLASH", // [220]
-      "CLOSE_BRACKET", // [221]
-      "QUOTE", // [222]
-      "", // [223]
-      "META", // [224]
-      "ALTGR", // [225]
-      "", // [226]
-      "WIN_ICO_HELP", // [227]
-      "WIN_ICO_00", // [228]
-      "", // [229]
-      "WIN_ICO_CLEAR", // [230]
-      "", // [231]
-      "", // [232]
-      "WIN_OEM_RESET", // [233]
-      "WIN_OEM_JUMP", // [234]
-      "WIN_OEM_PA1", // [235]
-      "WIN_OEM_PA2", // [236]
-      "WIN_OEM_PA3", // [237]
-      "WIN_OEM_WSCTRL", // [238]
-      "WIN_OEM_CUSEL", // [239]
-      "WIN_OEM_ATTN", // [240]
-      "WIN_OEM_FINISH", // [241]
-      "WIN_OEM_COPY", // [242]
-      "WIN_OEM_AUTO", // [243]
-      "WIN_OEM_ENLW", // [244]
-      "WIN_OEM_BACKTAB", // [245]
-      "ATTN", // [246]
-      "CRSEL", // [247]
-      "EXSEL", // [248]
-      "EREOF", // [249]
-      "PLAY", // [250]
-      "ZOOM", // [251]
-      "", // [252]
-      "PA1", // [253]
-      "WIN_OEM_CLEAR", // [254]
-      "" // [255]
-    ];
+    
 
-    function sleep (time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
-    }
-    function arraysEqual(a, b) {
-      if (a === b) return true;
-      if (a == null || b == null) return false;
-      if (a.length !== b.length) return false;
     
-      // If you don't care about the order of the elements inside
-      // the array, you should sort both arrays here.
-      // Please note that calling sort on an array will modify that array.
-      // you might want to clone your array first.
-    
-      for (let i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-      }
-      return true;
-    }
 
     let onFinishLoad = () => {
         if ((cr_getC2Runtime() || {isloading: true}).isloading) {
@@ -435,7 +165,7 @@ export let runtime;
 
       menuButton.onclick = function() {
           if(document.getElementById("menu-bg") === null) { //if menu doesnt exist, to avoid duplicates
-              map = disableClick(runtime);
+              map = disableClick();
               createModLoaderMenu();
               document.getElementById("menu-button").style.display = "none";
               document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
@@ -571,7 +301,7 @@ export let runtime;
       xButton.onclick = function() {
           menuBg.remove();
           versionText.remove();
-          enableClick(runtime, map);
+          enableClick(map);
           document.getElementById("menu-button").style.display = "block";
           document.getElementById("c2canvasdiv").style.filter = "none";
       }
@@ -882,7 +612,7 @@ export let runtime;
                         customModConfig['favorite'] = false;
                         freshUserConfig['mods'][key] = customModConfig;
 
-                        customModNum++;
+                        incCustomModNum();
                     }
                 }
                 freshUserConfig['version'] = backendConfig['version'];
@@ -999,7 +729,7 @@ export let runtime;
             runtime.tickMe(this);
 
 
-            notify(runtime, "QOL Modloader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
+            notify("QOL Modloader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
             // console.log(createNotifyModal)
             // createNotifyModal("appleapple");
 
@@ -1032,18 +762,18 @@ export let runtime;
         tick() {
             try {
               if(document.getElementById("menu-bg") === null) {
-                if(!isInLevel(runtime) && document.getElementById("menu-button").style.top === "45%") {
+                if(!isInLevel() && document.getElementById("menu-button").style.top === "45%") {
                   document.getElementById("menu-button").style.top = "2px"
                   
-                } else if(isPaused(runtime) && document.getElementById("menu-button").style.top === "2px"){
+                } else if(isPaused() && document.getElementById("menu-button").style.top === "2px"){
                     document.getElementById("menu-button").style.top = "45%"
 
                 }
-                if((!isInLevel(runtime) && document.getElementById("menu-button").style.display === "none") || (isPaused(runtime) && document.getElementById("menu-button").style.display === "none")) {
+                if((!isInLevel() && document.getElementById("menu-button").style.display === "none") || (isPaused() && document.getElementById("menu-button").style.display === "none")) {
                     document.getElementById("menu-button").style.display = "block";
                     
                     console.log("hello")
-                } else if((isInLevel(runtime) && document.getElementById("menu-button").style.display === "block") && (!isPaused(runtime) && document.getElementById("menu-button").style.display === "block")) {
+                } else if((isInLevel() && document.getElementById("menu-button").style.display === "block") && (!isPaused() && document.getElementById("menu-button").style.display === "block")) {
                     document.getElementById("menu-button").style.display = "none";
                 }
               }

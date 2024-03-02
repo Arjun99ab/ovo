@@ -1,4 +1,5 @@
-// import
+import { toggleMod } from "./pages/mods/utils.js";
+
 
 function createNotifyModal (text) {
     //Create background div

@@ -1,3 +1,13 @@
+import {backendConfig} from "../../../modloader.js";
+import {createConfirmReloadModal} from "../../modals.js"
+
+export {toggleMod, customModNum, incCustomModNum}
+
+let customModNum = 0;
+function incCustomModNum() {
+  customModNum++;
+}
+
 let toggleMod = (modId, enable) => {
     console.log(modId)
     if (enable) { //want to enable

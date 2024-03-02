@@ -1,7 +1,10 @@
-import { version, filters, backendConfig, currentFilter} from "../../../modloader.js";
+import { version, filters, backendConfig} from "../../../modloader.js";
+import {detectDeviceType} from "../../utils.js"
 import {createMenuCard} from "./cards.js"
-import {createFilterButton} from "./filters.js"
-// export let currentFilter;
+import {createFilterButton, currentFilter, setFilter} from "./filters.js"
+import {toggleMod, customModNum, incCustomModNum} from "./utils.js"
+
+export{renderModsMenu, renderAddModMenu, searchMods}
 
 let renderModsMenu = (filtersDiv, cardsDiv) => {
     let c = {
@@ -71,7 +74,8 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
       }
       if(filter === 'all') { //set initial filter to all
         filterButton.style.backgroundColor = "lightblue";
-        currentFilter = 'all';
+        setFilter('all');
+        // currentFilter = 'all';
 
       }
       filtersDiv.appendChild(filterButton);
@@ -175,7 +179,7 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
 
     saveButton.onclick = function() {
       if(addModName.value !== "" && addModCode.value !== "") {
-        customModNum++;
+        incCustomModNum();
         console.log("brand new mod")
 
         let modSettings = JSON.parse(localStorage.getItem('modSettings'));
@@ -348,7 +352,7 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
     
   }
 
-  let searchMods = (backendConfig, search, filter = "all") => {
+  let searchMods = (search, filter = "all") => {
     search = search.toLowerCase();
     console.log(filter)
     

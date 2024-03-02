@@ -1,8 +1,10 @@
 import {toggleMod} from "./utils.js"
 import {createDescPopup} from "./desc.js"
 import {createModSettingsPopup} from "./settings.js"
-import { createNotifyModal, createConfirmDeleteModal } from "../../modals"
+import { createNotifyModal, createConfirmDeleteModal } from "../../modals.js"
+import {backendConfig} from "../../../modloader.js"
 
+export {createMenuCard, createCardButton, createToggleButton}
 
 let createMenuCard = (id, name, iconurl, enabled) => {
     let menuCard = document.createElement("div");
@@ -183,7 +185,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
   
     return menuCard;
   }
-  let createCardButton = (backendConfig, id, url, width) => {
+  let createCardButton = (id, url, width) => {
     let cardButton = document.createElement("div");
     cardButton.id = id;
     let d = {

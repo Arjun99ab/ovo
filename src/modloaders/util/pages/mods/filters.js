@@ -1,3 +1,13 @@
+import {backendConfig, filters, version} from '../../../modloader.js';
+import {detectDeviceType} from "../../utils.js";
+import {createMenuCard} from './cards.js';
+export {createFilterButton, currentFilter, setFilter}
+
+let currentFilter = 'all';
+function setFilter(filter) {
+    currentFilter = filter;
+}
+
 let createFilterButton = (id, text, width) => {
     let menuButton = document.createElement("button");
     menuButton.id = id;
@@ -27,7 +37,7 @@ let createFilterButton = (id, text, width) => {
         filters.forEach((filter) => { //set all other filters to white
           document.getElementById(filter + "-filter-btn").style.backgroundColor = "white";
         });
-        currentFilter = id.split("-")[0]; //set currentFilter to this filter
+        setFilter(id.split("-")[0]); //set currentFilter to this filter
         console.log(currentFilter)
         document.getElementById(id).style.backgroundColor = "lightblue";
         let filterCards = document.getElementById("cards-div").children;

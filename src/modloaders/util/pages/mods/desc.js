@@ -1,4 +1,7 @@
-let createDescPopup = (backendConfig, modId) => {
+import { backendConfig } from "../../../modloader.js";
+export {createDescPopup}
+
+let createDescPopup = (modId) => {
     //Create background div
     let descPopup = document.createElement("div");
     descPopup.id = "descPopup-bg";

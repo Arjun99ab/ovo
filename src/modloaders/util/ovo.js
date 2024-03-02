@@ -1,15 +1,17 @@
+import { runtime } from "../modloader.js"
+
 export {isInLevel, isPaused, closePaused, disableClick, enableClick, notify} 
 
-let isInLevel = (runtime) => {
+let isInLevel = () => {
     return runtime.running_layout.name.startsWith("Level")
 };
-let isPaused = (runtime) => {
+let isPaused = () => {
     if (isInLevel()) return runtime.running_layout.layers.find(function(a) {
         return "Pause" === a.name
     }).visible
 };
 
-let closePaused = (runtime) => {
+let closePaused = () => {
     if (isInLevel()) return runtime.running_layout.layers.find(function(a) {return "Pause" === a.name}).visible = false
 }
 
@@ -75,7 +77,7 @@ let closePaused = (runtime) => {
 //   };
 
 
-let disableClick = (runtime) => {
+let disableClick = () => {
     let map = [];
     let mapUI = [];
     let types = runtime.types_by_index.filter((x) =>
@@ -120,7 +122,7 @@ let disableClick = (runtime) => {
     };
   };
 
-  let enableClick = (runtime, { map, mapUI }) => {
+  let enableClick = ({ map, mapUI }) => {
     map.forEach((x) => {
       let inst = x.inst.behavior_insts.find(
         (x) => x.behavior instanceof cr.behaviors.aekiro_button
@@ -136,7 +138,7 @@ let disableClick = (runtime) => {
 
 
 
-let notify = (runtime, title, text, image = "./speedrunner.png") => {
+let notify = (title, text, image = "./speedrunner.png") => {
     cr.plugins_.sirg_notifications.prototype.acts.AddSimpleNotification.call(
         runtime.types_by_index.find(
             (type) => type.plugin instanceof cr.plugins_.sirg_notifications
