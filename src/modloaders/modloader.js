@@ -725,11 +725,17 @@ export let runtime;
                 this.touchstart(event)
             });
 
+            document.addEventListener("keydown", (event) => {
+
+                this.keyDown(event)
+            });
+
+
             
             
             createModLoaderMenuBtn();
             // document.getElementById("menu-button").click();
-            runtime.tickMe(this);
+            // runtime.tickMe(this);
 
 
             notify("QOL Modloader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
@@ -750,40 +756,64 @@ export let runtime;
                     }         
                 }    
             }
+            if(event.keyCode === 27) { //escape
+              if(inGame) {
+                document.getElementById("menu-button").style.display = "block";
+                inGame = false;
+              } else {
+                inGame = true;
+                document.getElementById("menu-button").style.display = "none";
+
+              }
+                
+            }
         },
 
         touchstart(event) {
 
-        
-
-        
-      
-        
-        
-        tick() {
-            try {
-              if(document.getElementById("menu-bg") === null) {
-                if(!isInLevel() && document.getElementById("menu-button").style.top === "45%") {
-                  document.getElementById("menu-button").style.top = "2px"
-                  
-                } else if(isPaused() && document.getElementById("menu-button").style.top === "2px"){
-                    document.getElementById("menu-button").style.top = "45%"
-
-                }
-                if((!isInLevel() && document.getElementById("menu-button").style.display === "none") || (isPaused() && document.getElementById("menu-button").style.display === "none")) {
-                    document.getElementById("menu-button").style.display = "block";
-                    
-                    console.log("hello")
-                } else if((isInLevel() && document.getElementById("menu-button").style.display === "block") && (!isPaused() && document.getElementById("menu-button").style.display === "block")) {
-                    document.getElementById("menu-button").style.display = "none";
-                }
-              }
-                
-                
-            } catch (err) {
-                console.log(err);
+          if (event.target.tagName === 'CANVAS') {
+            console.log("touchstart")
+            let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
+            
+            let uiButtons = runtime.types_by_index.filter((x) =>
+                x.behaviors.some(
+                (y) => y.behavior instanceof cr.behaviors.aekiro_button
+                )
+            )[0];
+            let levelButton = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("levelbutton"))
+            // let listItem = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("listparent"))
+            // console.log(listItem)
+            console.log(uiButtons.getCurrentSol().getObjects())
+            // console.log(playButton.getCurrentSol().getObjects().map(x=>x.instance_vars))
+            if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, levelButton)) {
+                inGame = true;
+                document.getElementById("menu-button").style.display = "none";
             }
+            
+            if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiButtons)) {
+                console.log("playbutton")
+                let buttonType = uiButtons.getFirstPicked().properties[1];
+                let hideButtons = ["Play", "Resume", "Reload"]
+                if (hideButtons.includes(buttonType)) {
+                  document.getElementById("menu-button").style.display = "none";
+                  inGame = true;
+                } else if(buttonType === "Pause" || (buttonType === "Back" && isPaused())) {
+                  if (inGame) {
+                    document.getElementById("menu-button").style.display = "block";
+                    inGame = false;
+                  } else {
+                    document.getElementById("menu-button").style.display = "none";
+                    inGame = true;
+                  }
+                } else {
+                  document.getElementById("menu-button").style.display = "block";
+                  inGame = false;
+                }
+            }
+          }
+
         }
+        
     };
   
     setTimeout(onFinishLoad, timers[0]);

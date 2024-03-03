@@ -122,7 +122,7 @@
                 if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, playButton)) {
                     console.log("playbutton")
                     console.log(playButton.getCurrentSol().getObjects().map(x=>x.properties[1]))
-                    notify("playbutton")
+                    // notify("playbutton")
                 }
                 // console.log(uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]))
                 if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
