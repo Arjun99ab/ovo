@@ -27,6 +27,7 @@ export let runtime;
     // let backendConfig;
 
     let menus = ["mods", "settings", "profiles", "skins", "addmod"];
+    let inGame = false;
 
     
 
@@ -716,11 +717,13 @@ export let runtime;
             
                         
 
-            document.addEventListener("keydown", (event) => {
-                this.keyDown(event)
-                
+            document.addEventListener("touchstart", (event) => {
+              this.touchstart(event)
             });
 
+            document.addEventListener("mousedown", (event) => {
+                this.touchstart(event)
+            });
 
             
             
@@ -736,23 +739,21 @@ export let runtime;
         },
 
         keyDown(event) {
-
             if(event.keyCode === 192) { //backtick
                 if(document.getElementById("menu-bg") === null) { //menu doesnt exist
-                    //create mod menu via tab
+                    //create mod menu
                     document.getElementById("menu-button").click();
-                    // map = disableClick(runtime);
-                    // createModLoaderMenu(); 
                 } else { //menu exists
-                    //remove mod menu via tab
+                    //remove mod menu
                     if(document.getElementById("confirm-bg") === null) {
                         document.getElementById("x-button").click();
                     }         
-                }
-                 
+                }    
             }
-            
         },
+
+        touchstart(event) {
+
         
 
         

@@ -379,12 +379,14 @@ let createModSettingsPopup = (modId) => {
     settingsDiv.style[a] = c[a];
   });
   modSettings = JSON.parse(localStorage.getItem('modSettings'));
+  // console.log(backendConfig)
+  // console.log(modId)
   Object.keys(backendConfig['mods'][modId]['settings']).forEach((setting) => {
-    let settingRow
+    let settingRow;
     if(backendConfig['mods'][modId]['settings'][setting]['type'] === "slider") {
       settingRow = createModSettingsSlider(modId, setting, modSettingsPopup);
     } else if(backendConfig['mods'][modId]['settings'][setting]['type'] === "keybind") {
-      settingRow = createModSettingsSlider(modId, setting, modSettingsPopup);
+      settingRow = createModSettingsKeybind(modId, setting, modSettingsPopup);
     }
     settingsDiv.appendChild(settingRow);
   });
@@ -439,9 +441,11 @@ let createModSettingsKeybind = (modId, setting, bg) => {
         settingInput.addEventListener('click', () => {
           settingInput.innerHTML = "Press any key";
           window.addEventListener('keydown', function keydown(e) {
-            keybind = e.code;
+            keybind = e.key;
             settingInput.innerHTML = keybind;
             console.log(keybind)
+            modSettings['mods'][modId]['settings'][setting] = keybind;
+            localStorage.setItem('modSettings', JSON.stringify(modSettings));
             // modSettings['mods'][modId]['settings'][setting] = keybind;
             // localStorage.setItem('modSettings', JSON.stringify(modSettings));
             window.removeEventListener('keydown', keydown);

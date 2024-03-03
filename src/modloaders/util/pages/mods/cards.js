@@ -232,7 +232,8 @@ let createMenuCard = (id, name, iconurl, enabled) => {
         if(backendConfig['mods'][id.split("-")[0]]['settings'] !== null) {
           document.getElementById("menu-bg").style.pointerEvents = "none";
           document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-          createModSettingsPopup(backendConfig, id.split("-")[0]);
+          // console.log(id.split("-")[0])
+          createModSettingsPopup(id.split("-")[0]);
         } else {
           document.getElementById("menu-bg").style.pointerEvents = "none";
           document.getElementById("menu-bg").style.filter = "blur(1.2px)";

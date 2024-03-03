@@ -18,6 +18,10 @@
             )[0];
     }
 
+    let isInLevel = () => {
+        return runtime.running_layout.name.startsWith("Level")
+    };
+
     let getArrow = (a) => {
         return runtime.types_by_index
                         .filter(
@@ -106,7 +110,21 @@
                 let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
                 let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
                 // console.log(uiDirection)
+                let playButton = runtime.types_by_index.filter((x) =>
+                    x.behaviors.some(
+                    (y) => y.behavior instanceof cr.behaviors.aekiro_button
+                    )
+                )[0];
+                console.log(playButton.getCurrentSol().getObjects())
+                // console.log(playButton.getCurrentSol().getObjects().map(x=>x.instance_vars))
+
                 
+                if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, playButton)) {
+                    console.log("playbutton")
+                    console.log(playButton.getCurrentSol().getObjects().map(x=>x.properties[1]))
+                    notify("playbutton")
+                }
+                // console.log(uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]))
                 if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
                     console.log("start", uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]))
                     
@@ -162,22 +180,22 @@
         },
       
       
-        tick() {
-            try {
-                if (this.touching) {
-                    console.log('touching')
-                    let touch = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0];
-                    console.log(touch.touches)
-                    if (touch.touches.length > 0) {
-                        console.log('touching')
-                        let touch = touch.touches[0];
-                        console.log(touch.x, touch.y)
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
+        // tick() {
+        //     try {
+        //         if (this.touching) {
+        //             console.log('touching')
+        //             let touch = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Touch)[0].instances[0];
+        //             console.log(touch.touches)
+        //             if (touch.touches.length > 0) {
+        //                 console.log('touching')
+        //                 let touch = touch.touches[0];
+        //                 console.log(touch.x, touch.y)
+        //             }
+        //         }
+        //     } catch (error) {
+        //         console.error(error);
+        //     }
+        // }
     };
   
     mod.init();
