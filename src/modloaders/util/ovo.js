@@ -3,7 +3,7 @@ import { runtime } from "../modloader.js"
 export {isInLevel, isPaused, closePaused, disableClick, enableClick, notify} 
 
 let isInLevel = () => {
-    return runtime.running_layout.name.startsWith("Level")
+    return runtime.running_layout.name.startsWith("Level") && runtime.running_layout.name !== "Level Menu"
 };
 let isPaused = () => {
     if (isInLevel()) return runtime.running_layout.layers.find(function(a) {

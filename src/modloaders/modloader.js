@@ -303,7 +303,12 @@ export let runtime;
           menuBg.remove();
           versionText.remove();
           enableClick(map);
-          document.getElementById("menu-button").style.display = "block";
+          if(inGame) {
+            document.getElementById("menu-button").style.display = "none";
+          } else {
+
+            document.getElementById("menu-button").style.display = "block";
+          }
           document.getElementById("c2canvasdiv").style.filter = "none";
       }
       navbar.appendChild(xButton);
@@ -753,17 +758,20 @@ export let runtime;
                     //remove mod menu
                     if(document.getElementById("confirm-bg") === null) {
                         document.getElementById("x-button").click();
+                        
                     }         
                 }    
             }
             if(event.keyCode === 27) { //escape
-              if(inGame) {
-                document.getElementById("menu-button").style.display = "block";
-                inGame = false;
-              } else {
-                inGame = true;
-                document.getElementById("menu-button").style.display = "none";
+              if (isInLevel()) {
+                if(inGame) {
+                  document.getElementById("menu-button").style.display = "block";
+                  inGame = false;
+                } else {
+                  inGame = true;
+                  document.getElementById("menu-button").style.display = "none";
 
+                }
               }
                 
             }
