@@ -6,50 +6,50 @@ let keyboardMap = [
   "", // [0]
   "", // [1]
   "", // [2]
-  "CANCEL", // [3]
+  "cancel", // [3]
   "", // [4]
   "", // [5]
-  "HELP", // [6]
+  "help", // [6]
   "", // [7]
-  "BACK_SPACE", // [8]
-  "TAB", // [9]
+  "back_space", // [8]
+  "tab", // [9]
   "", // [10]
   "", // [11]
-  "CLEAR", // [12]
-  "ENTER", // [13]
-  "ENTER_SPECIAL", // [14]
+  "clear", // [12]
+  "enter", // [13]
+  "enter_special", // [14]
   "", // [15]
-  "SHIFT", // [16]
-  "CONTROL", // [17]
-  "ALT", // [18]
-  "PAUSE", // [19]
-  "CAPS_LOCK", // [20]
-  "KANA", // [21]
-  "EISU", // [22]
-  "JUNJA", // [23]
-  "FINAL", // [24]
-  "HANJA", // [25]
+  "shift", // [16]
+  "control", // [17]
+  "alt", // [18]
+  "pause", // [19]
+  "caps_lock", // [20]
+  "kana", // [21]
+  "eisu", // [22]
+  "junja", // [23]
+  "final", // [24]
+  "hanja", // [25]
   "", // [26]
-  "ESCAPE", // [27]
-  "CONVERT", // [28]
-  "NONCONVERT", // [29]
-  "ACCEPT", // [30]
-  "MODECHANGE", // [31]
+  "escape", // [27]
+  "convert", // [28]
+  "nonconvert", // [29]
+  "accept", // [30]
+  "modechange", // [31]
   "space", // [32]
-  "PAGE_UP", // [33]
-  "PAGE_DOWN", // [34]
-  "END", // [35]
-  "HOME", // [36]
+  "page_up", // [33]
+  "page_down", // [34]
+  "end", // [35]
+  "home", // [36]
   "←", // [37]
   "↑", // [38]
   "→", // [39]
   "↓", // [40]
-  "SELECT", // [41]
-  "PRINT", // [42]
-  "EXECUTE", // [43]
-  "PRINTSCREEN", // [44]
-  "INSERT", // [45]
-  "DELETE", // [46]
+  "select", // [41]
+  "print", // [42]
+  "execute", // [43]
+  "printscreen", // [44]
+  "insert", // [45]
+  "delete", // [46]
   "", // [47]
   "0", // [48]
   "1", // [49]
@@ -67,78 +67,78 @@ let keyboardMap = [
   "=", // [61]
   ">", // [62]
   "?", // [63]
-  "AT", // [64]
-  "A", // [65]
-  "B", // [66]
-  "C", // [67]
-  "D", // [68]
-  "E", // [69]
-  "F", // [70]
-  "G", // [71]
-  "H", // [72]
-  "I", // [73]
-  "J", // [74]
-  "K", // [75]
-  "L", // [76]
-  "M", // [77]
-  "N", // [78]
-  "O", // [79]
-  "P", // [80]
-  "Q", // [81]
-  "R", // [82]
-  "S", // [83]
-  "T", // [84]
-  "U", // [85]
-  "V", // [86]
-  "W", // [87]
-  "X", // [88]
-  "Y", // [89]
-  "Z", // [90]
-  "OS_KEY", // [91] Windows Key (Windows) or Command Key (Mac)
+  "at", // [64]
+  "a", // [65]
+  "b", // [66]
+  "c", // [67]
+  "d", // [68]
+  "e", // [69]
+  "f", // [70]
+  "g", // [71]
+  "h", // [72]
+  "i", // [73]
+  "j", // [74]
+  "k", // [75]
+  "l", // [76]
+  "m", // [77]
+  "n", // [78]
+  "o", // [79]
+  "p", // [80]
+  "q", // [81]
+  "r", // [82]
+  "s", // [83]
+  "t", // [84]
+  "u", // [85]
+  "v", // [86]
+  "w", // [87]
+  "x", // [88]
+  "y", // [89]
+  "z", // [90]
+  "os_key", // [91] windows key (windows) or command key (mac)
   "", // [92]
-  "CONTEXT_MENU", // [93]
+  "context_menu", // [93]
   "", // [94]
-  "SLEEP", // [95]
-  "NUMPAD0", // [96]
-  "NUMPAD1", // [97]
-  "NUMPAD2", // [98]
-  "NUMPAD3", // [99]
-  "NUMPAD4", // [100]
-  "NUMPAD5", // [101]
-  "NUMPAD6", // [102]
-  "NUMPAD7", // [103]
-  "NUMPAD8", // [104]
-  "NUMPAD9", // [105]
-  "MULTIPLY", // [106]
-  "ADD", // [107]
-  "SEPARATOR", // [108]
-  "SUBTRACT", // [109]
-  "DECIMAL", // [110]
-  "DIVIDE", // [111]
-  "F1", // [112]
-  "F2", // [113]
-  "F3", // [114]
-  "F4", // [115]
-  "F5", // [116]
-  "F6", // [117]
-  "F7", // [118]
-  "F8", // [119]
-  "F9", // [120]
-  "F10", // [121]
-  "F11", // [122]
-  "F12", // [123]
-  "F13", // [124]
-  "F14", // [125]
-  "F15", // [126]
-  "F16", // [127]
-  "F17", // [128]
-  "F18", // [129]
-  "F19", // [130]
-  "F20", // [131]
-  "F21", // [132]
-  "F22", // [133]
-  "F23", // [134]
-  "F24", // [135]
+  "sleep", // [95]
+  "numpad0", // [96]
+  "numpad1", // [97]
+  "numpad2", // [98]
+  "numpad3", // [99]
+  "numpad4", // [100]
+  "numpad5", // [101]
+  "numpad6", // [102]
+  "numpad7", // [103]
+  "numpad8", // [104]
+  "numpad9", // [105]
+  "multiply", // [106]
+  "add", // [107]
+  "separator", // [108]
+  "subtract", // [109]
+  "decimal", // [110]
+  "divide", // [111]
+  "f1", // [112]
+  "f2", // [113]
+  "f3", // [114]
+  "f4", // [115]
+  "f5", // [116]
+  "f6", // [117]
+  "f7", // [118]
+  "f8", // [119]
+  "f9", // [120]
+  "f10", // [121]
+  "f11", // [122]
+  "f12", // [123]
+  "f13", // [124]
+  "f14", // [125]
+  "f15", // [126]
+  "f16", // [127]
+  "f17", // [128]
+  "f18", // [129]
+  "f19", // [130]
+  "f20", // [131]
+  "f21", // [132]
+  "f22", // [133]
+  "f23", // [134]
+  "f24", // [135]
   "", // [136]
   "", // [137]
   "", // [138]
@@ -147,13 +147,13 @@ let keyboardMap = [
   "", // [141]
   "", // [142]
   "", // [143]
-  "NUM_LOCK", // [144]
-  "SCROLL_LOCK", // [145]
-  "WIN_OEM_FJ_JISHO", // [146]
-  "WIN_OEM_FJ_MASSHOU", // [147]
-  "WIN_OEM_FJ_TOUROKU", // [148]
-  "WIN_OEM_FJ_LOYA", // [149]
-  "WIN_OEM_FJ_ROYA", // [150]
+  "num_lock", // [144]
+  "scroll_lock", // [145]
+  "win_oem_fj_jisho", // [146]
+  "win_oem_fj_masshou", // [147]
+  "win_oem_fj_touroku", // [148]
+  "win_oem_fj_loya", // [149]
+  "win_oem_fj_roya", // [150]
   "", // [151]
   "", // [152]
   "", // [153]
@@ -163,39 +163,39 @@ let keyboardMap = [
   "", // [157]
   "", // [158]
   "", // [159]
-  "CIRCUMFLEX", // [160]
-  "EXCLAMATION", // [161]
-  "DOUBLE_QUOTE", // [162]
-  "HASH", // [163]
-  "DOLLAR", // [164]
-  "PERCENT", // [165]
-  "AMPERSAND", // [166]
-  "UNDERSCORE", // [167]
-  "OPEN_PAREN", // [168]
-  "CLOSE_PAREN", // [169]
-  "ASTERISK", // [170]
-  "PLUS", // [171]
-  "PIPE", // [172]
-  "HYPHEN_MINUS", // [173]
-  "OPEN_CURLY_BRACKET", // [174]
-  "CLOSE_CURLY_BRACKET", // [175]
-  "TILDE", // [176]
+  "circumflex", // [160]
+  "exclamation", // [161]
+  "double_quote", // [162]
+  "hash", // [163]
+  "dollar", // [164]
+  "percent", // [165]
+  "ampersand", // [166]
+  "underscore", // [167]
+  "open_paren", // [168]
+  "close_paren", // [169]
+  "asterisk", // [170]
+  "plus", // [171]
+  "pipe", // [172]
+  "hyphen_minus", // [173]
+  "open_curly_bracket", // [174]
+  "close_curly_bracket", // [175]
+  "tilde", // [176]
   "", // [177]
   "", // [178]
   "", // [179]
   "", // [180]
-  "VOLUME_MUTE", // [181]
-  "VOLUME_DOWN", // [182]
-  "VOLUME_UP", // [183]
+  "volume_mute", // [181]
+  "volume_down", // [182]
+  "volume_up", // [183]
   "", // [184]
   "", // [185]
-  "SEMICOLON", // [186]
-  "EQUALS", // [187]
-  "COMMA", // [188]
-  "MINUS", // [189]
-  "PERIOD", // [190]
-  "SLASH", // [191]
-  "BACK_QUOTE", // [192]
+  "semicolon", // [186]
+  "equals", // [187]
+  "comma", // [188]
+  "minus", // [189]
+  "period", // [190]
+  "slash", // [191]
+  "back_quote", // [192]
   "", // [193]
   "", // [194]
   "", // [195]
@@ -222,44 +222,46 @@ let keyboardMap = [
   "", // [216]
   "", // [217]
   "", // [218]
-  "OPEN_BRACKET", // [219]
-  "BACK_SLASH", // [220]
-  "CLOSE_BRACKET", // [221]
-  "QUOTE", // [222]
+  "open_bracket", // [219]
+  "back_slash", // [220]
+  "close_bracket", // [221]
+  "quote", // [222]
   "", // [223]
-  "META", // [224]
-  "ALTGR", // [225]
+  "meta", // [224]
+  "altgr", // [225]
   "", // [226]
-  "WIN_ICO_HELP", // [227]
-  "WIN_ICO_00", // [228]
+  "win_ico_help", // [227]
+  "win_ico_00", // [228]
   "", // [229]
-  "WIN_ICO_CLEAR", // [230]
+  "win_ico_clear", // [230]
   "", // [231]
   "", // [232]
-  "WIN_OEM_RESET", // [233]
-  "WIN_OEM_JUMP", // [234]
-  "WIN_OEM_PA1", // [235]
-  "WIN_OEM_PA2", // [236]
-  "WIN_OEM_PA3", // [237]
-  "WIN_OEM_WSCTRL", // [238]
-  "WIN_OEM_CUSEL", // [239]
-  "WIN_OEM_ATTN", // [240]
-  "WIN_OEM_FINISH", // [241]
-  "WIN_OEM_COPY", // [242]
-  "WIN_OEM_AUTO", // [243]
-  "WIN_OEM_ENLW", // [244]
-  "WIN_OEM_BACKTAB", // [245]
-  "ATTN", // [246]
-  "CRSEL", // [247]
-  "EXSEL", // [248]
-  "EREOF", // [249]
-  "PLAY", // [250]
-  "ZOOM", // [251]
+  "win_oem_reset", // [233]
+  "win_oem_jump", // [234]
+  "win_oem_pa1", // [235]
+  "win_oem_pa2", // [236]
+  "win_oem_pa3", // [237]
+  "win_oem_wsctrl", // [238]
+  "win_oem_cusel", // [239]
+  "win_oem_attn", // [240]
+  "win_oem_finish", // [241]
+  "win_oem_copy", // [242]
+  "win_oem_auto", // [243]
+  "win_oem_enlw", // [244]
+  "win_oem_backtab", // [245]
+  "attn", // [246]
+  "crsel", // [247]
+  "exsel", // [248]
+  "ereof", // [249]
+  "play", // [250]
+  "zoom", // [251]
   "", // [252]
-  "PA1", // [253]
-  "WIN_OEM_CLEAR", // [254]
+  "pa1", // [253]
+  "win_oem_clear", // [254]
   "" // [255]
 ];
+
+let keybindWaiting = null;
 
 let createModSettingsPopup = (modId) => {
   //Create background div
@@ -423,39 +425,74 @@ let createModSettingsKeybind = (modId, setting, bg) => {
     let modSettings = JSON.parse(localStorage.getItem('modSettings'));
   
     
-        let settingInput = document.createElement("div");
-        settingInput.innerHTML = modSettings['mods'][modId]['settings'][setting];
-        settingInput.style.fontSize = "1.8vw";
-        settingInput.style.margin = "0";
-        settingInput.style.padding = "0";
-        settingInput.style.border = "1px solid black";
-        settingInput.style.width = "10vw";
-        settingInput.style.height = "2vh";
-        settingInput.style.display = "flex";
-        settingInput.style.justifyContent = "center";
-        settingInput.style.alignItems = "center";
-        settingInput.style.cursor = "pointer";
-  
-        let keybind = modSettings['mods'][modId]['settings'][setting];
-  
-        settingInput.addEventListener('click', () => {
-          settingInput.innerHTML = "Press any key";
-          window.addEventListener('keydown', function keydown(e) {
-            keybind = e.key;
-            settingInput.innerHTML = keybind;
-            console.log(keybind)
-            modSettings['mods'][modId]['settings'][setting] = keybind;
-            localStorage.setItem('modSettings', JSON.stringify(modSettings));
-            // modSettings['mods'][modId]['settings'][setting] = keybind;
-            // localStorage.setItem('modSettings', JSON.stringify(modSettings));
-            window.removeEventListener('keydown', keydown);
-          });
+    let settingInput = document.createElement("div");
+    settingInput.innerHTML = modSettings['mods'][modId]['settings'][setting].join(" + ");
+    settingInput.style.fontSize = "1.8vw";
+    settingInput.style.margin = "0";
+    settingInput.style.padding = "8px";
+    settingInput.style.border = "1px solid black";
+    settingInput.style.minWidth = "10vw";
+    settingInput.style.width = "auto";
+    settingInput.style.height = "auto";
+    settingInput.style.display = "flex";
+    settingInput.style.justifyContent = "center";
+    settingInput.style.alignItems = "center";
+    settingInput.style.cursor = "pointer";
+    settingInput.style.userSelect = "none";
+    settingInput.style.textAlign = "center";
+    settingInput.style.borderRadius = "10px";
+
+    let keyArray = modSettings['mods'][modId]['settings'][setting];
+
+    settingInput.addEventListener('click', () => {
+      if(keybindWaiting !== null) return;
+      keybindWaiting = [];
+      
+      settingInput.innerHTML = "Waiting...";
+      window.addEventListener('keydown', function keydown(e) {
+        window.addEventListener('keyup', function keyup(e) {
+          keybindWaiting = null;
+          window.removeEventListener('keydown', keydown);
+          window.removeEventListener('keyup', keyup);
+          return;
+          
         });
-  
-        settingRow.appendChild(settingText);
-        settingRow.appendChild(settingInput);
-      return settingRow;
-    }
+        let keybind = e.key.toLowerCase();
+        if(keybind === "escape") {
+          settingInput.innerHTML = "None"
+          modSettings['mods'][modId]['settings'][setting] = ["None"];
+          localStorage.setItem('modSettings', JSON.stringify(modSettings));
+          window.removeEventListener('keydown', keydown);
+          keybindWaiting = null;
+          return;
+        }
+        // modSettings = JSON.parse(localStorage.getItem('modSettings'));
+        // keyArray = modSettings['mods'][modId]['settings'][setting]
+        keybindWaiting.push(keybind);
+
+        settingInput.innerHTML = keybindWaiting.join(" + ");
+        console.log(keybind)
+
+        if (keybindWaiting.length > 1) {
+          modSettings['mods'][modId]['settings'][setting] = keybindWaiting;
+          localStorage.setItem('modSettings', JSON.stringify(modSettings));
+          keybindWaiting = null;
+          window.removeEventListener('keydown', keydown);
+          return;
+        }
+      });
+      
+    });
+
+    // menuBg.onclick = (e) => { //ensure that input box focus
+    //   // console.log("please");
+    //   settingInput.blur()
+    // }
+
+    settingRow.appendChild(settingText);
+    settingRow.appendChild(settingInput);
+    return settingRow;
+  }
   
   let createModSettingsSlider = (modId, setting, bg) => {
     let settingRow = document.createElement("div");

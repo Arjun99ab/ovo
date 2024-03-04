@@ -4,6 +4,15 @@
   let runtime = globalThis.sdk_runtime;
   globalThis.sdk_runtime = old;
   targetY = null;
+  let settings = {
+    "createcheckpointkeybind": [16, 83],
+    "resetcheckpointkeybind": [16, 82],
+    "nextlevelkeybind": [16, 78],
+    "prevlevelkeybind": [16, 66],
+    "flagkeybind": [16, 77],
+    "coinkeybind": [16, 67]
+  }
+  let keybindPressed = (event, keybind) => {
   let showPosition = {
     tick() {
       let playerInstances = runtime.types_by_index
@@ -162,6 +171,7 @@
 
     if (event.code === "KeyS") {
       if (event.shiftKey) {
+          notify("Spawnpoint set", "State Saved");
           curState = saveState();
       } else if (curState != null) {
           loadState(curState);
@@ -171,13 +181,13 @@
         curState = null;
         runtime.changeLayout = runtime.runningLayout;
         //runtime.attempts = runtime.attempts + 1;
-        notify("State reset by soft level reset (Shift + R)", "State Reset");
+        notify("State reset by soft level reset", "State Reset");
     }
     if (event.code === "KeyN") {
         if (event.shiftKey) {
             runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) + 1)]
             setTimeout(() => {
-                notify("Going to next level bypass (Shift + N)", "Next Level");
+                notify("Going to next level bypass", "Next Level");
             }, 300);
         }
     }
@@ -189,7 +199,7 @@
             player.y = flag.y;
             player.set_bbox_changed();
             setTimeout(() => {
-                notify("Going to next level (Shift + M)", "Next Level");
+                notify("Going to next level", "Next Level");
             }, 300);
         }
     }
@@ -197,7 +207,7 @@
         if (event.shiftKey) {
             runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) - 1)]
             setTimeout(() => {
-                notify("Going to next level (Shift + N)", "Next Level");
+                notify("Going to previous level", "Next Level");
             }, 300);
         }
     }
@@ -209,7 +219,7 @@
             player.y = flag.y;
             player.set_bbox_changed();
             setTimeout(() => {
-                notify("Going to coin (Shift + C)", "Coin");
+                notify("Going to coin", "Coin");
             }, 300);
         }
     }
