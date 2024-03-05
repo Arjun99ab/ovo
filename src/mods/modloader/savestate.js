@@ -4,15 +4,7 @@
   let runtime = globalThis.sdk_runtime;
   globalThis.sdk_runtime = old;
   targetY = null;
-  let settings = {
-    "createcheckpointkeybind": [16, 83],
-    "resetcheckpointkeybind": [16, 82],
-    "nextlevelkeybind": [16, 78],
-    "prevlevelkeybind": [16, 66],
-    "flagkeybind": [16, 77],
-    "coinkeybind": [16, 67]
-  }
-  let keybindPressed = (event, keybind) => {
+  
   let showPosition = {
     tick() {
       let playerInstances = runtime.types_by_index
@@ -102,6 +94,7 @@
   let runtime = globalThis.sdk_runtime;
   globalThis.sdk_runtime = old;
 
+
   //Get all valid players on the layout
   // Ghosts don't count as valid players, and replays don't count either
 
@@ -163,36 +156,49 @@
     runtime.loadInstanceFromJSON(player, state, true);
   };
   // boundKeyDown = keyDown.bind();
+
+  let settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['savestate']['settings'];
+  
+  let keybindDown = (event, type) => {
+    console.log(event.key, settings[type])
+    console.log(settings)
+    if(settings[type].length === 2) { //special + regular
+      if (event.key.toLowerCase() === settings[type][1]) {
+        if ((event.shiftKey && settings[type][0] === "shift") || (event.ctrlKey && settings[type][0] === "control") || (event.altKey && settings[type][0] === "alt") || (event.metaKey && settings[type][0] === "meta")) {
+          return true;
+        }
+      }
+    } else { //regular (1 key)
+      if (event.key.toLowerCase() === settings[type][0]) {
+        return true;
+      }
+    }
+    return false;
+  }
+    
   
   let keyDown = (event) => {
     if (!getFlag()) {
       return;
     }
 
-    if (event.code === "KeyS") {
-      if (event.shiftKey) {
-          notify("Spawnpoint set", "State Saved");
-          curState = saveState();
-      } else if (curState != null) {
-          loadState(curState);
-      }
+    if (keybindDown(event, "createcheckpointkeybind")){
+        // notify("Spawnpoint set", "State Saved");
+        curState = saveState();
     }
-    if (event.code === "KeyR" && event.shiftKey) {
+    if (keybindDown(event, "resetcheckpointkeybind")) {
         curState = null;
         runtime.changeLayout = runtime.runningLayout;
         //runtime.attempts = runtime.attempts + 1;
         notify("State reset by soft level reset", "State Reset");
     }
-    if (event.code === "KeyN") {
-        if (event.shiftKey) {
-            runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) + 1)]
-            setTimeout(() => {
-                notify("Going to next level bypass", "Next Level");
-            }, 300);
-        }
+    if (keybindDown(event, "nextlevelkeybind")) {
+          runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) + 1)]
+          setTimeout(() => {
+              notify("Going to next level bypass", "Next Level");
+          }, 300);
     }
-    if (event.code === "KeyM") {
-        if (event.shiftKey) {
+    if (keybindDown(event, "flagkeybind")) {
             let player = getPlayer();
             let flag = getFlag();
             player.x = flag.x;
@@ -201,18 +207,14 @@
             setTimeout(() => {
                 notify("Going to next level", "Next Level");
             }, 300);
-        }
     }
-    if (event.code === "KeyB") {
-        if (event.shiftKey) {
+    if (keybindDown(event, "prevlevelkeybind")) {
             runtime.changelayout = runtime.layouts["Level " + String(parseInt(runtime.running_layout.name.split(' ')[1]) - 1)]
             setTimeout(() => {
-                notify("Going to previous level", "Next Level");
+                notify("Going to previous level", "Previous Level");
             }, 300);
-        }
     }
-    if (event.code === "KeyC") {
-        if (event.shiftKey) {
+    if (keybindDown(event, "coinkeybind")) {
             let player = getPlayer();
             let flag = getCoin();
             player.x = flag.x;
@@ -221,7 +223,6 @@
             setTimeout(() => {
                 notify("Going to coin", "Coin");
             }, 300);
-        }
     }
     
   }
@@ -233,6 +234,11 @@
       document.removeEventListener("keydown", keyDown);
     }
   }
+
+  globalThis.savestateSettingsUpdate = function () {
+    settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['savestate']['settings'];
+  }
+    
   
   document.addEventListener("keydown", keyDown);
 

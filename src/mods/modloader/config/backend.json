@@ -1,47 +1,14 @@
 {
-    "version": "2.0.2",
+    "version": "2.0.3",
     "settings":{
     },
     "mods": 
     {
-        "console": {
-            "name": "console",
-            "author": "Toadi",
-            "desc": "Use 'shift' + [arrows] to fly around!",
-            "url": "../src/mods/modloader/mobileconsole.js",
-            "icon": "https://cdn-icons-png.flaticon.com/128/723/723955.png",
-            "platform": ["pc", "mobile"],
-            "version": ["1.4", "1.4.4", "CTLE"],
-            "tags": ["hacks"],
-            "reload": false,
-            "settings": null,
-            "defaultSettings": {
-                "settings": null,
-                "favorite": false,
-                "enabled": false
-            }
-        },
-        "aaa": {
-            "name": "aaa",
-            "author": "Toadi",
-            "desc": "Use 'shift' + [arrows] to fly around!",
-            "url": "../src/mods/modloader/mobileks.js",
-            "icon": "https://cdn-icons-png.flaticon.com/128/723/723955.png",
-            "platform": ["pc", "mobile"],
-            "version": ["1.4", "1.4.4", "CTLE"],
-            "tags": ["hacks"],
-            "reload": false,
-            "settings": null,
-            "defaultSettings": {
-                "settings": null,
-                "favorite": false,
-                "enabled": false
-            }
-        },
+        
         "flymod": {
             "name": "Fly",
             "author": "Toadi",
-            "desc": "Use 'shift' + [arrows] to fly around!",
+            "desc": "Use [activator key] + [arrows] to fly around!<br/><br/>Use the settings to change the speed and activator keybind.",
             "url": "../src/mods/modloader/flymod.js",
             "icon": "https://cdn-icons-png.flaticon.com/128/723/723955.png",
             "platform": ["pc"],
@@ -54,12 +21,18 @@
                     "desc": "How fast you fly",
                     "type": "slider",
                     "min": 1,
-                    "max": 10
+                    "max": 25
+                },
+                "activatorkeybind": {
+                    "name": "Activate fly",
+                    "desc": "Activates fly mode.",
+                    "type": "keybind"
                 }
             },
             "defaultSettings": {
                 "settings": {
-                    "speed": 5
+                    "speed": 10,
+                    "activatorkeybind": ["shift"]
                 },
                 "favorite": false,
                 "enabled": false
@@ -161,7 +134,7 @@
         "savestate": {
             "name": "Save State",
             "author": "skymen",
-            "desc": "'Shift + s': Create Checkpoint <br/>'Shift + r': Reset Checkpoint<br/>'Shift + n': Bypass to next level<br/>'Shift + b': Bypass to previous level<br/>'Shift + m': Move to end flag<br/>'Shift + c': Move to coin",
+            "desc": "<u><b>Features</b></u><br/>Create Checkpoint <br/>Reset Checkpoint<br/>Bypass to next level<br/>Bypass to previous level<br/>Move to end flag<br/>Move to coin<br/><br/>View settings to change keybinds.",
             "url": "../src/mods/modloader/savestate.js",
             "icon": "https://static.thenounproject.com/png/3681374-200.png",
             "platform": ["pc"],

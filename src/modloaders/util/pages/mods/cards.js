@@ -107,6 +107,12 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       deleteButton = createCardButton(id + "-delete-btn", "https://cdn-icons-png.flaticon.com/128/3096/3096673.png", "calc(100%/3)");
     } else {
       settingsButton = createCardButton(id + "-settings-btn", "https://cdn-icons-png.flaticon.com/128/2040/2040504.png", "calc(100%/3)");
+      if(backendConfig['mods'][id]['settings'] === null) {
+        settingsButton.style.background = "url(../src/modloaders/img/settingsDisabled.png)";
+        settingsButton.style.backgroundSize = "2.5vw"; //or 50% 
+        settingsButton.style.backgroundRepeat = "no-repeat";
+        settingsButton.style.backgroundPosition= "center";
+      }
     }
     let favoriteButton = createCardButton(id + "-favorites-btn", "https://cdn-icons-png.flaticon.com/128/1828/1828970.png", "calc(100%/3)");
     if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['favorite']) {
@@ -208,7 +214,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       color: "black",
       fontSize: "2vw",
       cursor: "pointer",
-      backgroundColor: "white",
+      backgroundColor: "black",
       width: width,
       height: "3vw",
       textAlign: "center",
@@ -222,7 +228,9 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     Object.keys(c).forEach(function (a) {
       cardButton.style[a] = c[a];
     });
-
+    // if(backendConfig['mods'][id.split("-")[0]]['settings'] === null) {//no settings available
+    //   cardButton.style.opacity = "0.5";
+    // }
     cardButton.onclick = function() {
       if(id.includes("info")) {
         document.getElementById("menu-bg").style.pointerEvents = "none";

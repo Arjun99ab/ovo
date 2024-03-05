@@ -11,7 +11,7 @@ let keyboardMap = [
   "", // [5]
   "help", // [6]
   "", // [7]
-  "back_space", // [8]
+  "backspace", // [8]
   "tab", // [9]
   "", // [10]
   "", // [11]
@@ -23,7 +23,7 @@ let keyboardMap = [
   "control", // [17]
   "alt", // [18]
   "pause", // [19]
-  "caps_lock", // [20]
+  "capslock", // [20]
   "kana", // [21]
   "eisu", // [22]
   "junja", // [23]
@@ -35,15 +35,15 @@ let keyboardMap = [
   "nonconvert", // [29]
   "accept", // [30]
   "modechange", // [31]
-  "space", // [32]
-  "page_up", // [33]
-  "page_down", // [34]
+  " ", // [32]
+  "pageup", // [33]
+  "pagedown", // [34]
   "end", // [35]
   "home", // [36]
-  "←", // [37]
-  "↑", // [38]
-  "→", // [39]
-  "↓", // [40]
+  "arrowleft", // [37]
+  "arrowup", // [38]
+  "arrowright", // [39]
+  "arrowdown", // [40]
   "select", // [41]
   "print", // [42]
   "execute", // [43]
@@ -94,27 +94,27 @@ let keyboardMap = [
   "x", // [88]
   "y", // [89]
   "z", // [90]
-  "os_key", // [91] windows key (windows) or command key (mac)
-  "", // [92]
-  "context_menu", // [93]
+  "meta", // [91] windows key (windows) or command key (mac)
+  "meta", // [92]
+  "contextmenu", // [93]
   "", // [94]
-  "sleep", // [95]
-  "numpad0", // [96]
-  "numpad1", // [97]
-  "numpad2", // [98]
-  "numpad3", // [99]
-  "numpad4", // [100]
-  "numpad5", // [101]
-  "numpad6", // [102]
-  "numpad7", // [103]
-  "numpad8", // [104]
-  "numpad9", // [105]
-  "multiply", // [106]
-  "add", // [107]
-  "separator", // [108]
-  "subtract", // [109]
-  "decimal", // [110]
-  "divide", // [111]
+  "standby", // [95]
+  "0", // [96]
+  "1", // [97]
+  "2", // [98]
+  "3", // [99]
+  "4", // [100]
+  "5", // [101]
+  "6", // [102]
+  "7", // [103]
+  "8", // [104]
+  "9", // [105]
+  "*", // [106]
+  "+", // [107]
+  ".", // [108]
+  "-", // [109]
+  ".", // [110]
+  "/", // [111]
   "f1", // [112]
   "f2", // [113]
   "f3", // [114]
@@ -147,8 +147,8 @@ let keyboardMap = [
   "", // [141]
   "", // [142]
   "", // [143]
-  "num_lock", // [144]
-  "scroll_lock", // [145]
+  "numlock", // [144]
+  "scrolllock", // [145]
   "win_oem_fj_jisho", // [146]
   "win_oem_fj_masshou", // [147]
   "win_oem_fj_touroku", // [148]
@@ -189,13 +189,13 @@ let keyboardMap = [
   "volume_up", // [183]
   "", // [184]
   "", // [185]
-  "semicolon", // [186]
-  "equals", // [187]
-  "comma", // [188]
-  "minus", // [189]
-  "period", // [190]
-  "slash", // [191]
-  "back_quote", // [192]
+  ";", // [186]
+  "=", // [187]
+  ",", // [188]
+  "-", // [189]
+  ".", // [190]
+  "/", // [191]
+  "`", // [192]
   "", // [193]
   "", // [194]
   "", // [195]
@@ -347,6 +347,11 @@ let createModSettingsPopup = (modId) => {
     modSettingsPopup.remove();
     document.getElementById("menu-bg").style.pointerEvents = "auto";
     document.getElementById("menu-bg").style.filter = "none";
+    try {
+      globalThis[modId + "SettingsUpdate"]();
+    } catch(e) {
+      //if it works it works, if it doesnt, itll auto update when the mod is reloaded
+    }
   }
   // navbar.appendChild(xButton);
   modSettingsPopup.appendChild(xButton);
@@ -447,39 +452,82 @@ let createModSettingsKeybind = (modId, setting, bg) => {
     settingInput.addEventListener('click', () => {
       if(keybindWaiting !== null) return;
       keybindWaiting = [];
+      console.log(modId, setting)
       
       settingInput.innerHTML = "Waiting...";
       window.addEventListener('keydown', function keydown(e) {
-        window.addEventListener('keyup', function keyup(e) {
-          keybindWaiting = null;
-          window.removeEventListener('keydown', keydown);
-          window.removeEventListener('keyup', keyup);
-          return;
+        
           
-        });
-        let keybind = e.key.toLowerCase();
+        // });
+        let keybind = keyboardMap[e.keyCode]; //keybinds are lowercase by defaults
+        console.log(keybind)
+        console.log(e.keyCode)
+
         if(keybind === "escape") {
           settingInput.innerHTML = "None"
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
           modSettings['mods'][modId]['settings'][setting] = ["None"];
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
           window.removeEventListener('keydown', keydown);
           keybindWaiting = null;
+          
           return;
-        }
+        }  
+        
+        
+
         // modSettings = JSON.parse(localStorage.getItem('modSettings'));
         // keyArray = modSettings['mods'][modId]['settings'][setting]
         keybindWaiting.push(keybind);
 
-        settingInput.innerHTML = keybindWaiting.join(" + ");
-        console.log(keybind)
-
-        if (keybindWaiting.length > 1) {
+        if(!(keybind === "shift" || keybind === "control" || keybind === "alt" || keybind === "meta")) { //regular key
+          settingInput.innerHTML = keybindWaiting.join(" + ");
+          console.log(keybindWaiting)
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
           modSettings['mods'][modId]['settings'][setting] = keybindWaiting;
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
-          keybindWaiting = null;
           window.removeEventListener('keydown', keydown);
+          if(keybindWaiting.length == 1) { 
+            keybindWaiting = null;
+
+          }
+          console.log("hola")
           return;
+
+          
+        } else {
+          console.log(keybindWaiting)
+          window.addEventListener('keyup', function keyup(e) {
+            // if(!(e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)) return;
+            console.log('msadfohsaudfhi')
+            console.log(keybindWaiting)
+            modSettings = JSON.parse(localStorage.getItem('modSettings'));
+            modSettings['mods'][modId]['settings'][setting] = keybindWaiting;
+            localStorage.setItem('modSettings', JSON.stringify(modSettings));
+            window.removeEventListener('keydown', keydown);
+            window.removeEventListener('keyup', keyup);
+            keybindWaiting = null;
+
+            return;
+          });
+          settingInput.innerHTML = keybindWaiting.join(" + ");
+          console.log(keybind)
+  
+          if (keybindWaiting.length > 1) {
+            console.log('ashod');
+            console.log(keybindWaiting)
+            modSettings = JSON.parse(localStorage.getItem('modSettings'));
+            modSettings['mods'][modId]['settings'][setting] = keybindWaiting;
+            localStorage.setItem('modSettings', JSON.stringify(modSettings));
+            keybindWaiting = null;
+            window.removeEventListener('keydown', keydown);
+            
+
+            return;
+          }
         }
+
+        
       });
       
     });

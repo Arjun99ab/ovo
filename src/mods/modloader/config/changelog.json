@@ -15,6 +15,14 @@
             "Ability to add/delete your custom mods",
             "Bug fixes"
         ]
+    },
+    "2.0.3": {
+        "changes": [
+            "Ability to modify settings of mods (keybinds, etc.)",
+            "Fixed mod menu button showing up in game",
+            "Reduced lag caused by modloader",
+            "Bug fixes"
+        ]
     }
 
 }
