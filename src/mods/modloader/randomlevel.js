@@ -14,6 +14,24 @@
             image
         );
     };
+    let settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['randomlevel']['settings'];
+
+    let keybindDown = (event, type) => {
+        console.log(event.key, settings[type])
+        console.log(settings)
+        if(settings[type].length === 2) { //special + regular
+          if (event.key.toLowerCase() === settings[type][1]) {
+            if ((event.shiftKey && settings[type][0] === "shift") || (event.ctrlKey && settings[type][0] === "control") || (event.altKey && settings[type][0] === "alt") || (event.metaKey && settings[type][0] === "meta")) {
+              return true;
+            }
+          }
+        } else { //regular (1 key)
+          if (event.key.toLowerCase() === settings[type][0]) {
+            return true;
+          }
+        }
+        return false;
+      }
     globalThis.randomlevelToggle = function (enable) {
         if (enable) {
             // Use the bound methods when adding the event listeners
@@ -23,6 +41,9 @@
             document.removeEventListener("keydown", randomlevel.boundKeyDown);
         }
     }
+    globalThis.randomlevelSettingsUpdate = function () {
+        settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['randomlevel']['settings'];
+      }
 
     let randomlevel = {
         init() {
@@ -31,13 +52,11 @@
 
             this.interval = null;
             globalThis.ovoRandomLevel = this;
-            notify("Random Level Mod loaded", "Shift + Y", "./tutorials.png");
+            notify("Random Level Mod loaded", "Teleport to a random level!", "./tutorials.png");
         },
         keyDown(event) {
-            if (event.code === "KeyY") {
-                if (event.shiftKey) {
-                    this.loadRandomLevel();
-                }
+            if (keybindDown(event, "randomlevelkeybind")) {
+                this.loadRandomLevel();
             }
         },
 

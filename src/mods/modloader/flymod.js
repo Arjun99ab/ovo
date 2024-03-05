@@ -19,6 +19,29 @@
             document.removeEventListener("keyup", ovoFlyMod.boundKeyUp);
         }
     }
+    let settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['flymod']['settings'];
+
+    globalThis.flymodSettingsUpdate = function () {
+        settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['flymod']['settings'];
+        speed = {x: settings["speed"], y: settings["speed"]};
+    }
+
+    let keybindDown = (event, type) => {
+        if(settings[type].length === 2) { //special + regular
+          if (event.key.toLowerCase() === settings[type][1]) {
+            if ((event.shiftKey && settings[type][0] === "shift") || (event.ctrlKey && settings[type][0] === "control") || (event.altKey && settings[type][0] === "alt") || (event.metaKey && settings[type][0] === "meta")) {
+              return true;
+            }
+          }
+        } else { //regular (1 key)
+          if (event.key.toLowerCase() === settings[type][0]) {
+            
+            return true;
+          }
+        }
+        return false;
+      }
+    let speed = {x: settings["speed"], y: settings["speed"]};
 
     var modEnabled;
     //get the player object
@@ -52,7 +75,7 @@
             this.movementKeys = [false, false, false, false];
             this.activatorKeyHeld = false;
             this.activated = false;
-            this.speed = {x: 10, y: 10};
+            // this.speed = {x: 10, y: 10};
             this.stored = [1500, true];
             this.override = false;
 
@@ -83,7 +106,8 @@
         keyDown(event) {
             //check if mod is enabled & shift arrows => allow to fly
             let key = event.key.toLowerCase();
-            if (key == "shift" && !this.override) {
+            if (keybindDown(event, "activatorkeybind") && !this.override) {
+                console.log("womp womp")
                 this.activatorKeyHeld = true;
             } else if (event.keyCode >= 37 && event.keyCode <= 40 && this.activatorKeyHeld) {
                 if (!this.activated) {
@@ -107,7 +131,7 @@
             //activated variable can only be true if it was set true in the first palce
             //if shift is released, disable fly
             let key = event.key.toLowerCase();
-            if (key == "shift" && this.activatorKeyHeld) {
+            if (keybindDown(event, "activatorkeybind")&& this.activatorKeyHeld) {
                 this.activatorKeyHeld = false;
               
                 if (this.activated) {
@@ -144,16 +168,16 @@
         },
       
         speedX(speed) {
-            this.speed.x = speed;
+            speed.x = speed;
         },
       
         speedY(speed) {
-            this.speed.y = speed;
+            speed.y = speed;
         },
       
         setSpeed(speed) {
-            this.speed.x = speed;
-            this.speed.y = speed;  //
+            speed.x = speed;
+            speed.y = speed;  //
         },
 
         setOverride(value) {
@@ -173,8 +197,8 @@
                   
                     let moveX = this.movementKeys[2] - this.movementKeys[0];
                     let moveY = this.movementKeys[3] - this.movementKeys[1];
-                    player.x += moveX * this.speed.x;
-                    player.y += moveY * this.speed.y;
+                    player.x += moveX * speed.x;
+                    player.y += moveY * speed.y;
                 }
             }
         }
