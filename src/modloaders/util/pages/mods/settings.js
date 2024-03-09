@@ -289,6 +289,8 @@ let createModSettingsPopup = (modId) => {
       height: "auto",
       overflow: "auto",
       margin: "0",
+      maxHeight: "90%",
+      
       // padding: "10px",
       borderRadius: "10px",
   };
@@ -431,6 +433,7 @@ let createModSettingsKeybind = (modId, setting, bg) => {
   
     
     let settingInput = document.createElement("div");
+    console.log(setting)
     settingInput.innerHTML = modSettings['mods'][modId]['settings'][setting].join(" + ");
     settingInput.style.fontSize = "1.8vw";
     settingInput.style.margin = "0";

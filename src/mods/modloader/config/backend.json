@@ -1,5 +1,5 @@
 {
-    "version": "2.0.3",
+    "version": "2.0.4",
     "settings":{
     },
     "mods": 
@@ -280,9 +280,89 @@
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["hacks"],
             "reload": false,
-            "settings": null,
+            "settings": {
+                "timescale1keybind": {
+                    "name": "Timescale 1",
+                    "desc": "Sets timescale to 1",
+                    "type": "keybind"
+                },
+                "timescale0.5keybind": {
+                    "name": "Timescale 0.5",
+                    "desc": "Sets timescale to 0.5",
+                    "type": "keybind"
+                },
+                "timescale0.02keybind": {
+                    "name": "Timescale 0.02",
+                    "desc": "Sets timescale to 0.02.",
+                    "type": "keybind"
+                },
+                "timescale0.2keybind": {
+                    "name": "Timescale 0.2",
+                    "desc": "Sets timescale to 0.2",
+                    "type": "keybind"
+                },
+                "timescale0.07keybind": {
+                    "name": "Timescale 0.07",
+                    "desc": "Sets timescale to 0.07",
+                    "type": "keybind"
+                },
+                "timescale0.05keybind": {
+                    "name": "Timescale 0.05",
+                    "desc": "Sets timescale to 0.05",
+                    "type": "keybind"
+                },
+                "timescale0.1keybind": {
+                    "name": "Timescale 0.1",
+                    "desc": "Sets timescale to 0.1",
+                    "type": "keybind"
+                },
+                "timescalex2keybind": {
+                    "name": "Timescale x2",
+                    "desc": "Multiplies timescale by 2",
+                    "type": "keybind"
+                },
+                "timescalex5keybind": {
+                    "name": "Timescale x5",
+                    "desc": "Multiplies timescale by 5",
+                    "type": "keybind"
+                },
+                "timescale/2keybind": {
+                    "name": "Timescale /2",
+                    "desc": "Divides timescale by 2",
+                    "type": "keybind"
+                },
+                "timescale/5keybind": {
+                    "name": "Timescale /5",
+                    "desc": "Divides timescale by 5",
+                    "type": "keybind"
+                },
+                "automjkeybind": {
+                    "name": "Auto MJ",
+                    "desc": "Performs an MJ",
+                    "type": "keybind"
+                },
+                "autojumpkeybind": {
+                    "name": "Auto Jump",
+                    "desc": "Performs an auto jump.",
+                    "type": "keybind"
+                }
+            },
             "defaultSettings": {
-                "settings": null,
+                "settings": {
+                    "timescale1keybind": ["q"],
+                    "timescale0.5keybind": ["w"],
+                    "timescale0.02keybind": ["e"],
+                    "timescale0.2keybind": ["a"],
+                    "timescale0.07keybind": ["shift", "d"],
+                    "timescale0.05keybind": ["d"],
+                    "timescale0.1keybind": ["s"],
+                    "timescalex2keybind": ["x"],
+                    "timescalex5keybind": ["z"],
+                    "timescale/2keybind": ["c"],
+                    "timescale/5keybind": ["v"],
+                    "automjkeybind": ["shift", "f"],
+                    "autojumpkeybind": ["f"]
+                },
                 "favorite": false,
                 "enabled": false
             }

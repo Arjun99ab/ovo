@@ -14,64 +14,84 @@
         image
       );
     };
+
+    let settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['taskeybinds']['settings'];
+    globalThis.taskeybindsSettingsUpdate = function () {
+      settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['taskeybinds']['settings'];
+    }
+
+    let keybindDown = (event, type) => {
+        console.log(event.key, settings[type])
+        console.log(settings)
+        if(settings[type].length === 2) { //special + regular
+          if (event.key.toLowerCase() === settings[type][1]) {
+            if ((event.shiftKey && settings[type][0] === "shift") || (event.ctrlKey && settings[type][0] === "control") || (event.altKey && settings[type][0] === "alt") || (event.metaKey && settings[type][0] === "meta")) {
+              return true;
+            }
+          }
+        } else { //regular (1 key)
+          if (event.key.toLowerCase() === settings[type][0]) {
+            return true;
+          }
+        }
+        return false;
+      }
   
     notify("timescale shortcut mod loaded");
     let keyDown = (event) => {
-      if (event.code === "KeyQ") {
+      if (keybindDown(event, "timescale1keybind")) {
         ovoTasTools.timescale = 1
-          notify("timescale set to 1");
+        notify("timescale set to 1");
       }
-      if (event.code === "KeyW") {
+      else if (keybindDown(event, "timescale0.5keybind")) {
         ovoTasTools.timescale = 0.5
           notify("timescale set to 0.5");
       }
-      if (event.code === "KeyE") {
+      else if (keybindDown(event, "timescale0.02keybind")) {
         ovoTasTools.timescale = 0.02
           notify("timescale set to 0.02");
       }
-      if (event.code === "KeyA") {
+      else if (keybindDown(event, "timescale0.2keybind")) {
         ovoTasTools.timescale = 0.2
         notify("timescale set to 0.2");
       }
-      if (event.code === "KeyD") {
-        if (event.shiftKey) {
-          ovoTasTools.timescale = 0.07
-          notify("timescale set to 0.07");
-        } else {        
-          ovoTasTools.timescale = 0.05
-          notify("timescale set to 0.05");
-        }
+      else if (keybindDown(event, "timescale0.07keybind")) {
+        ovoTasTools.timescale = 0.07
+        notify("timescale set to 0.07");
+      } 
+      else if (keybindDown(event, "timescale0.05keybind")) {        
+        ovoTasTools.timescale = 0.05
+        notify("timescale set to 0.05");
       }
-      if (event.code === "KeyS") {
+      else if (keybindDown(event, "timescale0.1keybind")) {
         ovoTasTools.timescale = 0.1
-          notify("timescale set to 0.1");
+        notify("timescale set to 0.1");
       }
-      if (event.code === "KeyX") {
+      else if (keybindDown(event, "timescalex2keybind")) {
         ovoTasTools.timescale *= 2
         notify("timescale set to *2");
       }
-      if (event.code === "KeyZ") {
+      else if (keybindDown(event, "timescalex5keybind")) {
         ovoTasTools.timescale *= 5
         notify("timescale set to *5");
       }
-      if (event.code === "KeyC") {
+      else if (keybindDown(event, "timescale/2keybind")) {
         ovoTasTools.timescale /= 2
         notify("timescale set to /2");
       }
-      if (event.code === "KeyV") {
+      else if (keybindDown(event, "timescale/5keybind")) {
         ovoTasTools.timescale /= 5
         notify("timescale set to /5");
       }
-      if(event.code === "KeyF") {
-        if (event.shiftKey) {
-            ovoTasTools.loadInputs([["Down"],])
-            ovoTasTools.playInputs()
-            notify("auto mj inputed");
-        } else {
-            ovoTasTools.loadInputs([["Jump"],["Jump"],["Jump"],["Jump"],["Jump"],])
-            ovoTasTools.playInputs()
-            notify("auto jump inputed");
-        }
+      else if(keybindDown(event, "automjkeybind")) {
+        ovoTasTools.loadInputs([["Down"],])
+        ovoTasTools.playInputs()
+        notify("auto mj inputed");
+      } else if (keybindDown(event, "autojumpkeybind")) {
+        ovoTasTools.loadInputs([["Jump"],["Jump"],["Jump"],["Jump"],["Jump"],])
+        ovoTasTools.playInputs()
+        notify("auto jump inputed");
+        
       }
     };
     globalThis.taskeybindsToggle = function (enable) {

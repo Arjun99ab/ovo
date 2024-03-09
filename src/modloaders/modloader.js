@@ -640,6 +640,9 @@ export let runtime;
                       console.log(key)
                       if (backendConfig['mods'][key]['defaultSettings']['settings'] !== null) {
                         let backendModSettings = Object.keys(backendConfig['mods'][key]['defaultSettings']['settings'])
+                        if (userConfig['mods'][key]['settings'] === null) {
+                          userConfig['mods'][key]['settings'] = {}
+                        }
                         let userModSettings = Object.keys(userConfig['mods'][key]['settings'])
                         if(!arraysEqual(backendModSettings, userModSettings)) {
                           let newMods = backendModSettings.filter(x => !userModSettings.includes(x))

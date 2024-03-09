@@ -25,7 +25,9 @@
     },
     "2.0.4": {
         "changes": [
-            "Mod menu button now appears only when it should (in menus & pause)"
+            "Mod menu button now appears only when it should (in menus & pause)",
+            "TAS Keybinds mod keybinds are now customizable"
+
         ]
     }
 
