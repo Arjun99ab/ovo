@@ -21,7 +21,9 @@
                     "desc": "How fast you fly",
                     "type": "slider",
                     "min": 1,
-                    "max": 25
+                    "max": 25,
+                    "increment": 0.1
+
                 },
                 "activatorkeybind": {
                     "name": "Activate fly",
@@ -72,6 +74,7 @@
                 "enabled": false
             }
         },
+        
         "hurricane": {
             "name": "Hurricane",
             "author": "Toadi",

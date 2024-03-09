@@ -629,3 +629,93 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       settingRow.appendChild(settingLine);
       return settingRow;
     }
+    let createModSettingGuiPosition = (modId, setting, bg) => {
+      let settingRow = document.createElement("div");
+      settingRow.style.display = "flex";
+      settingRow.style.flexDirection = "row";
+      settingRow.style.justifyContent = "space-between";
+      settingRow.style.alignItems = "center";
+      settingRow.style.margin = "5px";
+      settingRow.style.columnGap = "3vw";
+      // settingRow.style.rowGap = "5vh";
+  
+  
+      let settingText = document.createElement("p");
+      settingText.innerHTML = backendConfig['mods'][modId]['settings'][setting]['name'] + ": ";
+      settingText.style.fontSize = "1.8vw";
+      settingText.style.margin = "0";
+      settingText.style.padding = "0";
+  
+      let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+      let settingValue = document.createElement("p");
+      settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
+      settingValue.style.fontSize = "1.8vw";
+      settingValue.style.margin = "0";
+      settingValue.style.padding = "0";
+      settingRow.appendChild(settingText);
+      settingRow.appendChild(settingValue);
+  
+      let settingButton = document.createElement("div");
+      console.log(setting)
+      settingButton.innerHTML = "Move Element";
+      settingButton.style.fontSize = "1.8vw";
+      settingButton.style.margin = "0";
+      settingButton.style.padding = "8px";
+      settingButton.style.border = "1px solid black";
+      settingButton.style.minWidth = "10vw";
+      // settingButton.style.width = "auto";
+      // settingButton.style.height = "auto";
+      settingButton.style.display = "flex";
+      settingButton.style.justifyContent = "center";
+      settingButton.style.alignItems = "center";
+      settingButton.style.cursor = "pointer";
+      settingButton.style.userSelect = "none";
+      settingButton.style.textAlign = "center";
+      settingButton.style.borderRadius = "10px";
+  
+  
+      
+      settingButton.addEventListener('click', (e) => {
+        // console.log("please1")
+        e.preventDefault();
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        settingButton.focus();
+        // settingLine.select();
+        // settingLine.stepUp();
+      });
+      settingButton.addEventListener('mousedown', (e) => {
+        // console.log("please0")
+        // e.preventDefault();
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        settingButton.focus();
+        // settingLine.select();
+      });
+      settingButton.addEventListener('input', (e) => {
+        // console.log("please2")
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        // e.preventDefault();
+        settingButton.focus();
+        // console.log(settingLine.value)
+        settingValue.innerHTML = settingLine.value;
+        modSettings = JSON.parse(localStorage.getItem('modSettings'));
+        modSettings['mods'][modId]['settings'][setting] = settingLine.value;
+        localStorage.setItem('modSettings', JSON.stringify(modSettings));
+      });
+      settingLine.addEventListener('change', (e) => {
+        // console.log("please3")
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        // e.preventDefault();
+        settingLine.focus();
+      });
+  
+      bg.onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        settingLine.blur()
+      }
+      settingRow.appendChild(settingLine);
+      return settingRow;
+    }
