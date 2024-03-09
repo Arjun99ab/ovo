@@ -1,5 +1,5 @@
 import {createNotifyModal, createChangelogPopup, createConfirmDeleteModal, createConfirmReloadModal} from './util/modals.js';
-import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify } from './util/ovo.js';
+import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify, menuButtonHover, levelButtonHover} from './util/ovo.js';
 import {sleep, arraysEqual, detectDeviceType} from './util/utils.js';
 import {currentFilter, setFilter} from './util/pages/mods/filters.js';
 import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/render.js';
@@ -152,7 +152,7 @@ export let runtime;
           position: "absolute",
           cursor: "pointer",
           left: "4px",
-          top: "4px",
+          top: "60px",
           width: "100px",
           height: "100px",
           display: "block",
@@ -723,11 +723,11 @@ export let runtime;
                         
 
             document.addEventListener("touchstart", (event) => {
-              this.touchstart(event)
+              this.mouseend(event)
             });
 
-            document.addEventListener("mousedown", (event) => {
-                this.touchstart(event)
+            document.addEventListener("mouseup", (event) => {
+                this.mouseend(event)
             });
 
             document.addEventListener("keydown", (event) => {
@@ -777,50 +777,61 @@ export let runtime;
             }
         },
 
-        touchstart(event) {
-
-          if (event.target.tagName === 'CANVAS') {
-            console.log("touchstart")
-            let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
+        mouseend(event) {
+          let mouse = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Mouse).instances[0]
+          let buttonBehav = runtime.types_by_index.filter((x) =>
+            x.behaviors.some(
+              (y) => y.behavior instanceof cr.behaviors.aekiro_button)
+            )[0].instances[0].behavior_insts[0];
             
+            console.log(runtime.types_by_index.filter((x) =>
+            x.behaviors.some(
+              (y) => y.behavior instanceof cr.behaviors.aekiro_button)
+            )[4].instances)
+            let menuButtonClicked = menuButtonHover();
+            let levelButtonClicked = levelButtonHover();
+
+            if(levelButtonClicked !== null) {
+              console.log("levelbutton")
+              document.getElementById("menu-button").style.display = "none";
+              inGame = true;
+            }
             let uiButtons = runtime.types_by_index.filter((x) =>
                 x.behaviors.some(
                 (y) => y.behavior instanceof cr.behaviors.aekiro_button
                 )
-            )[0];
-            let levelButton = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("levelbutton"))
-            // let listItem = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("listparent"))
-            // console.log(listItem)
-            console.log(uiButtons.getCurrentSol().getObjects())
-            // console.log(playButton.getCurrentSol().getObjects().map(x=>x.instance_vars))
-            if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, levelButton)) {
-                inGame = true;
+            )[0]
+            console.log(uiButtons.instances)
+
+
+
+            if(menuButtonClicked !== null) {
+              console.log("apple pieee", menuButtonClicked.properties[1])
+              console.log("playbutton")
+              let buttonType = menuButtonClicked.properties[1];
+              let hideButtons = ["Play", "Resume", "Reload", "Next", "Replay", "LoadReplay"]
+              if (hideButtons.includes(buttonType)) {
                 document.getElementById("menu-button").style.display = "none";
-            }
-            
-            if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiButtons)) {
-                console.log("playbutton")
-                let buttonType = uiButtons.getFirstPicked().properties[1];
-                let hideButtons = ["Play", "Resume", "Reload"]
-                if (hideButtons.includes(buttonType)) {
-                  document.getElementById("menu-button").style.display = "none";
-                  inGame = true;
-                } else if(buttonType === "Pause" || (buttonType === "Back" && isPaused())) {
-                  if (inGame) {
-                    document.getElementById("menu-button").style.display = "block";
-                    inGame = false;
-                  } else {
-                    document.getElementById("menu-button").style.display = "none";
-                    inGame = true;
-                  }
-                } else {
+                inGame = true;
+              } else if(buttonType === "Pause" || (buttonType === "Back" && isPaused())) {
+                if (inGame) {
                   document.getElementById("menu-button").style.display = "block";
                   inGame = false;
+                } else {
+                  document.getElementById("menu-button").style.display = "none";
+                  inGame = true;
                 }
+              } else {
+                document.getElementById("menu-button").style.display = "block";
+                inGame = false;
+              }
             }
-          }
 
-        }
+
+
+        },
+
+        
         
     };
   

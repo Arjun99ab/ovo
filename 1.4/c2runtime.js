@@ -23173,6 +23173,7 @@ cr.plugins_.Mouse = function(runtime)
 		this.triggerButton = info.which - 1;	// 1-based
 		this.triggerType = 0;					// single click
 		this.runtime.trigger(cr.plugins_.Mouse.prototype.cnds.OnClick, this);
+		console.log(this)
 		this.runtime.trigger(cr.plugins_.Mouse.prototype.cnds.OnObjectClicked, this);
 		this.runtime.isInUserInputEvent = false;
 	};
@@ -23243,15 +23244,20 @@ cr.plugins_.Mouse = function(runtime)
 	};
 	Cnds.prototype.IsOverObject = function (obj)
 	{
+		// console.log(this, obj)
 		var cnd = this.runtime.getCurrentCondition();
+		// console.log(cnd.inverted)
 		var mx = this.mouseXcanvas;
 		var my = this.mouseYcanvas;
 		return cr.xor(this.runtime.testAndSelectCanvasPointOverlap(obj, mx, my, cnd.inverted), cnd.inverted);
 	};
 	Cnds.prototype.OnObjectClicked = function (button, type, obj)
 	{
+		console.log(button, type, obj);
+		console.log(this.triggerButton, this.triggerType);
 		if (button !== this.triggerButton || type !== this.triggerType)
 			return false;	// wrong click type
+		console.log(this.runtime.testAndSelectCanvasPointOverlap(obj, this.mouseXcanvas, this.mouseYcanvas, false));
 		return this.runtime.testAndSelectCanvasPointOverlap(obj, this.mouseXcanvas, this.mouseYcanvas, false);
 	};
 	Cnds.prototype.OnWheel = function (dir)

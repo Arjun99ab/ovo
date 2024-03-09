@@ -19,9 +19,13 @@
     "2.0.3": {
         "changes": [
             "Ability to modify settings of mods (keybinds, etc.)",
-            "Fixed mod menu button showing up in game",
             "Reduced lag caused by modloader",
             "Bug fixes"
+        ]
+    },
+    "2.0.4": {
+        "changes": [
+            "Mod menu button now appears only when it should (in menus & pause)"
         ]
     }
 

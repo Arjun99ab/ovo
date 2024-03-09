@@ -1,6 +1,6 @@
 import { runtime } from "../modloader.js"
 
-export {isInLevel, isPaused, closePaused, disableClick, enableClick, notify} 
+export {isInLevel, isPaused, closePaused, disableClick, enableClick, notify, menuButtonHover, levelButtonHover} 
 
 let isInLevel = () => {
     return runtime.running_layout.name.startsWith("Level") && runtime.running_layout.name !== "Level Menu"
@@ -14,6 +14,33 @@ let isPaused = () => {
 let closePaused = () => {
     if (isInLevel()) return runtime.running_layout.layers.find(function(a) {return "Pause" === a.name}).visible = false
 }
+
+let menuButtonHover = () => {
+  let presentButtons = runtime.types_by_index.filter((x) =>
+  x.behaviors.some(
+    (y) => y.behavior instanceof cr.behaviors.aekiro_button)
+  )[0].instances;
+  for(let i = 0; i < presentButtons.length; i++) {
+    if(presentButtons[i].behavior_insts[0].isMouseOver() || presentButtons[i].behavior_insts[0].isInTouch()) {
+        return presentButtons[i]
+    }
+  }
+  return null;
+}
+
+let levelButtonHover = () => {
+  let presentButtons = runtime.types_by_index.filter((x) =>
+  x.behaviors.some(
+    (y) => y.behavior instanceof cr.behaviors.aekiro_button)
+  )[4].instances;
+  for(let i = 0; i < presentButtons.length; i++) {
+    if(presentButtons[i].behavior_insts[0].isMouseOver() || presentButtons[i].behavior_insts[0].isInTouch()) {
+        return presentButtons[i]
+    }
+  }
+  return null;
+}
+      
 
 
 
