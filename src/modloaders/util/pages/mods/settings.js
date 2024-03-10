@@ -582,6 +582,7 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       settingLine.min = backendConfig['mods'][modId]['settings'][setting]['min'];
       settingLine.max = backendConfig['mods'][modId]['settings'][setting]['max'];
       settingLine.value = modSettings['mods'][modId]['settings'][setting];
+      settingLine.step = backendConfig['mods'][modId]['settings'][setting]['increment'];
   
   
       
@@ -672,50 +673,180 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       settingButton.style.userSelect = "none";
       settingButton.style.textAlign = "center";
       settingButton.style.borderRadius = "10px";
+
+      
   
   
       
-      settingButton.addEventListener('click', (e) => {
-        // console.log("please1")
-        e.preventDefault();
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        settingButton.focus();
-        // settingLine.select();
-        // settingLine.stepUp();
-      });
-      settingButton.addEventListener('mousedown', (e) => {
-        // console.log("please0")
-        // e.preventDefault();
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        settingButton.focus();
-        // settingLine.select();
-      });
-      settingButton.addEventListener('input', (e) => {
-        // console.log("please2")
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        // e.preventDefault();
-        settingButton.focus();
-        // console.log(settingLine.value)
-        settingValue.innerHTML = settingLine.value;
-        modSettings = JSON.parse(localStorage.getItem('modSettings'));
-        modSettings['mods'][modId]['settings'][setting] = settingLine.value;
-        localStorage.setItem('modSettings', JSON.stringify(modSettings));
-      });
-      settingLine.addEventListener('change', (e) => {
-        // console.log("please3")
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        // e.preventDefault();
-        settingLine.focus();
-      });
-  
-      bg.onclick = (e) => { //ensure that input box focus
-        // console.log("please");
-        settingLine.blur()
+      settingButton.onclick = function() {
+        console.log("settings button clicked")
+
       }
-      settingRow.appendChild(settingLine);
+      // settingButton.addEventListener('mousedown', (e) => {
+      //   // console.log("please0")
+      //   // e.preventDefault();
+      //   e.stopImmediatePropagation()
+      //   e.stopPropagation();
+      //   settingButton.focus();
+      //   // settingLine.select();
+      // });
+      settingRow.appendChild(settingButton);
+      return settingRow;
+    }
+    let createModSettingCheckbox = (modId, setting, bg) => {
+      let settingRow = document.createElement("div");
+      settingRow.style.display = "flex";
+      settingRow.style.flexDirection = "row";
+      settingRow.style.justifyContent = "space-between";
+      settingRow.style.alignItems = "center";
+      settingRow.style.margin = "5px";
+      settingRow.style.columnGap = "3vw";
+      // settingRow.style.rowGap = "5vh";
+  
+  
+      let settingText = document.createElement("p");
+      settingText.innerHTML = backendConfig['mods'][modId]['settings'][setting]['name'] + ": ";
+      settingText.style.fontSize = "1.8vw";
+      settingText.style.margin = "0";
+      settingText.style.padding = "0";
+  
+      let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+      let settingValue = document.createElement("p");
+      settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
+      settingValue.style.fontSize = "1.8vw";
+      settingValue.style.margin = "0";
+      settingValue.style.padding = "0";
+      settingRow.appendChild(settingText);
+      settingRow.appendChild(settingValue);
+  
+      let settingButton = document.createElement("div");
+      console.log(setting)
+      settingButton.innerHTML = "Move Element";
+      settingButton.style.fontSize = "1.8vw";
+      settingButton.style.margin = "0";
+      settingButton.style.padding = "8px";
+      settingButton.style.border = "1px solid black";
+      settingButton.style.minWidth = "10vw";
+      // settingButton.style.width = "auto";
+      // settingButton.style.height = "auto";
+      settingButton.style.display = "flex";
+      settingButton.style.justifyContent = "center";
+      settingButton.style.alignItems = "center";
+      settingButton.style.cursor = "pointer";
+      settingButton.style.userSelect = "none";
+      settingButton.style.textAlign = "center";
+      settingButton.style.borderRadius = "10px";
+
+      
+  
+  
+      
+      settingButton.onclick = function() {
+        console.log("settings button clicked")
+
+      }
+      // settingButton.addEventListener('mousedown', (e) => {
+      //   // console.log("please0")
+      //   // e.preventDefault();
+      //   e.stopImmediatePropagation()
+      //   e.stopPropagation();
+      //   settingButton.focus();
+      //   // settingLine.select();
+      // });
+      settingRow.appendChild(settingButton);
+      return settingRow;
+    }
+    let createModSettingColor = (modId, setting, bg) => {
+      let settingRow = document.createElement("div");
+      settingRow.style.display = "flex";
+      settingRow.style.flexDirection = "row";
+      settingRow.style.justifyContent = "space-between";
+      settingRow.style.alignItems = "center";
+      settingRow.style.margin = "5px";
+      settingRow.style.columnGap = "3vw";
+      // settingRow.style.rowGap = "5vh";
+  
+  
+      let settingText = document.createElement("p");
+      settingText.innerHTML = backendConfig['mods'][modId]['settings'][setting]['name'] + ": ";
+      settingText.style.fontSize = "1.8vw";
+      settingText.style.margin = "0";
+      settingText.style.padding = "0";
+  
+      let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+      let settingValue = document.createElement("p");
+      settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
+      settingValue.style.fontSize = "1.8vw";
+      settingValue.style.margin = "0";
+      settingValue.style.padding = "0";
+      settingRow.appendChild(settingText);
+      settingRow.appendChild(settingValue);
+  
+      let colorBar = document.createElement("input");
+      colorBar.placeholder = "Input a color";
+      let d = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "13vw",
+        height: "3vw",
+        cursor: "pointer",
+        backgroundColor: "white",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        fontSize: "2vw",
+        color: "black",
+        fontFamily: "Retron2000",
+        paddingLeft: "10px",
+        borderRadius: "10px 10px 10px 10px",
+        
+      }
+      Object.keys(d).forEach(function (a) {
+        searchBar.style[a] = d[a];
+      });
+      searchBar.onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        e.preventDefault();
+        searchBar.focus()
+      }
+      menuBg.onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        searchBar.blur()
+      }
+      searchBar.onkeydown = (e) => { // ensures that user is able to type in input box
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        if(e.keyCode === 27) {
+          searchBar.blur();
+        }
+        if(e.keyCode === 13) {
+          searchBar.blur();
+        } 
+      };
+      searchBar.onkeyup = (e) => {
+        console.log(currentFilter)
+        console.log(searchBar.value)
+        let cardsList = searchMods(searchBar.value, currentFilter);
+        let filterCards = document.getElementById("cards-div").children;
+        while(filterCards.length > 0) { //clear all cards
+          filterCards[0].remove();
+        }
+        let cardsDiv = document.getElementById("cards-div");
+        console.log(cardsDiv)
+        cardsList.forEach((card) => {
+          cardsDiv.appendChild(card);
+        });
+      }
+      // settingButton.addEventListener('mousedown', (e) => {
+      //   // console.log("please0")
+      //   // e.preventDefault();
+      //   e.stopImmediatePropagation()
+      //   e.stopPropagation();
+      //   settingButton.focus();
+      //   // settingLine.select();
+      // });
+      settingRow.appendChild(settingButton);
       return settingRow;
     }
