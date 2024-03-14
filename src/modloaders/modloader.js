@@ -303,6 +303,17 @@ export let runtime;
           menuBg.remove();
           versionText.remove();
           enableClick(map);
+          let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+          for(const [key] of Object.entries(modSettings['mods'])) {
+              if(modSettings['mods'][key]['enabled'] === true) {
+                if(key.startsWith("custom") || !backendConfig['mods'][key]['tags'].includes('visual')) {
+                  document.getElementById("cheat-indicator").style.display = "block";
+                  break;
+                } else {
+                  document.getElementById("cheat-indicator").style.display = "none";
+                }
+              }
+          }
           if(inGame) {
             document.getElementById("menu-button").style.display = "none";
           } else {

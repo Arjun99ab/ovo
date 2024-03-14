@@ -20,6 +20,7 @@ let toggleMod = (modId, enable) => {
         let modSettings = JSON.parse(localStorage.getItem('modSettings'));
         if(modId.startsWith("customMod")) {
             js.text = modSettings['mods'][modId]["url"];
+            document.getElementById("cheat-indicator").style.display = "block";
         } else {
             console.log(backendConfig['mods'][modId]["url"])
             js.src = backendConfig['mods'][modId]["url"];
