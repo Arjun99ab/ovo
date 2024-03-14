@@ -105,6 +105,7 @@ let levelButtonHover = () => {
 
 
 let disableClick = () => {
+  document.getElementById("c2canvasdiv").style.pointerEvents = "none";
     let map = [];
     let mapUI = [];
     let types = runtime.types_by_index.filter((x) =>
@@ -150,6 +151,7 @@ let disableClick = () => {
   };
 
   let enableClick = ({ map, mapUI }) => {
+    document.getElementById("c2canvasdiv").style.pointerEvents = "auto";
     map.forEach((x) => {
       let inst = x.inst.behavior_insts.find(
         (x) => x.behavior instanceof cr.behaviors.aekiro_button

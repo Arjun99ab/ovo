@@ -298,6 +298,13 @@ let createModSettingsPopup = (modId) => {
     modSettingsPopup.style[a] = c[a];
   });
 
+  modSettingsPopup.onclick = (e) => {
+    console.log("womp wopm womp")
+    // e.stopImmediatePropagation()
+    // e.stopPropagation();
+    document.activeElement.blur();
+  }
+
   
 
   //Title
@@ -369,12 +376,12 @@ let createModSettingsPopup = (modId) => {
     padding: "15px",
     // margin: "5px",
     flexDirection: "column",
-    rowGap: "10px",
+    rowGap: "15px",
     // width: "10%",
     borderTop: "solid 3px black",
 
     height: "100%",
-    overflowY: "auto",
+    overflowY: "scroll",
     overflowX: "hidden",
     // backgroundColor: "red",
 
@@ -387,6 +394,13 @@ let createModSettingsPopup = (modId) => {
   Object.keys(c).forEach(function (a) {
     settingsDiv.style[a] = c[a];
   });
+  settingsDiv.addEventListener('wheel', (e) => {
+    // console.log("hello)")
+    e.stopImmediatePropagation()
+    e.stopPropagation();
+    // e.preventDefault();
+    settingsDiv.focus();
+  });
   modSettings = JSON.parse(localStorage.getItem('modSettings'));
   // console.log(backendConfig)
   // console.log(modId)
@@ -396,6 +410,14 @@ let createModSettingsPopup = (modId) => {
       settingRow = createModSettingsSlider(modId, setting, modSettingsPopup);
     } else if(backendConfig['mods'][modId]['settings'][setting]['type'] === "keybind") {
       settingRow = createModSettingsKeybind(modId, setting, modSettingsPopup);
+    } else if(backendConfig['mods'][modId]['settings'][setting]['type'] === "guiPosition") {
+      settingRow = createModSettingGuiPosition(modId, setting, modSettingsPopup);
+    } else if(backendConfig['mods'][modId]['settings'][setting]['type'] === "checkbox") {
+      settingRow = createModSettingCheckbox(modId, setting, modSettingsPopup);
+    } else if(backendConfig['mods'][modId]['settings'][setting]['type'] === "color") {
+      settingRow = createModSettingColor(modId, setting, modSettingsPopup);
+    } else if(backendConfig['mods'][modId]['settings'][setting]['type'] === "font") {
+      settingRow = createModSettingFont(modId, setting, modSettingsPopup);
     }
     settingsDiv.appendChild(settingRow);
   });
@@ -623,10 +645,10 @@ let createModSettingsKeybind = (modId, setting, bg) => {
         settingLine.focus();
       });
   
-      bg.onclick = (e) => { //ensure that input box focus
-        // console.log("please");
-        settingLine.blur()
-      }
+      // bg.onclick = (e) => { //ensure that input box focus
+      //   // console.log("please");
+      //   settingLine.blur()
+      // }
       settingRow.appendChild(settingLine);
       return settingRow;
     }
@@ -646,15 +668,9 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       settingText.style.fontSize = "1.8vw";
       settingText.style.margin = "0";
       settingText.style.padding = "0";
-  
-      let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-      let settingValue = document.createElement("p");
-      settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
-      settingValue.style.fontSize = "1.8vw";
-      settingValue.style.margin = "0";
-      settingValue.style.padding = "0";
+      
       settingRow.appendChild(settingText);
-      settingRow.appendChild(settingValue);
+      
   
       let settingButton = document.createElement("div");
       console.log(setting)
@@ -679,17 +695,8 @@ let createModSettingsKeybind = (modId, setting, bg) => {
   
       
       settingButton.onclick = function() {
-        console.log("settings button clicked")
-
+        console.log("move element")
       }
-      // settingButton.addEventListener('mousedown', (e) => {
-      //   // console.log("please0")
-      //   // e.preventDefault();
-      //   e.stopImmediatePropagation()
-      //   e.stopPropagation();
-      //   settingButton.focus();
-      //   // settingLine.select();
-      // });
       settingRow.appendChild(settingButton);
       return settingRow;
     }
@@ -711,39 +718,60 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       settingText.style.padding = "0";
   
       let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-      let settingValue = document.createElement("p");
-      settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
-      settingValue.style.fontSize = "1.8vw";
-      settingValue.style.margin = "0";
-      settingValue.style.padding = "0";
+      // let settingValue = document.createElement("p");
+      // settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
+      // settingValue.style.fontSize = "1.8vw";
+      // settingValue.style.margin = "0";
+      // settingValue.style.padding = "0";
       settingRow.appendChild(settingText);
-      settingRow.appendChild(settingValue);
-  
+      // settingRow.appendChild(settingValue);
+      
+      let tempDiv = document.createElement("div");
+      console.log(setting)
+      // settingButton.innerHTML = modSettings['mods'][modId]['settings'][setting] ? "✅" : "⬜";
+      tempDiv.style.fontSize = "1.8vw";
+      tempDiv.style.margin = "0";
+      tempDiv.style.paddingLeft = "8px";
+      tempDiv.style.paddingRight = "8px";
+      
+      // tempDiv.style.border = "1px solid red";
+      tempDiv.style.minWidth = "13vw";
+      // tempDiv.style.width = "auto";
+      // tempDiv.style.height = "auto";
+      tempDiv.style.display = "flex";
+      tempDiv.style.justifyContent = "center";
+      tempDiv.style.alignItems = "center";
+      tempDiv.style.cursor = "pointer";
+      tempDiv.style.userSelect = "none";
+      tempDiv.style.textAlign = "center";
+      tempDiv.style.borderRadius = "20%";
+
       let settingButton = document.createElement("div");
       console.log(setting)
-      settingButton.innerHTML = "Move Element";
+      settingButton.innerHTML = modSettings['mods'][modId]['settings'][setting] ? "✅" : "⬜"; //replace with image
+      settingButton.style.backgroundColor = modSettings['mods'][modId]['settings'][setting] ? "rgb(0,210,106)" : "white";
       settingButton.style.fontSize = "1.8vw";
       settingButton.style.margin = "0";
-      settingButton.style.padding = "8px";
+      settingButton.style.padding = "2px";
       settingButton.style.border = "1px solid black";
-      settingButton.style.minWidth = "10vw";
-      // settingButton.style.width = "auto";
-      // settingButton.style.height = "auto";
+      // settingButton.style.minWidth = "10vw";
+      settingButton.style.width = "3vw";
+      settingButton.style.height = "3vw";
       settingButton.style.display = "flex";
       settingButton.style.justifyContent = "center";
       settingButton.style.alignItems = "center";
       settingButton.style.cursor = "pointer";
       settingButton.style.userSelect = "none";
       settingButton.style.textAlign = "center";
-      settingButton.style.borderRadius = "10px";
+      settingButton.style.borderRadius = "50%";
 
-      
-  
-  
-      
       settingButton.onclick = function() {
-        console.log("settings button clicked")
-
+        modSettings = JSON.parse(localStorage.getItem('modSettings'));
+        settingButton.innerHTML = modSettings['mods'][modId]['settings'][setting] ? "⬜" : "✅";
+        settingButton.style.backgroundColor = modSettings['mods'][modId]['settings'][setting] ? "white" : "rgb(0,210,106)";
+        
+        modSettings['mods'][modId]['settings'][setting] = !modSettings['mods'][modId]['settings'][setting];
+        localStorage.setItem('modSettings', JSON.stringify(modSettings));
       }
       // settingButton.addEventListener('mousedown', (e) => {
       //   // console.log("please0")
@@ -753,7 +781,15 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       //   settingButton.focus();
       //   // settingLine.select();
       // });
-      settingRow.appendChild(settingButton);
+
+      tempDiv.appendChild(settingButton);
+
+      
+  
+  
+      
+      
+      settingRow.appendChild(tempDiv);
       return settingRow;
     }
     let createModSettingColor = (modId, setting, bg) => {
@@ -774,27 +810,36 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       settingText.style.padding = "0";
   
       let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-      let settingValue = document.createElement("p");
-      settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
-      settingValue.style.fontSize = "1.8vw";
-      settingValue.style.margin = "0";
-      settingValue.style.padding = "0";
+      // let settingValue = document.createElement("p");
+      // settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
+      // settingValue.style.fontSize = "1.8vw";
+      // settingValue.style.margin = "0";
+      // settingValue.style.padding = "0";
       settingRow.appendChild(settingText);
-      settingRow.appendChild(settingValue);
+      // settingRow.appendChild(settingValue);
+
+      let vertDiv = document.createElement("div");
+      vertDiv.style.display = "flex";
+      vertDiv.style.flexDirection = "column";
+      vertDiv.style.justifyContent = "space-between";
+      // vertDiv.style.alignItems = "center";
+
+
   
-      let colorBar = document.createElement("input");
-      colorBar.placeholder = "Input a color";
+      let colorBar = document.createElement("input"); //could be colorBar.type = "color", but darkmode might make it confusing
+      colorBar.placeholder = "Color...";
+      colorBar.value = modSettings['mods'][modId]['settings'][setting];
       let d = {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         width: "13vw",
-        height: "3vw",
+        height: "2.7vw",
         cursor: "pointer",
         backgroundColor: "white",
         verticalAlign: "middle",
         border: "solid 3px black",
-        fontSize: "2vw",
+        fontSize: "1.7vw",
         color: "black",
         fontFamily: "Retron2000",
         paddingLeft: "10px",
@@ -802,51 +847,158 @@ let createModSettingsKeybind = (modId, setting, bg) => {
         
       }
       Object.keys(d).forEach(function (a) {
-        searchBar.style[a] = d[a];
+        colorBar.style[a] = d[a];
       });
-      searchBar.onclick = (e) => { //ensure that input box focus
+      colorBar.onclick = (e) => { //ensure that input box focus
         // console.log("please");
         e.stopImmediatePropagation()
         e.stopPropagation();
         e.preventDefault();
-        searchBar.focus()
+        colorBar.focus()
       }
-      menuBg.onclick = (e) => { //ensure that input box focus
-        // console.log("please");
-        searchBar.blur()
-      }
-      searchBar.onkeydown = (e) => { // ensures that user is able to type in input box
+      colorBar.onkeydown = (e) => { // ensures that user is able to type in input box
         e.stopImmediatePropagation()
         e.stopPropagation();
         if(e.keyCode === 27) {
-          searchBar.blur();
+          colorBar.blur();
         }
         if(e.keyCode === 13) {
-          searchBar.blur();
+          colorBar.blur();
         } 
       };
-      searchBar.onkeyup = (e) => {
-        console.log(currentFilter)
-        console.log(searchBar.value)
-        let cardsList = searchMods(searchBar.value, currentFilter);
-        let filterCards = document.getElementById("cards-div").children;
-        while(filterCards.length > 0) { //clear all cards
-          filterCards[0].remove();
+      colorBar.onkeyup = (e) => {
+        console.log("color bar key up")
+        if(CSS.supports('color', colorBar.value)) {
+          console.log("valid color")
+          errorText.innerHTML = "Valid color!";
+          errorText.style.color = "rgb(45, 186, 47)";
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
+          modSettings['mods'][modId]['settings'][setting] = colorBar.value;
+          localStorage.setItem('modSettings', JSON.stringify(modSettings));
+        } else {
+          console.log("invalid color")
+          errorText.innerHTML = "Invalid CSS color / hex!";
+          errorText.style.color = "rgb(222, 48, 51)";
         }
-        let cardsDiv = document.getElementById("cards-div");
-        console.log(cardsDiv)
-        cardsList.forEach((card) => {
-          cardsDiv.appendChild(card);
-        });
+          
       }
-      // settingButton.addEventListener('mousedown', (e) => {
-      //   // console.log("please0")
-      //   // e.preventDefault();
-      //   e.stopImmediatePropagation()
-      //   e.stopPropagation();
-      //   settingButton.focus();
-      //   // settingLine.select();
-      // });
-      settingRow.appendChild(settingButton);
+
+      vertDiv.appendChild(colorBar);
+
+      let errorText = document.createElement("p");
+      errorText.innerHTML = "";
+      errorText.style.color = "black";
+      errorText.style.fontSize = "0.85vw";
+      errorText.style.margin = "2px";
+      errorText.style.padding = "1px";
+
+      vertDiv.appendChild(errorText);
+
+      settingRow.appendChild(vertDiv);
+      return settingRow;
+    }
+
+    let createModSettingFont = (modId, setting, bg) => {
+      let settingRow = document.createElement("div");
+      settingRow.style.display = "flex";
+      settingRow.style.flexDirection = "row";
+      settingRow.style.justifyContent = "space-between";
+      settingRow.style.alignItems = "center";
+      settingRow.style.margin = "5px";
+      settingRow.style.columnGap = "3vw";
+      // settingRow.style.rowGap = "5vh";
+
+
+      let settingText = document.createElement("p");
+      settingText.innerHTML = backendConfig['mods'][modId]['settings'][setting]['name'] + ": ";
+      settingText.style.fontSize = "1.8vw";
+      settingText.style.margin = "0";
+      settingText.style.padding = "0";
+
+      let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+      // let settingValue = document.createElement("p");
+      // settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
+      // settingValue.style.fontSize = "1.8vw";
+      // settingValue.style.margin = "0";
+      // settingValue.style.padding = "0";
+      settingRow.appendChild(settingText);
+      // settingRow.appendChild(settingValue);
+
+      let vertDiv = document.createElement("div");
+      vertDiv.style.display = "flex";
+      vertDiv.style.flexDirection = "column";
+      vertDiv.style.justifyContent = "space-between";
+      // vertDiv.style.alignItems = "center";
+
+
+
+      let colorBar = document.createElement("input");
+      colorBar.placeholder = "Font...";
+      colorBar.value = modSettings['mods'][modId]['settings'][setting];
+      
+      let d = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "13vw",
+        height: "2.7vw",
+        cursor: "pointer",
+        backgroundColor: "white",
+        verticalAlign: "middle",
+        border: "solid 3px black",
+        fontSize: "1.7vw",
+        color: "black",
+        fontFamily: "Retron2000",
+        paddingLeft: "10px",
+        borderRadius: "10px 10px 10px 10px",
+        
+      }
+      Object.keys(d).forEach(function (a) {
+        colorBar.style[a] = d[a];
+      });
+      colorBar.onclick = (e) => { //ensure that input box focus
+        // console.log("please");
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        e.preventDefault();
+        colorBar.focus()
+      }
+      colorBar.onkeydown = (e) => { // ensures that user is able to type in input box
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        if(e.keyCode === 27) {
+          colorBar.blur();
+        }
+        if(e.keyCode === 13) {
+          colorBar.blur();
+        } 
+      };
+      colorBar.onkeyup = (e) => {
+        if(CSS.supports('font', colorBar.value) || colorBar.value.toLowerCase() === "retron2000") {
+          errorText.innerHTML = "Valid font!";
+          errorText.style.color = "rgb(45, 186, 47)";
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
+          modSettings['mods'][modId]['settings'][setting] = colorBar.value;
+          localStorage.setItem('modSettings', JSON.stringify(modSettings));
+        } else {
+          errorText.innerHTML = "Invalid CSS font!";
+          errorText.style.color = "rgb(222, 48, 51)";
+        }
+        
+          
+      }
+
+      vertDiv.appendChild(colorBar);
+
+      let errorText = document.createElement("p");
+      errorText.innerHTML = "";
+      errorText.style.color = "black";
+      errorText.style.fontSize = "0.85vw";
+      errorText.style.margin = "2px";
+      errorText.style.padding = "1px";
+
+      vertDiv.appendChild(errorText);
+
+      settingRow.appendChild(vertDiv);
       return settingRow;
     }
