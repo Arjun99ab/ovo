@@ -13,11 +13,12 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     id = id.split("-")[0];
     // menuCard.innerHTML = text;
     let c = {
+      
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
       // alignItems: "center",
-      width: "95%", //MAKE SURE ITS 95, OTHERWISE CARDS OVERFLOW X AXIS
+      // width: "100%",
   
       // padding: "0",
       aspectRatio: "5 / 6",
@@ -29,7 +30,6 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       verticalAlign: "middle",
       border: "solid 3px black",
       borderRadius: "10px 10px 13px 13px",
-      // scrollbarGutter: "stable",
     }
     Object.keys(c).forEach(function (a) {
       menuCard.style[a] = c[a];

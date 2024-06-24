@@ -37,18 +37,21 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
       paddingBottom: "30px",
       // marginBottom: "20px",
       gridTemplateColumns: "repeat(4, 0.25fr)", 
-      columnGap: "5%",
+      columnGap: "4%",
       rowGap: "6%",
       // gridTemplateRows: "1fr 1fr 1fr 1fr",
 
       borderLeft: "solid 3px black",
       borderTop: "solid 3px black",
+      border: "solid 3px red",
       width: "83%",
       height: "93%",
       overflowY: "auto",
       overflowX: "hidden",
       scrollbarGutter: "stable",
       scrollbarWidth: "thin",
+      justifyContent: "center",
+      alignItems: "center",
     }
     Object.keys(c).forEach(function (a) {
         cardsDiv.style[a] = c[a];
@@ -117,7 +120,7 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
 
       height: "100%",
       overflowY: "auto",
-      overflowX: "hidden",
+      overflowX: "auto",
 
       scrollbarGutter: "stable",
       scrollbarWidth: "thin",
