@@ -1,4 +1,3 @@
-//unfinished mod
 (function () {
   let old = globalThis.sdk_runtime;
   c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
@@ -9,23 +8,31 @@
   var map2 = null;
   var levelData;
 
-  //modloader enable
+  const loadLocalStorageData = () => {
+    let favourites = JSON.parse(localStorage.getItem("favouriteLevels")) || [];
+    let hidden = JSON.parse(localStorage.getItem("hiddenLevels")) || [];
+    return { favourites, hidden };
+  };
+
+  const saveLocalStorageData = (favourites, hidden) => {
+    localStorage.setItem("favouriteLevels", JSON.stringify(favourites));
+    localStorage.setItem("hiddenLevels", JSON.stringify(hidden));
+  };
+
+  let { favourites, hidden } = loadLocalStorageData();
+
   globalThis.communityToggle = function (enable) {
     if (enable) {
       document.addEventListener("keydown", communityLevelsMod.keyDown);
     } else {
       if (document.getElementById("community-menu") !== null) {
-        //if menu exists
         document.getElementById("community-menu").remove();
         enableClick(map);
       }
-      // console.log("cmon bruh");
-      // console.log(communityLevelsMod.keyDown);
       document.removeEventListener("keydown", communityLevelsMod.keyDown);
     }
   };
 
-  //
   let getPlayer = () => {
     return runtime.types_by_index
       .filter(
@@ -48,12 +55,10 @@
       image
     );
   };
+
   let isInLevel = () => {
     return runtime.running_layout.name.startsWith("Level");
   };
-  // let test = () => {
-  //     console.log("hi");
-  // };
 
   let isPaused = () => {
     if (isInLevel())
@@ -75,7 +80,6 @@
         let behavior = inst.behavior_insts.find(
           (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
         );
-        // console.log(behavior)
         map.push({
           inst,
           oldState: behavior.scroll.isEnabled,
@@ -85,10 +89,8 @@
       });
     });
     let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
-    // console.log(layer)
     if (layer) {
       layer.instances.forEach((inst) => {
-        //save state to mapUI
         mapUI.push({
           inst,
           oldState: {
@@ -96,21 +98,11 @@
             height: inst.height,
           },
         });
-        // set size to 0
-        // console.log(inst)
         inst.width = 0;
         inst.height = 0;
         inst.set_bbox_changed();
       });
     }
-    types.forEach((type) => {
-      type.instances.forEach((inst) => {
-        let behavior = inst.behavior_insts.find(
-          (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
-        );
-        // console.log(behavior)
-      });
-    });
     return {
       map,
       mapUI,
@@ -124,7 +116,6 @@
       x.behaviors.some((y) => y.behavior instanceof cr.behaviors.aekiro_button)
     );
     types.forEach((type) => {
-      // console.log(type);
       type.instances.forEach((inst) => {
         let behavior = inst.behavior_insts.find(
           (x) => x.behavior instanceof cr.behaviors.aekiro_button
@@ -137,10 +128,8 @@
       });
     });
     let layer = runtime.running_layout.layers.find((x) => x.name == "UI");
-    // console.log(layer)
     if (layer) {
       layer.instances.forEach((inst) => {
-        //save state to mapUI
         mapUI.push({
           inst,
           oldState: {
@@ -148,19 +137,11 @@
             height: inst.height,
           },
         });
-        // set size to 0
         inst.width = 0;
         inst.height = 0;
         inst.set_bbox_changed();
       });
     }
-    types.forEach((type) => {
-      type.instances.forEach((inst) => {
-        let behavior = inst.behavior_insts.find(
-          (x) => x.behavior instanceof cr.behaviors.aekiro_scrollView
-        );
-      });
-    });
     return {
       map,
       mapUI,
@@ -181,21 +162,21 @@
     });
   };
 
-  function queryDatabase(query) {
-    var levelJsons = [];
-
-    for (var i = 0; i < levelData.length; i++) {
-      if (
-        levelData[i]["levelname"]
-          .replace(/_/g, " ")
-          .toLowerCase()
-          .startsWith(query) ||
-        levelData[i]["username"].toLowerCase().startsWith(query)
-      ) {
-        levelJsons.push(levelData[i]);
-      }
-    }
-    return levelJsons;
+  function queryDatabase(query, showFavourites, showHidden) {
+    let { favourites, hidden } = loadLocalStorageData();
+    let filteredData = levelData.filter((level) => {
+      let matchesQuery =
+        level.levelname.replace(/_/g, " ").toLowerCase().startsWith(query) ||
+        level.username.toLowerCase().startsWith(query);
+      let isFavourite = favourites.includes(level.id);
+      let isHidden = hidden.includes(level.id);
+      if (!showHidden && showFavourites && !isFavourite) return false;
+      if (!showHidden && isHidden) return false;
+      if (showHidden && !isHidden && (!showFavourites || !isFavourite))
+        return false;
+      return matchesQuery;
+    });
+    return filteredData;
   }
 
   function getDatabase(numEntries = 4) {
@@ -205,53 +186,70 @@
   let renderListLevels = (levelsQueried) => {
     var levelsList = document.createElement("div");
     levelsList.addEventListener("wheel", (e) => {
-      // console.log("hello)")
       e.stopImmediatePropagation();
       e.stopPropagation();
-      // e.preventDefault();
       levelsList.focus();
     });
 
-    // levelsList.style.zIndex = "2147483646";
     levelsList.id = "levels-list";
-    // levelsList.focus();
-
     levelsList.style.display = "flex";
     levelsList.style.flexWrap = "wrap";
+    levelsList.style.alignContent = "flex-start";
     levelsList.style.position = "absolute";
     levelsList.style.top = "25%";
     levelsList.style.left = "0px";
     levelsList.style.width = "100%";
     levelsList.style.height = "75%";
-    // levelsList.style.border = '1px solid black';
     levelsList.style.overflowY = "auto";
     levelsList.style.overflowX = "hidden";
-    // levelsList.onscroll = function() {
-    //     console.log("scrolling");
-    //     levelsList.focus();
-    // }
+    levelsList.style.borderTop = "2px solid black";
 
-    // console.log(levelsQueried)
     levelsQueried.forEach((level) => {
-      // console.log(level["levelname"])
       var levelBox = document.createElement("div");
       levelBox.style.width = "100%";
-      levelBox.style.height = "100px";
-      levelBox.style.borderTop = "2px solid black";
-      levelBox.style.position = "relative";
-      levelBox.style.overflowY = "auto";
+      levelBox.style.minHeight = "100px";
+      levelBox.style.borderBottom = "2px solid black";
+      // levelBox.style.position = "relative";
+      levelBox.style.overflowY = "hidden";
       levelBox.style.overflowX = "hidden";
       levelBox.style.scrollbarGutter = "stable";
+      levelBox.style.display = "flex";
+      levelBox.style.flexDirection = "row";
+
+      function updateLevelGradient() {
+        if (hidden.includes(level.id)) {
+          levelBox.style.background =
+            "linear-gradient(90deg, #ffffff38 50%, rgb(255 100 100 / 51%))";
+        } else if (favourites.includes(level.id)) {
+          levelBox.style.background =
+            "linear-gradient(90deg, #ffffff38 50%, rgb(255 191 0 / 51%))";
+        } else {
+          levelBox.style.background = "";
+        }
+      }
+      updateLevelGradient();
+
+      var levelInfo = document.createElement("div");
+      levelInfo.style.display = "flex";
+      levelInfo.style.flexDirection = "column";
+      levelInfo.style.flex = "75%";
+      levelInfo.style.justifyContent = "flex-start";
+      levelInfo.style.paddingLeft = "20px";
+      levelBox.appendChild(levelInfo);
+
+      var levelActions = document.createElement("div");
+      levelActions.style.display = "flex";
+      levelActions.style.flexDirection = "row";
+      levelActions.style.flex = "25%";
+      levelActions.style.flexWrap = "wrap";
+      levelActions.style.justifyContent = "flex-end";
+      levelActions.style.alignContent = "center";
+      levelBox.appendChild(levelActions);
 
       levelTitleText = document.createElement("div");
       c = {
-        backgroundColor: "white",
         border: "none",
         fontFamily: "Retron2000",
-        position: "relative",
-        top: "2%",
-        left: "2%",
-        //padding: "5px",
         color: "black",
         fontSize: "15pt",
         cursor: "default",
@@ -261,55 +259,45 @@
       });
 
       newContent = document.createTextNode(
-        level["levelname"].replace(/_/g, " ").slice(0, -5)
+        level.levelname.replace(/_/g, " ").slice(0, -5)
       );
       levelTitleText.appendChild(newContent);
-      levelBox.appendChild(levelTitleText);
+      levelInfo.appendChild(levelTitleText);
 
       levelAuthorText = document.createElement("div");
       c = {
-        backgroundColor: "white",
         border: "none",
         fontFamily: "Retron2000",
-        position: "relative",
-        top: "10%",
-        left: "2%",
-        //padding: "5px",
-        color: "black",
+        color: "#5d5d5d",
         fontSize: "10pt",
         cursor: "default",
+        fontStyle: "italic",
       };
       Object.keys(c).forEach(function (a) {
         levelAuthorText.style[a] = c[a];
       });
 
-      newContent = document.createTextNode("by " + level["username"]);
+      newContent = document.createTextNode("by " + level.username);
       levelAuthorText.appendChild(newContent);
-
-      levelBox.appendChild(levelAuthorText);
+      levelInfo.appendChild(levelAuthorText);
 
       levelDescText = document.createElement("div");
       c = {
-        backgroundColor: "white",
         border: "none",
         fontFamily: "Retron2000",
-        position: "relative",
-        top: "15%",
-        left: "2%",
-        //padding: "5px",
         color: "black",
-        fontSize: "10pt",
+        fontSize: "12pt",
         cursor: "default",
         width: "80%",
+        flex: "1",
+        alignContent: "space-around",
       };
       Object.keys(c).forEach(function (a) {
         levelDescText.style[a] = c[a];
       });
 
-      // newContent = document.createTextNode(level["content"]);
-      // levelDescText.appendChild(newContent);
-      levelDescText.innerHTML = level["content"];
-      levelBox.appendChild(levelDescText);
+      levelDescText.innerHTML = level.content;
+      levelInfo.appendChild(levelDescText);
 
       levelPlayBtn = document.createElement("button");
       c = {
@@ -317,13 +305,12 @@
         borderRadius: "25px",
         border: "#9268e3",
         padding: "10px",
-        position: "absolute",
+        margin: "5px",
         fontFamily: "Retron2000",
         color: "white",
         fontSize: "10pt",
         cursor: "pointer",
-        top: "30%",
-        right: "1%",
+        flex: "100%",
       };
       Object.keys(c).forEach(function (a) {
         levelPlayBtn.style[a] = c[a];
@@ -331,9 +318,7 @@
 
       levelPlayBtn.innerHTML = "Play";
       levelPlayBtn.onclick = async function () {
-        var levelJson = await fetch(
-          "../src/communitylevels/" + level["levelname"]
-        )
+        var levelJson = await fetch("../src/communitylevels/" + level.levelname)
           .then((response) => response.json())
           .then((data) => {
             return data;
@@ -341,8 +326,72 @@
         ovoLevelEditor.startLevel(levelJson);
         xButton.click();
       };
+      levelActions.appendChild(levelPlayBtn);
 
-      levelBox.appendChild(levelPlayBtn);
+      let favouriteBtn = document.createElement("button");
+      c = {
+        backgroundColor: "#FFA500",
+        borderRadius: "25px",
+        border: "#FFA500",
+        padding: "10px",
+        margin: "5px",
+        fontFamily: "Retron2000",
+        color: "white",
+        fontSize: "10pt",
+        cursor: "pointer",
+        flex: "0.7",
+      };
+      Object.keys(c).forEach(function (a) {
+        favouriteBtn.style[a] = c[a];
+      });
+
+      favouriteBtn.innerHTML = favourites.includes(level.id)
+        ? "Unfavourite"
+        : "Favourite";
+      favouriteBtn.onclick = function () {
+        if (favourites.includes(level.id)) {
+          favourites = favourites.filter((id) => id !== level.id);
+          favouriteBtn.innerHTML = "Favourite";
+        } else {
+          favourites.push(level.id);
+          favouriteBtn.innerHTML = "Unfavourite";
+        }
+        saveLocalStorageData(favourites, hidden);
+        updateLevelGradient();
+      };
+      levelActions.appendChild(favouriteBtn);
+
+      let hideBtn = document.createElement("button");
+      c = {
+        backgroundColor: "#FF0000",
+        borderRadius: "25px",
+        border: "#FF0000",
+        padding: "10px",
+        margin: "5px",
+        fontFamily: "Retron2000",
+        color: "white",
+        fontSize: "10pt",
+        cursor: "pointer",
+        flex: "0.3",
+      };
+      Object.keys(c).forEach(function (a) {
+        hideBtn.style[a] = c[a];
+      });
+
+      hideBtn.innerHTML = hidden.includes(level.id) ? "Unhide" : "Hide";
+      hideBtn.onclick = function () {
+        if (hidden.includes(level.id)) {
+          hidden = hidden.filter((id) => id !== level.id);
+          hideBtn.innerHTML = "Hide";
+        } else {
+          hidden.push(level.id);
+          hideBtn.innerHTML = "Unhide";
+        }
+        saveLocalStorageData(favourites, hidden);
+        updateLevelGradient();
+      };
+      levelActions.appendChild(hideBtn);
+
       levelsList.appendChild(levelBox);
     });
 
@@ -350,7 +399,6 @@
   };
 
   let createCommunityMenu = async () => {
-    //Create background div
     b = document.createElement("div");
     c = {
       backgroundColor: "white",
@@ -360,21 +408,19 @@
       fontFamily: "Retron2000",
       position: "absolute",
       top: "17.5%",
-      left: "32.5%",
       padding: "5px",
       color: "black",
       fontSize: "10pt",
       display: "block",
-      width: "35%",
+      width: "calc(100vw - 300px)",
+      marginLeft: "150px",
       height: "65%",
-      // textAlign: "center",
     };
     Object.keys(c).forEach(function (a) {
       b.style[a] = c[a];
     });
     b.id = "community-menu";
 
-    //X button CSS
     xButton = document.createElement("button");
     c = {
       backgroundColor: "white",
@@ -386,7 +432,6 @@
       cursor: "pointer",
       right: "1px",
       top: "1px",
-      // zIndex: "1000",
     };
     Object.keys(c).forEach(function (a) {
       xButton.style[a] = c[a];
@@ -406,10 +451,7 @@
       border: "none",
       fontFamily: "Retron2000",
       position: "relative",
-      // top: "2%",
-      // left: "25%",
       textAlign: "center",
-      //padding: "5px",
       color: "black",
       fontSize: "22pt",
       cursor: "default",
@@ -441,16 +483,13 @@
     });
 
     searchInput.onclick = (e) => {
-      //ensure that input box focus
-      // console.log("please");
       e.stopImmediatePropagation();
       e.stopPropagation();
       e.preventDefault();
       searchInput.focus();
     };
+
     searchInput.onkeydown = (e) => {
-      // ensures that user is able to type in input box
-      // console.log("pleasev2");
       e.stopImmediatePropagation();
       e.stopPropagation();
       if (e.keyCode === 13) {
@@ -460,6 +499,22 @@
         searchInput.blur();
       }
     };
+
+    let showFavouritesCheckbox = document.createElement("input");
+    showFavouritesCheckbox.type = "checkbox";
+    showFavouritesCheckbox.id = "show-favourites-checkbox";
+
+    let showFavouritesLabel = document.createElement("label");
+    showFavouritesLabel.htmlFor = "show-favourites-checkbox";
+    showFavouritesLabel.innerHTML = "Show Favourites";
+
+    let showHiddenCheckbox = document.createElement("input");
+    showHiddenCheckbox.type = "checkbox";
+    showHiddenCheckbox.id = "show-hidden-checkbox";
+
+    let showHiddenLabel = document.createElement("label");
+    showHiddenLabel.htmlFor = "show-hidden-checkbox";
+    showHiddenLabel.innerHTML = "Show Hidden";
 
     searchBtn = document.createElement("button");
     c = {
@@ -483,32 +538,53 @@
     searchBtn.id = "search-btn";
     searchBtn.onclick = async function () {
       let query = searchInput.value;
-      // console.log("searching" + query);
-      var levelsQueried = await queryDatabase(query);
-      // console.log(levelsQueried);
+      let showFavourites = showFavouritesCheckbox.checked;
+      let showHidden = showHiddenCheckbox.checked;
+      var levelsQueried = await queryDatabase(
+        query,
+        showFavourites,
+        showHidden
+      );
       if (document.getElementById("levels-list") !== null) {
-        //are there levels already displayed?
-        document.getElementById("levels-list").remove(); //if so remove them
+        document.getElementById("levels-list").remove();
       }
       levelsList = renderListLevels(levelsQueried);
       b.appendChild(levelsList);
     };
 
-    levelsQueried = await getDatabase((numEntries = levelData.length));
+    levelsQueried = await queryDatabase(
+      "",
+      showFavouritesCheckbox.checked,
+      showHiddenCheckbox.checked
+    );
     levelsList = renderListLevels(levelsQueried);
 
-    b.appendChild(levelsList);
-
-    b.appendChild(searchInput);
-    b.appendChild(searchBtn);
     b.appendChild(titleText);
     b.appendChild(xButton);
+    let filterDiv = document.createElement("div");
+    let filterDivContainer = document.createElement("div");
+    filterDivContainer.style.display = "flex";
+    filterDivContainer.style.alignItems = "flex-end";
+    filterDivContainer.style.flexDirection = "column";
+    filterDivContainer.style.paddingRight = "10px";
+    let favDiv = document.createElement("div");
+    let hiddenDiv = document.createElement("div");
+    favDiv.appendChild(showFavouritesCheckbox);
+    favDiv.appendChild(showFavouritesLabel);
+    hiddenDiv.appendChild(showHiddenCheckbox);
+    hiddenDiv.appendChild(showHiddenLabel);
+    filterDiv.appendChild(favDiv);
+    filterDiv.appendChild(hiddenDiv);
+    filterDivContainer.appendChild(filterDiv);
+    b.appendChild(filterDivContainer);
+    b.appendChild(searchInput);
+    b.appendChild(searchBtn);
+    b.appendChild(levelsList);
 
     document.body.appendChild(b);
   };
 
   let createHome = () => {
-    //Create background div
     b = document.createElement("div");
     c = {
       backgroundColor: "white",
@@ -532,7 +608,6 @@
     });
     b.id = "home-menu";
 
-    //X button CSS
     xButton = document.createElement("button");
     c = {
       backgroundColor: "white",
@@ -544,7 +619,6 @@
       cursor: "pointer",
       right: "1px",
       top: "1px",
-      // zIndex: "1000",
     };
     Object.keys(c).forEach(function (a) {
       xButton.style[a] = c[a];
@@ -564,10 +638,7 @@
       border: "none",
       fontFamily: "Retron2000",
       position: "relative",
-      // top: "2%",
-      // left: "25%",
       textAlign: "center",
-      //padding: "5px",
       color: "black",
       fontSize: "22pt",
       cursor: "default",
@@ -580,13 +651,11 @@
     titleText.appendChild(newContent);
 
     menuIcons = document.createElement("div");
-
     menuIcons.style.display = "flex";
     menuIcons.style.flexWrap = "wrap";
     menuIcons.style.position = "relative";
     menuIcons.style.top = "5%";
     menuIcons.style.gap = "5px";
-
     menuIcons.style.width = "70%";
     menuIcons.style.margin = "auto";
     menuIcons.style.paddingLeft = "20px";
@@ -599,8 +668,6 @@
       icon.style.height = "40%";
       icon.style.border = "1px solid red";
       icon.style.position = "relative";
-      // console.log(icon.offsetWidth)
-      // console.log(icon.offsetHeight)
       iconImg = document.createElement("img");
       iconImg.src = "https://static.thenounproject.com/png/17448-200.png";
       iconImg.style.flexShrink = "0";
@@ -648,15 +715,11 @@
             }
             `);
 
-      // console.log(ovoLevelEditor)
-
       levelData = await fetch("../src/communitylevels/config/data.json")
         .then((response) => response.json())
         .then((jsondata) => {
-          // console.log(jsondata)
           return jsondata;
         });
-      // console.log(levelData)
 
       document.addEventListener("keydown", this.keyDown);
 
@@ -669,25 +732,13 @@
     keyDown(event) {
       if (event.shiftKey && event.code === "KeyL") {
         if (document.getElementById("community-menu") === null) {
-          //if menu doesn't exist
           map = disableClick();
           createCommunityMenu();
         } else {
-          //if menu exists
           document.getElementById("community-menu").remove();
           enableClick(map);
         }
       }
-      // if(event.code === "KeyG" && JSON.parse(localStorage.getItem('modSettings'))["community"]["enabled"]) {
-      //   if (document.getElementById("home-menu") === null) { //if menu doesn't exist
-      //     map = disableClick();
-      //     createHome();
-      //   } else { //if menu exists
-      //     document.getElementById("home-menu").remove();
-      //     enableClick(map);
-      //   }
-
-      // }
     },
   };
 
