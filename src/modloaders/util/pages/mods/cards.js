@@ -17,7 +17,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       flexDirection: "column",
       justifyContent: "space-between",
       // alignItems: "center",
-      width: "100%",
+      width: "95%", //MAKE SURE ITS 95, OTHERWISE CARDS OVERFLOW X AXIS
   
       // padding: "0",
       aspectRatio: "5 / 6",
@@ -29,6 +29,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       verticalAlign: "middle",
       border: "solid 3px black",
       borderRadius: "10px 10px 13px 13px",
+      // scrollbarGutter: "stable",
     }
     Object.keys(c).forEach(function (a) {
       menuCard.style[a] = c[a];
