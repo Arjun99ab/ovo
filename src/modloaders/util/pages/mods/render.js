@@ -43,7 +43,6 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
 
       borderLeft: "solid 3px black",
       borderTop: "solid 3px black",
-      border: "solid 3px red",
       width: "83%",
       height: "93%",
       overflowY: "auto",
