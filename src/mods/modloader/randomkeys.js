@@ -360,7 +360,7 @@
             this.boundKeyDown = this.keyDown.bind(this);
             
             document.addEventListener("keydown", this.boundKeyDown);
-            notify("Mod Loaded", "Random Keys Mod loaded");
+            notify("Mod Loaded", "Random Keys Mod loaded", "../src/img/mods/randomkeys.png");
         },
         keyDown(event) {
             if(keybindDown(event, "randomkeyskeybind")) {

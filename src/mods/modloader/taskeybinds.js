@@ -37,7 +37,7 @@
         return false;
       }
   
-    notify("timescale shortcut mod loaded");
+    notify("Mod loaded", "timescale shortcut mod loaded", "../src/img/mods/taskeybinds.png");
     let keyDown = (event) => {
       if (keybindDown(event, "timescale1keybind")) {
         ovoTasTools.timescale = 1

@@ -726,7 +726,7 @@
       notify(
         "Community Levels Loaded",
         "by Awesomeguy<br/>Shift + L to open the levels menu",
-        "https://static.thenounproject.com/png/4306405-200.png"
+        "../src/img/mods/community.png"
       );
     },
     keyDown(event) {

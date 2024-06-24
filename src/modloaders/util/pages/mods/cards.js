@@ -103,21 +103,21 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     topCards.className = "card-buttons";
     let deleteButton;
     let settingsButton;
-    let infoButton = createCardButton(id + "-info-btn", "https://cdn-icons-png.flaticon.com/128/157/157933.png", "calc(100%/3)");
+    let infoButton = createCardButton(id + "-info-btn", "../src/img/modloader/card/info.png", "calc(100%/3)");
     if(id.startsWith("customMod")) {
-      deleteButton = createCardButton(id + "-delete-btn", "https://cdn-icons-png.flaticon.com/128/3096/3096673.png", "calc(100%/3)");
+      deleteButton = createCardButton(id + "-delete-btn", "../src/img/modloader/card/delete.png", "calc(100%/3)");
     } else {
-      settingsButton = createCardButton(id + "-settings-btn", "https://cdn-icons-png.flaticon.com/128/2040/2040504.png", "calc(100%/3)");
+      settingsButton = createCardButton(id + "-settings-btn", "../src/img/modloader/card/settings.png", "calc(100%/3)");
       if(backendConfig['mods'][id]['settings'] === null) {
-        settingsButton.style.background = "url(../src/modloaders/img/settingsDisabled.png)";
+        settingsButton.style.background = "url(../src/img/modloader/card/settingsdisabled.png)";
         settingsButton.style.backgroundSize = "2.5vw"; //or 50% 
         settingsButton.style.backgroundRepeat = "no-repeat";
         settingsButton.style.backgroundPosition= "center";
       }
     }
-    let favoriteButton = createCardButton(id + "-favorites-btn", "https://cdn-icons-png.flaticon.com/128/1828/1828970.png", "calc(100%/3)");
+    let favoriteButton = createCardButton(id + "-favorites-btn", "../src/img/modloader/card/notfavorite.png", "calc(100%/3)");
     if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['favorite']) {
-      favoriteButton.style.background = "url(https://cdn-icons-png.flaticon.com/128/1828/1828884.png)";
+      favoriteButton.style.background = "url(../src/img/modloader/card/favorite.png)";
       favoriteButton.style.backgroundSize = "2.5vw";
       favoriteButton.style.backgroundRepeat = "no-repeat";
       favoriteButton.style.backgroundPosition = "center";
@@ -251,7 +251,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       } else if(id.includes("favorite")) {
         console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id.split("-")[0]]['favorite'])
         if(!JSON.parse(localStorage.getItem('modSettings'))['mods'][id.split("-")[0]]['favorite']) {
-          document.getElementById(id).style.background = "url(https://cdn-icons-png.flaticon.com/128/1828/1828884.png)";
+          document.getElementById(id).style.background = "url(../src/img/modloader/card/favorite.png)";
           document.getElementById(id).style.backgroundSize = "2.5vw";
           document.getElementById(id).style.backgroundRepeat = "no-repeat";
           document.getElementById(id).style.backgroundPosition = "center";
@@ -260,7 +260,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
 
         } else {
-          document.getElementById(id).style.background = "url(https://cdn-icons-png.flaticon.com/128/1828/1828970.png)";
+          document.getElementById(id).style.background = "url(../src/img/modloader/card/notfavorite.png)";
           document.getElementById(id).style.backgroundSize = "2.5vw";
           document.getElementById(id).style.backgroundRepeat = "no-repeat";
           document.getElementById(id).style.backgroundPosition = "center";

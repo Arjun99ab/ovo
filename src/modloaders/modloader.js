@@ -145,7 +145,7 @@ export let runtime;
     let createModLoaderMenuBtn = () => {
       let menuButton = document.createElement("button");
       let c = {
-          background: "url(https://cdn-icons-png.flaticon.com/512/2099/2099192.png)",
+          background: "url(../src/img/modloader/menubutton.png)",
           backgroundSize: "cover", //or contain
           backgroundColor: "white",
           border: "none", //2p solid black
@@ -620,7 +620,7 @@ export let runtime;
                     if(key.startsWith("custom")) { //custom mod
                         let customModConfig = userConfig[key];
                         customModConfig['author'] = null;
-                        customModConfig['icon'] = "https://cdn0.iconfinder.com/data/icons/web-development-47/64/feature-application-program-custom-512.png"
+                        customModConfig['icon'] = "../src/img/mods/custommod.png"
                         customModConfig['platform'] = ["pc", "mobile"];
                         customModConfig['version'] = ["1.4", "1.4.4", "CTLE"];
                         customModConfig['tags'] = ['custom'];
@@ -757,7 +757,7 @@ export let runtime;
             // runtime.tickMe(this);
 
 
-            notify("QOL Modloader", "by Awesomeguy", "https://cdn3.iconfinder.com/data/icons/work-life-balance-glyph-1/64/quality-of-life-happiness-heart-512.png");
+            notify("QOL Modloader", "by Awesomeguy", "../src/img/modloader/modloader.png");
             // console.log(createNotifyModal)
             // createNotifyModal("appleapple");
 

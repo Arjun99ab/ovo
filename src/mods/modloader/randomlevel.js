@@ -52,7 +52,7 @@
 
             this.interval = null;
             globalThis.ovoRandomLevel = this;
-            notify("Random Level Mod loaded", "Teleport to a random level!", "./tutorials.png");
+            notify("Random Level Mod loaded", "Teleport to a random level!", "../src/img/mods/randomlevel.png");
         },
         keyDown(event) {
             if (keybindDown(event, "randomlevelkeybind")) {

@@ -45,7 +45,7 @@
                 this.initDomUI();
 
                 globalThis.ovoLevelSelector = this;
-                notify("Level Selector Mod Loaded", "Shift + T", "https://static.thenounproject.com/png/4200152-200.png");
+                notify("Level Selector Mod Loaded", "Shift + T", "../src/img/mods/levelselector.png");
             },
 
             initDomUI() {

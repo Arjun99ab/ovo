@@ -89,7 +89,7 @@
             runtime.tickMe(this);
           
             globalThis.ovoFlyMod = this;
-            notify("Fly Mod Loaded", "Shift + [arrow keys]", "https://cdn-icons-png.flaticon.com/512/3125/3125683.png");
+            notify("Fly Mod Loaded", "Shift + [arrow keys]", "../src/img/mods/fly.png");
         },
 
         flymodToggle(enable) {

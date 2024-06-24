@@ -65,7 +65,7 @@
   g = globalThis.ovoExplorer = {
     init: function () {
       runtime.tickMe(wind);
-      notify("Hurricane Mod Loaded", "Good luck!", "https://static.thenounproject.com/png/1925975-200.png");
+      notify("Hurricane Mod Loaded", "Good luck!", "../src/img/mods/hurricane.png");
     },
   };
   g.init();

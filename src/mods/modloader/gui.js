@@ -1584,7 +1584,7 @@
 
             runtime.tickMe(this);
 
-            notify("Gui Mod Loaded", "by Awesomeguy", "https://cdn.iconscout.com/icon/free/png-256/keyboard-arrow-4712861-3906731.png");
+            notify("Gui Mod Loaded", "by Awesomeguy", "../src/img/mods/gui.png");
 
 
         },

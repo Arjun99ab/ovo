@@ -111,7 +111,7 @@
 
   notify(
       "Read the mod description for more info",
-      "Save State Mod Loaded", "https://static.thenounproject.com/png/3681374-200.png"
+      "Save State Mod Loaded", "../src/img/mods/savestate.png"
   );
 
   let getPlayer = () =>

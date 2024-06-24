@@ -187,7 +187,7 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
         let modSettings = JSON.parse(localStorage.getItem('modSettings'));
         let customModConfig = {};
         customModConfig['author'] = null;
-        customModConfig['icon'] = "https://cdn0.iconfinder.com/data/icons/web-development-47/64/feature-application-program-custom-512.png"
+        customModConfig['icon'] = "../src/img/mods/custommod.png"
         customModConfig['platform'] = ["pc", "mobile"];
         customModConfig['version'] = ["1.4", "1.4.4", "CTLE"];
         customModConfig['tags'] = ['custom'];
