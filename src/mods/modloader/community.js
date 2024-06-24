@@ -407,14 +407,14 @@
       borderWidth: "2px",
       fontFamily: "Retron2000",
       position: "absolute",
-      top: "17.5%",
+      top: "15%",
       padding: "5px",
       color: "black",
       fontSize: "10pt",
       display: "block",
       width: "calc(100vw - 300px)",
       marginLeft: "150px",
-      height: "65%",
+      height: "75%",
     };
     Object.keys(c).forEach(function (a) {
       b.style[a] = c[a];
