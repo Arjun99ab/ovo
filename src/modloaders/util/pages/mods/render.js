@@ -1,4 +1,5 @@
 import { version, filters, backendConfig} from "../../../modloader.js";
+import { createNotifyModal } from "../../modals.js";
 import {detectDeviceType} from "../../utils.js"
 import {createMenuCard} from "./cards.js"
 import {createFilterButton, currentFilter, setFilter} from "./filters.js"
@@ -204,7 +205,11 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
         document.getElementById("nav-mods-btn").click();
 
 
-      } 
+      } else {
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        createNotifyModal("Please fill out the name and code fields before saving.");
+      }
     }
 
 
@@ -218,7 +223,7 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
       alignItems: "center",
       width: "13vw",
       height: "3vw",
-      cursor: "pointer",
+      cursor: "text",
       backgroundColor: "white",
       verticalAlign: "middle",
       border: "solid 3px black",
@@ -264,7 +269,7 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
       alignItems: "center",
       width: "90%",
       height: "50%",
-      cursor: "pointer",
+      cursor: "text",
       backgroundColor: "white",
       verticalAlign: "middle",
       border: "solid 3px black",
@@ -306,7 +311,7 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
       alignItems: "center",
       width: "60%",
       height: "50%",
-      cursor: "pointer",
+      cursor: "text",
       backgroundColor: "white",
       verticalAlign: "middle",
       border: "solid 3px black",

@@ -387,7 +387,7 @@ export let runtime;
         alignItems: "center",
         width: "13vw",
         height: "3vw",
-        cursor: "pointer",
+        cursor: "text",
         backgroundColor: "white",
         verticalAlign: "middle",
         border: "solid 3px black",

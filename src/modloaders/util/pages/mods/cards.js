@@ -3,6 +3,7 @@ import {createDescPopup} from "./desc.js"
 import {createModSettingsPopup} from "./settings.js"
 import { createNotifyModal, createConfirmDeleteModal } from "../../modals.js"
 import {backendConfig} from "../../../modloader.js"
+import {modsPendingReload} from "../../modals.js"
 
 export {createMenuCard, createCardButton, createToggleButton}
 
@@ -150,12 +151,18 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       bottomCards.style[a] = c[a];
     });
     let enabledButton;
-    if(enabled) {
-      enabledButton = createToggleButton("button4", "Enabled", "100%");
-      enabledButton.style.backgroundColor = "rgb(45, 186, 47)"; //lightgreen
+    console.log(id, modsPendingReload)
+    if(modsPendingReload.includes(id)) {
+      enabledButton = createToggleButton("button4", "Reload", "100%");
+      enabledButton.style.backgroundColor = "rgb(255, 255, 0)"; //yellow
     } else {
-      enabledButton = createToggleButton("button4", "Disabled", "100%");
-      enabledButton.style.backgroundColor = "rgb(222, 48, 51)";
+      if(enabled) {
+        enabledButton = createToggleButton("button4", "Enabled", "100%");
+        enabledButton.style.backgroundColor = "rgb(45, 186, 47)"; //lightgreen
+      } else {
+        enabledButton = createToggleButton("button4", "Disabled", "100%");
+        enabledButton.style.backgroundColor = "rgb(222, 48, 51)";
+      }
     }
     enabledButton.style.gridArea = "b4";
     enabledButton.style.border = "none";
@@ -165,18 +172,22 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       
       console.log("clicked")
       console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled'])
-      if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled']) { //if enabled, we want to disable
-        console.log("disabled")
-        document.getElementById(id + '-enable-button').innerHTML = "Disabled";
-        document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(222, 48, 51)";
-        toggleMod(id, false);
-      } else { //if disabled, we want to enable
-        console.log("enabled")
-  
-        document.getElementById(id + '-enable-button').innerHTML = "Enabled";
-        document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(45, 186, 47)";
-        toggleMod(id, true);
-  
+      if(modsPendingReload.includes(id)) {
+        location.reload()
+      } else {
+        if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled']) { //if enabled, we want to disable
+          console.log("disabled")
+          document.getElementById(id + '-enable-button').innerHTML = "Disabled";
+          document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(222, 48, 51)";
+          toggleMod(id, false);
+        } else { //if disabled, we want to enable
+          console.log("enabled")
+    
+          document.getElementById(id + '-enable-button').innerHTML = "Enabled";
+          document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(45, 186, 47)";
+          toggleMod(id, true);
+    
+        }
       }
     }
     

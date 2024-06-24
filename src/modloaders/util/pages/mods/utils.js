@@ -49,7 +49,7 @@ let toggleMod = (modId, enable) => {
       if(modId.startsWith("custom") || backendConfig['mods'][modId]["reload"]) { //if mod requires reload
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-        createConfirmReloadModal();
+        createConfirmReloadModal(modId);
       }
       // TODO - use globalThis to toggle mod
       else {

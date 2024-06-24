@@ -1,5 +1,6 @@
 import { toggleMod } from "./pages/mods/utils.js";
-
+export {modsPendingReload};
+let modsPendingReload = [];
 
 function createNotifyModal (text) {
     //Create background div
@@ -317,6 +318,7 @@ function createConfirmDeleteModal(modId) {
   confirmButton.style.border = "none";
   confirmButton.style.padding = "5px 10px";
   confirmButton.style.cursor = "pointer";
+  confirmButton.style.borderRadius = "10px";
   confirmButton.onclick = function() {
       let modSettings = JSON.parse(localStorage.getItem('modSettings'));
       
@@ -347,6 +349,7 @@ function createConfirmDeleteModal(modId) {
   cancelButton.style.border = "none";
   cancelButton.style.padding = "5px 10px";
   cancelButton.style.cursor = "pointer";
+  cancelButton.style.borderRadius = "10px";
   cancelButton.onclick = function() {
       console.log("cancel");
 
@@ -374,7 +377,7 @@ function createConfirmDeleteModal(modId) {
 
 
 
-function createConfirmReloadModal() {
+function createConfirmReloadModal(modId) {
   //Create background div
   let confirmBg = document.createElement("div");
   confirmBg.id = "confirm-bg";
@@ -450,6 +453,7 @@ function createConfirmReloadModal() {
   confirmButton.style.border = "none";
   confirmButton.style.padding = "5px 10px";
   confirmButton.style.cursor = "pointer";
+  confirmButton.style.borderRadius = "10px";
   confirmButton.onclick = function() {
       location.reload();
   };
@@ -464,6 +468,7 @@ function createConfirmReloadModal() {
   cancelButton.style.border = "none";
   cancelButton.style.padding = "5px 10px";
   cancelButton.style.cursor = "pointer";
+  cancelButton.style.borderRadius = "10px";
   cancelButton.onclick = function() {
       console.log("cancel");
 
@@ -471,6 +476,12 @@ function createConfirmReloadModal() {
       document.getElementById("menu-bg").style.pointerEvents = "auto";
       document.getElementById("menu-bg").style.filter = "none";
       document.getElementById("c2canvasdiv").style.filter = "none";
+
+      modsPendingReload.push(modId)
+      console.log(modsPendingReload)
+      let enabledButton = document.getElementById(modId + "-enable-button");
+      enabledButton.style.backgroundColor = "rgb(255, 255, 0)";
+      enabledButton.innerHTML = "Reload";
 
       
       // enableClick(map);   

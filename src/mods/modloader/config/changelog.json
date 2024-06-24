@@ -29,6 +29,14 @@
             "TAS Keybinds mod keybinds are now customizable"
 
         ]
+    },
+    "2.0.5": {
+        "changes": [
+            "Upgraded the Community Levels mod, courtesy of skymen. Available in Crash Test Level Editor",
+            "Fixed cards overflowing the rows in the mod menu",
+            "Disabling mods that require a reload, and choosing to reload later, will change the mod's state to 'Reload Required'"
+
+        ]
     }
 
 }
