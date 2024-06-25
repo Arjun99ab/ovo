@@ -19,7 +19,9 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
     borderTop: "solid 3px black",
 
     height: "auto",
-    overflowY: "auto",
+    maxHeight: "100%",
+    
+    overflowY: "scroll",
     overflowX: "hidden",
 
     scrollbarGutter: "stable",
