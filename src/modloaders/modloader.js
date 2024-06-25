@@ -145,36 +145,38 @@ export let runtime;
     let createModLoaderMenuBtn = () => {
       let menuButton = document.createElement("button");
       let c = {
-          background: "url(../src/img/modloader/menubutton.png)",
-          backgroundSize: "cover", //or contain
-          backgroundColor: "white",
-          border: "none", //2p solid black
-          position: "absolute",
-          cursor: "pointer",
-          left: "4px",
-          top: "60px",
-          width: "100px",
-          height: "100px",
-          display: "block",
-          zIndex: "2147483647",
+        background: "url(../src/img/modloader/menubutton.png)",
+        backgroundSize: "80%", //or contain
+        backgroundPosition: "48%",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: "white",
+        border: "2px solid black", //2p solid black
+        position: "absolute",
+        cursor: "pointer",
+        left: "4px",
+        top: "4px",
+        width: "40px",
+        height: "35px",
+        borderRadius: "5px",
+        display: "block",
+        zIndex: "2147483647",
       };
       Object.keys(c).forEach(function (a) {
-          menuButton.style[a] = c[a];
+        menuButton.style[a] = c[a];
       });
       menuButton.id = "menu-button";
-
-
-      menuButton.onclick = function() {
-          if(document.getElementById("menu-bg") === null) { //if menu doesnt exist, to avoid duplicates
-              map = disableClick();
-              createModLoaderMenu();
-              document.getElementById("menu-button").style.display = "none";
-              document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
-          } 
-      }
+  
+      menuButton.onclick = function () {
+        if (document.getElementById("menu-bg") === null) {
+          //if menu doesnt exist, to avoid duplicates
+          map = disableClick();
+          createModLoaderMenu();
+          document.getElementById("menu-button").style.display = "none";
+          document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
+        }
+      };
       document.body.appendChild(menuButton);
-
-    }
+    };
     let createModLoaderMenu = () => {
       //Create background div
       

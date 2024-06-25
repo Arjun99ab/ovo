@@ -37,8 +37,8 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
     padding: "10px",
     // marginBottom: "20px",
     gridTemplateColumns: "repeat(4, 0.25fr)",
-    columnGap: "10px",
-    rowGap: "10px",
+    columnGap: "3%",
+    rowGap: "4%",
     gridTemplateRows: "max-content",
 
     borderLeft: "solid 3px black",
