@@ -4,6 +4,8 @@ import {createModSettingsPopup} from "./settings.js"
 import { createNotifyModal, createConfirmDeleteModal } from "../../modals.js"
 import {backendConfig} from "../../../modloader.js"
 import {modsPendingReload} from "../../modals.js"
+import { createEditModPopup } from "./editmod.js"
+import { renderModsMenu } from "./render.js"
 
 export {createMenuCard, createCardButton, createToggleButton}
 
@@ -102,11 +104,11 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     });
   
     topCards.className = "card-buttons";
-    let deleteButton;
+    let editmodButton;
     let settingsButton;
     let infoButton = createCardButton(id + "-info-btn", "../src/img/modloader/card/info.png", "calc(100%/3)");
     if(id.startsWith("customMod")) {
-      deleteButton = createCardButton(id + "-delete-btn", "../src/img/modloader/card/delete.png", "calc(100%/3)");
+      editmodButton = createCardButton(id + "-editmod-btn", "../src/img/modloader/card/settings.png", "calc(100%/3)");
     } else {
       settingsButton = createCardButton(id + "-settings-btn", "../src/img/modloader/card/settings.png", "calc(100%/3)");
       if(backendConfig['mods'][id]['settings'] === null) {
@@ -114,6 +116,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
         settingsButton.style.backgroundSize = "2.5vw"; //or 50% 
         settingsButton.style.backgroundRepeat = "no-repeat";
         settingsButton.style.backgroundPosition= "center";
+        settingsButton.style.cursor = "not-allowed";
       }
     }
     let favoriteButton = createCardButton(id + "-favorites-btn", "../src/img/modloader/card/notfavorite.png", "calc(100%/3)");
@@ -132,7 +135,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
   
     topCards.appendChild(infoButton);
     if(id.startsWith("customMod")) {
-      topCards.appendChild(deleteButton);
+      topCards.appendChild(editmodButton);
     } else {
       topCards.appendChild(settingsButton);
     }
@@ -171,7 +174,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     enabledButton.onclick = function() {
       
       console.log("clicked")
-      console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled'])
+      // console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled'])
       if(modsPendingReload.includes(id)) {
         location.reload()
       } else {
@@ -244,11 +247,12 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     //   cardButton.style.opacity = "0.5";
     // }
     cardButton.onclick = function() {
-      if(id.includes("info")) {
+      let type = id.split("-")[1];
+      if(type === "info") {
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createDescPopup(id.split("-")[0]);
-      } else if(id.includes("settings")) {
+      } else if(type === "settings") {
         if(backendConfig['mods'][id.split("-")[0]]['settings'] !== null) {
           document.getElementById("menu-bg").style.pointerEvents = "none";
           document.getElementById("menu-bg").style.filter = "blur(1.2px)";
@@ -259,7 +263,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
           document.getElementById("menu-bg").style.filter = "blur(1.2px)";
           createNotifyModal("This mod doesn't have any settings.")
         }
-      } else if(id.includes("favorite")) {
+      } else if(type === "favorites") {
         console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id.split("-")[0]]['favorite'])
         if(!JSON.parse(localStorage.getItem('modSettings'))['mods'][id.split("-")[0]]['favorite']) {
           document.getElementById(id).style.background = "url(../src/img/modloader/card/favorite.png)";
@@ -278,13 +282,13 @@ let createMenuCard = (id, name, iconurl, enabled) => {
           let modSettings = JSON.parse(localStorage.getItem('modSettings'));
           modSettings['mods'][id.split("-")[0]]["favorite"] = false;
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
-          
+
         }
 
-      } else if(id.includes("delete")) {
+      } else if(type === "editmod") {
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-        createConfirmDeleteModal(id.split("-")[0]);
+        createEditModPopup(id.split("-")[0]);
       }
     }
     return cardButton;

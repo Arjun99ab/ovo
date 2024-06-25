@@ -108,6 +108,14 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
 
   let renderAddModMenu = (filtersDiv, cardsDiv) => {
 
+    //clear filtersDiv and cardsDiv
+    while (filtersDiv.firstChild) {
+      filtersDiv.removeChild(filtersDiv.lastChild);
+    }
+    while (cardsDiv.firstChild) {
+      cardsDiv.removeChild(cardsDiv.lastChild);
+    }
+
     let c = {
       display: "flex",
       // flex: "1",
@@ -150,15 +158,7 @@ let renderModsMenu = (filtersDiv, cardsDiv) => {
     Object.keys(c).forEach(function (a) {
         cardsDiv.style[a] = c[a];
     });
-    
-    while (filtersDiv.firstChild) {
-      filtersDiv.removeChild(filtersDiv.lastChild);
-    }
-    while (cardsDiv.firstChild) {
-      cardsDiv.removeChild(cardsDiv.lastChild);
-    }
-
-    
+       
 
     let saveButtonCss = {
       fontFamily: "Retron2000",

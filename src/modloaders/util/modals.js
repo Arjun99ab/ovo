@@ -114,6 +114,13 @@ function createNotifyModal (text) {
 function createChangelogPopup(changelog, userVersion, currentVersion) {
   //Create background div
   let changelogPopup = document.createElement("div");
+  changelogPopup.addEventListener('wheel', (e) => {
+    // console.log("hello)")
+    e.stopImmediatePropagation()
+    e.stopPropagation();
+    // e.preventDefault();
+    changelogPopup.focus();
+  });
   changelogPopup.id = "changelogPopup-bg";
 
   let c = {
@@ -134,7 +141,7 @@ function createChangelogPopup(changelog, userVersion, currentVersion) {
       color: "black",
       fontSize: "10pt",
       width: "40%",
-      height: "auto",
+      height: "min(80%, auto)",
       overflow: "auto",
       margin: "0",
       padding: "10px",

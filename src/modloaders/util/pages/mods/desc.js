@@ -24,6 +24,7 @@ let createDescPopup = (modId) => {
         color: "black",
         fontSize: "10pt",
         width: "auto",
+        minWidth: "20%",
         height: "auto",
         overflow: "auto",
         margin: "0",
