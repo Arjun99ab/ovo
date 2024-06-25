@@ -176,6 +176,9 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       console.log("clicked")
       // console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled'])
       if(modsPendingReload.includes(id)) {
+        let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+        modSettings['mods'][id]["enabled"] = false;
+        localStorage.setItem('modSettings', JSON.stringify(modSettings));
         location.reload()
       } else {
         if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled']) { //if enabled, we want to disable

@@ -9,6 +9,8 @@ let createEditModPopup = (modId) => {
     //Create background div
     let editmodPopup = document.createElement("div");
     editmodPopup.id = "editmodPopup-bg";
+    editmodPopup.className = "modloader-popups"
+
   
     let c = {
         display: "flex",

@@ -267,6 +267,7 @@ let createModSettingsPopup = (modId) => {
   //Create background div
   let modSettingsPopup = document.createElement("div");
   modSettingsPopup.id = "modSettingsPopup-bg";
+  modSettingsPopup.className = "modloader-popups"
 
   let c = {
       display: "flex",

@@ -5,6 +5,7 @@ let createDescPopup = (modId) => {
     //Create background div
     let descPopup = document.createElement("div");
     descPopup.id = "descPopup-bg";
+    descPopup.className = "modloader-popups"
   
     let c = {
         display: "flex",

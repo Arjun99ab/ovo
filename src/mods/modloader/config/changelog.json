@@ -37,6 +37,12 @@
             "Disabling mods that require a reload, and choosing to reload later, will change the mod's state to 'Reload Required'"
 
         ]
+    },
+    "2.0.6": {
+        "changes": [
+            "Edit custom mods' settings",
+            "Error messages for custom mods that fail to load"
+        ]
     }
 
 }

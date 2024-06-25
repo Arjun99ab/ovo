@@ -1,3 +1,4 @@
+import { notify } from "./ovo.js";
 import { toggleMod } from "./pages/mods/utils.js";
 export {modsPendingReload};
 let modsPendingReload = [];
@@ -6,6 +7,7 @@ function createNotifyModal (text) {
     //Create background div
     let notifyBg = document.createElement("div");
     notifyBg.id = "notify-bg";
+    notifyBg.className = "modloader-popups";
 
     let c = {
         display: "block",
@@ -54,8 +56,7 @@ function createNotifyModal (text) {
         infoText.style[a] = c[a];
     });
 
-    let content = document.createTextNode(text);
-    infoText.appendChild(content);
+    infoText.innerHTML = text;
     
     // Create buttons container
     let buttonsContainer = document.createElement("div");
@@ -122,6 +123,7 @@ function createChangelogPopup(changelog, userVersion, currentVersion) {
     changelogPopup.focus();
   });
   changelogPopup.id = "changelogPopup-bg";
+  changelogPopup.className = "modloader-popups";
 
   let c = {
       display: "flex",
@@ -253,6 +255,8 @@ function createConfirmDeleteModal(modId) {
   //Create background div
   let confirmBg = document.createElement("div");
   confirmBg.id = "confirm-delete-bg";
+  confirmBg.className = "modloader-popups";
+
 
   let c = {
       display: "block",
@@ -388,6 +392,7 @@ function createConfirmReloadModal(modId) {
   //Create background div
   let confirmBg = document.createElement("div");
   confirmBg.id = "confirm-bg";
+  confirmBg.className = "modloader-popups";
 
   let c = {
       display: "block",

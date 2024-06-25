@@ -301,6 +301,10 @@ export let runtime;
 
       xButton.onclick = function() {
           menuBg.remove();
+          const popups = document.getElementsByClassName("modloader-popups");
+          for (let i = 0; i < popups.length; i++) {
+            popups[i].remove();
+          }
           versionText.remove();
           enableClick(map);
           let modSettings = JSON.parse(localStorage.getItem('modSettings'));
