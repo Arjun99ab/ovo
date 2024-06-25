@@ -142,14 +142,14 @@ let createEditModPopup = (modId) => {
       settingsDiv.focus();
     });
     modSettings = JSON.parse(localStorage.getItem('modSettings'));
-
+    
     let addModName = document.createElement("input");
     addModName.placeholder = "Mod Name";
     let d = {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "13vw",
+      width: "90%",
       height: "3vw",
       cursor: "text",
       backgroundColor: "white",
@@ -237,7 +237,7 @@ let createEditModPopup = (modId) => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "60%",
+      width: "90%",
       height: "40%",
       cursor: "text",
       backgroundColor: "white",

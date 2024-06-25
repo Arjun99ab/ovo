@@ -201,16 +201,20 @@ let renderAddModMenu = (filtersDiv, cardsDiv) => {
     cursor: "pointer",
     backgroundColor: "lightgreen",
     width: "13vw",
-    height: "calc(100% - 20px)",
+    height: "100%",
     textAlign: "center",
     verticalAlign: "middle",
     // marginBottom: "15px",
-    border: "solid 3px black",
-    borderRadius: "10px",
-    margin: "10px",
+    // border: "solid 3px black",
+    borderRadius: "0 0 0 10px",
+    // margin: "10px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    // marginBottom: "15px",
   };
 
-  let saveButton = document.createElement("button");
+  let saveButton = document.createElement("div");
   saveButton.innerHTML = "Save Mod";
   Object.keys(saveButtonCss).forEach(function (a) {
     saveButton.style[a] = saveButtonCss[a];
