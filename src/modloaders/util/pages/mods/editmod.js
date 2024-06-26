@@ -142,6 +142,7 @@ let createEditModPopup = (modId) => {
       settingsDiv.focus();
     });
     modSettings = JSON.parse(localStorage.getItem('modSettings'));
+
     
     let addModName = document.createElement("input");
     addModName.placeholder = "Mod Name";
@@ -160,7 +161,6 @@ let createEditModPopup = (modId) => {
       fontFamily: "Retron2000",
       paddingLeft: "10px",
       borderRadius: "10px 10px 10px 10px",
-      
     }
     Object.keys(d).forEach(function (a) {
       addModName.style[a] = d[a];
@@ -271,7 +271,7 @@ let createEditModPopup = (modId) => {
 
     addModName.value = modSettings['mods'][modId].name;
     addModCode.value = modSettings['mods'][modId].url;
-    addModDesc.value = modSettings['mods'][modId].desc;
+    addModDesc.value = modSettings['mods'][modId].desc.replace(/<br\/>/g, "\n");
 
 
     let buttonsContainer = document.createElement("div");
@@ -312,7 +312,7 @@ let createEditModPopup = (modId) => {
         let modDesc = addModDesc.value;
         modSettings['mods'][modId].name = modName;
         modSettings['mods'][modId].code = modCode;
-        modSettings['mods'][modId].desc = modDesc;
+        modSettings['mods'][modId].desc = modDesc.replace(/\n/g, "<br/>");
         localStorage.setItem('modSettings', JSON.stringify(modSettings));
         editmodPopup.remove();
         renderModsMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));

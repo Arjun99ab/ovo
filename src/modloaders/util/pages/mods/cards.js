@@ -22,6 +22,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       justifyContent: "space-between",
       // alignItems: "center",
       // width: "100%",
+
   
       // padding: "0",
       aspectRatio: "5 / 6",

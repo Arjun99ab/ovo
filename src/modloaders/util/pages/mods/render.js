@@ -236,7 +236,7 @@ let renderAddModMenu = (filtersDiv, cardsDiv) => {
       customModConfig["settings"] = null;
       customModConfig["favorite"] = false;
       customModConfig["name"] = addModName.value;
-      customModConfig["desc"] = addModDesc.value;
+      customModConfig["desc"] = addModDesc.value.replace(/\n/g, "<br/>");
       customModConfig["enabled"] = false;
       customModConfig["url"] = addModCode.value;
       modSettings["mods"]["customMod" + customModNum] = customModConfig;
