@@ -4,6 +4,7 @@ import {sleep, arraysEqual, detectDeviceType} from './util/utils.js';
 import {currentFilter, setFilter} from './util/pages/mods/filters.js';
 import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/render.js';
 import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
+import { createChangeLayoutHook, createPauseOpenHook, createPauseCloseHook } from './util/hooks.js';
 
 //constants
 export let version = VERSION.version();
@@ -323,7 +324,6 @@ export let runtime;
           if(inGame) {
             document.getElementById("menu-button").style.display = "none";
           } else {
-
             document.getElementById("menu-button").style.display = "block";
           }
           document.getElementById("c2canvasdiv").style.filter = "none";
@@ -547,225 +547,252 @@ export let runtime;
 
     let cleanModLoader = {
         async init() {
-            // backendConfig = null;
-            let b=document.createElement("div")
-            let c={backgroundColor:"rgba(150,10,1,0.8)",width:"5px",height:"5px",position:"absolute",bottom:"5px",right:"5px", zIndex:"2147483647", display:"none"}
-            Object.keys(c).forEach(function(a){b.style[a]=c[a]})
-            b.id = "cheat-indicator"
-            document.body.appendChild(b)
-            function addStyle(styleString) {
-                const style = document.createElement('style');
-                style.textContent = styleString;
-                document.head.append(style);
+          createChangeLayoutHook("LayoutChange");
+          window.addEventListener(
+            "LayoutChange",
+            (e) => {
+              if(e.detail.layout.name.startsWith("Level") && e.detail.layout.name !== "Level Menu") {
+                document.getElementById("menu-button").style.display = "none";
+                inGame = true;
+              } else {
+                document.getElementById("menu-button").style.display = "block";
+                inGame = false;
               }
-            addStyle(`
-            #ovo-multiplayer-disconnected-container {
-                pointer-events: none;
-            }
-            #ovo-multiplayer-other-container {
-                pointer-events: none;
-            }
-            #ovo-multiplayer-container {
-                pointer-events: none;
-            }
-            #ovo-multiplayer-tab-container {
-                pointer-events: all;
-            }
-            .ovo-multiplayer-button-holder {
-                pointer-events: all;
-            }
-            .ovo-multiplayer-tab {
-                pointer-events: all;
-            }
-            .ovo-multiplayer-button {
-                pointer-events: all;
-            }
-            
-            `);
+            },
+            false,
+          );
 
-            backendConfig = await fetch('../src/mods/modloader/config/backend.json')
-            .then((response) => response.json())
-            .then(jsondata => {
-                return jsondata;
-            });
-            let changelog = await fetch('../src/mods/modloader/config/changelog.json')
-            .then((response) => response.json())
-            .then(jsondata => {
-                return jsondata;
-            });
+          createPauseOpenHook("PauseOpen");
+          window.addEventListener(
+            "PauseOpen",
+            (e) => {
+              // console.log("pause open")
+              // notify("Pause Opened", "wow!", "./speedrunner.png");
+              document.getElementById("menu-button").style.display = "block";
+              inGame = false;
+            },
+            false,
+          );
+
+          createPauseCloseHook("PauseClose");
+          window.addEventListener(
+            "PauseClose",
+            (e) => {
+              // console.log("pause close")
+              // notify("Pause Closed", "wow!", "./speedrunner.png");
+              document.getElementById("menu-button").style.display = "none";
+              inGame = true;
+            },
+            false,
+          );
 
 
-            // localStorage.setItem('modSettings', JSON.stringify({}));
-            
-            // console.log(backendConfig['mods'])
+          // backendConfig = null;
+          let b=document.createElement("div")
+          let c={backgroundColor:"rgba(150,10,1,0.8)",width:"5px",height:"5px",position:"absolute",bottom:"5px",right:"5px", zIndex:"2147483647", display:"none"}
+          Object.keys(c).forEach(function(a){b.style[a]=c[a]})
+          b.id = "cheat-indicator"
+          document.body.appendChild(b)
+          function addStyle(styleString) {
+              const style = document.createElement('style');
+              style.textContent = styleString;
+              document.head.append(style);
+            }
+          addStyle(`
+          #ovo-multiplayer-disconnected-container {
+              pointer-events: none;
+          }
+          #ovo-multiplayer-other-container {
+              pointer-events: none;
+          }
+          #ovo-multiplayer-container {
+              pointer-events: none;
+          }
+          #ovo-multiplayer-tab-container {
+              pointer-events: all;
+          }
+          .ovo-multiplayer-button-holder {
+              pointer-events: all;
+          }
+          .ovo-multiplayer-tab {
+              pointer-events: all;
+          }
+          .ovo-multiplayer-button {
+              pointer-events: all;
+          }
+          
+          `);
 
-            let userConfig = JSON.parse(localStorage.getItem('modSettings'));
-            // console.log(userConfig)
-            let freshUserConfig = {};
-            if(userConfig === null) {
-                //first time user
-                freshUserConfig = {'mods': {}, 'settings': {}}
-                for (const [key] of Object.entries(backendConfig['mods'])) {
+          backendConfig = await fetch('../src/mods/modloader/config/backend.json')
+          .then((response) => response.json())
+          .then(jsondata => {
+              return jsondata;
+          });
+          let changelog = await fetch('../src/mods/modloader/config/changelog.json')
+          .then((response) => response.json())
+          .then(jsondata => {
+              return jsondata;
+          });
+
+
+          // localStorage.setItem('modSettings', JSON.stringify({}));
+          
+          // console.log(backendConfig['mods'])
+
+          let userConfig = JSON.parse(localStorage.getItem('modSettings'));
+          // console.log(userConfig)
+          let freshUserConfig = {};
+          if(userConfig === null) {
+              //first time user
+              freshUserConfig = {'mods': {}, 'settings': {}}
+              for (const [key] of Object.entries(backendConfig['mods'])) {
+                  freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
+
+              }
+              freshUserConfig['version'] = backendConfig['version'];
+              freshUserConfig['settings'] = backendConfig['settings'];
+              localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
+          } else if(userConfig['version'] === undefined) {
+              //using old save format
+              freshUserConfig = {'mods': {}, 'settings': {}}
+              for (const [key] of Object.entries(backendConfig['mods'])) {
+                  freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
+                  if(userConfig[key] !== undefined) { //old save format didn't show mods that werent on version
+                      freshUserConfig['mods'][key]['enabled'] = userConfig[key]['enabled'];
+                  }
+              }
+              //migrate old custom mods to current format
+              for(const [key] of Object.entries(userConfig)) {
+                  if(key.startsWith("custom")) { //custom mod
+                      let customModConfig = userConfig[key];
+                      customModConfig['author'] = null;
+                      customModConfig['icon'] = "../src/img/mods/custommod.png"
+                      customModConfig['platform'] = ["pc", "mobile"];
+                      customModConfig['version'] = ["1.4", "1.4.4", "CTLE"];
+                      customModConfig['tags'] = ['custom'];
+                      customModConfig['reload'] = true;
+                      customModConfig['settings'] = null;
+                      customModConfig['favorite'] = false;
+                      freshUserConfig['mods'][key] = customModConfig;
+
+                      incCustomModNum();
+                  }
+              }
+              freshUserConfig['version'] = backendConfig['version'];
+              freshUserConfig['settings'] = backendConfig['settings'];
+              localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
+          } else  { //
+              //new version
+              if(userConfig['version'] !== backendConfig['version']) {
+                // document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
+                // map = disableClick(runtime);
+                createChangelogPopup(changelog, userConfig['version'], backendConfig['version']);
+              }
+              console.log("new version")
+              freshUserConfig = {'mods': {}, 'settings': {}}
+              for (const [key] of Object.entries(backendConfig['mods'])) {
+                  if(userConfig['mods'][key] === undefined) {
                     freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
-
-                }
-                freshUserConfig['version'] = backendConfig['version'];
-                freshUserConfig['settings'] = backendConfig['settings'];
-                localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
-            } else if(userConfig['version'] === undefined) {
-                //using old save format
-                freshUserConfig = {'mods': {}, 'settings': {}}
-                for (const [key] of Object.entries(backendConfig['mods'])) {
-                    freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
-                    if(userConfig[key] !== undefined) { //old save format didn't show mods that werent on version
-                        freshUserConfig['mods'][key]['enabled'] = userConfig[key]['enabled'];
-                    }
-                }
-                //migrate old custom mods to current format
-                for(const [key] of Object.entries(userConfig)) {
-                    if(key.startsWith("custom")) { //custom mod
-                        let customModConfig = userConfig[key];
-                        customModConfig['author'] = null;
-                        customModConfig['icon'] = "../src/img/mods/custommod.png"
-                        customModConfig['platform'] = ["pc", "mobile"];
-                        customModConfig['version'] = ["1.4", "1.4.4", "CTLE"];
-                        customModConfig['tags'] = ['custom'];
-                        customModConfig['reload'] = true;
-                        customModConfig['settings'] = null;
-                        customModConfig['favorite'] = false;
-                        freshUserConfig['mods'][key] = customModConfig;
-
-                        incCustomModNum();
-                    }
-                }
-                freshUserConfig['version'] = backendConfig['version'];
-                freshUserConfig['settings'] = backendConfig['settings'];
-                localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
-            } else  { //
-                //new version
-                if(userConfig['version'] !== backendConfig['version']) {
-                  // document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
-                  // map = disableClick(runtime);
-                  createChangelogPopup(changelog, userConfig['version'], backendConfig['version']);
-                }
-                console.log("new version")
-                freshUserConfig = {'mods': {}, 'settings': {}}
-                for (const [key] of Object.entries(backendConfig['mods'])) {
-                    if(userConfig['mods'][key] === undefined) {
-                      freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
-                    } else {
-                      console.log(key)
-                      if (backendConfig['mods'][key]['defaultSettings']['settings'] !== null) {
-                        let backendModSettings = Object.keys(backendConfig['mods'][key]['defaultSettings']['settings'])
-                        if (userConfig['mods'][key]['settings'] === null) {
-                          userConfig['mods'][key]['settings'] = {}
+                  } else {
+                    console.log(key)
+                    if (backendConfig['mods'][key]['defaultSettings']['settings'] !== null) {
+                      let backendModSettings = Object.keys(backendConfig['mods'][key]['defaultSettings']['settings'])
+                      if (userConfig['mods'][key]['settings'] === null) {
+                        userConfig['mods'][key]['settings'] = {}
+                      }
+                      let userModSettings = Object.keys(userConfig['mods'][key]['settings'])
+                      if(!arraysEqual(backendModSettings, userModSettings)) {
+                        let newMods = backendModSettings.filter(x => !userModSettings.includes(x))
+                        let badMods = userModSettings.filter(x => !backendModSettings.includes(x))
+                        for(const mod of newMods) {
+                          userConfig['mods'][key]['settings'][mod] = backendConfig['mods'][key]['defaultSettings']['settings'][mod]
                         }
-                        let userModSettings = Object.keys(userConfig['mods'][key]['settings'])
-                        if(!arraysEqual(backendModSettings, userModSettings)) {
-                          let newMods = backendModSettings.filter(x => !userModSettings.includes(x))
-                          let badMods = userModSettings.filter(x => !backendModSettings.includes(x))
-                          for(const mod of newMods) {
-                            userConfig['mods'][key]['settings'][mod] = backendConfig['mods'][key]['defaultSettings']['settings'][mod]
-                          }
-                          for(const mod of badMods) {
-                            delete userConfig['mods'][key]['settings'][mod]
-                          }
+                        for(const mod of badMods) {
+                          delete userConfig['mods'][key]['settings'][mod]
                         }
                       }
+                    }
+                    freshUserConfig['mods'][key] = userConfig['mods'][key];
+                  }
+              }
+              for(const [key] of Object.entries(userConfig['mods'])) {
+                  if(key.startsWith("custom")) { //custom mod
                       freshUserConfig['mods'][key] = userConfig['mods'][key];
-                    }
-                }
-                for(const [key] of Object.entries(userConfig['mods'])) {
-                    if(key.startsWith("custom")) { //custom mod
-                        freshUserConfig['mods'][key] = userConfig['mods'][key];
-                    } else {
-                      delete userConfig['mods'][key]; //if mod is not in backend, delete it
-                    }
-                  }
-                for(const [key] of Object.entries(backendConfig['settings'])) {
-                    if(userConfig['settings'][key] === undefined) {
-                        freshUserConfig['settings'][key] = backendConfig['settings'][key];
-                    } else {
-                      // console.log('SDHUIOFASDHUO');
-                        freshUserConfig['settings'][key] = userConfig['settings'][key];
-                    }
-                }
-                freshUserConfig['version'] = backendConfig['version'];
-                localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
-            }
-            userConfig = JSON.parse(localStorage.getItem('modSettings'));
-            console.log(userConfig)
-            console.log(backendConfig)
-
-
-            //enable mods
-            for (const [key] of Object.entries(userConfig['mods'])) {
-              // console.log(version)
-              // console.log(key)
-              // console.log(backendConfig['mods'][key]['version'])
-              if(!key.startsWith("custom") && userConfig['mods'][key]['enabled'] === true && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platform'].includes(detectDeviceType())) {
-                  if(key.startsWith("custom") || !backendConfig['mods'][key]['tags'].includes('visual')) { 
-                      //non visual mods or custom mods are considered 'cheats'
-                      document.getElementById("cheat-indicator").style.display = "block";
-                  }
-                  let js = document.createElement("script");
-                  js.type = "application/javascript";
-                  if(key.startsWith("customMod")) {
-                      js.text = userConfig['mods'][key]["url"];
                   } else {
-
-                      js.src = backendConfig['mods'][key]["url"];
+                    delete userConfig['mods'][key]; //if mod is not in backend, delete it
                   }
-                  js.id = key;
-                  document.head.appendChild(js);
-              } else if(key.startsWith("custom") && userConfig['mods'][key]['enabled'] === true) {
-                  let js = document.createElement("script");
-                  js.type = "application/javascript";
-                  js.src = userConfig['mods'][key]["url"];
-                  js.id = key;
-                  document.head.appendChild(js);
-                  document.getElementById("cheat-indicator").style.display = "block";
+                }
+              for(const [key] of Object.entries(backendConfig['settings'])) {
+                  if(userConfig['settings'][key] === undefined) {
+                      freshUserConfig['settings'][key] = backendConfig['settings'][key];
+                  } else {
+                    // console.log('SDHUIOFASDHUO');
+                      freshUserConfig['settings'][key] = userConfig['settings'][key];
+                  }
               }
+              freshUserConfig['version'] = backendConfig['version'];
+              localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
+          }
+          userConfig = JSON.parse(localStorage.getItem('modSettings'));
+          console.log(userConfig)
+          console.log(backendConfig)
+
+
+          //enable mods
+          for (const [key] of Object.entries(userConfig['mods'])) {
+            // console.log(version)
+            // console.log(key)
+            // console.log(backendConfig['mods'][key]['version'])
+            if(!key.startsWith("custom") && userConfig['mods'][key]['enabled'] === true && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platform'].includes(detectDeviceType())) {
+                if(key.startsWith("custom") || !backendConfig['mods'][key]['tags'].includes('visual')) { 
+                    //non visual mods or custom mods are considered 'cheats'
+                    document.getElementById("cheat-indicator").style.display = "block";
+                }
+                let js = document.createElement("script");
+                js.type = "application/javascript";
+                if(key.startsWith("customMod")) {
+                    js.text = userConfig['mods'][key]["url"];
+                } else {
+
+                    js.src = backendConfig['mods'][key]["url"];
+                }
+                js.id = key;
+                document.head.appendChild(js);
+            } else if(key.startsWith("custom") && userConfig['mods'][key]['enabled'] === true) {
+                let js = document.createElement("script");
+                js.type = "application/javascript";
+                js.src = userConfig['mods'][key]["url"];
+                js.id = key;
+                document.head.appendChild(js);
+                document.getElementById("cheat-indicator").style.display = "block";
             }
-            console.log(filters)
-            filters.add('all');
-            filters.add('favorite');
-            filters.add('custom');
-            for (const [key] of Object.entries(backendConfig['mods'])) {
-              console.log(backendConfig["mods"][key]['tags'])
-              for(let i = 0; i < backendConfig["mods"][key]['tags'].length; i++) {
-                filters.add(backendConfig["mods"][key]['tags'][i]);
-              }
+          }
+          console.log(filters)
+          filters.add('all');
+          filters.add('favorite');
+          filters.add('custom');
+          for (const [key] of Object.entries(backendConfig['mods'])) {
+            console.log(backendConfig["mods"][key]['tags'])
+            for(let i = 0; i < backendConfig["mods"][key]['tags'].length; i++) {
+              filters.add(backendConfig["mods"][key]['tags'][i]);
             }
-            console.log(filters)
-            filters = Array.from(filters);
-            
-                        
-
-            document.addEventListener("touchstart", (event) => {
-              this.mouseend(event)
-            });
-
-            document.addEventListener("mouseup", (event) => {
-                this.mouseend(event)
-            });
-
-            document.addEventListener("keydown", (event) => {
-
-                this.keyDown(event)
-            });
+          }
+          console.log(filters)
+          filters = Array.from(filters);
+          
+          document.addEventListener("keydown", (event) => {
+            this.keyDown(event)
+          });
+          
+          
+          createModLoaderMenuBtn();
+          // document.getElementById("menu-button").click();
+          // runtime.tickMe(this);
 
 
-            
-            
-            createModLoaderMenuBtn();
-            // document.getElementById("menu-button").click();
-            // runtime.tickMe(this);
-
-
-            notify("QOL Modloader", "by Awesomeguy", "../src/img/modloader/modloader.png");
-            // console.log(createNotifyModal)
-            // createNotifyModal("appleapple");
+          notify("QOL Modloader", "by Awesomeguy", "../src/img/modloader/modloader.png");
+          // console.log(createNotifyModal)
+          // createNotifyModal("appleapple");
 
         },
 
@@ -782,74 +809,11 @@ export let runtime;
                     }         
                 }    
             }
-            if(event.keyCode === 27) { //escape
-              if (isInLevel()) {
-                if(inGame) {
-                  document.getElementById("menu-button").style.display = "block";
-                  inGame = false;
-                } else {
-                  inGame = true;
-                  document.getElementById("menu-button").style.display = "none";
-
-                }
-              }
-                
-            }
         },
 
-        mouseend(event) {
-          let mouse = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Mouse).instances[0]
-          let buttonBehav = runtime.types_by_index.filter((x) =>
-            x.behaviors.some(
-              (y) => y.behavior instanceof cr.behaviors.aekiro_button)
-            )[0].instances[0].behavior_insts[0];
-            
-            console.log(runtime.types_by_index.filter((x) =>
-            x.behaviors.some(
-              (y) => y.behavior instanceof cr.behaviors.aekiro_button)
-            )[4].instances)
-            let menuButtonClicked = menuButtonHover();
-            let levelButtonClicked = levelButtonHover();
-
-            if(levelButtonClicked !== null) {
-              console.log("levelbutton")
-              document.getElementById("menu-button").style.display = "none";
-              inGame = true;
-            }
-            let uiButtons = runtime.types_by_index.filter((x) =>
-                x.behaviors.some(
-                (y) => y.behavior instanceof cr.behaviors.aekiro_button
-                )
-            )[0]
-            console.log(uiButtons.instances)
-
-
-
-            if(menuButtonClicked !== null) {
-              console.log("apple pieee", menuButtonClicked.properties[1])
-              console.log("playbutton")
-              let buttonType = menuButtonClicked.properties[1];
-              let hideButtons = ["Play", "Resume", "Reload", "Next", "Replay", "LoadReplay"]
-              if (hideButtons.includes(buttonType)) {
-                document.getElementById("menu-button").style.display = "none";
-                inGame = true;
-              } else if(buttonType === "Pause" || (buttonType === "Back" && isPaused())) {
-                if (inGame) {
-                  document.getElementById("menu-button").style.display = "block";
-                  inGame = false;
-                } else {
-                  document.getElementById("menu-button").style.display = "none";
-                  inGame = true;
-                }
-              } else {
-                document.getElementById("menu-button").style.display = "block";
-                inGame = false;
-              }
-            }
-
-
-
-        },
+        toString() {
+          return "modloader"
+        }
 
         
         

@@ -11,12 +11,12 @@
     globalThis.flymodToggle = function (enable) {
         if (enable) {
             // Use the bound methods when adding the event listeners
-            document.addEventListener("keydown", ovoFlyMod.boundKeyDown);
-            document.addEventListener("keyup", ovoFlyMod.boundKeyUp);
+            document.addEventListener("keydown", flyMod.boundKeyDown);
+            document.addEventListener("keyup", flyMod.boundKeyUp);
         } else {
             // Use the bound methods when removing the event listeners
-            document.removeEventListener("keydown", ovoFlyMod.boundKeyDown);
-            document.removeEventListener("keyup", ovoFlyMod.boundKeyUp);
+            document.removeEventListener("keydown", flyMod.boundKeyDown);
+            document.removeEventListener("keyup", flyMod.boundKeyUp);
         }
     }
     let settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['flymod']['settings'];

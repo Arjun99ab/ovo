@@ -1738,6 +1738,9 @@
 
                 
             } catch (err) {}
+        },
+        toString() {
+            return "guiMod";
         }
     };
   

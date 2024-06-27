@@ -216,7 +216,7 @@
         },
 
         keyDown(event) {
-            if(event.keyCode === 80) {
+            if(event.keyCode === 80) { //p
                 if(document.getElementById("confirm-bg") === null) { //menu doesnt exist
                     //create mod menu via tab
                     console.log("menu doesnt exist");

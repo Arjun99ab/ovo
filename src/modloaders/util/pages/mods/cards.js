@@ -22,6 +22,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       justifyContent: "space-between",
       // alignItems: "center",
       // width: "100%",
+      container: id + "/inline-size",
 
   
       // padding: "0",
@@ -60,7 +61,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     });
     cardImage.src = iconurl;
   
-    let cardText = document.createElement("p");
+    let cardText = document.createElement("span");
     if(id.startsWith("customMod") && JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['name'].length > 10) {
       name = JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['name'].substring(0, 9) + "-";
     }
@@ -78,10 +79,12 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       verticalAlign: "middle",
       margin: "0",
       whiteSpace: "nowrap",
+      overflow: "hidden",
     }
     Object.keys(c).forEach(function (a) {
       cardText.style[a] = c[a];
     });
+
   
     let cardButtons = document.createElement("div");
     c = {
@@ -203,10 +206,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
   
     menuCard.appendChild(cardImage);
     menuCard.appendChild(cardText);
-    menuCard.appendChild(cardButtons);
-      
-  
-  
+    menuCard.appendChild(cardButtons);  
   
     return menuCard;
   }

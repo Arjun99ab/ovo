@@ -5221,6 +5221,9 @@ let getRandomOvORoomCode = () => {
             
             
           },
+          toString() {
+            return "multiplayerMod";
+          },
 
           updateUsernamePosition(usernames, x, y, username) {
             usernames[0].x = x - 2;

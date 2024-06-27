@@ -773,6 +773,7 @@ if (typeof Object.getPrototypeOf !== "function")
 		{
 			if (!this.s["has"](x))
 			{
+
 				this.s["add"](x);
 				this.cache_valid = false;
 			}
@@ -780,6 +781,7 @@ if (typeof Object.getPrototypeOf !== "function")
 		else
 		{
 			var str = x.toString();
+			
 			var items = this.items;
 			if (!items)
 			{
@@ -5230,6 +5232,7 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 	};
 	Runtime.prototype.doChangeLayout = function (changeToLayout)
 	{
+		console.log("MONKEY MONKEY")
 		var prev_layout = this.running_layout;
 		this.running_layout.stopRunning();
 		var i, len, j, lenj, k, lenk, type, inst, binst;
@@ -43910,6 +43913,7 @@ cr.behaviors.aekiro_dialog = function(runtime)
 		}
 	};
 	behinstProto.showOverlay = function (){
+		// console.log("show overlay, 43916")
 		if(this.overlay){
 			this.overlay.my_timescale = 1;
 			this.overlay.type.plugin.acts.MoveToLayer.call(this.overlay, this.inst.layer);
@@ -44116,6 +44120,7 @@ cr.behaviors.aekiro_dialog = function(runtime)
 	behinstProto.open = function (_targetX,_targetY,center)
 	{
 		this.init();
+		console.log("OHOHOH")
 		if(this.isOpen || this.tween["isPlaying"]){//|| this.tween_close["isPlaying"]
 			return;
 		}
@@ -44219,6 +44224,7 @@ cr.behaviors.aekiro_dialog = function(runtime)
 		if(!this.isOpen || this.tween["isPlaying"] || this.tween_close["isPlaying"]){
 			return;
 		}
+
 		this.isOpen = false;
 		this.runtime.trigger(cr.behaviors.aekiro_dialog.prototype.cnds.onDialogClosed, this.inst);
 		if(this.overlay){
