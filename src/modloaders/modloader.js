@@ -656,17 +656,18 @@ export let runtime;
           let freshUserConfig = {};
           if(userConfig === null) {
               //first time user
-              freshUserConfig = {'mods': {}, 'settings': {}}
+              freshUserConfig = {'mods': {}, 'settings': {}, 'skins': {}}
               for (const [key] of Object.entries(backendConfig['mods'])) {
                   freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
 
               }
               freshUserConfig['version'] = backendConfig['version'];
               freshUserConfig['settings'] = backendConfig['settings'];
+              freshUserConfig['skins'] = backendConfig['skins'];
               localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
           } else if(userConfig['version'] === undefined) {
               //using old save format
-              freshUserConfig = {'mods': {}, 'settings': {}}
+              freshUserConfig = {'mods': {}, 'settings': {}, 'skins': {}}
               for (const [key] of Object.entries(backendConfig['mods'])) {
                   freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
                   if(userConfig[key] !== undefined) { //old save format didn't show mods that werent on version
@@ -692,6 +693,7 @@ export let runtime;
               }
               freshUserConfig['version'] = backendConfig['version'];
               freshUserConfig['settings'] = backendConfig['settings'];
+              freshUserConfig['skins'] = backendConfig['skins'];
               localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
           } else  { //
               //new version
@@ -701,7 +703,7 @@ export let runtime;
                 createChangelogPopup(changelog, userConfig['version'], backendConfig['version']);
               }
               console.log("new version")
-              freshUserConfig = {'mods': {}, 'settings': {}}
+              freshUserConfig = {'mods': {}, 'settings': {}, 'skins': {}}
               for (const [key] of Object.entries(backendConfig['mods'])) {
                   if(userConfig['mods'][key] === undefined) {
                     freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];

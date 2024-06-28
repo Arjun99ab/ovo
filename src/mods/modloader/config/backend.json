@@ -3,21 +3,18 @@
     "settings":{
     },
     "skins": {
-        "ticktest": {
-            "name": "Tick Test",
-            "author": "Awesomeguy",
-            "desc": "Shows your keystrokes on screen.",
-            "url": "../src/mods/modloader/ticktest.js",
-            "icon": "https://cdn-icons-png.flaticon.com/128/1548/1548686.png",
-            "platform": [],
-            "version": ["1.4", "1.4.4", "CTLE"],
-            "tags": ["visual"],
-            "reload": false,
-            "settings": null,
+        "christmaselec": {
+            "name": "Xmas Elec",
+            "author": "Awesovven",
+            "desc": "Christmas Electric made for @Plant",
+            "url": "../src/skins/Christmas_Electrical.png",
+            "icon": "../assets/img/reverse.png",
+            "version": ["1.4.4"],
+            "tags": ["community"],
+            "replaces": "skin21",
             "defaultSettings": {
-                "settings": null,
                 "favorite": false,
-                "enabled": false
+                "using": false
             }
         }
     },
