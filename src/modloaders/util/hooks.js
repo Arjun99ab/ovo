@@ -1,6 +1,6 @@
 import { runtime } from "../modloader.js"
 
-export {createChangeLayoutHook, createPauseOpenHook, createPauseCloseHook}
+export {createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook}
 
 let createChangeLayoutHook = (eventName) => {
     let funcCode = runtime.doChangeLayout.toString();
@@ -22,7 +22,7 @@ let createChangeLayoutHook = (eventName) => {
     runtime.doChangeLayout2 = new Function('changeToLayout', body);
 }
 
-let createPauseOpenHook = (eventName) => {
+let createDialogOpenHook = (eventName) => {
     let funcCode = cr.behaviors.aekiro_dialog.prototype.Instance.prototype.open.toString();
     // let params = 
     let start = funcCode.indexOf('{') + 1;
@@ -30,6 +30,7 @@ let createPauseOpenHook = (eventName) => {
     let body = funcCode.substring(start, end);
 
     cr.behaviors.aekiro_dialog.prototype.Instance.prototype.open = new Function("_targetX","_targetY", "center", `
+        console.log(_targetX,_targetY,center)
         event = new Event("${eventName}");
         window.dispatchEvent(event);
         this.open2(_targetX,_targetY,center);`);
@@ -37,7 +38,7 @@ let createPauseOpenHook = (eventName) => {
     cr.behaviors.aekiro_dialog.prototype.Instance.prototype.open2 = new Function("_targetX","_targetY", "center", body);
 }
 
-let createPauseCloseHook = (eventName) => {
+let createDialogCloseHook = (eventName) => {
     let funcCode = cr.behaviors.aekiro_dialog.prototype.Instance.prototype.close.toString();
     let start = funcCode.indexOf('{') + 1;
     let end = funcCode.lastIndexOf('}');
@@ -49,4 +50,18 @@ let createPauseCloseHook = (eventName) => {
         this.close2();`);
 
     cr.behaviors.aekiro_dialog.prototype.Instance.prototype.close2 = new Function(body);
+}
+
+let createDialogShowOverlayHook = (eventName) => {
+    let funcCode = cr.behaviors.aekiro_dialog.prototype.Instance.prototype.showOverlay.toString();
+    let start = funcCode.indexOf('{') + 1;
+    let end = funcCode.lastIndexOf('}');
+    let body = funcCode.substring(start, end);
+
+    cr.behaviors.aekiro_dialog.prototype.Instance.prototype.showOverlay = new Function(`
+        event = new Event("${eventName}");
+        window.dispatchEvent(event);
+        this.showOverlay2();`);
+
+    cr.behaviors.aekiro_dialog.prototype.Instance.prototype.showOverlay2 = new Function(body);
 }

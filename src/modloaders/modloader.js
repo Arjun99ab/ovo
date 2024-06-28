@@ -4,7 +4,7 @@ import {sleep, arraysEqual, detectDeviceType} from './util/utils.js';
 import {currentFilter, setFilter} from './util/pages/mods/filters.js';
 import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/render.js';
 import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
-import { createChangeLayoutHook, createPauseOpenHook, createPauseCloseHook } from './util/hooks.js';
+import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook} from './util/hooks.js';
 
 //constants
 export let version = VERSION.version();
@@ -562,29 +562,41 @@ export let runtime;
             false,
           );
 
-          createPauseOpenHook("PauseOpen");
+          createDialogOpenHook("DialogOpen");
           window.addEventListener(
-            "PauseOpen",
+            "DialogOpen",
             (e) => {
-              // console.log("pause open")
-              // notify("Pause Opened", "wow!", "./speedrunner.png");
+              // console.log("Dialog open")
+              // notify("Dialog Opened", "wow!", "./speedrunner.png");
               document.getElementById("menu-button").style.display = "block";
               inGame = false;
+              console.log(isPaused())
+              // console.log()
             },
             false,
           );
 
-          createPauseCloseHook("PauseClose");
+          createDialogCloseHook("DialogClose");
           window.addEventListener(
-            "PauseClose",
+            "DialogClose",
             (e) => {
-              // console.log("pause close")
-              // notify("Pause Closed", "wow!", "./speedrunner.png");
+              // console.log("Dialog close")
+              // notify("Dialog Closed", "wow!", "./speedrunner.png");
               document.getElementById("menu-button").style.display = "none";
               inGame = true;
             },
             false,
           );
+
+          // createDialogShowOverlayHook("DialogShowOverlay");
+          // window.addEventListener(
+          //   "DialogShowOverlay",
+          //   (e) => {
+          //     console.log(isPaused())
+          //     notify("Dialog Show Overlay", "wow!", "./speedrunner.png");
+          //   },
+          //   false,
+          // );
 
 
           // backendConfig = null;

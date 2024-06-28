@@ -160,8 +160,8 @@
   let settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['savestate']['settings'];
   
   let keybindDown = (event, type) => {
-    console.log(event.key, settings[type])
-    console.log(settings)
+    // console.log(event.key, settings[type])
+    // console.log(settings)
     if(settings[type].length === 2) { //special + regular
       if (event.key.toLowerCase() === settings[type][1]) {
         if ((event.shiftKey && settings[type][0] === "shift") || (event.ctrlKey && settings[type][0] === "control") || (event.altKey && settings[type][0] === "alt") || (event.metaKey && settings[type][0] === "meta")) {
