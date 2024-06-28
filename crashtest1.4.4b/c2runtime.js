@@ -43914,9 +43914,9 @@ cr.behaviors.aekiro_dialog = function(runtime)
 	};
 	behinstProto.showOverlay = function (){
 		// console.log("show overlay, 43916")
-		console.log(this.runtime.running_layout.layers.find(function(a) {
-			return "Pause" === a.name
-		}).visible)
+		// console.log(this.runtime.running_layout.layers.find(function(a) {
+		// 	return "Pause" === a.name
+		// }).visible)
 		if(this.overlay){
 			this.overlay.my_timescale = 1;
 			this.overlay.type.plugin.acts.MoveToLayer.call(this.overlay, this.inst.layer);
