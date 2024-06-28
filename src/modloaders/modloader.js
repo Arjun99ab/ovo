@@ -1,14 +1,19 @@
 import {createNotifyModal, createChangelogPopup, createConfirmDeleteModal, createConfirmReloadModal} from './util/modals.js';
 import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify, menuButtonHover, levelButtonHover} from './util/ovo.js';
 import {sleep, arraysEqual, detectDeviceType} from './util/utils.js';
+
 import {currentFilter, setFilter} from './util/pages/mods/filters.js';
 import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/render.js';
 import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
+
+import {renderSkinsMenu} from './util/pages/skins/render.js';
+
 import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook} from './util/hooks.js';
 
 //constants
 export let version = VERSION.version();
 export let filters = new Set();
+export let skinFilters = new Set();
 export let backendConfig;
 export let runtime;
 
@@ -368,9 +373,13 @@ export let runtime;
       }
       let skinsButton = createNavButton("nav-skins-btn", "Skins", "13vw");
       skinsButton.onclick = function() {
-        document.getElementById("menu-bg").style.pointerEvents = "none";
-        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-        createNotifyModal("Skins are not available yet.");
+        searchBar.disabled = false;
+        let elements = document.getElementsByClassName('nav-button');
+        for(let i = 0; i < elements.length; i++) {
+          elements[i].style.backgroundColor = 'white';
+        }
+        skinsButton.style.backgroundColor = "lightblue";
+        renderSkinsMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
       }
       let addmodButton = createNavButton("nav-addmod-btn", "Add Mod", "13vw");
       addmodButton.onclick = function() {
@@ -659,11 +668,16 @@ export let runtime;
               freshUserConfig = {'mods': {}, 'settings': {}, 'skins': {}}
               for (const [key] of Object.entries(backendConfig['mods'])) {
                   freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
+              }
+
+              for(const [key] of Object.entries(backendConfig['settings'])) {
+                  freshUserConfig['settings'][key] = backendConfig["settings"][key]['defaultSettings'];
 
               }
+              for(const [key] of Object.entries(backendConfig['skins'])) {
+                  freshUserConfig['skins'][key] = backendConfig["skins"][key]['defaultSettings'];
+              }
               freshUserConfig['version'] = backendConfig['version'];
-              freshUserConfig['settings'] = backendConfig['settings'];
-              freshUserConfig['skins'] = backendConfig['skins'];
               localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
           } else if(userConfig['version'] === undefined) {
               //using old save format
@@ -691,9 +705,14 @@ export let runtime;
                       incCustomModNum();
                   }
               }
+              for(const [key] of Object.entries(backendConfig['settings'])) {
+                freshUserConfig['settings'][key] = backendConfig["settings"][key]['defaultSettings'];
+              }
+              for(const [key] of Object.entries(backendConfig['skins'])) {
+                  freshUserConfig['skins'][key] = backendConfig["skins"][key]['defaultSettings'];
+              }
+
               freshUserConfig['version'] = backendConfig['version'];
-              freshUserConfig['settings'] = backendConfig['settings'];
-              freshUserConfig['skins'] = backendConfig['skins'];
               localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
           } else  { //
               //new version
@@ -703,6 +722,10 @@ export let runtime;
                 createChangelogPopup(changelog, userConfig['version'], backendConfig['version']);
               }
               console.log("new version")
+              userConfig['mods'] = userConfig['mods'] === undefined ? {} : userConfig['mods']
+              userConfig['settings'] = userConfig['settings'] === undefined ? {} : userConfig['settings']
+              userConfig['skins'] = userConfig['skins'] === undefined ? {} : userConfig['skins']
+              console.log(userConfig['skins'])
               freshUserConfig = {'mods': {}, 'settings': {}, 'skins': {}}
               for (const [key] of Object.entries(backendConfig['mods'])) {
                   if(userConfig['mods'][key] === undefined) {
@@ -743,6 +766,24 @@ export let runtime;
                     // console.log('SDHUIOFASDHUO');
                       freshUserConfig['settings'][key] = userConfig['settings'][key];
                   }
+              }
+              console.log(userConfig['skins'])
+              console.log(backendConfig['skins'])
+              for(const [key] of Object.entries(backendConfig['skins'])) {
+                
+                if(userConfig['skins'][key] === undefined) { // new skin
+                    freshUserConfig['skins'][key] = backendConfig['skins'][key]['defaultSettings'];
+                } else { //existing skin
+                  // console.log('SDHUIOFASDHUO');
+                    freshUserConfig['skins'][key] = userConfig['skins'][key];
+                }
+              }
+              for(const [key] of Object.entries(userConfig['skins'])) {
+                if(key.startsWith("custom")) { //custom skin
+                  freshUserConfig['mods'][key] = userConfig['mods'][key];
+                } else {
+                  delete userConfig['mods'][key]; //if skin is not in backend, delete it
+                }
               }
               freshUserConfig['version'] = backendConfig['version'];
               localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
@@ -793,6 +834,17 @@ export let runtime;
           }
           console.log(filters)
           filters = Array.from(filters);
+
+          skinFilters.add('all');
+          skinFilters.add('favorite');
+          skinFilters.add('custom');
+          for (const [key] of Object.entries(backendConfig['skins'])) {
+            for(let i = 0; i < backendConfig["skins"][key]['tags'].length; i++) {
+              skinFilters.add(backendConfig["skins"][key]['tags'][i]);
+            }
+          }
+          skinFilters = Array.from(skinFilters);
+          
           
           document.addEventListener("keydown", (event) => {
             this.keyDown(event)

@@ -1,4 +1,4 @@
-import { version, filters, backendConfig } from "../../../modloader.js";
+import { version, skinFilters, backendConfig } from "../../../modloader.js";
 import { createNotifyModal } from "../../modals.js";
 import { detectDeviceType } from "../../utils.js";
 import { createMenuCard } from "./cards.js";
@@ -67,7 +67,7 @@ let renderSkinsMenu = (filtersDiv, cardsDiv) => {
   }
 
   // filterArr = Array.from(filters)
-  for (const filter of filters) {
+  for (const filter of skinFilters) {
     console.log(filter);
     let filterButton;
     if (filter === "favorite") {
@@ -93,37 +93,37 @@ let renderSkinsMenu = (filtersDiv, cardsDiv) => {
   }
 
   let cardsList = [];
-  console.log(backendConfig["mods"]);
-  for (const [key] of Object.entries(backendConfig["mods"])) {
+  console.log(backendConfig["skins"]);
+  for (const [key] of Object.entries(backendConfig["skins"])) {
+    console.log(key);
     if (
       key != "version" &&
       key != "settings" &&
-      backendConfig["mods"][key]["version"].includes(version) &&
-      backendConfig["mods"][key]["platform"].includes(detectDeviceType())
-    ) {
+      backendConfig["skins"][key]["version"].includes(version))
+    {
       cardsList.push(
         createMenuCard(
           key + "-card",
-          backendConfig["mods"][key]["name"],
-          backendConfig["mods"][key]["icon"],
-          JSON.parse(localStorage.getItem("modSettings"))["mods"][key][
-            "enabled"
+          backendConfig["skins"][key]["name"],
+          backendConfig["skins"][key]["icon"],
+          JSON.parse(localStorage.getItem("modSettings"))["skins"][key][
+            "using"
           ]
         )
       );
     }
   }
   for (const [key] of Object.entries(
-    JSON.parse(localStorage.getItem("modSettings"))["mods"]
+    JSON.parse(localStorage.getItem("modSettings"))["skins"]
   )) {
     if (key.startsWith("custom")) {
       cardsList.push(
         createMenuCard(
           key + "-card",
-          JSON.parse(localStorage.getItem("modSettings"))["mods"][key]["name"],
-          JSON.parse(localStorage.getItem("modSettings"))["mods"][key]["icon"],
-          JSON.parse(localStorage.getItem("modSettings"))["mods"][key][
-            "enabled"
+          JSON.parse(localStorage.getItem("modSettings"))["skins"][key]["name"],
+          JSON.parse(localStorage.getItem("modSettings"))["skins"][key]["icon"],
+          JSON.parse(localStorage.getItem("modSettings"))["skins"][key][
+            "using"
           ]
         )
       );

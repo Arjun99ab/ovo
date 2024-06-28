@@ -9,7 +9,7 @@ import { renderSkinsMenu } from "./render.js"
 
 export {createMenuCard, createCardButton, createToggleButton}
 
-let createMenuCard = (id, name, iconurl, enabled) => {
+let createMenuCard = (id, name, iconurl, using) => {
     let menuCard = document.createElement("div");
     menuCard.id = id;
     console.log(menuCard.id)
@@ -62,8 +62,8 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     cardImage.src = iconurl;
   
     let cardText = document.createElement("span");
-    if(id.startsWith("customMod") && JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['name'].length > 10) {
-      name = JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['name'].substring(0, 9) + "-";
+    if(id.startsWith("customMod") && JSON.parse(localStorage.getItem('modSettings'))['skins'][id]['name'].length > 10) {
+      name = JSON.parse(localStorage.getItem('modSettings'))['skins'][id]['name'].substring(0, 9) + "-";
     }
     cardText.innerHTML = name;
   
@@ -115,7 +115,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       editmodButton = createCardButton(id + "-editmod-btn", "../src/img/modloader/card/settings.png", "calc(100%/3)");
     } else {
       settingsButton = createCardButton(id + "-settings-btn", "../src/img/modloader/card/settings.png", "calc(100%/3)");
-      if(backendConfig['mods'][id]['settings'] === null) {
+      if(backendConfig['skins'][id]['settings'] === null) {
         settingsButton.style.background = "url(../src/img/modloader/card/settingsdisabled.png)";
         settingsButton.style.backgroundSize = "2.5vw"; //or 50% 
         settingsButton.style.backgroundRepeat = "no-repeat";
@@ -124,7 +124,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
       }
     }
     let favoriteButton = createCardButton(id + "-favorites-btn", "../src/img/modloader/card/notfavorite.png", "calc(100%/3)");
-    if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['favorite']) {
+    if(JSON.parse(localStorage.getItem('modSettings'))['skins'][id]['favorite']) {
       favoriteButton.style.background = "url(../src/img/modloader/card/favorite.png)";
       favoriteButton.style.backgroundSize = "2.5vw";
       favoriteButton.style.backgroundRepeat = "no-repeat";
@@ -157,51 +157,42 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     Object.keys(c).forEach(function (a) {
       bottomCards.style[a] = c[a];
     });
-    let enabledButton;
-    console.log(id, modsPendingReload)
-    if(modsPendingReload.includes(id)) {
-      enabledButton = createToggleButton("button4", "Reload", "100%");
-      enabledButton.style.backgroundColor = "rgb(255, 255, 0)"; //yellow
+    let useButton;
+
+    if(using) {
+      useButton = createToggleButton("button4", "Using", "100%");
+      useButton.style.backgroundColor = "rgb(45, 186, 47)"; //lightgreen
     } else {
-      if(enabled) {
-        enabledButton = createToggleButton("button4", "Enabled", "100%");
-        enabledButton.style.backgroundColor = "rgb(45, 186, 47)"; //lightgreen
-      } else {
-        enabledButton = createToggleButton("button4", "Disabled", "100%");
-        enabledButton.style.backgroundColor = "rgb(222, 48, 51)";
-      }
+      useButton = createToggleButton("button4", "Use", "100%");
+      useButton.style.backgroundColor = "rgb(222, 48, 51)";
     }
-    enabledButton.style.gridArea = "b4";
-    enabledButton.style.border = "none";
-    enabledButton.style.borderRadius = "0px 0px 10px 10px";
-    enabledButton.id = id + "-enable-button";
-    enabledButton.onclick = function() {
+
+    useButton.style.gridArea = "b4";
+    useButton.style.border = "none";
+    useButton.style.borderRadius = "0px 0px 10px 10px";
+    useButton.id = id + "-use-button";
+    useButton.onclick = function() {
       
       console.log("clicked")
-      // console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled'])
-      if(modsPendingReload.includes(id)) {
-        let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-        modSettings['mods'][id]["enabled"] = false;
-        localStorage.setItem('modSettings', JSON.stringify(modSettings));
-        location.reload()
-      } else {
-        if(JSON.parse(localStorage.getItem('modSettings'))['mods'][id]['enabled']) { //if enabled, we want to disable
-          console.log("disabled")
-          document.getElementById(id + '-enable-button').innerHTML = "Disabled";
-          document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(222, 48, 51)";
-          toggleMod(id, false);
-        } else { //if disabled, we want to enable
-          console.log("enabled")
-    
-          document.getElementById(id + '-enable-button').innerHTML = "Enabled";
-          document.getElementById(id + '-enable-button').style.backgroundColor = "rgb(45, 186, 47)";
-          toggleMod(id, true);
-    
-        }
+      // console.log(JSON.parse(localStorage.getItem('modSettings'))['skins'][id]['using'])
+      
+      if(JSON.parse(localStorage.getItem('modSettings'))['skins'][id]['using']) { //if enabled, we want to disable
+        console.log("disabled")
+        document.getElementById(id + '-use-button').innerHTML = "Disabled";
+        document.getElementById(id + '-use-button').style.backgroundColor = "rgb(222, 48, 51)";
+        toggleMod(id, false);
+      } else { //if disabled, we want to enable
+        console.log("used")
+  
+        document.getElementById(id + '-use-button').innerHTML = "Using";
+        document.getElementById(id + '-use-button').style.backgroundColor = "rgb(45, 186, 47)";
+        toggleMod(id, true);
+  
       }
+      
     }
     
-    bottomCards.appendChild(enabledButton);
+    bottomCards.appendChild(useButton);
     cardButtons.appendChild(bottomCards);
   
     menuCard.appendChild(cardImage);
@@ -247,7 +238,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
     Object.keys(c).forEach(function (a) {
       cardButton.style[a] = c[a];
     });
-    // if(backendConfig['mods'][id.split("-")[0]]['settings'] === null) {//no settings available
+    // if(backendConfig['skins'][id.split("-")[0]]['settings'] === null) {//no settings available
     //   cardButton.style.opacity = "0.5";
     // }
     cardButton.onclick = function() {
@@ -257,7 +248,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createDescPopup(id.split("-")[0]);
       } else if(type === "settings") {
-        if(backendConfig['mods'][id.split("-")[0]]['settings'] !== null) {
+        if(backendConfig['skins'][id.split("-")[0]]['settings'] !== null) {
           document.getElementById("menu-bg").style.pointerEvents = "none";
           document.getElementById("menu-bg").style.filter = "blur(1.2px)";
           // console.log(id.split("-")[0])
@@ -268,14 +259,14 @@ let createMenuCard = (id, name, iconurl, enabled) => {
           createNotifyModal("This mod doesn't have any settings.")
         }
       } else if(type === "favorites") {
-        console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][id.split("-")[0]]['favorite'])
-        if(!JSON.parse(localStorage.getItem('modSettings'))['mods'][id.split("-")[0]]['favorite']) {
+        console.log(JSON.parse(localStorage.getItem('modSettings'))['skins'][id.split("-")[0]]['favorite'])
+        if(!JSON.parse(localStorage.getItem('modSettings'))['skins'][id.split("-")[0]]['favorite']) {
           document.getElementById(id).style.background = "url(../src/img/modloader/card/favorite.png)";
           document.getElementById(id).style.backgroundSize = "2.5vw";
           document.getElementById(id).style.backgroundRepeat = "no-repeat";
           document.getElementById(id).style.backgroundPosition = "center";
           let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-          modSettings['mods'][id.split("-")[0]]["favorite"] = true;
+          modSettings['skins'][id.split("-")[0]]["favorite"] = true;
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
 
         } else {
@@ -284,7 +275,7 @@ let createMenuCard = (id, name, iconurl, enabled) => {
           document.getElementById(id).style.backgroundRepeat = "no-repeat";
           document.getElementById(id).style.backgroundPosition = "center";
           let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-          modSettings['mods'][id.split("-")[0]]["favorite"] = false;
+          modSettings['skins'][id.split("-")[0]]["favorite"] = false;
           localStorage.setItem('modSettings', JSON.stringify(modSettings));
 
         }

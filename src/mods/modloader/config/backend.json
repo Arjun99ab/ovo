@@ -1,5 +1,5 @@
 {
-    "version": "2.0.6",
+    "version": "2.0.9",
     "settings":{
     },
     "skins": {
@@ -8,7 +8,7 @@
             "author": "Awesovven",
             "desc": "Christmas Electric made for @Plant",
             "url": "../src/skins/Christmas_Electrical.png",
-            "icon": "../assets/img/reverse.png",
+            "icon": "../assets/img/1.4.png",
             "version": ["1.4.4"],
             "tags": ["community"],
             "replaces": "skin21",
