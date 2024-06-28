@@ -38087,6 +38087,7 @@ cr.plugins_.skymen_skinsCore = function(runtime)
 	function Acts() {};
 	Acts.prototype.AddSkin = function (obj, skin, mode, anim, subskin)
 	{
+		console.log(obj, skin, mode, anim, subskin)
 		if(this.skins[skin] == undefined){
 			this.skins[skin] = {};
 		}
@@ -38130,6 +38131,7 @@ cr.plugins_.skymen_skinsCore = function(runtime)
 	};
 	Acts.prototype.Init = function ()
 	{
+		console.log("startup update")
 		if(this.init) return;
 		for (var i = 0; i < this.instances.length; i++) {
 			this.instances[i].updateSkin();
@@ -42029,6 +42031,7 @@ cr.behaviors.SkymenSkin = function(runtime)
 			this.inst.behaviorSkins.push(this);
 		}
 		if(this.skinBase.init){
+			console.log("skinbase init")
 			this.updateSkin();
 		}
 	};
@@ -42153,11 +42156,13 @@ cr.behaviors.SkymenSkin = function(runtime)
 		if(this.skinTag != this.oldSkinTag || this.subSkinTag != this.oldSubSkinTag){
 			this.oldSkinTag = this.skinTag;
 			this.oldSubSkinTag = this.subSkinTag;
+			console.log("SKIN  tick2")
 			this.updateSkin();
 		}
 	};
 	behinstProto.updateSkin = function()
 	{
+		console.log("HIHIHIHIHI", this.skinTag)
 		if(this.default){
 			if(this.object != null){
 				this.destroy();
@@ -42300,6 +42305,7 @@ cr.behaviors.SkymenSkin = function(runtime)
 	function Acts() {};
 	Acts.prototype.SetSkin = function (skin)
 	{
+		console.log("literally set skin")
 		if(this.default){
 			this.default = false;
 		}
@@ -43913,9 +43919,9 @@ cr.behaviors.aekiro_dialog = function(runtime)
 	};
 	behinstProto.showOverlay = function (){
 		// console.log("show overlay, 43916")
-		console.log(this.runtime.running_layout.layers.find(function(a) {
-			return "Pause" === a.name
-		}).visible)
+		// console.log(this.runtime.running_layout.layers.find(function(a) {
+		// 	return "Pause" === a.name
+		// }).visible)
 		if(this.overlay){
 			this.overlay.my_timescale = 1;
 			this.overlay.type.plugin.acts.MoveToLayer.call(this.overlay, this.inst.layer);

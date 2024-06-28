@@ -108,20 +108,17 @@ let createMenuCard = (id, name, iconurl, using) => {
     });
   
     topCards.className = "card-buttons";
-    let editmodButton;
-    let settingsButton;
+    let editskinButton;
     let infoButton = createCardButton(id + "-info-btn", "../src/img/modloader/card/info.png", "calc(100%/3)");
-    if(id.startsWith("customMod")) {
-      editmodButton = createCardButton(id + "-editmod-btn", "../src/img/modloader/card/settings.png", "calc(100%/3)");
+    if(id.startsWith("customSkin")) {
+      editskinButton = createCardButton(id + "-editskin-btn", "../src/img/modloader/card/settings.png", "calc(100%/3)");
     } else {
-      settingsButton = createCardButton(id + "-settings-btn", "../src/img/modloader/card/settings.png", "calc(100%/3)");
-      if(backendConfig['skins'][id]['settings'] === null) {
-        settingsButton.style.background = "url(../src/img/modloader/card/settingsdisabled.png)";
-        settingsButton.style.backgroundSize = "2.5vw"; //or 50% 
-        settingsButton.style.backgroundRepeat = "no-repeat";
-        settingsButton.style.backgroundPosition= "center";
-        settingsButton.style.cursor = "not-allowed";
-      }
+      editskinButton = createCardButton(id + "-editskin-btn", "../src/img/modloader/card/settings.png", "calc(100%/3)");
+      editskinButton.style.background = "url(../src/img/modloader/card/settingsdisabled.png)";
+      editskinButton.style.backgroundSize = "2.5vw"; //or 50% 
+      editskinButton.style.backgroundRepeat = "no-repeat";
+      editskinButton.style.backgroundPosition= "center";
+      editskinButton.style.cursor = "not-allowed";
     }
     let favoriteButton = createCardButton(id + "-favorites-btn", "../src/img/modloader/card/notfavorite.png", "calc(100%/3)");
     if(JSON.parse(localStorage.getItem('modSettings'))['skins'][id]['favorite']) {
@@ -138,11 +135,7 @@ let createMenuCard = (id, name, iconurl, using) => {
   
   
     topCards.appendChild(infoButton);
-    if(id.startsWith("customMod")) {
-      topCards.appendChild(editmodButton);
-    } else {
-      topCards.appendChild(settingsButton);
-    }
+    topCards.appendChild(editskinButton);
     topCards.appendChild(favoriteButton);
     cardButtons.appendChild(topCards);
     
