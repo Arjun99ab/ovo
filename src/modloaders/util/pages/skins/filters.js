@@ -1,4 +1,4 @@
-import {backendConfig, skinFilters, version} from '../../../modloader.js';
+import {backendConfig, skinFilters, skinVersion} from '../../../modloader.js';
 import {detectDeviceType} from "../../utils.js";
 import {createMenuCard} from './cards.js';
 
@@ -48,7 +48,7 @@ let createFilterButton = (id, text, width) => {
         let cardsList = [];
         let cardsDiv = document.getElementById("cards-div");
         for (const [key] of Object.entries(backendConfig['skins'])) {
-          if(key != "version" && key != "settings" && backendConfig['skins'][key]['version'].includes(version)) {
+          if(key != "version" && key != "settings" && backendConfig['skins'][key]['version'].includes(skinVersion)) {
             if(currentFilter === 'all') {
               cardsList.push(createMenuCard(key + '-card', backendConfig['skins'][key]['name'], backendConfig['skins'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['skins'][key]['using']));
             } else if(currentFilter === 'favorite') {

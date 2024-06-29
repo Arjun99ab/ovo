@@ -3,20 +3,568 @@
     "settings":{
     },
     "skins": {
-        "christmaselec": {
-            "name": "Xmas Elec",
+        "": {
+            "name": "Default",
+            "author": "NicoBros",
+            "desc": "The default skin.",
+            "url": "../src/skins/default.png",
+            "icon": "../src/skins/icons/default.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "default",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "electrical": {
+            "name": "Electrical",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/electrical.png",
+            "icon": "../src/skins/icons/electrical.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "electrical",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "pole": {
+            "name": "Pole",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/pole.png",
+            "icon": "../src/skins/icons/pole.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "pole",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "frank": {
+            "name": "Pink Guy",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/frank.png",
+            "icon": "../src/skins/icons/frank.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "frank",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "ovo+": {
+            "name": "OvO+",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/ovoplus.png",
+            "icon": "../src/skins/icons/ovoplus.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "ovo++",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "knight": {
+            "name": "Knight",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/knight.png",
+            "icon": "../src/skins/icons/knight.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "knight",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "dknight": {
+            "name": "Dark Knight",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/dknight.png",
+            "icon": "../src/skins/icons/dknight.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "dknight",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "lknight": {
+            "name": "Light Knight",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/lknight.png",
+            "icon": "../src/skins/icons/lknight.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "lknight",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "astronaut": {
+            "name": "Astronaut",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/astronaut.png",
+            "icon": "../src/skins/icons/astronaut.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "astronaut",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "alien": {
+            "name": "Alien",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/alien.png",
+            "icon": "../src/skins/icons/alien.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "alien",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "erigato": {
+            "name": "Erigato",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/erigato.png",
+            "icon": "../src/skins/icons/erigato.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "erigato",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "batter": {
+            "name": "Batter",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/batter.png",
+            "icon": "../src/skins/icons/batter.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "batter",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "ada": {
+            "name": "Adalich",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/ada.png",
+            "icon": "../src/skins/icons/ada.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "ada",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "thefall": {
+            "name": "The Fallen",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/thefall.png",
+            "icon": "../src/skins/icons/thefall.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "thefall",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "pulse": {
+            "name": "Pulse",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/pulse.png",
+            "icon": "../src/skins/icons/pulse.png",
+            "version": ["1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "pulse",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "materwelon": {
+            "name": "MaterWelon",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/materwelon.png",
+            "icon": "../src/skins/icons/materwelon.png",
+            "version": ["1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "materwelon",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "fl1ckd": {
+            "name": "Fl1ckd",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/fl1ckd.png",
+            "icon": "../src/skins/icons/fl1ckd.png",
+            "version": [ "1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "fl1ckd",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "theliljoker": {
+            "name": "TheLilJoker",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/theliljoker.png",
+            "icon": "../src/skins/icons/theliljoker.png",
+            "version": ["1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "theliljoker",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "amongus": {
+            "name": "Among Us",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/amongus.png",
+            "icon": "../src/skins/icons/amongus.png",
+            "version": ["1.4.3", "1.4.4"],
+            "tags": ["official"],
+            "replaces": "amongus",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "french": {
+            "name": "French",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/french.png",
+            "icon": "../src/skins/icons/french.png",
+            "version": ["1.4.4"],
+            "tags": ["official"],
+            "replaces": "french",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "english": {
+            "name": "English",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/english.png",
+            "icon": "../src/skins/icons/english.png",
+            "version": ["1.4.4"],
+            "tags": ["official"],
+            "replaces": "english",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "spanish": {
+            "name": "Spanish",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/spanish.png",
+            "icon": "../src/skins/icons/spanish.png",
+            "version": ["1.4.4"],
+            "tags": ["official"],
+            "replaces": "spanish",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "brazilian": {
+            "name": "Brazilian",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/brazilian.png",
+            "icon": "../src/skins/icons/brazilian.png",
+            "version": ["1.4.4"],
+            "tags": ["official"],
+            "replaces": "brazilian",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "cmg": {
+            "name": "Cool Math Games",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/cmg.png",
+            "icon": "../src/skins/icons/cmg.png",
+            "version": ["1.4.4"],
+            "tags": ["official"],
+            "replaces": "cmg",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "shyguy": {
+            "name": "Shy Guy",
+            "author": "NicoBros",
+            "desc": "",
+            "url": "../src/skins/shyguy.png",
+            "icon": "../src/skins/icons/shyguy.png",
+            "version": ["1.4.4"],
+            "tags": ["official"],
+            "replaces": "shyguy",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },  
+        "xmaselec": {
+            "name": "Xmas Electrical",
             "author": "Awesovven",
             "desc": "Christmas Electric made for @Plant",
-            "url": "../src/skins/Christmas_Electrical.png",
-            "icon": "../assets/img/1.4.png",
+            "url": "../src/skins/xmaselec.png",
+            "icon": "../src/skins/icons/xmaselec.png",
             "version": ["1.4.4"],
             "tags": ["community"],
-            "replaces": "skin21",
+            "replaces": "elec",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "grunt": {
+            "name": "Grunt",
+            "author": "RelishDog",
+            "desc": "",
+            "url": "../src/skins/grunt.png",
+            "icon": "../src/skins/icons/grunt.png",
+            "version": ["1.4.4"],
+            "tags": ["community"],
+            "replaces": "cmg",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "dream": {
+            "name": "Dream",
+            "author": "Awesomeguy",
+            "desc": "Speedrun!",
+            "url": "../src/skins/dream.png",
+            "icon": "../src/skins/icons/dream.png",
+            "version": ["1.4.4"],
+            "tags": ["community"],
+            "replaces": "shyguy",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "technoblade": {
+            "name": "Technoblade",
+            "author": "Awesomeguy",
+            "desc": "Legends never die.",
+            "url": "../src/skins/technoblade.png",
+            "icon": "../src/skins/icons/technoblade.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "erigato",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "skeppyplant": {
+            "name": "SkeppyPlant",
+            "author": "OvOPlant",
+            "desc": "",
+            "url": "../src/skins/skeppyplant.png",
+            "icon": "../src/skins/icons/skeppyplant.png",
+            "version": ["1.4.4"],
+            "tags": ["community"],
+            "replaces": "shyguy",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "mario": {
+            "name": "Mario",
+            "author": "Awesovven",
+            "desc": "",
+            "url": "../src/skins/mario.png",
+            "icon": "../src/skins/icons/mario.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "erigato",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "goldenpole": {
+            "name": "Golden Pole",
+            "author": "Awesovven",
+            "desc": "",
+            "url": "../src/skins/goldenpole.png",
+            "icon": "../src/skins/icons/goldenpole.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "pole",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "goldenovo+": {
+            "name": "Golden OvO+",
+            "author": "Awesovven",
+            "desc": "",
+            "url": "../src/skins/goldenovoplus.png",
+            "icon": "../src/skins/icons/goldenovoplus.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "ovo+",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "goldenerigato": {
+            "name": "Golden Erigato",
+            "author": "Awesovven",
+            "desc": "",
+            "url": "../src/skins/goldenerigato.png",
+            "icon": "../src/skins/icons/goldenerigato.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "erigato",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "goldenknight": {
+            "name": "Golden Knight",
+            "author": "Awesovven",
+            "desc": "",
+            "url": "../src/skins/goldenknight.png",
+            "icon": "../src/skins/icons/goldenknight.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "knight",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "kirby": {
+            "name": "Kirby",
+            "author": "Meltrix",
+            "desc": "",
+            "url": "../src/skins/kirby.png",
+            "icon": "../src/skins/icons/kirby.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "ada",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "goldenfrank": {
+            "name": "Golden Frank",
+            "author": "Awesovven",
+            "desc": "",
+            "url": "../src/skins/goldenfrank.png",
+            "icon": "../src/skins/icons/goldenfrank.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "frank",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "earth": {
+            "name": "Earth",
+            "author": "Saturnb",
+            "desc": "",
+            "url": "../src/skins/earth.png",
+            "icon": "../src/skins/icons/earth.png",
+            "version": ["1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "pulse",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "coffee": {
+            "name": "Coffee",
+            "author": "Awesovven",
+            "desc": "",
+            "url": "../src/skins/coffee.png",
+            "icon": "../src/skins/icons/coffee.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "pole",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "chronos": {
+            "name": "Chronos",
+            "author": "Awesovven",
+            "desc": "",
+            "url": "../src/skins/chronos.png",
+            "icon": "../src/skins/icons/chronos.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "tags": ["community"],
+            "replaces": "pole",
             "defaultSettings": {
                 "favorite": false,
                 "using": false
             }
         }
+        
+        
     },
     "mods": 
     {

@@ -1,9 +1,9 @@
-import {backendConfig} from "../../../modloader.js";
+import {backendConfig, runtime} from "../../../modloader.js";
 import {createConfirmReloadModal, createNotifyModal} from "../../modals.js"
 import { modsPendingReload } from "../../modals.js";
 import { notify } from "../../ovo.js";
 
-export {toggleMod, customModNum, incCustomModNum}
+export {useSkin, customModNum, incCustomModNum}
 
 let customModNum = 0;
 function incCustomModNum() {
@@ -35,6 +35,28 @@ function errorOccurHandler(modId) {
   return function(event) {
     errorOccur(modId, event);
   }
+}
+
+let useSkin = (skinId) => {
+  console.log(skinId)
+  let skinSettings = JSON.parse(localStorage.getItem('modSettings'));
+  let currentSkin = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8];
+  
+  let currentSkinUseButton = document.getElementById(currentSkin + "-use-button");
+  currentSkinUseButton.innerHTML = "Use";
+  currentSkinUseButton.style.backgroundColor = "rgb(135, 206, 250)";
+  
+  skinSettings['skins'][currentSkin]["using"] = false;
+
+  //LIKELY NEED TO CHANGE THESE REV CALLS TO BE MORE GENERALIZED?
+  if(Object.keys(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins).includes(skinId)) {
+    console.log("skin exists")
+    skinSettings['skins'][skinId]["using"] = true;
+    runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8] = skinId;
+    runtime.changelayout = runtime.running_layout //reload screen to apply skin, maybe find a way to like set the skin on the fly?
+  }
+  localStorage.setItem('modSettings', JSON.stringify(skinSettings));
+
 }
 
 let toggleMod = (modId, enable) => {

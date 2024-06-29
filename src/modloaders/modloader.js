@@ -12,6 +12,7 @@ import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, cr
 
 //constants
 export let version = VERSION.version();
+export let skinVersion = VERSION.skinVersion();
 export let filters = new Set();
 export let skinFilters = new Set();
 export let backendConfig;
@@ -822,6 +823,43 @@ export let runtime;
                 document.getElementById("cheat-indicator").style.display = "block";
             }
           }
+
+          for(const[key] of Object.entries(backendConfig['skins'])) {
+            if(!backendConfig['skins'][key]['tags'].includes("official")) { //community skin
+              console.log(key)
+              let replaces = backendConfig['skins'][key]['replaces']
+              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key] = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[replaces];
+              // let skin = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key]
+              let url = backendConfig['skins'][key]['url']
+              for(let i = 0; i < 10; i++) {
+                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_file = url
+                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_filesize = 404
+                //a = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins.lknight.head.type.all_frames[i].texture_img
+                //a.cr_src = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png'
+                //a.cr_filesize = 404
+                //a.currentSrc = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png'
+                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.cr_src = url
+                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.cr_filesize = 404
+                // runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.currentSrc = url
+                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.src = url
+                //runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins.apple.head.type.all_frames[i].webGL_texture.c2texkey = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png,false,false'
+                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.name = "t" + (runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index + 1000)
+                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index + 1000
+              }
+            }
+          }
+
+          //enable skins, find skin that is using
+          for (const [key] of Object.entries(userConfig['skins'])) {
+            if(userConfig['skins'][key]['using'] === true) {
+              console.log("set skin", key)
+              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8] = key;
+              runtime.changelayout = runtime.running_layout //reload screen to apply skin, maybe find a way to like set the skin on the fly?
+              break;
+            }
+          }
+
+
           console.log(filters)
           filters.add('all');
           filters.add('favorite');

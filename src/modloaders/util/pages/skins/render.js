@@ -1,9 +1,9 @@
-import { version, skinFilters, backendConfig } from "../../../modloader.js";
+import { skinVersion, skinFilters, backendConfig } from "../../../modloader.js";
 import { createNotifyModal } from "../../modals.js";
 import { detectDeviceType } from "../../utils.js";
 import { createMenuCard } from "./cards.js";
 import { createFilterButton, currentFilter, setFilter } from "./filters.js";
-import { toggleMod, customModNum, incCustomModNum } from "./utils.js";
+// import { toggleMod, customModNum, incCustomModNum } from "./utils.js";
 
 export { renderSkinsMenu, searchMods };
 
@@ -99,7 +99,7 @@ let renderSkinsMenu = (filtersDiv, cardsDiv) => {
     if (
       key != "version" &&
       key != "settings" &&
-      backendConfig["skins"][key]["version"].includes(version))
+      backendConfig["skins"][key]["version"].includes(skinVersion))
     {
       cardsList.push(
         createMenuCard(
@@ -157,7 +157,7 @@ let searchMods = (search, filter = "all") => {
     if (
       key != "version" &&
       key != "settings" &&
-      backendConfig["mods"][key]["version"].includes(version) &&
+      backendConfig["mods"][key]["version"].includes(skinVersion) &&
       backendConfig["mods"][key]["platform"].includes(detectDeviceType()) &&
       backendConfig["mods"][key]["name"].toLowerCase().includes(search) &&
       (backendConfig["mods"][key]["tags"].includes(filter) ||
@@ -181,7 +181,7 @@ let searchMods = (search, filter = "all") => {
       console.log(userConfig["mods"][key]);
       if (
         userConfig["mods"][key]["name"].toLowerCase().includes(search) &&
-        userConfig["mods"][key]["version"].includes(version) &&
+        userConfig["mods"][key]["version"].includes(skinVersion) &&
         userConfig["mods"][key]["platform"].includes(detectDeviceType()) &&
         (userConfig["mods"][key]["tags"].includes(filter) ||
           filter === "all" ||

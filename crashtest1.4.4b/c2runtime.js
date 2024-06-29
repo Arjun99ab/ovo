@@ -42162,7 +42162,7 @@ cr.behaviors.SkymenSkin = function(runtime)
 	};
 	behinstProto.updateSkin = function()
 	{
-		console.log("HIHIHIHIHI", this.skinTag)
+		// console.log("HIHIHIHIHI", this.skinTag)
 		if(this.default){
 			if(this.object != null){
 				this.destroy();

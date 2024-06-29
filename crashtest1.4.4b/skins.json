@@ -214,5 +214,14 @@
     "lang": "shyguy",
     "price": 0,
     "achievement": -1
+  },
+  {
+    "name": "Among Us",
+    "hidden": false,
+    "icon": "amongus.png",
+    "skin": "amongus",
+    "lang": "amongus",
+    "price": 50,
+    "achievement": -1
   }
 ]

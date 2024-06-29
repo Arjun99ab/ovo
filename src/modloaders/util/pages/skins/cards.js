@@ -1,4 +1,4 @@
-import {toggleMod} from "./utils.js"
+import {useSkin} from "./utils.js"
 import {createDescPopup} from "./desc.js"
 import {createModSettingsPopup} from "./settings.js"
 import { createNotifyModal, createConfirmDeleteModal } from "../../modals.js"
@@ -48,13 +48,13 @@ let createMenuCard = (id, name, iconurl, using) => {
       height: "auto",
       maxWidth: "60%",
       minWidth: "60%",
-      // aspectRatio: "1 / 1",
+      aspectRatio: "1 / 1",
       marginTop: "5%",
       marginLeft: "auto",
       marginRight: "auto",
       // backgroundColor: "blue",
+      imageRendering: "pixelated",
   
-      
     }
     Object.keys(c).forEach(function (a) {
       cardImage.style[a] = c[a];
@@ -157,7 +157,7 @@ let createMenuCard = (id, name, iconurl, using) => {
       useButton.style.backgroundColor = "rgb(45, 186, 47)"; //lightgreen
     } else {
       useButton = createToggleButton("button4", "Use", "100%");
-      useButton.style.backgroundColor = "rgb(222, 48, 51)";
+      useButton.style.backgroundColor = "rgb(135, 206, 250)";
     }
 
     useButton.style.gridArea = "b4";
@@ -169,19 +169,12 @@ let createMenuCard = (id, name, iconurl, using) => {
       console.log("clicked")
       // console.log(JSON.parse(localStorage.getItem('modSettings'))['skins'][id]['using'])
       
-      if(JSON.parse(localStorage.getItem('modSettings'))['skins'][id]['using']) { //if enabled, we want to disable
-        console.log("disabled")
-        document.getElementById(id + '-use-button').innerHTML = "Disabled";
-        document.getElementById(id + '-use-button').style.backgroundColor = "rgb(222, 48, 51)";
-        toggleMod(id, false);
-      } else { //if disabled, we want to enable
-        console.log("used")
-  
-        document.getElementById(id + '-use-button').innerHTML = "Using";
-        document.getElementById(id + '-use-button').style.backgroundColor = "rgb(45, 186, 47)";
-        toggleMod(id, true);
-  
-      }
+      console.log("want to use")
+
+      useButton.innerHTML = "Using";
+      useButton.style.backgroundColor = "rgb(45, 186, 47)";
+      useSkin(id);
+      
       
     }
     
