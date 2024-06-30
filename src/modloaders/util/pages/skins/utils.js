@@ -43,10 +43,12 @@ let useSkin = (skinId) => {
   let currentSkin = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8];
   
   try {
-    let currentSkinUseButton = document.getElementById(currentSkin + "-use-button");
-    currentSkinUseButton.innerHTML = "Use";
-    currentSkinUseButton.style.backgroundColor = "rgb(135, 206, 250)";
-    skinSettings['skins'][currentSkin]["using"] = false;
+    if (currentSkin !== skinId) {
+      let currentSkinUseButton = document.getElementById(currentSkin + "-use-button");
+      currentSkinUseButton.innerHTML = "Use";
+      currentSkinUseButton.style.backgroundColor = "rgb(135, 206, 250)";
+      skinSettings['skins'][currentSkin]["using"] = false;
+    }
 
   } catch (e) {}
   
