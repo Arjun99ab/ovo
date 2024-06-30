@@ -361,7 +361,7 @@
             "icon": "../src/skins/icons/xmaselec.png",
             "version": ["1.4.4"],
             "tags": ["community"],
-            "replaces": "elec",
+            "replaces": "english",
             "defaultSettings": {
                 "favorite": false,
                 "using": false

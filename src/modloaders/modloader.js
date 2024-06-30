@@ -1,14 +1,15 @@
 import {createNotifyModal, createChangelogPopup, createConfirmDeleteModal, createConfirmReloadModal} from './util/modals.js';
-import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify, menuButtonHover, levelButtonHover} from './util/ovo.js';
+import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify, menuButtonHover, levelButtonHover, addSkin} from './util/ovo.js';
 import {sleep, arraysEqual, detectDeviceType} from './util/utils.js';
 
 import {currentFilter, setFilter} from './util/pages/mods/filters.js';
 import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/render.js';
 import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
 
-import {renderSkinsMenu} from './util/pages/skins/render.js';
+import {renderSkinsMenu, searchSkins} from './util/pages/skins/render.js';
+import { useSkin } from './util/pages/skins/utils.js';
 
-import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook} from './util/hooks.js';
+import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook} from './util/hooks.js';
 
 //constants
 export let version = VERSION.version();
@@ -350,6 +351,7 @@ export let runtime;
       let modsButton = createNavButton("nav-mods-btn", "Mods", "13vw");
       modsButton.style.backgroundColor = "lightblue"; //set default button to blue
       modsButton.onclick = function() {
+        setFilter("all");
         searchBar.disabled = false;
         let elements = document.getElementsByClassName('nav-button');
         for(let i = 0; i < elements.length; i++) {
@@ -374,6 +376,7 @@ export let runtime;
       }
       let skinsButton = createNavButton("nav-skins-btn", "Skins", "13vw");
       skinsButton.onclick = function() {
+        setFilter("all");
         searchBar.disabled = false;
         let elements = document.getElementsByClassName('nav-button');
         for(let i = 0; i < elements.length; i++) {
@@ -441,7 +444,13 @@ export let runtime;
       searchBar.onkeyup = (e) => {
         console.log(currentFilter)
         console.log(searchBar.value)
-        let cardsList = searchMods(searchBar.value, currentFilter);
+        let cardsList = [];
+        if(modsButton.style.backgroundColor === "lightblue") {
+          cardsList = searchMods(searchBar.value, currentFilter);
+        }
+        if(skinsButton.style.backgroundColor === "lightblue") {
+          cardsList = searchSkins(searchBar.value, currentFilter);
+        }
         let filterCards = document.getElementById("cards-div").children;
         while(filterCards.length > 0) { //clear all cards
           filterCards[0].remove();
@@ -594,6 +603,29 @@ export let runtime;
               // notify("Dialog Closed", "wow!", "./speedrunner.png");
               document.getElementById("menu-button").style.display = "none";
               inGame = true;
+            },
+            false,
+          );
+          createSaveHook("SaveGame");
+          window.addEventListener(
+            "SaveGame",
+            (e) => {
+              // console.log("save game!")
+              // notify("Save game", "wow!", "./speedrunner.png");
+              if(runtime.running_layout.name === "Skins Menu") {
+                console.log("skins menu")
+                let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+                let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0]
+
+                for(const [key] of Object.entries(modSettings['skins'])) {
+                  console.log(key, modSettings['skins'][key]['using'])
+                  if(modSettings['skins'][key]['using'] === true) {
+                    modSettings['skins'][key]['using'] = false;
+                  }
+                }
+                modSettings['skins'][saveObj.data.CurSkin]['using'] = true;
+                localStorage.setItem('modSettings', JSON.stringify(modSettings));
+              }
             },
             false,
           );
@@ -789,6 +821,7 @@ export let runtime;
               freshUserConfig['version'] = backendConfig['version'];
               localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
           }
+
           userConfig = JSON.parse(localStorage.getItem('modSettings'));
           console.log(userConfig)
           console.log(backendConfig)
@@ -824,40 +857,130 @@ export let runtime;
             }
           }
 
+          
+
+          // for(const[key] of Object.entries(backendConfig['skins'])) {
+          //   if(!backendConfig['skins'][key]['tags'].includes("official")) { //community skin
+          //     console.log(key)
+          //     let replaces = backendConfig['skins'][key]['replaces']
+          //     runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key] = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[replaces];
+          //     // let skin = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key]
+          //     let url = backendConfig['skins'][key]['url']
+          //     for(let i = 0; i < 10; i++) {
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_file = url
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_filesize = 404
+          //       //a = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins.lknight.head.type.all_frames[i].texture_img
+          //       //a.cr_src = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png'
+          //       //a.cr_filesize = 404
+          //       //a.currentSrc = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png'
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.cr_src = url
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.cr_filesize = 404
+          //       // runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.currentSrc = url
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.src = url
+          //       //runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins.apple.head.type.all_frames[i].webGL_texture.c2texkey = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png,false,false'
+          //       // runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.name = "t" + (runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index + 1000)
+          //       // runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index + 1000
+          //     }
+          //   }
+          // }
+          let data_response = await fetch('data.js')
+          .then((response) => response.json())
+          .then(jsondata => {
+              return jsondata;
+          });
           for(const[key] of Object.entries(backendConfig['skins'])) {
-            if(!backendConfig['skins'][key]['tags'].includes("official")) { //community skin
+            if(!backendConfig['skins'][key]['tags'].includes("official") && backendConfig['skins'][key]['version'].includes(skinVersion)) { //community skin
               console.log(key)
               let replaces = backendConfig['skins'][key]['replaces']
-              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key] = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[replaces];
-              // let skin = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key]
               let url = backendConfig['skins'][key]['url']
-              for(let i = 0; i < 10; i++) {
-                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_file = url
-                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_filesize = 404
-                //a = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins.lknight.head.type.all_frames[i].texture_img
-                //a.cr_src = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png'
-                //a.cr_filesize = 404
-                //a.currentSrc = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png'
-                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.cr_src = url
-                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.cr_filesize = 404
-                // runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.currentSrc = url
-                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.src = url
-                //runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins.apple.head.type.all_frames[i].webGL_texture.c2texkey = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png,false,false'
-                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.name = "t" + (runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index + 1000)
-                runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index + 1000
+              addSkin(key, replaces, url, data_response)
+            }
+          }
+          //enable skins, find skin that is using
+          let foundSkin = false;
+          for (const [key] of Object.entries(userConfig['skins'])) {
+            if(userConfig['skins'][key]['using'] === true && backendConfig['skins'][key]['version'].includes(skinVersion) && !foundSkin && !backendConfig['skins'][key]['tags'].includes("official")) {
+              console.log("set skin", key)
+              userConfig['skins'][key]["using"] = true;
+              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8] = key;
+              
+              let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0];
+              saveObj.data.CurSkin = key;
+              cr.plugins_.SyncStorage.prototype.acts.SaveData.call(saveObj)
+              
+              
+              let insts = runtime.types_by_index.filter((x) =>
+                x.behaviors.some(
+                  (y) => y.behavior instanceof cr.behaviors.SkymenSkin))[0].instances
+              let collider = runtime.types_by_index
+                .filter(
+                  (x) =>
+                    !!x.animations &&
+                    x.animations[0].frames[0].texture_file.includes("collider")
+                )[0]
+                .instances[0];
+              for(let i = 0; i < insts.length; i++) {
+                  let cur = insts[i]
+                  cur.width = cur.curFrame.width
+                  cur.height = cur.curFrame.height
+                  cur.set_bbox_changed();    
+                  let skymenskinbehav = cur.behaviorSkins[0]
+                  skymenskinbehav.syncScale = true;
+                  skymenskinbehav.syncSize = false;
+                  cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(skymenskinbehav, key);
+
+                  cur.width = (collider.width / collider.curFrame.width) * cur.curFrame.width;
+                  cur.height = (collider.height / collider.curFrame.height) * cur.curFrame.height;
+                  cur.set_bbox_changed();               
               }
+              foundSkin = true;
+            } else {
+              userConfig['skins'][key]['using'] = false
+            }
+          }
+          if (!foundSkin) { //they are using official skin or something else is wrong
+            let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0];
+            let skin = saveObj.data.CurSkin;
+            if(backendConfig['skins'][skin]['version'].includes(skinVersion)) { //skin loaded fine
+              userConfig['skins'][skin]['using'] = true;
+            } else {
+              userConfig['skins'][""]["using"] = true;
+              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8] = "";
+              
+              saveObj.data.CurSkin = "";
+              cr.plugins_.SyncStorage.prototype.acts.SaveData.call(saveObj)
+              
+              
+              let insts = runtime.types_by_index.filter((x) =>
+                x.behaviors.some(
+                  (y) => y.behavior instanceof cr.behaviors.SkymenSkin))[0].instances
+              let collider = runtime.types_by_index
+                .filter(
+                  (x) =>
+                    !!x.animations &&
+                    x.animations[0].frames[0].texture_file.includes("collider")
+                )[0]
+                .instances[0];
+              for(let i = 0; i < insts.length; i++) {
+                  let cur = insts[i]
+                  cur.width = cur.curFrame.width
+                  cur.height = cur.curFrame.height
+                  cur.set_bbox_changed();    
+                  let skymenskinbehav = cur.behaviorSkins[0]
+                  skymenskinbehav.syncScale = true;
+                  skymenskinbehav.syncSize = false;
+                  cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(skymenskinbehav);
+
+                  cur.width = (collider.width / collider.curFrame.width) * cur.curFrame.width;
+                  cur.height = (collider.height / collider.curFrame.height) * cur.curFrame.height;
+                  cur.set_bbox_changed();               
+              }
+              
             }
           }
 
-          //enable skins, find skin that is using
-          for (const [key] of Object.entries(userConfig['skins'])) {
-            if(userConfig['skins'][key]['using'] === true) {
-              console.log("set skin", key)
-              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8] = key;
-              runtime.changelayout = runtime.running_layout //reload screen to apply skin, maybe find a way to like set the skin on the fly?
-              break;
-            }
-          }
+          localStorage.setItem('modSettings', JSON.stringify(userConfig));
+          
 
 
           console.log(filters)

@@ -773,7 +773,6 @@ if (typeof Object.getPrototypeOf !== "function")
 		{
 			if (!this.s["has"](x))
 			{
-
 				this.s["add"](x);
 				this.cache_valid = false;
 			}
@@ -781,7 +780,6 @@ if (typeof Object.getPrototypeOf !== "function")
 		else
 		{
 			var str = x.toString();
-			
 			var items = this.items;
 			if (!items)
 			{
@@ -16218,7 +16216,6 @@ cr.plugins_.Arr = function(runtime)
 			a.textContent = filename;
 			a.href = "data:application/json," + encodeURIComponent(this.getAsJSON());
 			a.download = filename;
-			// a.download = "apple.json";
 			body.appendChild(a);
 			var clickEvent = document.createEvent("MouseEvent");
 			clickEvent.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -19864,9 +19861,7 @@ cr.plugins_.Browser = function(runtime)
 	};
 	Acts.prototype.InvokeDownloadString = function (str_, mimetype_, filename_)
 	{
-		console.log(str_)
 		var datauri = "data:" + mimetype_ + "," + encodeURIComponent(str_);
-		console.log(datauri)
 		var a = document.createElement("a");
 		if (typeof a["download"] === "undefined")
 		{
@@ -38087,7 +38082,6 @@ cr.plugins_.skymen_skinsCore = function(runtime)
 	function Acts() {};
 	Acts.prototype.AddSkin = function (obj, skin, mode, anim, subskin)
 	{
-		console.log(obj, skin, mode, anim, subskin)
 		if(this.skins[skin] == undefined){
 			this.skins[skin] = {};
 		}
@@ -38131,7 +38125,6 @@ cr.plugins_.skymen_skinsCore = function(runtime)
 	};
 	Acts.prototype.Init = function ()
 	{
-		console.log("startup update")
 		if(this.init) return;
 		for (var i = 0; i < this.instances.length; i++) {
 			this.instances[i].updateSkin();
@@ -42031,7 +42024,6 @@ cr.behaviors.SkymenSkin = function(runtime)
 			this.inst.behaviorSkins.push(this);
 		}
 		if(this.skinBase.init){
-			console.log("skinbase init")
 			this.updateSkin();
 		}
 	};
@@ -42156,13 +42148,11 @@ cr.behaviors.SkymenSkin = function(runtime)
 		if(this.skinTag != this.oldSkinTag || this.subSkinTag != this.oldSubSkinTag){
 			this.oldSkinTag = this.skinTag;
 			this.oldSubSkinTag = this.subSkinTag;
-			console.log("SKIN  tick2")
 			this.updateSkin();
 		}
 	};
 	behinstProto.updateSkin = function()
 	{
-		// console.log("HIHIHIHIHI", this.skinTag)
 		if(this.default){
 			if(this.object != null){
 				this.destroy();
@@ -42305,7 +42295,6 @@ cr.behaviors.SkymenSkin = function(runtime)
 	function Acts() {};
 	Acts.prototype.SetSkin = function (skin)
 	{
-		console.log("literally set skin")
 		if(this.default){
 			this.default = false;
 		}
@@ -43918,10 +43907,6 @@ cr.behaviors.aekiro_dialog = function(runtime)
 		}
 	};
 	behinstProto.showOverlay = function (){
-		// console.log("show overlay, 43916")
-		// console.log(this.runtime.running_layout.layers.find(function(a) {
-		// 	return "Pause" === a.name
-		// }).visible)
 		if(this.overlay){
 			this.overlay.my_timescale = 1;
 			this.overlay.type.plugin.acts.MoveToLayer.call(this.overlay, this.inst.layer);
@@ -44231,7 +44216,6 @@ cr.behaviors.aekiro_dialog = function(runtime)
 		if(!this.isOpen || this.tween["isPlaying"] || this.tween_close["isPlaying"]){
 			return;
 		}
-
 		this.isOpen = false;
 		this.runtime.trigger(cr.behaviors.aekiro_dialog.prototype.cnds.onDialogClosed, this.inst);
 		if(this.overlay){
