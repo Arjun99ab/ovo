@@ -5,7 +5,7 @@
     "skins": {
         "": {
             "name": "Default",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "The default skin.",
             "url": "../src/skins/default.png",
             "icon": "../src/skins/icons/default.png",
@@ -19,7 +19,7 @@
         },
         "electrical": {
             "name": "Electrical",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/electrical.png",
             "icon": "../src/skins/icons/electrical.png",
@@ -33,7 +33,7 @@
         },
         "pole": {
             "name": "Pole",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/pole.png",
             "icon": "../src/skins/icons/pole.png",
@@ -47,7 +47,7 @@
         },
         "frank": {
             "name": "Pink Guy",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/frank.png",
             "icon": "../src/skins/icons/frank.png",
@@ -61,7 +61,7 @@
         },
         "ovo+": {
             "name": "OvO+",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/ovoplus.png",
             "icon": "../src/skins/icons/ovoplus.png",
@@ -75,7 +75,7 @@
         },
         "knight": {
             "name": "Knight",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/knight.png",
             "icon": "../src/skins/icons/knight.png",
@@ -89,7 +89,7 @@
         },
         "dknight": {
             "name": "Dark Knight",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/dknight.png",
             "icon": "../src/skins/icons/dknight.png",
@@ -103,7 +103,7 @@
         },
         "lknight": {
             "name": "Light Knight",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/lknight.png",
             "icon": "../src/skins/icons/lknight.png",
@@ -117,7 +117,7 @@
         },
         "astronaut": {
             "name": "Astronaut",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/astronaut.png",
             "icon": "../src/skins/icons/astronaut.png",
@@ -131,7 +131,7 @@
         },
         "alien": {
             "name": "Alien",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/alien.png",
             "icon": "../src/skins/icons/alien.png",
@@ -145,7 +145,7 @@
         },
         "erigato": {
             "name": "Erigato",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/erigato.png",
             "icon": "../src/skins/icons/erigato.png",
@@ -159,7 +159,7 @@
         },
         "batter": {
             "name": "Batter",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/batter.png",
             "icon": "../src/skins/icons/batter.png",
@@ -173,7 +173,7 @@
         },
         "ada": {
             "name": "Adalich",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/ada.png",
             "icon": "../src/skins/icons/ada.png",
@@ -187,7 +187,7 @@
         },
         "thefall": {
             "name": "The Fallen",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/thefall.png",
             "icon": "../src/skins/icons/thefall.png",
@@ -201,7 +201,7 @@
         },
         "pulse": {
             "name": "Pulse",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/pulse.png",
             "icon": "../src/skins/icons/pulse.png",
@@ -215,7 +215,7 @@
         },
         "materwelon": {
             "name": "MaterWelon",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/materwelon.png",
             "icon": "../src/skins/icons/materwelon.png",
@@ -229,7 +229,7 @@
         },
         "fl1ckd": {
             "name": "Fl1ckd",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/fl1ckd.png",
             "icon": "../src/skins/icons/fl1ckd.png",
@@ -243,7 +243,7 @@
         },
         "theliljoker": {
             "name": "TheLilJoker",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/theliljoker.png",
             "icon": "../src/skins/icons/theliljoker.png",
@@ -257,7 +257,7 @@
         },
         "amongus": {
             "name": "Among Us",
-            "author": "NicoBros",
+            "author": "skymen",
             "desc": "",
             "url": "../src/skins/amongus.png",
             "icon": "../src/skins/icons/amongus.png",

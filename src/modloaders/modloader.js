@@ -894,6 +894,17 @@ export let runtime;
               let replaces = backendConfig['skins'][key]['replaces']
               let url = backendConfig['skins'][key]['url']
               addSkin(key, replaces, url, data_response)
+              let entry = {
+                "achievement": -1,
+                "hidden": false,
+                "icon":  backendConfig['skins'][key]['icon'],
+                "lang": key,
+                "name": backendConfig['skins'][key]['name'],
+                "price": 0,
+                "skin": key
+              }
+              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.aekiro_model)[0].instances[0].hashtable.Skins.push(entry)
+              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.JSON)[1].instances[0].data.root.push(entry)
             }
           }
           //enable skins, find skin that is using
