@@ -1,14 +1,21 @@
 import {createNotifyModal, createChangelogPopup, createConfirmDeleteModal, createConfirmReloadModal} from './util/modals.js';
-import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify, menuButtonHover, levelButtonHover} from './util/ovo.js';
+import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify, menuButtonHover, levelButtonHover, addSkin} from './util/ovo.js';
 import {sleep, arraysEqual, detectDeviceType} from './util/utils.js';
+
 import {currentFilter, setFilter} from './util/pages/mods/filters.js';
 import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/render.js';
 import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
-import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook} from './util/hooks.js';
+
+import {renderSkinsMenu, searchSkins} from './util/pages/skins/render.js';
+import { useSkin } from './util/pages/skins/utils.js';
+
+import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook} from './util/hooks.js';
 
 //constants
 export let version = VERSION.version();
+export let skinVersion = VERSION.skinVersion();
 export let filters = new Set();
+export let skinFilters = new Set();
 export let backendConfig;
 export let runtime;
 
@@ -344,6 +351,7 @@ export let runtime;
       let modsButton = createNavButton("nav-mods-btn", "Mods", "13vw");
       modsButton.style.backgroundColor = "lightblue"; //set default button to blue
       modsButton.onclick = function() {
+        setFilter("all");
         searchBar.disabled = false;
         let elements = document.getElementsByClassName('nav-button');
         for(let i = 0; i < elements.length; i++) {
@@ -368,9 +376,14 @@ export let runtime;
       }
       let skinsButton = createNavButton("nav-skins-btn", "Skins", "13vw");
       skinsButton.onclick = function() {
-        document.getElementById("menu-bg").style.pointerEvents = "none";
-        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-        createNotifyModal("Skins are not available yet.");
+        setFilter("all");
+        searchBar.disabled = false;
+        let elements = document.getElementsByClassName('nav-button');
+        for(let i = 0; i < elements.length; i++) {
+          elements[i].style.backgroundColor = 'white';
+        }
+        skinsButton.style.backgroundColor = "lightblue";
+        renderSkinsMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
       }
       let addmodButton = createNavButton("nav-addmod-btn", "Add Mod", "13vw");
       addmodButton.onclick = function() {
@@ -431,7 +444,13 @@ export let runtime;
       searchBar.onkeyup = (e) => {
         console.log(currentFilter)
         console.log(searchBar.value)
-        let cardsList = searchMods(searchBar.value, currentFilter);
+        let cardsList = [];
+        if(modsButton.style.backgroundColor === "lightblue") {
+          cardsList = searchMods(searchBar.value, currentFilter);
+        }
+        if(skinsButton.style.backgroundColor === "lightblue") {
+          cardsList = searchSkins(searchBar.value, currentFilter);
+        }
         let filterCards = document.getElementById("cards-div").children;
         while(filterCards.length > 0) { //clear all cards
           filterCards[0].remove();
@@ -587,6 +606,29 @@ export let runtime;
             },
             false,
           );
+          createSaveHook("SaveGame");
+          window.addEventListener(
+            "SaveGame",
+            (e) => {
+              // console.log("save game!")
+              // notify("Save game", "wow!", "./speedrunner.png");
+              if(runtime.running_layout.name === "Skins Menu") {
+                console.log("skins menu")
+                let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+                let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0]
+
+                for(const [key] of Object.entries(modSettings['skins'])) {
+                  console.log(key, modSettings['skins'][key]['using'])
+                  if(modSettings['skins'][key]['using'] === true) {
+                    modSettings['skins'][key]['using'] = false;
+                  }
+                }
+                modSettings['skins'][saveObj.data.CurSkin]['using'] = true;
+                localStorage.setItem('modSettings', JSON.stringify(modSettings));
+              }
+            },
+            false,
+          );
 
           // createDialogShowOverlayHook("DialogShowOverlay");
           // window.addEventListener(
@@ -656,17 +698,23 @@ export let runtime;
           let freshUserConfig = {};
           if(userConfig === null) {
               //first time user
-              freshUserConfig = {'mods': {}, 'settings': {}}
+              freshUserConfig = {'mods': {}, 'settings': {}, 'skins': {}}
               for (const [key] of Object.entries(backendConfig['mods'])) {
                   freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
+              }
+
+              for(const [key] of Object.entries(backendConfig['settings'])) {
+                  freshUserConfig['settings'][key] = backendConfig["settings"][key]['defaultSettings'];
 
               }
+              for(const [key] of Object.entries(backendConfig['skins'])) {
+                  freshUserConfig['skins'][key] = backendConfig["skins"][key]['defaultSettings'];
+              }
               freshUserConfig['version'] = backendConfig['version'];
-              freshUserConfig['settings'] = backendConfig['settings'];
               localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
           } else if(userConfig['version'] === undefined) {
               //using old save format
-              freshUserConfig = {'mods': {}, 'settings': {}}
+              freshUserConfig = {'mods': {}, 'settings': {}, 'skins': {}}
               for (const [key] of Object.entries(backendConfig['mods'])) {
                   freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
                   if(userConfig[key] !== undefined) { //old save format didn't show mods that werent on version
@@ -690,8 +738,14 @@ export let runtime;
                       incCustomModNum();
                   }
               }
+              for(const [key] of Object.entries(backendConfig['settings'])) {
+                freshUserConfig['settings'][key] = backendConfig["settings"][key]['defaultSettings'];
+              }
+              for(const [key] of Object.entries(backendConfig['skins'])) {
+                  freshUserConfig['skins'][key] = backendConfig["skins"][key]['defaultSettings'];
+              }
+
               freshUserConfig['version'] = backendConfig['version'];
-              freshUserConfig['settings'] = backendConfig['settings'];
               localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
           } else  { //
               //new version
@@ -701,7 +755,11 @@ export let runtime;
                 createChangelogPopup(changelog, userConfig['version'], backendConfig['version']);
               }
               console.log("new version")
-              freshUserConfig = {'mods': {}, 'settings': {}}
+              userConfig['mods'] = userConfig['mods'] === undefined ? {} : userConfig['mods']
+              userConfig['settings'] = userConfig['settings'] === undefined ? {} : userConfig['settings']
+              userConfig['skins'] = userConfig['skins'] === undefined ? {} : userConfig['skins']
+              console.log(userConfig['skins'])
+              freshUserConfig = {'mods': {}, 'settings': {}, 'skins': {}}
               for (const [key] of Object.entries(backendConfig['mods'])) {
                   if(userConfig['mods'][key] === undefined) {
                     freshUserConfig['mods'][key] = backendConfig["mods"][key]['defaultSettings'];
@@ -742,9 +800,28 @@ export let runtime;
                       freshUserConfig['settings'][key] = userConfig['settings'][key];
                   }
               }
+              console.log(userConfig['skins'])
+              console.log(backendConfig['skins'])
+              for(const [key] of Object.entries(backendConfig['skins'])) {
+                
+                if(userConfig['skins'][key] === undefined) { // new skin
+                    freshUserConfig['skins'][key] = backendConfig['skins'][key]['defaultSettings'];
+                } else { //existing skin
+                  // console.log('SDHUIOFASDHUO');
+                    freshUserConfig['skins'][key] = userConfig['skins'][key];
+                }
+              }
+              for(const [key] of Object.entries(userConfig['skins'])) {
+                if(key.startsWith("custom")) { //custom skin
+                  freshUserConfig['mods'][key] = userConfig['mods'][key];
+                } else {
+                  delete userConfig['mods'][key]; //if skin is not in backend, delete it
+                }
+              }
               freshUserConfig['version'] = backendConfig['version'];
               localStorage.setItem('modSettings', JSON.stringify(freshUserConfig));
           }
+
           userConfig = JSON.parse(localStorage.getItem('modSettings'));
           console.log(userConfig)
           console.log(backendConfig)
@@ -779,6 +856,133 @@ export let runtime;
                 document.getElementById("cheat-indicator").style.display = "block";
             }
           }
+
+          
+
+          // for(const[key] of Object.entries(backendConfig['skins'])) {
+          //   if(!backendConfig['skins'][key]['tags'].includes("official")) { //community skin
+          //     console.log(key)
+          //     let replaces = backendConfig['skins'][key]['replaces']
+          //     runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key] = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[replaces];
+          //     // let skin = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key]
+          //     let url = backendConfig['skins'][key]['url']
+          //     for(let i = 0; i < 10; i++) {
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_file = url
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_filesize = 404
+          //       //a = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins.lknight.head.type.all_frames[i].texture_img
+          //       //a.cr_src = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png'
+          //       //a.cr_filesize = 404
+          //       //a.currentSrc = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png'
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.cr_src = url
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.cr_filesize = 404
+          //       // runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.currentSrc = url
+          //       runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.all_frames[i].texture_img.src = url
+          //       //runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins.apple.head.type.all_frames[i].webGL_texture.c2texkey = 'http://127.0.0.1:5501/dev/images/skin8-sheet0.png,false,false'
+          //       // runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.name = "t" + (runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index + 1000)
+          //       // runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[key].head.type.index + 1000
+          //     }
+          //   }
+          // }
+          let data_response = await fetch('data.js')
+          .then((response) => response.json())
+          .then(jsondata => {
+              return jsondata;
+          });
+          for(const[key] of Object.entries(backendConfig['skins'])) {
+            if(!backendConfig['skins'][key]['tags'].includes("official") && backendConfig['skins'][key]['version'].includes(skinVersion)) { //community skin
+              console.log(key)
+              let replaces = backendConfig['skins'][key]['replaces']
+              let url = backendConfig['skins'][key]['url']
+              addSkin(key, replaces, url, data_response)
+            }
+          }
+          //enable skins, find skin that is using
+          let foundSkin = false;
+          for (const [key] of Object.entries(userConfig['skins'])) {
+            if(userConfig['skins'][key]['using'] === true && backendConfig['skins'][key]['version'].includes(skinVersion) && !foundSkin && !backendConfig['skins'][key]['tags'].includes("official")) {
+              console.log("set skin", key)
+              userConfig['skins'][key]["using"] = true;
+              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8] = key;
+              
+              let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0];
+              saveObj.data.CurSkin = key;
+              cr.plugins_.SyncStorage.prototype.acts.SaveData.call(saveObj)
+              
+              
+              let insts = runtime.types_by_index.filter((x) =>
+                x.behaviors.some(
+                  (y) => y.behavior instanceof cr.behaviors.SkymenSkin))[0].instances
+              let collider = runtime.types_by_index
+                .filter(
+                  (x) =>
+                    !!x.animations &&
+                    x.animations[0].frames[0].texture_file.includes("collider")
+                )[0]
+                .instances[0];
+              for(let i = 0; i < insts.length; i++) {
+                  let cur = insts[i]
+                  cur.width = cur.curFrame.width
+                  cur.height = cur.curFrame.height
+                  cur.set_bbox_changed();    
+                  let skymenskinbehav = cur.behaviorSkins[0]
+                  skymenskinbehav.syncScale = true;
+                  skymenskinbehav.syncSize = false;
+                  cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(skymenskinbehav, key);
+
+                  cur.width = (collider.width / collider.curFrame.width) * cur.curFrame.width;
+                  cur.height = (collider.height / collider.curFrame.height) * cur.curFrame.height;
+                  cur.set_bbox_changed();               
+              }
+              foundSkin = true;
+            } else {
+              userConfig['skins'][key]['using'] = false
+            }
+          }
+          if (!foundSkin) { //they are using official skin or something else is wrong
+            let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0];
+            let skin = saveObj.data.CurSkin;
+            if(backendConfig['skins'][skin]['version'].includes(skinVersion)) { //skin loaded fine
+              userConfig['skins'][skin]['using'] = true;
+            } else {
+              userConfig['skins'][""]["using"] = true;
+              runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8] = "";
+              
+              saveObj.data.CurSkin = "";
+              cr.plugins_.SyncStorage.prototype.acts.SaveData.call(saveObj)
+              
+              
+              let insts = runtime.types_by_index.filter((x) =>
+                x.behaviors.some(
+                  (y) => y.behavior instanceof cr.behaviors.SkymenSkin))[0].instances
+              let collider = runtime.types_by_index
+                .filter(
+                  (x) =>
+                    !!x.animations &&
+                    x.animations[0].frames[0].texture_file.includes("collider")
+                )[0]
+                .instances[0];
+              for(let i = 0; i < insts.length; i++) {
+                  let cur = insts[i]
+                  cur.width = cur.curFrame.width
+                  cur.height = cur.curFrame.height
+                  cur.set_bbox_changed();    
+                  let skymenskinbehav = cur.behaviorSkins[0]
+                  skymenskinbehav.syncScale = true;
+                  skymenskinbehav.syncSize = false;
+                  cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(skymenskinbehav);
+
+                  cur.width = (collider.width / collider.curFrame.width) * cur.curFrame.width;
+                  cur.height = (collider.height / collider.curFrame.height) * cur.curFrame.height;
+                  cur.set_bbox_changed();               
+              }
+              
+            }
+          }
+
+          localStorage.setItem('modSettings', JSON.stringify(userConfig));
+          
+
+
           console.log(filters)
           filters.add('all');
           filters.add('favorite');
@@ -791,6 +995,17 @@ export let runtime;
           }
           console.log(filters)
           filters = Array.from(filters);
+
+          skinFilters.add('all');
+          skinFilters.add('favorite');
+          skinFilters.add('custom');
+          for (const [key] of Object.entries(backendConfig['skins'])) {
+            for(let i = 0; i < backendConfig["skins"][key]['tags'].length; i++) {
+              skinFilters.add(backendConfig["skins"][key]['tags'][i]);
+            }
+          }
+          skinFilters = Array.from(skinFilters);
+          
           
           document.addEventListener("keydown", (event) => {
             this.keyDown(event)

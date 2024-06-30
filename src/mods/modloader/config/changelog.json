@@ -43,6 +43,12 @@
             "Edit custom mods' settings",
             "Error messages for custom mods that fail to load"
         ]
+    },
+    "2.1.0": {
+        "changes": [
+            "Skins menu! Play with custom skins from the community.",
+            "Note: some skins are not available across all versions due default skins availablitity per version."
+        ]
     }
 
 }

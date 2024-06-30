@@ -1,6 +1,6 @@
 import { runtime } from "../modloader.js"
 
-export {createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook}
+export {createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook}
 
 let createChangeLayoutHook = (eventName) => {
     let funcCode = runtime.doChangeLayout.toString();
@@ -64,4 +64,18 @@ let createDialogShowOverlayHook = (eventName) => {
         this.showOverlay2();`);
 
     cr.behaviors.aekiro_dialog.prototype.Instance.prototype.showOverlay2 = new Function(body);
+}
+
+let createSaveHook = (eventName) => {
+    let funcCode = cr.plugins_.SyncStorage.prototype.Instance.prototype.isLocalStorageReady.toString();
+    let start = funcCode.indexOf('{') + 1;
+    let end = funcCode.lastIndexOf('}');
+    let body = funcCode.substring(start, end);
+
+    cr.plugins_.SyncStorage.prototype.Instance.prototype.isLocalStorageReady = new Function(`
+        event = new Event("${eventName}");
+        window.dispatchEvent(event);
+        return this.isLocalStorageReady2();`);
+
+    cr.plugins_.SyncStorage.prototype.Instance.prototype.isLocalStorageReady2 = new Function(body);
 }

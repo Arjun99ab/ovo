@@ -1,4 +1,4 @@
-import {backendConfig, filters, version} from '../../../modloader.js';
+import {backendConfig, skinFilters, skinVersion} from '../../../modloader.js';
 import {detectDeviceType} from "../../utils.js";
 import {createMenuCard} from './cards.js';
 
@@ -35,7 +35,7 @@ let createFilterButton = (id, text, width) => {
 
     menuButton.onclick = function() {
       if(document.getElementById(id).style.backgroundColor === "white") {
-        filters.forEach((filter) => { //set all other filters to white
+        skinFilters.forEach((filter) => { //set all other filters to white
           document.getElementById(filter + "-filter-btn").style.backgroundColor = "white";
         });
         setFilter(id.split("-")[0]); //set currentFilter to this filter
@@ -47,19 +47,19 @@ let createFilterButton = (id, text, width) => {
         }
         let cardsList = [];
         let cardsDiv = document.getElementById("cards-div");
-        for (const [key] of Object.entries(backendConfig['mods'])) {
-          if(key != "version" && key != "settings" && backendConfig['mods'][key]['version'].includes(version) && backendConfig['mods'][key]['platform'].includes(detectDeviceType())) {
+        for (const [key] of Object.entries(backendConfig['skins'])) {
+          if(key != "version" && key != "settings" && backendConfig['skins'][key]['version'].includes(skinVersion)) {
             if(currentFilter === 'all') {
-              cardsList.push(createMenuCard(key + '-card', backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']));
+              cardsList.push(createMenuCard(key + '-card', backendConfig['skins'][key]['name'], backendConfig['skins'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['skins'][key]['using']));
             } else if(currentFilter === 'favorite') {
-              // console.log(JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['favorite'])
-              if(JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['favorite']) {
-                let b = createMenuCard(key + '-card', backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']);
+              // console.log(JSON.parse(localStorage.getItem('modSettings'))['skins'][key]['favorite'])
+              if(JSON.parse(localStorage.getItem('modSettings'))['skins'][key]['favorite']) {
+                let b = createMenuCard(key + '-card', backendConfig['skins'][key]['name'], backendConfig['skins'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['skins'][key]['using']);
                 cardsDiv.appendChild(b);
               }
             } else {
-              if(backendConfig['mods'][key]['tags'].includes(currentFilter)) {
-                cardsList.push(createMenuCard(key + '-card', backendConfig['mods'][key]['name'], backendConfig['mods'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['mods'][key]['enabled']));
+              if(backendConfig['skins'][key]['tags'].includes(currentFilter)) {
+                cardsList.push(createMenuCard(key + '-card', backendConfig['skins'][key]['name'], backendConfig['skins'][key]['icon'], JSON.parse(localStorage.getItem('modSettings'))['skins'][key]['using']));
                 // cardsDiv.appendChild(b);
               }
             }
@@ -67,23 +67,23 @@ let createFilterButton = (id, text, width) => {
         }
         console.log("???/")
         let userConfig = JSON.parse(localStorage.getItem('modSettings'));
-        console.log(userConfig['mods'])
-        Object.keys(userConfig['mods']).forEach(function (key) {          
+        console.log(userConfig['skins'])
+        Object.keys(userConfig['skins']).forEach(function (key) {          
           console.log(key)
           if(key.startsWith("custom")) {
             console.log(currentFilter)
             if(currentFilter === 'all') {
-              cardsList.push(createMenuCard(key + '-card', userConfig['mods'][key]['name'], userConfig['mods'][key]['icon'], userConfig['mods'][key]['enabled']));
+              cardsList.push(createMenuCard(key + '-card', userConfig['skins'][key]['name'], userConfig['skins'][key]['icon'], userConfig['skins'][key]['using']));
               // cardsDiv.appendChild(b);
             } else if(currentFilter === 'favorite') {
-              console.log(userConfig['mods'][key]['favorite'])
-              if(userConfig['mods'][key]['favorite']) {
-                cardsList.push(createMenuCard(key + '-card', userConfig['mods'][key]['name'], userConfig['mods'][key]['icon'], userConfig['mods'][key]['enabled']));
+              console.log(userConfig['skins'][key]['favorite'])
+              if(userConfig['skins'][key]['favorite']) {
+                cardsList.push(createMenuCard(key + '-card', userConfig['skins'][key]['name'], userConfig['skins'][key]['icon'], userConfig['skins'][key]['using']));
                 // cardsDiv.appendChild(b);
               }
             } else {
-              if(userConfig['mods'][key]['tags'].includes(currentFilter)) {
-                cardsList.push(createMenuCard(key + '-card', userConfig['mods'][key]['name'], userConfig['mods'][key]['icon'], userConfig['mods'][key]['enabled']));
+              if(userConfig['skins'][key]['tags'].includes(currentFilter)) {
+                cardsList.push(createMenuCard(key + '-card', userConfig['skins'][key]['name'], userConfig['skins'][key]['icon'], userConfig['skins'][key]['using']));
                 // cardsDiv.appendChild(b);
               }
             }

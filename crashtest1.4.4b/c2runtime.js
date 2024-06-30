@@ -773,7 +773,6 @@ if (typeof Object.getPrototypeOf !== "function")
 		{
 			if (!this.s["has"](x))
 			{
-
 				this.s["add"](x);
 				this.cache_valid = false;
 			}
@@ -781,7 +780,6 @@ if (typeof Object.getPrototypeOf !== "function")
 		else
 		{
 			var str = x.toString();
-			
 			var items = this.items;
 			if (!items)
 			{
@@ -5232,7 +5230,6 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 	};
 	Runtime.prototype.doChangeLayout = function (changeToLayout)
 	{
-		console.log("MONKEY MONKEY")
 		var prev_layout = this.running_layout;
 		this.running_layout.stopRunning();
 		var i, len, j, lenj, k, lenk, type, inst, binst;
@@ -16219,7 +16216,6 @@ cr.plugins_.Arr = function(runtime)
 			a.textContent = filename;
 			a.href = "data:application/json," + encodeURIComponent(this.getAsJSON());
 			a.download = filename;
-			// a.download = "apple.json";
 			body.appendChild(a);
 			var clickEvent = document.createEvent("MouseEvent");
 			clickEvent.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -19865,9 +19861,7 @@ cr.plugins_.Browser = function(runtime)
 	};
 	Acts.prototype.InvokeDownloadString = function (str_, mimetype_, filename_)
 	{
-		console.log(str_)
 		var datauri = "data:" + mimetype_ + "," + encodeURIComponent(str_);
-		console.log(datauri)
 		var a = document.createElement("a");
 		if (typeof a["download"] === "undefined")
 		{
@@ -43913,10 +43907,6 @@ cr.behaviors.aekiro_dialog = function(runtime)
 		}
 	};
 	behinstProto.showOverlay = function (){
-		// console.log("show overlay, 43916")
-		// console.log(this.runtime.running_layout.layers.find(function(a) {
-		// 	return "Pause" === a.name
-		// }).visible)
 		if(this.overlay){
 			this.overlay.my_timescale = 1;
 			this.overlay.type.plugin.acts.MoveToLayer.call(this.overlay, this.inst.layer);
@@ -44226,7 +44216,6 @@ cr.behaviors.aekiro_dialog = function(runtime)
 		if(!this.isOpen || this.tween["isPlaying"] || this.tween_close["isPlaying"]){
 			return;
 		}
-
 		this.isOpen = false;
 		this.runtime.trigger(cr.behaviors.aekiro_dialog.prototype.cnds.onDialogClosed, this.inst);
 		if(this.overlay){

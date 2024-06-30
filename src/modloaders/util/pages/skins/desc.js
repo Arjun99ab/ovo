@@ -108,13 +108,13 @@ let createDescPopup = (modId) => {
       let titleText = document.createElement("p");
       titleText.style.fontSize = "2.3vw";
       titleText.style.textAlign = "center";
-      titleText.innerHTML = modSettings['mods'][modId]['name'];
+      titleText.innerHTML = modSettings['skins'][modId]['name'];
       headerText.appendChild(titleText);
-      if(modSettings['mods'][modId]['author'] !== null) {
+      if(modSettings['skins'][modId]['author'] !== null) {
         let authorText = document.createElement("p");
         authorText.style.fontSize = "1.3vw";
         authorText.style.textAlign = "center";
-        authorText.innerHTML = "by " + modSettings['mods'][modId]['author'];
+        authorText.innerHTML = "by " + modSettings['skins'][modId]['author'];
         headerText.appendChild(authorText);
       }
       
@@ -125,7 +125,7 @@ let createDescPopup = (modId) => {
   
       let descText = document.createElement("div");
       descText.id = "descText";
-      descText.innerHTML = modSettings['mods'][modId]['desc'];
+      descText.innerHTML = modSettings['skins'][modId]['desc'];
       descText.style.fontSize = "1.5vw";
       descText.style.textAlign = "center";
       descText.style.margin = "15px";
@@ -136,13 +136,13 @@ let createDescPopup = (modId) => {
       let titleText = document.createElement("p");
       titleText.style.fontSize = "2.3vw";
       titleText.style.textAlign = "center";
-      titleText.innerHTML = backendConfig['mods'][modId]['name'];
+      titleText.innerHTML = backendConfig['skins'][modId]['name'];
       headerText.appendChild(titleText);
-      if(backendConfig['mods'][modId]['author'] !== null) {
+      if(backendConfig['skins'][modId]['author'] !== null) {
         let authorText = document.createElement("p");
         authorText.style.fontSize = "1.3vw";
         authorText.style.textAlign = "center";
-        authorText.innerHTML = "by " + backendConfig['mods'][modId]['author'];
+        authorText.innerHTML = "by " + backendConfig['skins'][modId]['author'];
         headerText.appendChild(authorText);
       }
       
@@ -153,7 +153,7 @@ let createDescPopup = (modId) => {
   
       let descText = document.createElement("div");
       descText.id = "descText";
-      descText.innerHTML = backendConfig['mods'][modId]['desc'];
+      descText.innerHTML = backendConfig['skins'][modId]['desc'];
       descText.style.fontSize = "1.5vw";
       descText.style.textAlign = "center";
       descText.style.margin = "15px";

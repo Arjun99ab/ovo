@@ -1,9 +1,9 @@
-import {backendConfig} from "../../../modloader.js";
+import {backendConfig, runtime} from "../../../modloader.js";
 import {createConfirmReloadModal, createNotifyModal} from "../../modals.js"
 import { modsPendingReload } from "../../modals.js";
 import { notify } from "../../ovo.js";
 
-export {toggleMod, customModNum, incCustomModNum}
+export {useSkin, customModNum, incCustomModNum}
 
 let customModNum = 0;
 function incCustomModNum() {
@@ -35,6 +35,65 @@ function errorOccurHandler(modId) {
   return function(event) {
     errorOccur(modId, event);
   }
+}
+
+let useSkin = (skinId) => {
+  console.log(skinId)
+  let skinSettings = JSON.parse(localStorage.getItem('modSettings'));
+  let currentSkin = runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8];
+  
+  try {
+    let currentSkinUseButton = document.getElementById(currentSkin + "-use-button");
+    currentSkinUseButton.innerHTML = "Use";
+    currentSkinUseButton.style.backgroundColor = "rgb(135, 206, 250)";
+    skinSettings['skins'][currentSkin]["using"] = false;
+
+  } catch (e) {}
+  
+
+  //LIKELY NEED TO CHANGE THESE REV CALLS TO BE MORE GENERALIZED?
+  if(Object.keys(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins).includes(skinId) || skinId === "") {
+    console.log("skin exists")
+    skinSettings['skins'][skinId]["using"] = true;
+    runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8] = skinId;
+    
+    let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0];
+    saveObj.data.CurSkin = skinId;
+    cr.plugins_.SyncStorage.prototype.acts.SaveData.call(saveObj)
+    
+    
+    let insts = runtime.types_by_index.filter((x) =>
+      x.behaviors.some(
+        (y) => y.behavior instanceof cr.behaviors.SkymenSkin))[0].instances
+    let collider = runtime.types_by_index
+      .filter(
+        (x) =>
+          !!x.animations &&
+          x.animations[0].frames[0].texture_file.includes("collider")
+      )[0]
+      .instances[0];
+    for(let i = 0; i < insts.length; i++) {
+        let cur = insts[i]
+        cur.width = cur.curFrame.width
+        cur.height = cur.curFrame.height
+        cur.set_bbox_changed();    
+        let skymenskinbehav = cur.behaviorSkins[0]
+        skymenskinbehav.syncScale = true;
+        skymenskinbehav.syncSize = false;
+        if(skinId === "") {
+          cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(skymenskinbehav);
+        } else {
+          cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(skymenskinbehav, skinId);
+        }
+
+        cur.width = (collider.width / collider.curFrame.width) * cur.curFrame.width;
+        cur.height = (collider.height / collider.curFrame.height) * cur.curFrame.height;
+        cur.set_bbox_changed();               
+    }
+    // runtime.changelayout = runtime.running_layout //reload screen to apply skin, maybe find a way to like set the skin on the fly?
+  } 
+  localStorage.setItem('modSettings', JSON.stringify(skinSettings));
+
 }
 
 let toggleMod = (modId, enable) => {
