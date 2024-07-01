@@ -202,7 +202,7 @@ let addSkin = (skinId, templateId, url, data_response) => {
   //           });
   let pm = data_response["project"]
 
-  let m = structuredClone(pm[3][templateIndex]) // copy pole skin type
+  let m = structuredClone(pm[3][templateIndex]) // copy skin type
   m[0] = "t" + index
 
   for (let i = 0, len = m[7].length; i < len; i++) {
@@ -237,14 +237,12 @@ let addSkin = (skinId, templateId, url, data_response) => {
   type_inst.sid = [123456789123456789] //m[11];
   if (type_inst.is_family)
   {
-      console.log("a")
       type_inst.members = [];				// types in runtime family
       type_inst.family_index = runtime.family_count++;
       type_inst.families = null;
   }
   else
   {
-      console.log("b")
       type_inst.members = null;
       type_inst.family_index = -1;
       type_inst.families = [];			// families runtime type belongs to
@@ -256,26 +254,22 @@ let addSkin = (skinId, templateId, url, data_response) => {
   type_inst.container = null;
   if (m[6])
   {
-      console.log("c")
       type_inst.texture_file = m[6][0];
       type_inst.texture_filesize = m[6][1];
       type_inst.texture_pixelformat = m[6][2];
   }
   else
   {
-      console.log("d")
       type_inst.texture_file = null;
       type_inst.texture_filesize = 0;
       type_inst.texture_pixelformat = 0;		// rgba8
   }
   if (m[7])
   {
-      console.log("e")
       type_inst.animations = m[7];
   }
   else
   {
-      console.log("f")
       type_inst.animations = null;
   }
   type_inst.index = index;                                // save index in to types array in type
@@ -320,7 +314,6 @@ let addSkin = (skinId, templateId, url, data_response) => {
       }
       if (!behavior_plugin)
       {
-          console.log("h")
           behavior_plugin = new behavior_ctor(runtime);
           behavior_plugin.my_types = [];						// types using runtime behavior
           behavior_plugin.my_instances = new cr.ObjectSet(); 	// instances of runtime behavior
@@ -361,18 +354,15 @@ let addSkin = (skinId, templateId, url, data_response) => {
   type_inst.tile_poly_data = m[13];
   if (!runtime.uses_loader_layout || type_inst.is_family || type_inst.isOnLoaderLayout || !plugin.is_world || true)
   {
-      console.log("i")
       type_inst.onCreate();
       cr.seal(type_inst);
   }
   if (type_inst.name) {
-      console.log("j")
       runtime.types[type_inst.name] = type_inst;
   }
   runtime.types_by_index.push(type_inst);
   if (plugin.singleglobal)
   {
-      console.log("k")
       var instance = new plugin.Instance(type_inst);
       instance.uid = runtime.next_uid++;
       instance.puid = runtime.next_puid++;
