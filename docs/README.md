@@ -1,23 +1,32 @@
-# OvO Modloader
+## docsify
 
-A feature rich, gui integrated OvO mod menu.
+> A magical documentation site generator.
+
+## What it is
+
+Docsify generates your documentation website on the fly. Unlike GitBook, it does not generate static html files. Instead, it smartly loads and parses your Markdown files and displays them as a website. To start using it, all you need to do is create an `index.html` and [deploy it on GitHub Pages](deploy.md).
+
+See the [Quick start](quickstart.md) guide for more details.
 
 ## Features
-- Enable / disable mods
-- Add custom mods
-- Favorite mods
-- Customize mod settings (keybinds, etc.)
-- Saves data & mods cross sessions & versions
-- Supports 9+ versions
 
-## To-do
-- General settings
-- Profiles
-- Skins
+- No statically built html files
+- Simple and lightweight
+- Smart full-text search plugin
+- Multiple themes
+- Useful plugin API
+- Emoji support
+- Compatible with IE11
+- Support server-side rendering ([example](https://github.com/docsifyjs/docsify-ssr-demo))
 
-#
-Ideas? Questions? Bug reports? Contact me via Discord at '.awesomeguy.'
+## Examples
 
- ## 
- Not affliated with [Dedra Games](https://dedragames.com/)
+Check out the [Showcase](https://github.com/docsifyjs/awesome-docsify#showcase) to see docsify in use.
 
+## Donate
+
+Please consider donating if you think docsify is helpful to you or that my work is valuable. I am happy if you can help me [buy a cup of coffee](https://github.com/QingWei-Li/donate). :heart:
+
+## Community
+
+Users and the development team are usually in the [Discord server](https://discord.gg/3NwKFyR).
