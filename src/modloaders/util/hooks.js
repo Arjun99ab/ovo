@@ -1,6 +1,6 @@
 import { runtime } from "../modloader.js"
 
-export {createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook}
+export {createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook}
 
 let createChangeLayoutHook = (eventName) => {
     let funcCode = runtime.doChangeLayout.toString();
@@ -30,7 +30,6 @@ let createDialogOpenHook = (eventName) => {
     let body = funcCode.substring(start, end);
 
     cr.behaviors.aekiro_dialog.prototype.Instance.prototype.open = new Function("_targetX","_targetY", "center", `
-        console.log(_targetX,_targetY,center)
         event = new Event("${eventName}");
         window.dispatchEvent(event);
         this.open2(_targetX,_targetY,center);`);
@@ -64,6 +63,20 @@ let createDialogShowOverlayHook = (eventName) => {
         this.showOverlay2();`);
 
     cr.behaviors.aekiro_dialog.prototype.Instance.prototype.showOverlay2 = new Function(body);
+}
+
+let createButtonClickHook = (eventName) => {
+    let funcCode = cr.plugins_.aekiro_proui2.prototype.Instance.prototype.runCallback.toString();
+    let start = funcCode.indexOf('{') + 1;
+    let end = funcCode.lastIndexOf('}');
+    let body = funcCode.substring(start, end);
+
+    cr.plugins_.aekiro_proui2.prototype.Instance.prototype.runCallback = new Function("callbackName", "callbackParams", `
+        event = new Event("${eventName}");
+        window.dispatchEvent(event);
+        this.runCallback2(callbackName, callbackParams);`);
+
+    cr.plugins_.aekiro_proui2.prototype.Instance.prototype.runCallback2 = new Function("callbackName", "callbackParams", body);
 }
 
 let createSaveHook = (eventName) => {

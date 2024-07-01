@@ -33835,6 +33835,7 @@ cr.plugins_.aekiro_proui2 = function (runtime) {
 		}
 	};*/
   instanceProto.runCallback = function (callbackName, callbackParams) {
+	console.log("run call back")
     if (callbackName == "") {
       return;
     }
@@ -43205,6 +43206,7 @@ cr.behaviors.aekiro_button = function(runtime)
 				this.state = HOVER;
 			}
 			this.updateView();
+			console.log(this)
 			this.proui.runCallback(this.callbackName,this.callbackParams);
 			for (var i = 0, l= this.callbacks.length; i < l; i++) {
 				this.callbacks[i]();

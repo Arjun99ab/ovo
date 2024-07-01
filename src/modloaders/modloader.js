@@ -9,7 +9,7 @@ import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
 import {renderSkinsMenu, searchSkins} from './util/pages/skins/render.js';
 import { useSkin } from './util/pages/skins/utils.js';
 
-import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook} from './util/hooks.js';
+import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook} from './util/hooks.js';
 
 //constants
 export let version = VERSION.version();
@@ -626,6 +626,17 @@ export let runtime;
                 modSettings['skins'][saveObj.data.CurSkin]['using'] = true;
                 localStorage.setItem('modSettings', JSON.stringify(modSettings));
               }
+            },
+            false,
+          );
+
+          createButtonClickHook("ButtonClick");
+          window.addEventListener(
+            "ButtonClick",
+            (e) => {
+              // console.log("save game!")
+              // notify("Save game", "wow!", "./speedrunner.png");
+              console.log("button click!!")
             },
             false,
           );
