@@ -17,7 +17,7 @@
                 "using": false
             }
         },
-        "electrical": {
+        "elec": {
             "name": "Electrical",
             "author": "skymen",
             "desc": "",
@@ -25,7 +25,7 @@
             "icon": "../src/skins/icons/electrical.png",
             "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
             "tags": ["official"],
-            "replaces": "electrical",
+            "replaces": "elec",
             "defaultSettings": {
                 "favorite": false,
                 "using": false
