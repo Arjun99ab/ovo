@@ -348,55 +348,80 @@ export let runtime;
           buttonContainer.style[a] = c[a];
       });
       buttonContainer.className = "button-container";
-      let modsButton = createNavButton("nav-mods-btn", "Mods", "13vw");
+
+
+      let modsButton = createNavButton("nav-mods-btn", "Mods", "11vw");
       modsButton.style.backgroundColor = "lightblue"; //set default button to blue
       modsButton.onclick = function() {
         setFilter("all");
         searchBar.disabled = false;
+        searchBar.blur();
         let elements = document.getElementsByClassName('nav-button');
         for(let i = 0; i < elements.length; i++) {
           elements[i].style.backgroundColor = 'white';
         }
         modsButton.style.backgroundColor = "lightblue";
-        renderModsMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
+        renderModsMenu(sectionDiv);
 
       }
-      let settingsButton = createNavButton("nav-settings-btn", "Settings", "13vw");
+      let settingsButton = createNavButton("nav-settings-btn", "Settings", "11vw");
       settingsButton.onclick = function() {
+        searchBar.blur()
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Settings are not available yet.");
       }
 
-      let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "13vw");
+      let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "11vw");
       profilesButton.onclick = function() {
+        searchBar.blur()
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Profiles are not available yet.");
       }
-      let skinsButton = createNavButton("nav-skins-btn", "Skins", "13vw");
+      let skinsButton = createNavButton("nav-skins-btn", "Skins", "11vw");
       skinsButton.onclick = function() {
         setFilter("all");
         searchBar.disabled = false;
+        searchBar.blur()
         let elements = document.getElementsByClassName('nav-button');
         for(let i = 0; i < elements.length; i++) {
           elements[i].style.backgroundColor = 'white';
         }
         skinsButton.style.backgroundColor = "lightblue";
-        renderSkinsMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
+        renderSkinsMenu(sectionDiv);
       }
-      let addmodButton = createNavButton("nav-addmod-btn", "Add Mod", "13vw");
+      let addmodButton = createNavButton("nav-addmod-btn", "Add Mod", "11vw");
       addmodButton.onclick = function() {
         searchBar.disabled = true;
         searchBar.value = "";
+        // searchBar.style.cursor = "not-allowed";
         let elements = document.getElementsByClassName('nav-button');
         for(let i = 0; i < elements.length; i++) {
           elements[i].style.backgroundColor = 'white';
         }
         addmodButton.style.backgroundColor = "lightblue";
-        renderAddModMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
+        renderAddModMenu(sectionDiv);
         
       }
+
+      let replaysButton = createNavButton("nav-replays-btn", "Replays", "11vw");
+      replaysButton.onclick = function() {
+        searchBar.disabled = true;
+        searchBar.value = "";
+        // searchBar.style.cursor = "not-allowed";
+        let elements = document.getElementsByClassName('nav-button');
+        for(let i = 0; i < elements.length; i++) {
+          elements[i].style.backgroundColor = 'white';
+        }
+        replaysButton.style.backgroundColor = "lightblue";
+        while (sectionDiv.firstChild) {
+          sectionDiv.removeChild(sectionDiv.lastChild);
+        }
+        // renderAddModMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
+        
+      }
+
       let searchBar = document.createElement("input");
       searchBar.id = 'nav-search-bar';
       searchBar.placeholder = "Search...";
@@ -404,7 +429,7 @@ export let runtime;
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        width: "13vw",
+        width: "11vw",
         height: "3vw",
         cursor: "text",
         backgroundColor: "white",
@@ -428,7 +453,7 @@ export let runtime;
         searchBar.focus()
       }
       menuBg.onclick = (e) => { //ensure that input box focus
-        // console.log("please");
+        console.log("please");
         searchBar.blur()
       }
       searchBar.onkeydown = (e) => { // ensures that user is able to type in input box
@@ -470,6 +495,7 @@ export let runtime;
       buttonContainer.appendChild(profilesButton);
       buttonContainer.appendChild(skinsButton);
       buttonContainer.appendChild(addmodButton);
+      buttonContainer.appendChild(replaysButton);
       buttonContainer.appendChild(searchBar);
 
 
@@ -481,13 +507,14 @@ export let runtime;
       //////////////////////////below crap
 
 
-      let filtersAndCards = document.createElement("div");
-      filtersAndCards.id = "filters-and-cards-div";
+      let sectionDiv = document.createElement("div");
+      sectionDiv.id = "filters-and-cards-div";
       c = {
         display: "flex",
         flex: "1",
         alignItems: "start",
         overflow: "hidden",
+        borderTop: "solid 3px black",
         // scrollbarGutter: "stable",
         // height: "100%",
         // backgroundColor: "blue",
@@ -496,48 +523,14 @@ export let runtime;
 
       }
       Object.keys(c).forEach(function (a) {
-          filtersAndCards.style[a] = c[a];
+        sectionDiv.style[a] = c[a];
       });
-      let filtersDiv = document.createElement("div");
-      filtersDiv.id = "filters-div";
-      filtersDiv.addEventListener('wheel', (e) => {
-        // console.log("hello)")
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        // e.preventDefault();
-        filtersDiv.focus();
-      });
-      
-
-
-      ////
-
 
       
-
-
-    
-
-
-      
-      let cardsDiv = document.createElement("div");
-      cardsDiv.addEventListener('wheel', (e) => {
-        // console.log("hello)")
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        // e.preventDefault();
-        cardsDiv.focus();
-      });
-      
-      cardsDiv.id = "cards-div";
 
 
       //default menu, when users open the modmenu
-      renderModsMenu(filtersDiv, cardsDiv)
-
-
-      filtersAndCards.appendChild(filtersDiv);
-      filtersAndCards.appendChild(cardsDiv);
+      renderModsMenu(sectionDiv)
 
 
       
@@ -547,7 +540,7 @@ export let runtime;
 
       menuBg.appendChild(navbar);
       menuBg.appendChild(buttonContainer);
-      menuBg.appendChild(filtersAndCards);
+      menuBg.appendChild(sectionDiv);
       document.body.appendChild(menuBg);
 
       
@@ -570,6 +563,7 @@ export let runtime;
           window.addEventListener(
             "LayoutChange",
             (e) => {
+              // console.log(e.detail.layout.name)
               if(e.detail.layout.name.startsWith("Level") && e.detail.layout.name !== "Level Menu") {
                 document.getElementById("menu-button").style.display = "none";
                 inGame = true;

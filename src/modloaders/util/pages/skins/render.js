@@ -7,7 +7,35 @@ import { createFilterButton, currentFilter, setFilter } from "./filters.js";
 
 export { renderSkinsMenu, searchSkins };
 
-let renderSkinsMenu = (filtersDiv, cardsDiv) => {
+let renderSkinsMenu = (sectionDiv) => {
+
+  while (sectionDiv.firstChild) {
+    sectionDiv.removeChild(sectionDiv.lastChild);
+  }
+
+  let filtersDiv = document.createElement("div");
+      filtersDiv.addEventListener('wheel', (e) => {
+        // console.log("hello)")
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        // e.preventDefault();
+        filtersDiv.focus();
+      });
+      filtersDiv.id = "filters-div";
+      
+  let cardsDiv = document.createElement("div");
+  cardsDiv.addEventListener('wheel', (e) => {
+    // console.log("hello)")
+    e.stopImmediatePropagation()
+    e.stopPropagation();
+    // e.preventDefault();
+    cardsDiv.focus();
+  });
+  cardsDiv.id = "cards-div";
+
+  sectionDiv.appendChild(filtersDiv);
+  sectionDiv.appendChild(cardsDiv);
+
   let c = {
     display: "flex",
     // flex: "1",
@@ -16,7 +44,7 @@ let renderSkinsMenu = (filtersDiv, cardsDiv) => {
     padding: "10px",
     flexDirection: "column",
     // width: "10%",
-    borderTop: "solid 3px black",
+    // borderTop: "solid 3px black",
 
     height: "auto",
     maxHeight: "100%",
@@ -44,7 +72,7 @@ let renderSkinsMenu = (filtersDiv, cardsDiv) => {
     gridTemplateRows: "max-content",
 
     borderLeft: "solid 3px black",
-    borderTop: "solid 3px black",
+    // borderTop: "solid 3px black",
     width: "83%",
     height: "calc(100% - 24px)",
     overflowY: "auto",
