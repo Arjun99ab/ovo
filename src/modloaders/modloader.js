@@ -350,7 +350,7 @@ export let runtime;
       buttonContainer.className = "button-container";
 
 
-      let modsButton = createNavButton("nav-mods-btn", "Mods", "11vw");
+      let modsButton = createNavButton("nav-mods-btn", "Mods", "13vw");
       modsButton.style.backgroundColor = "lightblue"; //set default button to blue
       modsButton.onclick = function() {
         setFilter("all");
@@ -364,7 +364,7 @@ export let runtime;
         renderModsMenu(sectionDiv);
 
       }
-      let settingsButton = createNavButton("nav-settings-btn", "Settings", "11vw");
+      let settingsButton = createNavButton("nav-settings-btn", "Settings", "13vw");
       settingsButton.onclick = function() {
         searchBar.blur()
         document.getElementById("menu-bg").style.pointerEvents = "none";
@@ -372,14 +372,14 @@ export let runtime;
         createNotifyModal("Settings are not available yet.");
       }
 
-      let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "11vw");
+      let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "13vw");
       profilesButton.onclick = function() {
         searchBar.blur()
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Profiles are not available yet.");
       }
-      let skinsButton = createNavButton("nav-skins-btn", "Skins", "11vw");
+      let skinsButton = createNavButton("nav-skins-btn", "Skins", "13vw");
       skinsButton.onclick = function() {
         setFilter("all");
         searchBar.disabled = false;
@@ -391,7 +391,7 @@ export let runtime;
         skinsButton.style.backgroundColor = "lightblue";
         renderSkinsMenu(sectionDiv);
       }
-      let addmodButton = createNavButton("nav-addmod-btn", "Add Mod", "11vw");
+      let addmodButton = createNavButton("nav-addmod-btn", "Add Mod", "13vw");
       addmodButton.onclick = function() {
         searchBar.disabled = true;
         searchBar.value = "";
@@ -405,7 +405,7 @@ export let runtime;
         
       }
 
-      let replaysButton = createNavButton("nav-replays-btn", "Replays", "11vw");
+      let replaysButton = createNavButton("nav-replays-btn", "Replays", "13vw");
       replaysButton.onclick = function() {
         searchBar.disabled = true;
         searchBar.value = "";
@@ -429,7 +429,7 @@ export let runtime;
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        width: "11vw",
+        width: "13vw",
         height: "3vw",
         cursor: "text",
         backgroundColor: "white",
@@ -495,7 +495,7 @@ export let runtime;
       buttonContainer.appendChild(profilesButton);
       buttonContainer.appendChild(skinsButton);
       buttonContainer.appendChild(addmodButton);
-      buttonContainer.appendChild(replaysButton);
+      // buttonContainer.appendChild(replaysButton);
       buttonContainer.appendChild(searchBar);
 
 
