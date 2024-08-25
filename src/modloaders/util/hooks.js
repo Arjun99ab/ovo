@@ -10,7 +10,6 @@ let createChangeLayoutHook = (eventName) => {
 
 
     runtime.doChangeLayout = new Function('changeToLayout', `
-        console.log(changeToLayout)
         window.dispatchEvent(
             new CustomEvent("${eventName}",  {
                 bubbles: true,

@@ -15702,6 +15702,7 @@ cr.plugins_.Arr = function(runtime)
 	};
 	instanceProto.getAsJSON = function ()
 	{
+		console.log("hihi")
 		return JSON.stringify({
 			"c2array": true,
 			"size": [this.cx, this.cy, this.cz],
@@ -15722,6 +15723,7 @@ cr.plugins_.Arr = function(runtime)
 		this.cy = sz[1];
 		this.cz = sz[2];
 		this.arr = o["data"];
+		console.log(o)
 	};
 	instanceProto.setSize = function (w, h, d)
 	{
