@@ -607,15 +607,78 @@
             "name": "Keystrokes",
             "author": "Awesomeguy",
             "desc": "Shows your keystrokes on screen.",
-            "url": "../src/mods/modloader/mobileks.js",
+            "url": "../src/mods/modloader/keystrokes.js",
             "icon": "https://cdn-icons-png.flaticon.com/128/1548/1548686.png",
             "platform": [],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
             "reload": false,
-            "settings": null,
+            "settings": {
+                "position": {
+                    "name": "Position",
+                    "desc": "",
+                    "type": "guiPosition"
+                },
+                "border": {
+                    "name": "Border",
+                    "desc": "",
+                    "type": "checkbox"
+                },
+                "activecolor": {
+                    "name": "Active Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "inactivecolor": {
+                    "name": "Inactive Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "activetextcolor": {
+                    "name": "Active Text Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "inactivetextcolor": {
+                    "name": "Inactive Text Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "scale": {
+                    "name": "Scale",
+                    "desc": "",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 5,
+                    "increment": 0.05
+                },
+                "opacity": {
+                    "name": "Opacity",
+                    "desc": "",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 1,
+                    "increment": 0.01
+                },
+                "font": {
+                    "name": "Font",
+                    "desc": "",
+                    "type": "font"
+                }
+
+            },
             "defaultSettings": {
-                "settings": null,
+                "settings": {
+                    "position": "100 100",
+                    "border": true,
+                    "activecolor": "black",
+                    "inactivecolor": "white",
+                    "activetextcolor": "white",
+                    "inactivetextcolor": "black",
+                    "scale": 1,
+                    "opacity": 1,
+                    "font": "Retron2000"
+                },
                 "favorite": false,
                 "enabled": false
             }
@@ -638,7 +701,6 @@
                     "min": 1,
                     "max": 25,
                     "increment": 1
-
                 },
                 "activatorkeybind": {
                     "name": "Activate fly",

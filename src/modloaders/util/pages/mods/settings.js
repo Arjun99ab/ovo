@@ -378,7 +378,7 @@ let createModSettingsPopup = (modId) => {
     padding: "15px",
     // margin: "5px",
     flexDirection: "column",
-    rowGap: "15px",
+    rowGap: "2vh",
     // width: "10%",
     borderTop: "solid 3px black",
 
@@ -719,7 +719,7 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       settingText.style.margin = "0";
       settingText.style.padding = "0";
   
-      let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+      // let modSettings = JSON.parse(localStorage.getItem('modSettings'));
       // let settingValue = document.createElement("p");
       // settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
       // settingValue.style.fontSize = "1.8vw";
@@ -748,43 +748,70 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       tempDiv.style.textAlign = "center";
       tempDiv.style.borderRadius = "20%";
 
-      let settingButton = document.createElement("div");
-      console.log(setting)
-      settingButton.innerHTML = modSettings['mods'][modId]['settings'][setting] ? "✅" : "⬜"; //replace with image
-      settingButton.style.backgroundColor = modSettings['mods'][modId]['settings'][setting] ? "rgb(0,210,106)" : "white";
-      settingButton.style.fontSize = "1.8vw";
-      settingButton.style.margin = "0";
-      settingButton.style.padding = "2px";
-      settingButton.style.border = "1px solid black";
-      // settingButton.style.minWidth = "10vw";
-      settingButton.style.width = "3vw";
-      settingButton.style.height = "3vw";
-      settingButton.style.display = "flex";
-      settingButton.style.justifyContent = "center";
-      settingButton.style.alignItems = "center";
-      settingButton.style.cursor = "pointer";
-      settingButton.style.userSelect = "none";
-      settingButton.style.textAlign = "center";
-      settingButton.style.borderRadius = "50%";
 
-      settingButton.onclick = function() {
-        modSettings = JSON.parse(localStorage.getItem('modSettings'));
-        settingButton.innerHTML = modSettings['mods'][modId]['settings'][setting] ? "⬜" : "✅";
-        settingButton.style.backgroundColor = modSettings['mods'][modId]['settings'][setting] ? "white" : "rgb(0,210,106)";
-        
-        modSettings['mods'][modId]['settings'][setting] = !modSettings['mods'][modId]['settings'][setting];
-        localStorage.setItem('modSettings', JSON.stringify(modSettings));
-      }
-      // settingButton.addEventListener('mousedown', (e) => {
-      //   // console.log("please0")
-      //   // e.preventDefault();
-      //   e.stopImmediatePropagation()
-      //   e.stopPropagation();
-      //   settingButton.focus();
-      //   // settingLine.select();
-      // });
 
-      tempDiv.appendChild(settingButton);
+      const customCheckbox = document.createElement('span');
+      customCheckbox.id = "customCheckbox";
+      let isChecked = true;
+
+      // Set up the initial style for the checkbox
+      Object.assign(customCheckbox.style, {
+          display: 'inline-block',
+          width: '20px',
+          height: '20px',
+          backgroundColor: '#f0f0f0',
+          border: '2px solid #999',
+          borderRadius: '4px',
+          position: 'relative',
+          cursor: 'pointer'
+      });
+
+      // Add the click event listener to toggle the checkbox state
+      customCheckbox.addEventListener('click', function () {
+          isChecked = !isChecked;
+
+
+
+          if (isChecked) {
+              customCheckbox.style.backgroundColor = '#4caf50';
+              customCheckbox.style.borderColor = '#4caf50';
+
+              // Create and display the checkmark (if it doesn't exist)
+              if (!customCheckbox.querySelector('.checkmark')) {
+                  const checkmark = document.createElement('div');
+                  checkmark.classList.add('checkmark');
+                  Object.assign(checkmark.style, {
+                      content: '""',
+                      position: 'absolute',
+                      left: '6px',
+                      top: '2px',
+                      width: '6px',
+                      height: '12px',
+                      border: 'solid white',
+                      borderWidth: '0 2px 2px 0',
+                      transform: 'rotate(45deg)',
+                      opacity: '1',
+                      transition: 'opacity 0.2s'
+                  });
+                  customCheckbox.appendChild(checkmark);
+              }
+          } else {
+              customCheckbox.style.backgroundColor = '#f0f0f0';
+              customCheckbox.style.borderColor = '#999';
+
+              // Remove the checkmark if unchecked
+              const checkmark = customCheckbox.querySelector('.checkmark');
+              if (checkmark) {
+                  customCheckbox.removeChild(checkmark);
+              }
+          }
+
+          // Log the state
+          console.log('Checkbox is checked:', isChecked);
+      });
+
+
+      tempDiv.appendChild(customCheckbox);
 
       
   
