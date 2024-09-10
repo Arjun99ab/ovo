@@ -292,6 +292,7 @@ let createModSettingsPopup = (modId) => {
       overflow: "auto",
       margin: "0",
       maxHeight: "90%",
+      zIndex: "1002",
       
       // padding: "10px",
       borderRadius: "10px",
@@ -352,14 +353,23 @@ let createModSettingsPopup = (modId) => {
   });
 
   xButton.innerHTML = "❌";
-  xButton.id = "x-button";
+  xButton.id = "x-button-mod-settings";
 
   xButton.onclick = function() {
+    console.log("asohdyasud")
     modSettingsPopup.remove();
-    document.getElementById("menu-bg").style.pointerEvents = "auto";
-    document.getElementById("menu-bg").style.filter = "none";
+    try {
+      document.getElementById("x-button-moving-mode").remove();
+    } catch(e) {}
+    try {
+      document.getElementById("menu-bg").style.pointerEvents = "auto";
+      document.getElementById("menu-bg").style.filter = "none";
+    } catch(e) {
+      console.log("no menu bg")
+    }
     try {
       globalThis[modId + "SettingsUpdate"]();
+      globalThis[modId + "ToggleMoving"](false);
     } catch(e) {
       //if it works it works, if it doesnt, itll auto update when the mod is reloaded
     }
@@ -698,6 +708,41 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       
       settingButton.onclick = function() {
         console.log("move element")
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.display = "none";
+        document.getElementById("modSettingsPopup-bg").style.pointerEvents = "none";
+        document.getElementById("modSettingsPopup-bg").style.display = "none";
+
+        let xButton = document.createElement("button");
+        let c = {
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          backgroundColor: "white",
+          border: "none",
+          fontFamily: "Retron2000",
+          color: "black",
+          fontSize: "3.5vw",
+          cursor: "pointer",
+        };
+        Object.keys(c).forEach(function (a) {
+            xButton.style[a] = c[a];
+        });
+
+        xButton.innerHTML = "❌";
+        xButton.id = "x-button-moving-mode";
+        xButton.onclick = function() {
+          console.log("asohdyasud")
+          document.getElementById("menu-bg").style.pointerEvents = "auto";
+          document.getElementById("menu-bg").style.display = "block";
+          document.getElementById("modSettingsPopup-bg").style.pointerEvents = "auto";
+          document.getElementById("modSettingsPopup-bg").style.display = "block";
+          xButton.remove();
+          globalThis[modId + "ToggleMoving"](false);
+        }
+        document.body.appendChild(xButton);
+
+        globalThis[modId + "ToggleMoving"](true);
       }
       settingRow.appendChild(settingButton);
       return settingRow;
@@ -719,7 +764,7 @@ let createModSettingsKeybind = (modId, setting, bg) => {
       settingText.style.margin = "0";
       settingText.style.padding = "0";
   
-      // let modSettings = JSON.parse(localStorage.getItem('modSettings'));
+      let modSettings = JSON.parse(localStorage.getItem('modSettings'));
       // let settingValue = document.createElement("p");
       // settingValue.innerHTML = modSettings['mods'][modId]['settings'][setting];
       // settingValue.style.fontSize = "1.8vw";
@@ -752,7 +797,7 @@ let createModSettingsKeybind = (modId, setting, bg) => {
 
       const customCheckbox = document.createElement('span');
       customCheckbox.id = "customCheckbox";
-      let isChecked = true;
+      let isChecked = modSettings['mods'][modId]['settings'][setting];
 
       // Set up the initial style for the checkbox
       Object.assign(customCheckbox.style, {
@@ -766,9 +811,47 @@ let createModSettingsKeybind = (modId, setting, bg) => {
           cursor: 'pointer'
       });
 
+      if (isChecked) {
+          customCheckbox.style.backgroundColor = '#4caf50';
+          customCheckbox.style.borderColor = '#4caf50';
+
+          // Create and display the checkmark (if it doesn't exist)
+          if (!customCheckbox.querySelector('.checkmark')) {
+              const checkmark = document.createElement('div');
+              checkmark.classList.add('checkmark');
+              Object.assign(checkmark.style, {
+                  content: '""',
+                  position: 'absolute',
+                  left: '6px',
+                  top: '2px',
+                  width: '6px',
+                  height: '12px',
+                  border: 'solid white',
+                  borderWidth: '0 2px 2px 0',
+                  transform: 'rotate(45deg)',
+                  opacity: '1',
+                  transition: 'opacity 0.2s'
+              });
+              customCheckbox.appendChild(checkmark);
+          }
+      } else {
+          customCheckbox.style.backgroundColor = '#f0f0f0';
+          customCheckbox.style.borderColor = '#999';
+
+          // Remove the checkmark if unchecked
+          const checkmark = customCheckbox.querySelector('.checkmark');
+          if (checkmark) {
+              customCheckbox.removeChild(checkmark);
+          }
+      }
+
       // Add the click event listener to toggle the checkbox state
       customCheckbox.addEventListener('click', function () {
           isChecked = !isChecked;
+
+          modSettings = JSON.parse(localStorage.getItem('modSettings'));
+          modSettings['mods'][modId]['settings'][setting] = isChecked;
+          localStorage.setItem('modSettings', JSON.stringify(modSettings));
 
 
 

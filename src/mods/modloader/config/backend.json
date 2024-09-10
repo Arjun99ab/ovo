@@ -608,8 +608,8 @@
             "author": "Awesomeguy",
             "desc": "Shows your keystrokes on screen.",
             "url": "../src/mods/modloader/keystrokes.js",
-            "icon": "https://cdn-icons-png.flaticon.com/128/1548/1548686.png",
-            "platform": [],
+            "icon": "../src/img/mods/keystrokes.png",
+            "platform": ["mobile", "pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
             "reload": false,
@@ -659,13 +659,7 @@
                     "min": 0,
                     "max": 1,
                     "increment": 0.01
-                },
-                "font": {
-                    "name": "Font",
-                    "desc": "",
-                    "type": "font"
                 }
-
             },
             "defaultSettings": {
                 "settings": {
@@ -740,7 +734,7 @@
             "desc": "Customize your HUD! Move around elements, right click to edit them, pause the game to enable/disable and add custom text nodes!<br/><br/>WIP for mobile support.",
             "url": "../src/mods/modloader/gui.js",
             "icon": "../src/img/mods/gui.png",
-            "platform": ["pc", "mobile"],
+            "platform": ["pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
             "reload": false,

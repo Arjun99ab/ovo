@@ -31,6 +31,7 @@ let createDescPopup = (modId) => {
         margin: "0",
         padding: "10px",
         borderRadius: "10px",
+        zIndex: "1002",
     };
     Object.keys(c).forEach(function (a) {
       descPopup.style[a] = c[a];

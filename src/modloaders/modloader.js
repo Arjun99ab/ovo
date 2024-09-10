@@ -212,6 +212,7 @@ export let runtime;
           display: "flex",
           flexDirection: "column",
           borderRadius: "10px",
+          zIndex: "1001",
       };
       Object.keys(c).forEach(function (a) {
           menuBg.style[a] = c[a];
@@ -313,7 +314,11 @@ export let runtime;
           menuBg.remove();
           const popups = document.getElementsByClassName("modloader-popups");
           for (let i = 0; i < popups.length; i++) {
-            popups[i].remove();
+            if(popups[i].id === "modSettingsPopup-bg") { //if mod settings menu is open, ensure settings are properly saved
+              document.getElementById("x-button-mod-settings").click()
+            } else {
+              popups[i].remove();
+            }
           }
           versionText.remove();
           enableClick(map);

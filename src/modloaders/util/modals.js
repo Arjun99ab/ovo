@@ -31,6 +31,7 @@ function createNotifyModal (text) {
         margin: "0",
         padding: "10px",
         borderRadius: "10px",
+        zIndex: "1002",
     };
     Object.keys(c).forEach(function (a) {
       notifyBg.style[a] = c[a];
@@ -148,6 +149,7 @@ function createChangelogPopup(changelog, userVersion, currentVersion) {
       margin: "0",
       padding: "10px",
       borderRadius: "10px",
+      zIndex: "1002",
   };
   Object.keys(c).forEach(function (a) {
     changelogPopup.style[a] = c[a];
@@ -280,6 +282,7 @@ function createConfirmDeleteModal(modId) {
       margin: "0",
       padding: "5px",
       borderRadius: "10px",
+      zIndex: "1002",
   };
   Object.keys(c).forEach(function (a) {
       confirmBg.style[a] = c[a];
@@ -416,6 +419,7 @@ function createConfirmReloadModal(modId) {
       margin: "0",
       padding: "5px",
       borderRadius: "10px",
+      zIndex: "1002",
   };
   Object.keys(c).forEach(function (a) {
       confirmBg.style[a] = c[a];

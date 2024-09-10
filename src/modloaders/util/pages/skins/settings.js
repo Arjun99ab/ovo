@@ -292,6 +292,7 @@ let createModSettingsPopup = (modId) => {
       overflow: "auto",
       margin: "0",
       maxHeight: "90%",
+      zIndex: "1002",
       
       // padding: "10px",
       borderRadius: "10px",
