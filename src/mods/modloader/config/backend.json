@@ -644,11 +644,6 @@
                     "desc": "",
                     "type": "color"
                 },
-                "font": {
-                    "name": "Font",
-                    "desc": "",
-                    "type": "font"
-                },
                 "scale": {
                     "name": "Scale",
                     "desc": "",
@@ -676,8 +671,7 @@
                     "activetextcolor": "white",
                     "inactivetextcolor": "black",
                     "scale": 1,
-                    "opacity": 1,
-                    "font": "Retron2000"
+                    "opacity": 1
                 },
                 "favorite": false,
                 "enabled": false
