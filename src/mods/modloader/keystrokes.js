@@ -244,49 +244,50 @@
 
 
         tick() {
-            if (!enabled) {
-                return;
-            }
-            if((isInLevel() && runtime.running_layout.name !== "Level Menu") || moving ) {
-                document.getElementById("arrowsContainer").style.display = "block";
-            } else {
-                document.getElementById("arrowsContainer").style.display = "none";
-            }
-            if (detectDeviceType() === "pc") {
-                if(elementMoving !== null && moving) {
-                    elementMoving.style.left = (currentMouseCoords[0] - startingMouseCoords[0] + parseInt(elementMoving.style.left)).toString() + 'px';
-                    elementMoving.style.top = (currentMouseCoords[1] - startingMouseCoords[1] + parseInt(elementMoving.style.top)).toString() + 'px';
-                    startingMouseCoords  = currentMouseCoords;
+            try {
+                if (!enabled) {
+                    return;
                 }
-            }
-            if (detectDeviceType() === "mobile") {
-                let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
-                let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
-                if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
-                    document.getElementById("up").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("up") ? keyColors["up"][1] : keyColors["up"][0];
-                    document.getElementById("down").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("down") ? keyColors["up"][1] : keyColors["up"][0]
-                    document.getElementById("left").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("left") ? keyColors["up"][1] : keyColors["up"][0];
-                    document.getElementById("right").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("right") ? keyColors["up"][1] : keyColors["up"][0];
-                    
-                    document.getElementById("up").style.color = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("up") ? keyColors["up"][3] : keyColors["up"][2];
-                    document.getElementById("down").style.color = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("down") ? keyColors["up"][3] : keyColors["up"][2]
-                    document.getElementById("left").style.color = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("left") ? keyColors["up"][3] : keyColors["up"][2];
-                    document.getElementById("right").style.color = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("right") ? keyColors["up"][3] : keyColors["up"][2];
-                    
-                
+                if((isInLevel() && runtime.running_layout.name !== "Level Menu") || moving ) {
+                    document.getElementById("arrowsContainer").style.display = "block";
                 } else {
-                    document.getElementById("up").style.backgroundColor = keyColors["up"][0];
-                    document.getElementById("down").style.backgroundColor = keyColors["up"][0];
-                    document.getElementById("left").style.backgroundColor = keyColors["up"][0];
-                    document.getElementById("right").style.backgroundColor = keyColors["up"][0];
-
-                    document.getElementById("up").style.color = keyColors["up"][2];
-                    document.getElementById("down").style.color = keyColors["up"][2];
-                    document.getElementById("left").style.color = keyColors["up"][2];
-                    document.getElementById("right").style.color = keyColors["up"][2];
+                    document.getElementById("arrowsContainer").style.display = "none";
                 }
-            }
-            
+                if (detectDeviceType() === "pc") {
+                    if(elementMoving !== null && moving) {
+                        elementMoving.style.left = (currentMouseCoords[0] - startingMouseCoords[0] + parseInt(elementMoving.style.left)).toString() + 'px';
+                        elementMoving.style.top = (currentMouseCoords[1] - startingMouseCoords[1] + parseInt(elementMoving.style.top)).toString() + 'px';
+                        startingMouseCoords  = currentMouseCoords;
+                    }
+                }
+                if (detectDeviceType() === "mobile") {
+                    let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
+                    let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
+                    if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
+                        document.getElementById("up").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("up") ? keyColors["up"][1] : keyColors["up"][0];
+                        document.getElementById("down").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("down") ? keyColors["up"][1] : keyColors["up"][0]
+                        document.getElementById("left").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("left") ? keyColors["up"][1] : keyColors["up"][0];
+                        document.getElementById("right").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("right") ? keyColors["up"][1] : keyColors["up"][0];
+                        
+                        document.getElementById("up").style.color = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("up") ? keyColors["up"][3] : keyColors["up"][2];
+                        document.getElementById("down").style.color = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("down") ? keyColors["up"][3] : keyColors["up"][2]
+                        document.getElementById("left").style.color = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("left") ? keyColors["up"][3] : keyColors["up"][2];
+                        document.getElementById("right").style.color = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("right") ? keyColors["up"][3] : keyColors["up"][2];
+                        
+                    
+                    } else {
+                        document.getElementById("up").style.backgroundColor = keyColors["up"][0];
+                        document.getElementById("down").style.backgroundColor = keyColors["up"][0];
+                        document.getElementById("left").style.backgroundColor = keyColors["up"][0];
+                        document.getElementById("right").style.backgroundColor = keyColors["up"][0];
+
+                        document.getElementById("up").style.color = keyColors["up"][2];
+                        document.getElementById("down").style.color = keyColors["up"][2];
+                        document.getElementById("left").style.color = keyColors["up"][2];
+                        document.getElementById("right").style.color = keyColors["up"][2];
+                    }
+                }
+            } catch {}
         },
 
         toString() { //need tostring because add tick obj ios bug

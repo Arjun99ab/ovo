@@ -49,6 +49,13 @@
             "Skins menu! Play with custom skins from the community.",
             "Note: some skins are not available across all versions due default skins availablitity per version."
         ]
+    },
+    "2.1.1": {
+        "changes": [
+            "Deprecated GUI mod. You can enable the same GUI elements as mods in the menu",
+            "They are listed as FPS, keystrokes, position, and state",
+            "Added mobile support and customization for these GUI elements"
+        ]
     }
 
 }

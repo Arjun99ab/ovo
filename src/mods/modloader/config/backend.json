@@ -1,5 +1,5 @@
 {
-    "version": "2.1.0",
+    "version": "2.1.1",
     "settings":{
     },
     "skins": {
@@ -677,12 +677,12 @@
                 "enabled": false
             }
         },
-        "fps": {
+        "fpsGUI": {
             "name": "FPS",
             "author": "Awesomeguy",
             "desc": "Shows your FPS on screen.",
-            "url": "../src/mods/modloader/fps.js",
-            "icon": "../src/img/mods/fps.png",
+            "url": "../src/mods/modloader/fpsGUI.js",
+            "icon": "../src/img/mods/fpsGUI.png",
             "platform": ["mobile", "pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
@@ -727,7 +727,129 @@
             },
             "defaultSettings": {
                 "settings": {
-                    "position": "100 100",
+                    "position": "225 100",
+                    "border": true,
+                    "backgroundcolor": "white",
+                    "textcolor": "black",
+                    "scale": 1,
+                    "opacity": 1
+                },
+                "favorite": false,
+                "enabled": false
+            }
+        },
+        "positionGUI": {
+            "name": "Position",
+            "author": "Awesomeguy",
+            "desc": "Shows your position on screen.",
+            "url": "../src/mods/modloader/positionGUI.js",
+            "icon": "../src/img/mods/positionGUI.png",
+            "platform": ["mobile", "pc"],
+            "version": ["1.4", "1.4.4", "CTLE"],
+            "tags": ["visual"],
+            "reload": false,
+            "settings": {
+                "position": {
+                    "name": "Position",
+                    "desc": "",
+                    "type": "guiPosition"
+                },
+                "border": {
+                    "name": "Border",
+                    "desc": "",
+                    "type": "checkbox"
+                },
+                "backgroundcolor": {
+                    "name": "Background Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "textcolor": {
+                    "name": "Text Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "scale": {
+                    "name": "Scale",
+                    "desc": "",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 5,
+                    "increment": 0.05
+                },
+                "opacity": {
+                    "name": "Opacity",
+                    "desc": "",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 1,
+                    "increment": 0.01
+                }
+            },
+            "defaultSettings": {
+                "settings": {
+                    "position": "100 400",
+                    "border": true,
+                    "backgroundcolor": "white",
+                    "textcolor": "black",
+                    "scale": 1,
+                    "opacity": 1
+                },
+                "favorite": false,
+                "enabled": false
+            }
+        },
+        "stateGUI": {
+            "name": "State",
+            "author": "Awesomeguy",
+            "desc": "Shows your state on screen.",
+            "url": "../src/mods/modloader/stateGUI.js",
+            "icon": "../src/img/mods/stateGUI.png",
+            "platform": ["mobile", "pc"],
+            "version": ["1.4", "1.4.4", "CTLE"],
+            "tags": ["visual"],
+            "reload": false,
+            "settings": {
+                "position": {
+                    "name": "Position",
+                    "desc": "",
+                    "type": "guiPosition"
+                },
+                "border": {
+                    "name": "Border",
+                    "desc": "",
+                    "type": "checkbox"
+                },
+                "backgroundcolor": {
+                    "name": "Background Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "textcolor": {
+                    "name": "Text Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "scale": {
+                    "name": "Scale",
+                    "desc": "",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 5,
+                    "increment": 0.05
+                },
+                "opacity": {
+                    "name": "Opacity",
+                    "desc": "",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 1,
+                    "increment": 0.01
+                }
+            },
+            "defaultSettings": {
+                "settings": {
+                    "position": "100 250",
                     "border": true,
                     "backgroundcolor": "white",
                     "textcolor": "black",

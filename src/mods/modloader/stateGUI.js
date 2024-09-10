@@ -2,7 +2,7 @@
 (function() {
     let runtime = cr_getC2Runtime();
 
-    let settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['fps']['settings'];
+    let settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['stateGUI']['settings'];
 
     let currentMouseCoords = [];
     var elementMoving = null;
@@ -11,40 +11,32 @@
     let moving = false;
 
     let enabled = true;
-    
-
-    let keyColors = {
-        "up": [settings["inactivecolor"], settings["activecolor"], settings["inactivetextcolor"], settings["activetextcolor"]],
-        "down": [settings["inactivecolor"], settings["activecolor"], settings["inactivetextcolor"], settings["activetextcolor"]],
-        "left": [settings["inactivecolor"], settings["activecolor"], settings["inactivetextcolor"], settings["activetextcolor"]],
-        "right": [settings["inactivecolor"], settings["activecolor"], settings["inactivetextcolor"], settings["activetextcolor"]]
-    }
 
 
-    globalThis.fpsToggleMoving = function (enable) {
+    globalThis.stateGUIToggleMoving = function (enable) {
         moving = enable;
-        document.getElementById("fps").style.cursor = enable ? "grab" : "default";
+        document.getElementById("gui-state").style.cursor = enable ? "grab" : "default";
     }
 
-    globalThis.fpsToggle = function (enable) {
+    globalThis.stateGUIToggle = function (enable) {
         if (enable) {
             enabled = true;
         } else {
-            document.getElementById("fps").style.display = "none";
+            document.getElementById("gui-state").style.display = "none";
             enabled = false;
         }
     }
 
-    globalThis.fpsSettingsUpdate = function () {
-        settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['fps']['settings'];
-        let fps = document.getElementById("gui-fps")
-        fps.style.top = `${settings["position"].split(' ')[0]}px`;
-        fps.style.left = `${settings["position"].split(' ')[1]}px`;
-        fps.style.transform = `scale(${settings["scale"]})`;
-        fps.style.opacity = `${settings["opacity"]}`;
-        fps.style.color = settings["textcolor"];
-        fps.style.backgroundColor = settings["backgroundcolor"];
-        fps.style.border = settings["border"] ? "2px solid black" : "none";
+    globalThis.stateGUISettingsUpdate = function () {
+        settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['stateGUI']['settings'];
+        let state = document.getElementById("gui-state")
+        state.style.top = `${settings["position"].split(' ')[0]}px`;
+        state.style.left = `${settings["position"].split(' ')[1]}px`;
+        state.style.transform = `scale(${settings["scale"]})`;
+        state.style.opacity = `${settings["opacity"]}`;
+        state.style.color = settings["textcolor"];
+        state.style.backgroundColor = settings["backgroundcolor"];
+        state.style.border = settings["border"] ? "2px solid black" : "none";
         
         
 
@@ -107,7 +99,7 @@
         b.addEventListener('mouseup', (event) => {
             if(event.button === 0 && elementMoving !== null && moving) {
                 settings = JSON.parse(localStorage.getItem("modSettings"));
-                settings['mods']['fps']['settings']["position"] = `${parseInt(elementMoving.style.top)} ${parseInt(elementMoving.style.left)}`;
+                settings['mods']['stateGUI']['settings']["position"] = `${parseInt(elementMoving.style.top)} ${parseInt(elementMoving.style.left)}`;
                 localStorage.setItem('modSettings', JSON.stringify(settings));
 
                 elementMoving = null;
@@ -134,7 +126,7 @@
         b.addEventListener('touchend', (event) => {
             if (elementMoving !== null && moving) {
                 settings = JSON.parse(localStorage.getItem("modSettings"));
-                settings['mods']['fps']['settings']["position"] = `${parseInt(elementMoving.style.top)} ${parseInt(elementMoving.style.left)}`;
+                settings['mods']['stateGUI']['settings']["position"] = `${parseInt(elementMoving.style.top)} ${parseInt(elementMoving.style.left)}`;
                 localStorage.setItem('modSettings', JSON.stringify(settings));
 
                 elementMoving = null;
@@ -147,46 +139,64 @@
 
     }
 
-    let fps = {
+    let stateGUI = {
         init() {
 
             document.addEventListener('mousemove', (event) => {
                 currentMouseCoords = [event.clientX, event.clientY]
             });
             
-            let fpsElement = createGuiElement('gui-fps', settings["position"].split(' ')[0], settings["position"].split(' ')[0], "FPS")
-            document.body.appendChild(fpsElement);
+            let stateElement = createGuiElement('gui-state', settings["position"].split(' ')[0], settings["position"].split(' ')[1], "state")
+            document.body.appendChild(stateElement);
             runtime.tickMe(this);
             console.log("init complete")
-            notify("by Awesomeguy", "FPS Mod Loaded", "../src/img/mods/fps.png");
+            notify("by Awesomeguy", "State GUI Loaded", "../src/img/mods/stateGUI.png");
         },
 
 
 
         tick() {
-            if (!enabled) {
-                return;
-            }
-            if((isInLevel() && runtime.running_layout.name !== "Level Menu") || moving ) {
-                document.getElementById("gui-fps").style.display = "block";
-                document.getElementById("gui-fps").innerHTML = runtime.fps;
-            } else {
-                // console.log("cuh^2")
-                document.getElementById("gui-fps").style.display = "none";
-            }
-            if (detectDeviceType() === "pc") {
-                if(elementMoving !== null && moving) {
-                    elementMoving.style.left = (currentMouseCoords[0] - startingMouseCoords[0] + parseInt(elementMoving.style.left)).toString() + 'px';
-                    elementMoving.style.top = (currentMouseCoords[1] - startingMouseCoords[1] + parseInt(elementMoving.style.top)).toString() + 'px';
-                    startingMouseCoords  = currentMouseCoords;
+            try {
+                if (!enabled) {
+                    return;
                 }
-            }
+                if((isInLevel() && runtime.running_layout.name !== "Level Menu") || moving ) {
+                    document.getElementById("gui-state").style.display = "block";
+                    let playerInstances = runtime.types_by_index.filter((x) =>!!x.animations &&x.animations[0].frames[0].texture_file.includes("collider"))[0].instances.filter((x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled);
+                    let player = playerInstances[0];  
+                    if(Math.abs(player.behavior_insts[0].dx) > 551) {
+                        document.getElementById("gui-state").innerHTML = "Rejump/1FSJ";
+                    } else if(Math.abs(player.behavior_insts[0].dx) > 500) {
+                        document.getElementById("gui-state").innerHTML = "Sliding";                    
+                    } else if(Math.abs(player.behavior_insts[0].dx) > 450) {
+                        document.getElementById("gui-state").innerHTML = "Diving";                    
+                    } else if(player.behavior_insts[0].dy < 0) {
+                        document.getElementById("gui-state").innerHTML = "Jumping";                    
+                    } else if(player.behavior_insts[0].dy > 0) {
+                        document.getElementById("gui-state").innerHTML = "Falling";                    
+                    } else if(Math.abs(player.behavior_insts[0].dx) > 0) {
+                        document.getElementById("gui-state").innerHTML = "Running";                    
+                    } else {
+                        document.getElementById("gui-state").innerHTML = "Resting"; 
+                    }
+                } else {
+                    // console.log("cuh^2")
+                    document.getElementById("gui-state").style.display = "none";
+                }
+                if (detectDeviceType() === "pc") {
+                    if(elementMoving !== null && moving) {
+                        elementMoving.style.left = (currentMouseCoords[0] - startingMouseCoords[0] + parseInt(elementMoving.style.left)).toString() + 'px';
+                        elementMoving.style.top = (currentMouseCoords[1] - startingMouseCoords[1] + parseInt(elementMoving.style.top)).toString() + 'px';
+                        startingMouseCoords  = currentMouseCoords;
+                    }
+                }
+            } catch {}
             
         },
 
         toString() { //need tostring because add tick obj ios bug
-            return "awesomeguy.fps";
+            return "awesomeguy.stateGUI";
         }
     };
-    fps.init();
+    stateGUI.init();
 })();
