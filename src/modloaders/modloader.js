@@ -917,10 +917,12 @@ export let runtime;
               runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.JSON)[1].instances[0].data.root.push(entry)
             }
           }
+          let customSkin = false
           //enable skins, find skin that is using
           let foundSkin = false;
           for (const [key] of Object.entries(userConfig['skins'])) {
             if(userConfig['skins'][key]['using'] === true && backendConfig['skins'][key]['version'].includes(skinVersion) && !foundSkin && !backendConfig['skins'][key]['tags'].includes("official")) {
+              customSkin = true
               console.log("set skin", key)
               userConfig['skins'][key]["using"] = true;
               console.log(1)
@@ -960,8 +962,7 @@ export let runtime;
 
                   cur.width = (collider.width / collider.curFrame.width) * cur.curFrame.width;
                   cur.height = (collider.height / collider.curFrame.height) * cur.curFrame.height;
-                  cur.set_bbox_changed();     
-                  runtime.changelayout = runtime.running_layout // potentially fixed black skin bug          
+                  cur.set_bbox_changed();            
               }
               console.log(1)
               foundSkin = true;
@@ -1008,6 +1009,10 @@ export let runtime;
               }
               
             }
+          }
+
+          if (customSkin) {
+            runtime.changelayout = runtime.running_layout
           }
 
           localStorage.setItem('modSettings', JSON.stringify(userConfig));
