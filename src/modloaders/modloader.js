@@ -923,12 +923,13 @@ export let runtime;
             if(userConfig['skins'][key]['using'] === true && backendConfig['skins'][key]['version'].includes(skinVersion) && !foundSkin && !backendConfig['skins'][key]['tags'].includes("official")) {
               console.log("set skin", key)
               userConfig['skins'][key]["using"] = true;
+              console.log(1)
               runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.Globals)[0].instances[0].instance_vars[8] = key;
-              
+              console.log(1)
               let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0];
               saveObj.data.CurSkin = key;
               cr.plugins_.SyncStorage.prototype.acts.SaveData.call(saveObj)
-              
+              console.log(1)
               
               let insts = runtime.types_by_index.filter((x) =>
                 x.behaviors.some(
@@ -940,20 +941,29 @@ export let runtime;
                     x.animations[0].frames[0].texture_file.includes("collider")
                 )[0]
                 .instances[0];
+                console.log(1)
               for(let i = 0; i < insts.length; i++) {
                   let cur = insts[i]
                   cur.width = cur.curFrame.width
                   cur.height = cur.curFrame.height
-                  cur.set_bbox_changed();    
+                  console.log(1, i)
+                  cur.set_bbox_changed(); 
+                  console.log(1, i)
+
                   let skymenskinbehav = cur.behaviorSkins[0]
                   skymenskinbehav.syncScale = true;
                   skymenskinbehav.syncSize = false;
-                  cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(skymenskinbehav, key);
+                  console.log(1, i)
+                  
+                  cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(skymenskinbehav, key); // causes black skin bug
+                  console.log(1, i)
 
                   cur.width = (collider.width / collider.curFrame.width) * cur.curFrame.width;
                   cur.height = (collider.height / collider.curFrame.height) * cur.curFrame.height;
-                  cur.set_bbox_changed();               
+                  cur.set_bbox_changed();     
+                  runtime.changelayout = runtime.running_layout // potentially fixed black skin bug          
               }
+              console.log(1)
               foundSkin = true;
             } else {
               userConfig['skins'][key]['using'] = false
