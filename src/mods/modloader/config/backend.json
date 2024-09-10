@@ -644,6 +644,86 @@
                     "desc": "",
                     "type": "color"
                 },
+                "font": {
+                    "name": "Font",
+                    "desc": "",
+                    "type": "font"
+                },
+                "scale": {
+                    "name": "Scale",
+                    "desc": "",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 5,
+                    "increment": 0.05
+                },
+                "opacity": {
+                    "name": "Opacity",
+                    "desc": "",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 1,
+                    "increment": 0.01
+                }
+
+            },
+            "defaultSettings": {
+                "settings": {
+                    "position": "100 100",
+                    "border": true,
+                    "activecolor": "black",
+                    "inactivecolor": "white",
+                    "activetextcolor": "white",
+                    "inactivetextcolor": "black",
+                    "scale": 1,
+                    "opacity": 1,
+                    "font": "Retron2000"
+                },
+                "favorite": false,
+                "enabled": false
+            }
+        },
+        "fps": {
+            "name": "FPS",
+            "author": "Awesomeguy",
+            "desc": "Shows your FPS on screen.",
+            "url": "../src/mods/modloader/fps.js",
+            "icon": "../src/img/mods/fps.png",
+            "platform": [],
+            "version": ["1.4", "1.4.4", "CTLE"],
+            "tags": ["visual"],
+            "reload": false,
+            "settings": {
+                "position": {
+                    "name": "Position",
+                    "desc": "",
+                    "type": "guiPosition"
+                },
+                "border": {
+                    "name": "Border",
+                    "desc": "",
+                    "type": "checkbox"
+                },
+                "activecolor": {
+                    "name": "Active Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "inactivecolor": {
+                    "name": "Inactive Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "activetextcolor": {
+                    "name": "Active Text Color",
+                    "desc": "",
+                    "type": "color"
+                },
+                "inactivetextcolor": {
+                    "name": "Inactive Text Color",
+                    "desc": "",
+                    "type": "color"
+                },
                 "scale": {
                     "name": "Scale",
                     "desc": "",

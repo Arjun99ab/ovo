@@ -356,6 +356,8 @@ let createModSettingsPopup = (modId) => {
   xButton.id = "x-button-mod-settings";
 
   xButton.onclick = function() {
+
+    //fix bad code
     console.log("asohdyasud")
     modSettingsPopup.remove();
     try {
