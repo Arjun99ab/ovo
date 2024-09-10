@@ -574,7 +574,7 @@
             "desc": "Shows your keystrokes on screen.",
             "url": "../src/mods/modloader/ticktest.js",
             "icon": "https://cdn-icons-png.flaticon.com/128/1548/1548686.png",
-            "platform": ["pc"],
+            "platform": [],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
             "reload": false,
@@ -683,7 +683,7 @@
             "desc": "Shows your FPS on screen.",
             "url": "../src/mods/modloader/fps.js",
             "icon": "../src/img/mods/fps.png",
-            "platform": [],
+            "platform": ["mobile", "pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
             "reload": false,
@@ -698,23 +698,13 @@
                     "desc": "",
                     "type": "checkbox"
                 },
-                "activecolor": {
-                    "name": "Active Color",
+                "backgroundcolor": {
+                    "name": "Background Color",
                     "desc": "",
                     "type": "color"
                 },
-                "inactivecolor": {
-                    "name": "Inactive Color",
-                    "desc": "",
-                    "type": "color"
-                },
-                "activetextcolor": {
-                    "name": "Active Text Color",
-                    "desc": "",
-                    "type": "color"
-                },
-                "inactivetextcolor": {
-                    "name": "Inactive Text Color",
+                "textcolor": {
+                    "name": "Text Color",
                     "desc": "",
                     "type": "color"
                 },
@@ -739,13 +729,10 @@
                 "settings": {
                     "position": "100 100",
                     "border": true,
-                    "activecolor": "black",
-                    "inactivecolor": "white",
-                    "activetextcolor": "white",
-                    "inactivetextcolor": "black",
+                    "backgroundcolor": "white",
+                    "textcolor": "black",
                     "scale": 1,
-                    "opacity": 1,
-                    "font": "Retron2000"
+                    "opacity": 1
                 },
                 "favorite": false,
                 "enabled": false

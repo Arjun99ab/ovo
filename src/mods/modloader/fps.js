@@ -37,18 +37,15 @@
 
     globalThis.fpsSettingsUpdate = function () {
         settings = JSON.parse(localStorage.getItem("modSettings"))['mods']['fps']['settings'];
-        keyColors = {
-            "up": [settings["inactivecolor"], settings["activecolor"], settings["inactivetextcolor"], settings["activetextcolor"]],
-            "down": [settings["inactivecolor"], settings["activecolor"], settings["inactivetextcolor"], settings["activetextcolor"]],
-            "left": [settings["inactivecolor"], settings["activecolor"], settings["inactivetextcolor"], settings["activetextcolor"]],
-            "right": [settings["inactivecolor"], settings["activecolor"], settings["inactivetextcolor"], settings["activetextcolor"]]
-        }
-        let fps = document.getElementById("fps")
+        let fps = document.getElementById("gui-fps")
         fps.style.top = `${settings["position"].split(' ')[0]}px`;
         fps.style.left = `${settings["position"].split(' ')[1]}px`;
-        // arrowsContainer.style.fontFamily = `${settings["font"]}`;
         fps.style.transform = `scale(${settings["scale"]})`;
         fps.style.opacity = `${settings["opacity"]}`;
+        fps.style.color = settings["textcolor"];
+        fps.style.backgroundColor = settings["backgroundcolor"];
+        fps.style.border = settings["border"] ? "2px solid black" : "none";
+        
         
 
     }
@@ -74,17 +71,21 @@
     let createGuiElement = (id1, top, left, name) => {
         let b = document.createElement("div")
         let c = {
-            backgroundColor: "white",
-            border: "2px solid black",
+            backgroundColor: settings["backgroundcolor"],
+            border: settings["border"] ? "2px solid black" : "none",
             fontFamily: "Retron2000",
             position: "absolute",
             top: `${top}px`,
             left: `${left}px`,
             padding: "5px",
-            color: "black",
+            color: settings["textcolor"],
             fontSize: "10pt",
-            display: "none",
-            cursor: "pointer",
+            transform: `scale(${settings["scale"]})`,
+            opacity: `${settings["opacity"]}`, 
+            display: "block",
+            cursor: "default",
+            zIndex: "1000",
+            userSelect: "none",
         };
         Object.keys(c).forEach(function (a) {
             b.style[a] = c[a];
@@ -93,7 +94,6 @@
         b.name = name;
         const newContent = document.createTextNode("N/A");
 
-        // add the text node to the newly created div
         b.appendChild(newContent);
 
         b.addEventListener('mousedown', (event) => {
@@ -143,7 +143,7 @@
             }
         });
 
-        document.body.appendChild(b);
+        return b;
 
     }
 
@@ -154,8 +154,8 @@
                 currentMouseCoords = [event.clientX, event.clientY]
             });
             
-            createGuiElement('fps', settings["position"].split(' ')[0], settings["position"].split(' ')[0], "FPS")
-
+            let fpsElement = createGuiElement('gui-fps', settings["position"].split(' ')[0], settings["position"].split(' ')[0], "FPS")
+            document.body.appendChild(fpsElement);
             runtime.tickMe(this);
             console.log("init complete")
             notify("by Awesomeguy", "FPS Mod Loaded", "../src/img/mods/fps.png");
@@ -168,12 +168,11 @@
                 return;
             }
             if((isInLevel() && runtime.running_layout.name !== "Level Menu") || moving ) {
-                console.log("cuh")
-                document.getElementById("fps").style.display = "block";
-                document.getElementById("fps").innerHTML = runtime.fps;
+                document.getElementById("gui-fps").style.display = "block";
+                document.getElementById("gui-fps").innerHTML = runtime.fps;
             } else {
                 // console.log("cuh^2")
-                document.getElementById("fps").style.display = "none";
+                document.getElementById("gui-fps").style.display = "none";
             }
             if (detectDeviceType() === "pc") {
                 if(elementMoving !== null && moving) {

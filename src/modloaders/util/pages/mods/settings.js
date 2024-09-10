@@ -1088,7 +1088,7 @@ let createModSettingsKeybind = (modId, setting, bg) => {
         } 
       };
       colorBar.onkeyup = (e) => {
-        if(CSS.supports('font', colorBar.value) || colorBar.value.toLowerCase() === "retron2000") {
+        if(CSS.supports(`font-family: ${colorBar.value}`) || colorBar.value.toLowerCase() === "retron2000") {
           errorText.innerHTML = "Valid font!";
           errorText.style.color = "rgb(45, 186, 47)";
           modSettings = JSON.parse(localStorage.getItem('modSettings'));
