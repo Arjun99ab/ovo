@@ -911,23 +911,6 @@
                 "enabled": false
             }
         },
-        "gui": {
-            "name": "Gui",
-            "author": "Awesomeguy",
-            "desc": "Customize your HUD! Move around elements, right click to edit them, pause the game to enable/disable and add custom text nodes!<br/><br/>WIP for mobile support.",
-            "url": "../src/mods/modloader/gui.js",
-            "icon": "../src/img/mods/gui.png",
-            "platform": ["pc"],
-            "version": ["1.4", "1.4.4", "CTLE"],
-            "tags": ["visual"],
-            "reload": false,
-            "settings": null,
-            "defaultSettings": {
-                "settings": null,
-                "favorite": false,
-                "enabled": false
-            }
-        },
         "hurricane": {
             "name": "Hurricane",
             "author": "Toadi",
