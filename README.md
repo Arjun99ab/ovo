@@ -2,18 +2,20 @@
 
 A feature rich, gui integrated OvO mod menu.
 
+![modloader screen](./src//img/github/screen.png)
+
 ## Features
 - Enable / disable mods
 - Add custom mods
 - Favorite mods
-- Customize mod settings (keybinds, etc.)
+- Customize mod settings
+- Use community made skins
 - Saves data & mods cross sessions & versions
 - Supports 9+ versions
 
 ## To-do
 - General settings
 - Profiles
-- Skins
 
 #
 Ideas? Questions? Bug reports? Contact me via Discord at '.awesomeguy.'
