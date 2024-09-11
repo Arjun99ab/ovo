@@ -972,11 +972,9 @@ export let runtime;
           }
           if (!foundSkin) { //they are using official skin or something else is wrong
             let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0];
-            let skin = saveObj.data.CurSkin;
+            let skin = saveObj.data.CurSkin === undefined ? "" : saveObj.data.CurSkin;
 
-            console.log(skin)
-            console.log(skin === "")
-            if(backendConfig['skins'][skin]['version'] !== undefined && backendConfig['skins'][skin]['version'].includes(skinVersion)) { //skin loaded fine
+            if(backendConfig['skins'][skin]['version'].includes(skinVersion)) { //skin loaded fine
               userConfig['skins'][skin]['using'] = true;
             } else {
               userConfig['skins'][""]["using"] = true;
