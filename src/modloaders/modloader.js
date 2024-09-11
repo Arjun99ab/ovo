@@ -976,7 +976,7 @@ export let runtime;
 
             console.log(skin)
             console.log(skin === "")
-            if(skin !== "" && backendConfig['skins'][skin]['version'].includes(skinVersion)) { //skin loaded fine
+            if(backendConfig['skins'][skin]['version'] !== undefined && backendConfig['skins'][skin]['version'].includes(skinVersion)) { //skin loaded fine
               userConfig['skins'][skin]['using'] = true;
             } else {
               userConfig['skins'][""]["using"] = true;
