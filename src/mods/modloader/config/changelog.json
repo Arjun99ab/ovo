@@ -56,6 +56,12 @@
             "They are listed as FPS, keystrokes, position, and state",
             "Added mobile support and customization for these GUI elements"
         ]
+    },
+    "2.1.11": {
+        "changes": [
+            "Removed keystrokes mod from mobile due to bugs",
+            "It will be back in the future"
+        ]
     }
 
 }

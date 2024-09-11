@@ -1,5 +1,5 @@
 {
-    "version": "2.1.1",
+    "version": "2.1.11",
     "settings":{
     },
     "skins": {
@@ -609,7 +609,7 @@
             "desc": "Shows your keystrokes on screen.",
             "url": "../src/mods/modloader/keystrokes.js",
             "icon": "../src/img/mods/keystrokes.png",
-            "platform": ["mobile", "pc"],
+            "platform": ["pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
             "reload": false,
