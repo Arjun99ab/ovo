@@ -1,5 +1,5 @@
 (function() {
-    // Get runtime
+    // Get runtime //
     let old = globalThis.sdk_runtime;
     c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
     let runtime = globalThis.sdk_runtime;
