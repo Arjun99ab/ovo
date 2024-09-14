@@ -11,7 +11,7 @@ import { useSkin } from './util/pages/skins/utils.js';
 
 import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook} from './util/hooks.js';
 
-//constants
+//constants constants
 export let version = VERSION.version();
 export let skinVersion = VERSION.skinVersion();
 export let filters = new Set();
