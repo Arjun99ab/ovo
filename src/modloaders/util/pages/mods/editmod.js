@@ -271,6 +271,7 @@ let createEditModPopup = (modId) => {
     };
 
     addModName.value = modSettings['mods'][modId].name;
+    console.log(modSettings['mods'][modId])
     addModCode.value = modSettings['mods'][modId].url;
     addModDesc.value = modSettings['mods'][modId].desc.replace(/<br\/>/g, "\n");
 
@@ -312,11 +313,11 @@ let createEditModPopup = (modId) => {
         let modCode = addModCode.value;
         let modDesc = addModDesc.value;
         modSettings['mods'][modId].name = modName;
-        modSettings['mods'][modId].code = modCode;
+        modSettings['mods'][modId].url = modCode;
         modSettings['mods'][modId].desc = modDesc.replace(/\n/g, "<br/>");
         localStorage.setItem('modSettings', JSON.stringify(modSettings));
         editmodPopup.remove();
-        renderModsMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
+        // renderModsMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
         document.getElementById("menu-bg").style.pointerEvents = "auto";
         document.getElementById("menu-bg").style.filter = "none";
     }
