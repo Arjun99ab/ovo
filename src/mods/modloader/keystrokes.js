@@ -263,6 +263,8 @@
                 if (detectDeviceType() === "mobile") {
                     let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
                     let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
+                    uiDirection.pushCleanSol();
+                    
                     if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
                         document.getElementById("up").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("up") ? keyColors["up"][1] : keyColors["up"][0];
                         document.getElementById("down").style.backgroundColor = uiDirection.getCurrentSol().getObjects().map(x=>x.instance_vars[0]).includes("down") ? keyColors["up"][1] : keyColors["up"][0]
@@ -286,6 +288,8 @@
                         document.getElementById("left").style.color = keyColors["up"][2];
                         document.getElementById("right").style.color = keyColors["up"][2];
                     }
+                    uiDirection.popSol();
+
                 }
             } catch {}
         },

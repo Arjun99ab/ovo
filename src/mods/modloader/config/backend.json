@@ -609,7 +609,7 @@
             "desc": "Shows your keystrokes on screen.",
             "url": "../src/mods/modloader/keystrokes.js",
             "icon": "../src/img/mods/keystrokes.png",
-            "platform": ["pc"],
+            "platform": ["pc", "mobile"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
             "reload": false,
