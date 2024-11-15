@@ -9,7 +9,7 @@ import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
 import {renderSkinsMenu, searchSkins} from './util/pages/skins/render.js';
 import { useSkin } from './util/pages/skins/utils.js';
 
-import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook} from './util/hooks.js';
+import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createDeathHook} from './util/hooks.js';
 
 //constants constants!!!
 export let version = VERSION.version();
@@ -497,10 +497,10 @@ export let runtime;
      
       buttonContainer.appendChild(modsButton);
       buttonContainer.appendChild(settingsButton);
-      buttonContainer.appendChild(profilesButton);
+      // buttonContainer.appendChild(profilesButton);
       buttonContainer.appendChild(skinsButton);
+      buttonContainer.appendChild(replaysButton);
       buttonContainer.appendChild(addmodButton);
-      // buttonContainer.appendChild(replaysButton);
       buttonContainer.appendChild(searchBar);
 
 
@@ -568,7 +568,7 @@ export let runtime;
           window.addEventListener(
             "LayoutChange",
             (e) => {
-              // console.log(e.detail.layout.name)
+              console.log(e.detail.layout.name)
               if(e.detail.layout.name.startsWith("Level") && e.detail.layout.name !== "Level Menu") {
                 document.getElementById("menu-button").style.display = "none";
                 inGame = true;
@@ -579,6 +579,9 @@ export let runtime;
             },
             false,
           );
+
+          createDeathHook("PlayerDeath");
+          
 
           createDialogOpenHook("DialogOpen");
           window.addEventListener(
