@@ -39,6 +39,8 @@
   let replayLevel = null;
   let deathWhileReplaying = false;
   let paused = false;
+  let frames = [];
+
 
   
 
@@ -47,7 +49,6 @@
       async init() {
 
         document.addEventListener("keyup", (event) => {this.keyUp(event)});
-
 
         replayJSON = await fetch('../src/mods/modloader/replay/level11.json')
             .then((response) => response.json())
@@ -201,10 +202,16 @@
       keyUp(event) {
         if (event.keyCode == 85) { // key U
           console.log(replayJSON);
+          
         }
         if (event.keyCode == 73) { // key I
             replaying = true;
             replayIndex = 0;
+            let totalFrames = replayJSON.size[0] * (165 / 60);
+            let numFrames = replayJSON.size[0];
+            for (let i = 0; i < numFrames; i++) {
+                frames.push(Math.floor((i * totalFrames) / numFrames));
+            }
         }  
       },
 
@@ -213,8 +220,9 @@
 
         if(replaying && !paused) { 
             // console.log("replaying")
-            if(replayIndex % 2 === 0) {//only even frames because 120 fps (update for generic fps)
-                let replayFrame = replayJSON.data[replayIndex / 2];
+            if(frames.includes(replayIndex)) {//only even frames because 120 fps (update for generic fps)
+
+                let replayFrame = replayJSON.data[frames.indexOf(replayIndex)]; //o(n) but n is small so it should be fine
                 let data = {
                     x: replayFrame[0][0],
                     y: replayFrame[1][0],
@@ -236,10 +244,11 @@
                     this.loadPlayerData(replayInstance, data);
                 }
             }
-            replayIndex+=0.5;
-            if (replayIndex >= replayJSON.data.length * 2) {
+            replayIndex+=1;
+            if (replayIndex >= frames[frames.length - 1]) {
                 replaying = false;
                 replayIndex = 0;
+                frames = [];
             }
         }
 

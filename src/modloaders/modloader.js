@@ -7,6 +7,7 @@ import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/re
 import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
 
 import {renderSkinsMenu, searchSkins} from './util/pages/skins/render.js';
+import {renderReplaysMenu} from './util/pages/replays/render.js';
 import { useSkin } from './util/pages/skins/utils.js';
 
 import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createDeathHook} from './util/hooks.js';
@@ -423,7 +424,7 @@ export let runtime;
         while (sectionDiv.firstChild) {
           sectionDiv.removeChild(sectionDiv.lastChild);
         }
-        // renderAddModMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
+        renderReplaysMenu(document.getElementById('filters-and-cards-div'));
         
       }
 
