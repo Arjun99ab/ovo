@@ -31,7 +31,7 @@
   let getCurLayout = () => runtime.running_layout.name;
 
   let replayInstance = null;
-  let replayJSON;
+  let replayJSON = null;
   let replaying = false;
   let replayIndex = 0;
 
@@ -39,22 +39,24 @@
   let replayLevel = null;
   let deathWhileReplaying = false;
   let paused = false;
-  let frames = [];
+  let frames = [];     
 
 
+  
   
 
 
   let ticktest = {
+    
       async init() {
 
         document.addEventListener("keyup", (event) => {this.keyUp(event)});
 
-        replayJSON = await fetch('../src/mods/modloader/replay/level11.json')
-            .then((response) => response.json())
-            .then(jsondata => {
-                return jsondata;
-            });
+        // replayJSON = await fetch('../src/mods/modloader/replay/level11.json')
+        //     .then((response) => response.json())
+        //     .then(jsondata => {
+        //         return jsondata;
+        //     });
         console.log(replayJSON)
 
         window.addEventListener(
@@ -70,6 +72,11 @@
                 replayIndex = 0;
                 replaying = true;
                 deathWhileReplaying = false;
+              }
+            } else if (e.detail.currentLayout !== e.detail.layout) {
+              if (replaying || deathWhileReplaying) {
+                console.log("chage back to ", e.detail.currentLayout)
+                runtime.changelayout = e.detail.currentLayout;
               }
             }
           },
@@ -107,7 +114,6 @@
         );
 
 
-          runtime.tickMe(this);            
       },
 
       destroyNonPlayerGhosts() {
@@ -177,6 +183,7 @@
       },
       loadPlayerData(player, data) {
           if (data.layout !== getCurLayout()) {
+            console.log("killing")
             replaying = false;
             ghostPlayer = null;
             return;
@@ -202,6 +209,7 @@
       keyUp(event) {
         if (event.keyCode == 85) { // key U
           console.log(replayJSON);
+          runtime.untickMe(this);
           
         }
         if (event.keyCode == 73) { // key I
@@ -218,31 +226,32 @@
       tick() {
         // console.log(runtime.deathRow);
 
-        if(replaying && !paused) { 
+        if (replaying && !paused) { 
+          if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1]) {
             // console.log("replaying")
             if(frames.includes(replayIndex)) {//only even frames because 120 fps (update for generic fps)
 
-                let replayFrame = replayJSON.data[frames.indexOf(replayIndex)]; //o(n) but n is small so it should be fine
-                let data = {
-                    x: replayFrame[0][0],
-                    y: replayFrame[1][0],
-                    angle: replayFrame[2][0],
-                    state: replayFrame[3][0],
-                    side: replayFrame[5][0],
-                    frame: replayFrame[4][0],
-                    skin: "dream"
-                }
-                if(replayIndex === 0) {
-                    data.layout = getCurLayout();
-                    data.layer = getPlayer().layer.name;
-                    replayInstance = this.createGhostPlayer(data);
-                    console.log(replayInstance)
-                    // replayInstance.instance.opacity = 0.1;
-                } else {
-                    data.layout = replayJSON.data[replayJSON.data.length - 1][1][1]
-                    data.layer = ghostPlayer.layer.name;
-                    this.loadPlayerData(replayInstance, data);
-                }
+              let replayFrame = replayJSON.data[frames.indexOf(replayIndex)]; //o(n) but n is small so it should be fine
+              let data = {
+                  x: replayFrame[0][0],
+                  y: replayFrame[1][0],
+                  angle: replayFrame[2][0],
+                  state: replayFrame[3][0],
+                  side: replayFrame[5][0],
+                  frame: replayFrame[4][0],
+                  skin: "dream"
+              }
+              if(replayIndex === 0) {
+                  data.layout = getCurLayout();
+                  data.layer = getPlayer().layer.name;
+                  replayInstance = this.createGhostPlayer(data);
+                  console.log(replayInstance)
+                  // replayInstance.instance.opacity = 0.1;
+              } else {
+                  data.layout = replayJSON.data[replayJSON.data.length - 1][1][1]
+                  data.layer = ghostPlayer.layer.name;
+                  this.loadPlayerData(replayInstance, data);
+              }
             }
             replayIndex+=1;
             if (replayIndex >= frames[frames.length - 1]) {
@@ -250,10 +259,28 @@
                 replayIndex = 0;
                 frames = [];
             }
+          } else {
+            // replay
+            runtime.changelayout = runtime.layouts[replayJSON.data[replayJSON.data.length - 1][1][1]];
+          }
         }
 
 
       },
   };
   ticktest.init();
+
+  globalThis.beginRacing = function(replayData) {
+    console.log("begin racing", replayData)
+    runtime.tickMe(ticktest);
+    replayJSON = replayData;
+    replaying = true;
+    replayIndex = 0;
+    let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
+    let numFrames = replayJSON.size[0];
+    for (let i = 0; i < numFrames; i++) {
+        frames.push(Math.floor((i * totalFrames) / numFrames));
+    }
+
+  }
 })();

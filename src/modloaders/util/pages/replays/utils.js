@@ -2,128 +2,87 @@ import {backendConfig} from "../../../modloader.js";
 import {createConfirmReloadModal, createNotifyModal} from "../../modals.js"
 import { modsPendingReload } from "../../modals.js";
 import { notify } from "../../ovo.js";
-export {toggleMod, customModNum, incCustomModNum}
+export {customModNum, incCustomModNum, compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes}
 
 let customModNum = 0;
 function incCustomModNum() {
   customModNum++;
 }
 
-let globalHandler = null;
+async function compressWithStream(data) {
+  const encoder = new TextEncoder();
+  const compressionStream = new CompressionStream('deflate-raw'); 
+  const readableStream = new Blob([encoder.encode(data)]).stream();
+  const compressedStream = readableStream.pipeThrough(compressionStream);
 
-function errorOccur(modId, event) {
-  let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-  console.log(event)
-  // console.log(event.detail.name)
-  modSettings = JSON.parse(localStorage.getItem('modSettings'));
-  modSettings['mods'][modId]["enabled"] = false;
-  localStorage.setItem('modSettings', JSON.stringify(modSettings));
-  document.getElementById(modId + '-enable-button').innerHTML = "Reload";
-  document.getElementById(modId + '-enable-button').style.backgroundColor = "rgb(255, 255, 0)";
-  modsPendingReload.push(modId);
+  const compressedBlob = await new Response(compressedStream).blob();
+  const compressedArrayBuffer = await compressedBlob.arrayBuffer();
 
-  window.removeEventListener('dynamicallyAddedScriptError', globalHandler, true);
-  console.error('Error caught when loading custom script', event.detail);
-  document.getElementById("menu-bg").style.pointerEvents = "none";
-  document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-  createNotifyModal("<u><b>Error: " + event.detail.name + "</b></u><br/>" + event.detail.message)
+  return compressedArrayBuffer;
 }
 
+async function compressAndStoreInIndexedDB(data, replayName, replayDescription) {
+  const encoder = new TextEncoder();
+  const compressionStream = new CompressionStream('deflate-raw'); 
+  const readableStream = new Blob([encoder.encode(data)]).stream();
+  const compressedStream = readableStream.pipeThrough(compressionStream);
 
-function errorOccurHandler(modId) {
-  return function(event) {
-    errorOccur(modId, event);
+  const compressedBlob = await new Response(compressedStream).blob();
+  const compressedArrayBuffer = await compressedBlob.arrayBuffer();
+  let localforage = window.localforage;
+  var replayStore = localforage.createInstance({
+    name: "replays"
+  });
+
+  let saveObj = {
+    name: replayName,
+    description: replayDescription,
+    replay: compressedArrayBuffer
   }
+  
+  replayStore.setItem('replay1', saveObj, function (err) {
+    replayStore.getItem('replay1', function (err, value) {
+      console.log(value);
+    });
+  });
+  
 }
 
-let toggleMod = (modId, enable) => {
-    console.log(modId, enable)
+async function decompressWithStream(compressedData) {
+  const decompressionStream = new DecompressionStream('deflate-raw');
+  const compressedBlob = new Blob([compressedData]); 
+  const decompressedStream = compressedBlob.stream().pipeThrough(decompressionStream);
 
-    if (enable) { //want to enable
-      console.log(document.getElementById(modId))
-      console.log(!document.getElementById(modId), !document.getElementById(modId))
-      if(!document.getElementById(modId)) { // custom mods or mods that aren't in memory
-        let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-        let handler = errorOccurHandler(modId);
-        window.addEventListener('dynamicallyAddedScriptError', handler, true);
-        globalHandler = handler;
+  const decompressedArrayBuffer = await new Response(decompressedStream).arrayBuffer();
 
-        let js = document.createElement("script");
-        js.type = "application/javascript";
-        if(modId.startsWith("customMod")) {
-            // js.text = modSettings['mods'][modId]["url"];
-            console.log("custom mod")
-            console.log(modId)
-            js.text = `
-                try {
-                    // Your script code that may throw an error
-                    // console.log("running custom mod")
-                    ${modSettings['mods'][modId]["url"]};
+  const decoder = new TextDecoder();
+  return decoder.decode(decompressedArrayBuffer);
+}
 
-                    let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-                    modSettings['mods']['${modId}']["enabled"] = true;
-                    localStorage.setItem('modSettings', JSON.stringify(modSettings));
-                    
-                } catch (error) {
-                    console.error('Error in dynamically added script:', error);
-                    console.log(error)
-                    console.log(error.message)
-                    console.log(error.name)
-                    console.log(error.lineNumber) 
-
-                    // Dispatch a custom event with error details
-                    let errorEvent = new CustomEvent('dynamicallyAddedScriptError', { detail: error });
-                    window.dispatchEvent(errorEvent);
-                }
-            `;
-        } else {
-            console.log(backendConfig['mods'][modId]["url"])
-            js.src = backendConfig['mods'][modId]["url"];
-        }
-        js.id = modId;
-
-        //why doesnt this trigger i have no idea
-        // pseudo resolve by doing this  stuff at the end of the try, bc by then nothign should be wrong
-        js.addEventListener('load', function() {
-          console.log("loaded")
-          if(modId.startsWith("customMod")) {
-            notify("Mod loaded successfully");
-          }
-          modSettings['mods'][modId]["enabled"] = true;
-          localStorage.setItem('modSettings', JSON.stringify(modSettings));
-          window.removeEventListener('error', globalHandler, true);
-        });
-
-        document.head.appendChild(js);    
-
-        
-
-      } else { //mods that have been loaded before
-          let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-          modSettings['mods'][modId]["enabled"] = true;
-          localStorage.setItem('modSettings', JSON.stringify(modSettings));            
-          
-          // TODO - use globalThis to toggle mod
-          console.log(modId)
-          globalThis[modId + "Toggle"](true); //true is to toggle
-
-      }
-    } else { //currently enabled, so we want to disable
-      console.log("hewwo")
-      let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-      modSettings['mods'][modId]["enabled"] = false;
-      localStorage.setItem('modSettings', JSON.stringify(modSettings));
-      if (modsPendingReload.includes(modId)) {
-        location.reload();
-      }
-      if(modId.startsWith("custom") || backendConfig['mods'][modId]["reload"]) { //if mod requires reload
-        document.getElementById("menu-bg").style.pointerEvents = "none";
-        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-        createConfirmReloadModal(modId);
-      }
-      // TODO - use globalThis to toggle mod
-      else {
-        globalThis[modId + "Toggle"](false); //false
-      }
-    }
+function convert_formated_hex_to_bytes(hex_str) {
+  var count = 0,
+      hex_arr,
+      hex_data = [],
+      hex_len,
+      i;
+  
+  if (hex_str.trim() === "") {
+      return [];
   }
+  
+  if (/[^0-9a-fA-F\s]/.test(hex_str)) {
+      return false;
+  }
+  
+  hex_arr = hex_str.split(/([0-9a-fA-F]+)/g);
+  hex_len = hex_arr.length;
+  
+  for (i = 0; i < hex_len; ++i) {
+      if (hex_arr[i].trim() === "") {
+          continue;
+      }
+      hex_data[count++] = parseInt(hex_arr[i], 16);
+  }
+  
+  return hex_data;
+}

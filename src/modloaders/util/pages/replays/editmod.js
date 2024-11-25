@@ -1,15 +1,15 @@
 import { backendConfig } from "../../../modloader.js";
 import { createConfirmDeleteModal } from "../../modals.js";
 import { renderReplaysMenu } from "./render.js";
+import { compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes } from "./utils.js";
 
-export {createEditModPopup}
+export {createUploadPopup}
 
-
-let createEditModPopup = (modId) => {
+let createUploadPopup = (modId) => {
     //Create background div
-    let editmodPopup = document.createElement("div");
-    editmodPopup.id = "editmodPopup-bg";
-    editmodPopup.className = "modloader-popups"
+    let uploadPopup = document.createElement("div");
+    uploadPopup.id = "uploadPopup-bg";
+    uploadPopup.className = "modloader-popups"
 
   
     let c = {
@@ -29,9 +29,9 @@ let createEditModPopup = (modId) => {
         cursor: "default",
         color: "black",
         fontSize: "10pt",
-        width: "70%",
-        minWidth: "20%",
-        height: "80%",
+        width: "auto",
+        minWidth: "40%",
+        height: "auto",
         overflow: "auto",
         margin: "0",
         maxHeight: "90%",
@@ -41,10 +41,10 @@ let createEditModPopup = (modId) => {
         borderRadius: "10px",
     };
     Object.keys(c).forEach(function (a) {
-        editmodPopup.style[a] = c[a];
+      uploadPopup.style[a] = c[a];
     });
   
-    editmodPopup.onclick = (e) => {
+    uploadPopup.onclick = (e) => {
       console.log("apple ^2")
       // e.stopImmediatePropagation()
       // e.stopPropagation();
@@ -73,10 +73,10 @@ let createEditModPopup = (modId) => {
         titleText.style[a] = c[a];
     });
     titleText.id = "title-text";
-    let newContent = document.createTextNode("Settings");
+    let newContent = document.createTextNode("Upload Replay");
     titleText.appendChild(newContent);
   
-    editmodPopup.appendChild(titleText);
+    uploadPopup.appendChild(titleText);
   
     //X button CSS
     let xButton = document.createElement("button");
@@ -99,12 +99,12 @@ let createEditModPopup = (modId) => {
     xButton.id = "x-button";
   
     xButton.onclick = function() {
-        editmodPopup.remove();
+      uploadPopup.remove();
         document.getElementById("menu-bg").style.pointerEvents = "auto";
         document.getElementById("menu-bg").style.filter = "none";
     }
     // navbar.appendChild(xButton);
-    editmodPopup.appendChild(xButton);
+    uploadPopup.appendChild(xButton);
   
     let modSettings = JSON.parse(localStorage.getItem('modSettings'));
   
@@ -117,7 +117,7 @@ let createEditModPopup = (modId) => {
       padding: "15px",
       // margin: "5px",
       flexDirection: "column",
-      rowGap: "15px",
+      rowGap: "20px",
       // width: "10%",
       borderTop: "solid 3px black",
   
@@ -146,12 +146,12 @@ let createEditModPopup = (modId) => {
 
     
     let addModName = document.createElement("input");
-    addModName.placeholder = "Mod Name";
+    addModName.placeholder = "Name";
     let d = {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "90%",
+      width: "55%",
       height: "3vw",
       cursor: "text",
       backgroundColor: "white",
@@ -188,16 +188,14 @@ let createEditModPopup = (modId) => {
       } 
     };
 
-    let addModCode = document.createElement("textarea");
-    addModCode.placeholder = "Mod Code";
-    addModCode.rows = "10";
-    addModCode.cols = "50";
-    let e = {
+    let addModDesc = document.createElement("input");
+    addModDesc.placeholder = "Description";
+    d = {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "90%",
-      height: "50%",
+      width: "70%",
+      height: "3vw",
       cursor: "text",
       backgroundColor: "white",
       verticalAlign: "middle",
@@ -207,52 +205,9 @@ let createEditModPopup = (modId) => {
       fontFamily: "Retron2000",
       paddingLeft: "10px",
       borderRadius: "10px 10px 10px 10px",
-      
     }
-    Object.keys(e).forEach(function (a) {
-      addModCode.style[a] = e[a];
-    });
-    addModCode.onclick = (e) => { //ensure that input box focus
-      // console.log("please");
-      e.stopImmediatePropagation()
-      e.stopPropagation();
-      e.preventDefault();
-      addModCode.focus()
-    }
-    document.getElementById('menu-bg').onclick = (e) => { //ensure that input box focus
-      // console.log("please");
-    }
-    addModCode.onkeydown = (e) => { // ensures that user is able to type in input box
-      e.stopImmediatePropagation()
-      e.stopPropagation();
-      if(e.keyCode === 27) {
-        addModCode.blur();
-      }
-    };
-
-    let addModDesc = document.createElement("textarea");
-    addModDesc.placeholder = "Mod Description";
-    addModDesc.rows = "7";
-    addModDesc.cols = "50"; 
-    let f = {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      width: "90%",
-      height: "40%",
-      cursor: "text",
-      backgroundColor: "white",
-      verticalAlign: "middle",
-      border: "solid 3px black",
-      fontSize: "2vw",
-      color: "black",
-      fontFamily: "Retron2000",
-      paddingLeft: "10px",
-      borderRadius: "10px 10px 10px 10px",
-      
-    }
-    Object.keys(f).forEach(function (a) {
-      addModDesc.style[a] = f[a];
+    Object.keys(d).forEach(function (a) {
+      addModDesc.style[a] = d[a];
     });
     addModDesc.onclick = (e) => { //ensure that input box focus
       // console.log("please");
@@ -261,38 +216,75 @@ let createEditModPopup = (modId) => {
       e.preventDefault();
       addModDesc.focus()
     }
-    
+    document.getElementById('menu-bg').onclick = (e) => { //ensure that input box focus
+      // console.log("please");
+      addModDesc.blur()
+    }
     addModDesc.onkeydown = (e) => { // ensures that user is able to type in input box
       e.stopImmediatePropagation()
       e.stopPropagation();
       if(e.keyCode === 27) {
         addModDesc.blur();
       }
+      if(e.keyCode === 13) {
+        addModDesc.blur();
+      } 
     };
 
-    addModName.value = modSettings['mods'][modId].name;
-    console.log(modSettings['mods'][modId])
-    addModCode.value = modSettings['mods'][modId].url;
-    addModDesc.value = modSettings['mods'][modId].desc.replace(/<br\/>/g, "\n");
+    let replayContents = null;
 
-
-    let buttonsContainer = document.createElement("div");
-    buttonsContainer.style.display = "flex";
-    // buttonsContainer.style.flexWrap = "wrap";
-    buttonsContainer.style.justifyContent = "space-around";
-    buttonsContainer.style.alignItems = "center";
-    // buttonsContainer.style.border = "solid 3px red";
-    buttonsContainer.style.width = "100%";
-    // buttonsContainer.style.alignItems = "center";
+    let uploadArea = document.createElement("input");
+    uploadArea.type = "file";
+    uploadArea.accept = ".ovo";
+    c = {
+      fontFamily: "Retron2000",
+    }
+    Object.keys(c).forEach(function (a) {
+      uploadArea.style[a] = c[a];
+    });
     
-    // buttonsContainer.style.marginTop = "15px";
-    // buttonsContainer.style.marginBottom = "10px";
-    // buttonsContainer.style.gap = "10px";
-    // buttonsContainer.style.position = "relative";
+    uploadArea.addEventListener("change", (e) => {
+      console.log(e.target.files[0]);
+      let file = e.target.files[0];
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        let contents = e.target.result;
+        console.log(contents);
+        let hexList = convert_formated_hex_to_bytes(contents);
+        console.log(hexList);
+        let LZMA_WORKER = window.LZMA_WORKER;
+        LZMA_WORKER.decompress(hexList, function on_decompress_complete(result) {
+          console.log(result);
+          replayContents = result;
+          compressWithStream(result).then((result2) => {
+            console.log(result2)
+            for(let i = 0; i < result2.byteLength; i++) {
+              console.log(result2[i]);
+            }
+            console.log(result2.byteLength);
+            decompressWithStream(result2).then((result3) =>
+              console.log(result3)
+            )
+          });
+          compressAndStoreInIndexedDB(result, addModName.value, addModDesc.value).then((result) => {
+            console.log(result);
+          });
+
+          // console.log(compressWithStream(result));
+        });
+        // LZMA_WORKER.compress("apple", 1, function(result) {
+        //   console.log(result);
+        //   LZMA_WORKER.decompress(result, function on_decompress_complete(result) {
+        //     console.log(result);
+        //   });
+        // });
+      }
+      reader.readAsText(file);
+    });
 
     // Create confirm button
     let saveButton = document.createElement("button");
-    saveButton.innerHTML = "Save Settings";
+    saveButton.innerHTML = "Save Replay";
     let g = {
         fontFamily: "Retron2000",
         fontSize: "14pt",
@@ -302,57 +294,51 @@ let createEditModPopup = (modId) => {
         padding: "5px 10px",
         cursor: "pointer",
         borderRadius: "10px",
+        alignItems: "center",
     }
     Object.keys(g).forEach(function (a) {
         saveButton.style[a] = g[a];
     });
 
     saveButton.onclick = function() {
-        let modSettings = JSON.parse(localStorage.getItem('modSettings'));
-        let modName = addModName.value;
-        let modCode = addModCode.value;
-        let modDesc = addModDesc.value;
-        modSettings['mods'][modId].name = modName;
-        modSettings['mods'][modId].url = modCode;
-        modSettings['mods'][modId].desc = modDesc.replace(/\n/g, "<br/>");
-        localStorage.setItem('modSettings', JSON.stringify(modSettings));
-        editmodPopup.remove();
-        // renderModsMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
-        document.getElementById("menu-bg").style.pointerEvents = "auto";
-        document.getElementById("menu-bg").style.filter = "none";
+      console.log("save replay");
+      console.log(addModName.value);
+      console.log(replayContents);
+      // uploadPopup.remove();
+      document.getElementById("menu-bg").style.pointerEvents = "auto";
+      document.getElementById("menu-bg").style.filter = "none";
     }
 
-    let deleteButton = document.createElement("button");
-    deleteButton.innerHTML = "Delete Mod";
-    let h = {
-        fontFamily: "Retron2000",
-        fontSize: "14pt",
-        backgroundColor: "rgb(222, 48, 51)",
-        color: "white",
-        border: "none",
-        padding: "5px 10px",
-        cursor: "pointer",
-        borderRadius: "10px",
-    }
-    Object.keys(h).forEach(function (a) {
-        deleteButton.style[a] = h[a];
-    });
-    deleteButton.onclick = function() {
-        createConfirmDeleteModal(modId);
-        editmodPopup.remove();
-    }
+    // let deleteButton = document.createElement("button");
+    // deleteButton.innerHTML = "Delete Mod";
+    // let h = {
+    //     fontFamily: "Retron2000",
+    //     fontSize: "14pt",
+    //     backgroundColor: "rgb(222, 48, 51)",
+    //     color: "white",
+    //     border: "none",
+    //     padding: "5px 10px",
+    //     cursor: "pointer",
+    //     borderRadius: "10px",
+    // }
+    // Object.keys(h).forEach(function (a) {
+    //     deleteButton.style[a] = h[a];
+    // });
+    // deleteButton.onclick = function() {
+    //     createConfirmDeleteModal(modId);
+    //     uploadPopup.remove();
+    // }
 
 
     // Append buttons to the buttons container
-    buttonsContainer.appendChild(saveButton);
-    buttonsContainer.appendChild(deleteButton);
+    // buttonsContainer.appendChild(saveButton);
     
     settingsDiv.appendChild(addModName); 
-    settingsDiv.appendChild(addModCode);
     settingsDiv.appendChild(addModDesc);
-    settingsDiv.appendChild(buttonsContainer);
+    settingsDiv.appendChild(uploadArea);
+    settingsDiv.appendChild(saveButton);
     
-    editmodPopup.appendChild(settingsDiv);
+    uploadPopup.appendChild(settingsDiv);
   
-    document.body.appendChild(editmodPopup);
+    document.body.appendChild(uploadPopup);
   }
