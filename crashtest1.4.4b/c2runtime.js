@@ -26832,6 +26832,7 @@ cr.plugins_.Sprite = function(runtime)
 	var instanceProto = pluginProto.Instance.prototype;
 	instanceProto.onCreate = function()
 	{
+		console.log(this.properties)
 		this.visible = (this.properties[0] === 0);	// 0=visible, 1=invisible
 		this.isTicking = false;
 		this.inAnimTrigger = false;
@@ -40032,34 +40033,43 @@ cr.behaviors.Platform = function(runtime)
 	function Acts() {};
 	Acts.prototype.SetIgnoreInput = function (ignoring)
 	{
+		// console.log("ignore input", ignoring)
+
 		this.ignoreInput = ignoring;
 	};
 	Acts.prototype.SetMaxSpeed = function (maxspeed)
 	{
+		// console.log("max speed")
 		this.maxspeed = maxspeed;
 		if (this.maxspeed < 0)
 			this.maxspeed = 0;
 	};
 	Acts.prototype.SetAcceleration = function (acc)
 	{
+		// console.log("accell")
+
 		this.acc = acc;
 		if (this.acc < 0)
 			this.acc = 0;
 	};
 	Acts.prototype.SetDeceleration = function (dec)
 	{
+		// console.log("decel")
+
 		this.dec = dec;
 		if (this.dec < 0)
 			this.dec = 0;
 	};
 	Acts.prototype.SetJumpStrength = function (js)
 	{
-		this.jumpStrength = js;
+		// console.log("jump strength")
+		this.jumpStrength = 1000;
 		if (this.jumpStrength < 0)
 			this.jumpStrength = 0;
 	};
 	Acts.prototype.SetGravity = function (grav)
 	{
+		// console.log("gravity")
 		if (this.g1 === grav)
 			return;		// no change
 		this.g = grav;
@@ -40075,6 +40085,8 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Acts.prototype.SetMaxFallSpeed = function (mfs)
 	{
+		// console.log("mfs")
+
 		this.maxFall = mfs;
 		if (this.maxFall < 0)
 			this.maxFall = 0;
@@ -42191,6 +42203,7 @@ cr.behaviors.SkymenSkin = function(runtime)
 			}
 			this.object = this.inst.runtime.createInstance(type, this.inst.layer)
 			var anim = this.getAnim(this.skinTag, this.subSkinTag);
+			console.log(anim)
 			cr.plugins_.Sprite.prototype.acts.SetAnim.call(this.object, anim, 0);
 			if(this.syncWithFrame){
 				cr.plugins_.Sprite.prototype.acts.SetAnimSpeed.call(this.object, 0);

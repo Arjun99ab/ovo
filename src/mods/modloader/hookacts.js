@@ -65,20 +65,11 @@ let runtime = cr_getC2Runtime()
 map.set(cr.behaviors.Platform.prototype.acts.SetMaxSpeed, function (action) {
   let old = action.func
   action.func = function (...args) {
-    this.maxspeed = args[0];
-    if (this.maxspeed > 0)
-        this.maxspeed = 10000;
+	args[0] = 10000;
+	console.log("hi2")
+	old.apply(this, args)
   }
 })
-map.set(cr.behaviors.Platform.prototype.acts.SetMaxFallSpeed, function (action) {
-    let old = action.func
-    action.func = function (...args) {
-        this.maxFall = args[0];
-		if (this.maxFall > 0)
-			this.maxFall = 10000;
-    }
-  })
-
 for(const action of Object.values(runtime.actsBySid)) {
     if (map.has(action.func)) map.get(action.func)(action)
 }
