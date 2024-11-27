@@ -581,7 +581,7 @@ export let runtime;
             false,
           );
 
-          createDeathHook("PlayerDeath");
+          // createDeathHook("PlayerDeath");
           
 
           createDialogOpenHook("DialogOpen");

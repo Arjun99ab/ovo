@@ -3174,6 +3174,7 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 		if (typeof img.src !== "undefined" && textures_by_src.hasOwnProperty(tex_key))
 		{
 			webGL_texture = textures_by_src[tex_key];
+			console.log(textures_by_src)
 			webGL_texture.c2refcount++;
 			return webGL_texture;
 		}
@@ -26659,6 +26660,7 @@ cr.plugins_.Sprite = function(runtime)
 	var typeProto = pluginProto.Type.prototype;
 	function frame_getDataUri()
 	{
+		console.log(this)
 		if (this.datauri.length === 0)
 		{
 			var tmpcanvas = document.createElement("canvas");
@@ -26684,11 +26686,13 @@ cr.plugins_.Sprite = function(runtime)
 			return;
 		var i, leni, j, lenj;
 		var anim, frame, animobj, frameobj, wt, uv;
+		// console.log(anim, frame, animobj, frameobj, wt, uv)
 		this.all_frames = [];
 		this.has_loaded_textures = false;
 		for (i = 0, leni = this.animations.length; i < leni; i++)
 		{
 			anim = this.animations[i];
+			console.log(anim)
 			animobj = {};
 			animobj.name = anim[0];
 			animobj.speed = anim[1];
@@ -26742,6 +26746,7 @@ cr.plugins_.Sprite = function(runtime)
 				this.all_frames.push(frameobj);
 			}
 			cr.seal(animobj);
+			console.log(animobj)
 			this.animations[i] = animobj;		// swap array data for object
 		}
 	};
@@ -26838,6 +26843,9 @@ cr.plugins_.Sprite = function(runtime)
 		this.inAnimTrigger = false;
 		this.collisionsEnabled = (this.properties[3] !== 0);
 		this.cur_animation = this.getAnimationByName(this.properties[1]) || this.type.animations[0];
+		if(this.properties[1] === "Modloader") {
+			console.log(this.getAnimationByName(this.properties[1]), this.type.animations[0])
+		}
 		this.cur_frame = this.properties[2];
 		if (this.cur_frame < 0)
 			this.cur_frame = 0;
