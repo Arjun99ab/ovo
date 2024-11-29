@@ -32,14 +32,19 @@
 
   let replayInstance = null;
   let replayJSON = null;
-  let replaying = false;
   let replayIndex = 0;
 
-  let ghostPlayer = null;
-  let replayLevel = null;
-  let deathWhileReplaying = false;
+
+  let replaying = false;
+  let ghostAtFlag = false;
+  let playerDeath = false;
   let paused = false;
-  let frames = [];     
+
+  let playingBack = false;
+
+  let replayInfo = null;
+  
+  let frames = []; 
 
 
   
@@ -52,31 +57,38 @@
 
         document.addEventListener("keyup", (event) => {this.keyUp(event)});
 
-        // replayJSON = await fetch('../src/mods/modloader/replay/level11.json')
-        //     .then((response) => response.json())
-        //     .then(jsondata => {
-        //         return jsondata;
-        //     });
+        replayJSON = await fetch('../src/mods/modloader/replay/level1_1.4.json')
+            .then((response) => response.json())
+            .then(jsondata => {
+                return jsondata;
+            });
         console.log(replayJSON)
 
         window.addEventListener(
           "LayoutChange",
           (e) => {
-            console.log(e.detail.layout.name)
-            // if(e.detail.layout.name === "Level5") {
-            console.log(e.detail.currentLayout)
             if (e.detail.currentLayout === e.detail.layout && e.detail.layout.name.startsWith("Level")) {
-              //player death
-              if (replaying || deathWhileReplaying) {
+              //player respawned
+              if (replaying || playerDeath || ghostAtFlag) {
                 console.log("YEP")
                 replayIndex = 0;
                 replaying = true;
-                deathWhileReplaying = false;
+                playerDeath = false;
+                ghostAtFlag = false;
+                paused = false;
               }
-            } else if (e.detail.currentLayout !== e.detail.layout) {
-              if (replaying || deathWhileReplaying) {
-                console.log("chage back to ", e.detail.currentLayout)
-                runtime.changelayout = e.detail.currentLayout;
+            } else if (e.detail.currentLayout.name === replayJSON.data[replayJSON.data.length - 1][1][1] && e.detail.currentLayout !== e.detail.layout && e.detail.layout.name !== replayJSON.data[replayJSON.data.length - 1][1][1]) {
+              //user leaves level
+              if (replaying || playerDeath || ghostAtFlag) {
+                replaying = false;
+                replayIndex = 0;
+                playerDeath = false;
+                ghostAtFlag = false;
+                replayInstance = null;
+                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
+                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
+                runtime.untickMe(this);
+
               }
             }
           },
@@ -84,20 +96,32 @@
         );
 
         window.addEventListener(
-          "PlayerDeath",
+          "CallFunction",
           (e) => {
-            if(replaying) {
-              deathWhileReplaying = true;
-              replaying = false
+            if(e.detail.name === "Gameplay > Death") {
+              if(replaying) {
+                //note that player died
+                playerDeath = true;
+                //stop replay ghost, will resume when player respawns
+                replaying = false
+              }
+            }
+            if(e.detail.name === "Menu > End") {
+              if(replaying) {
+                paused = true;
+              }
             }
           },
           false,
         );
+      
         window.addEventListener(
           "DialogOpen",
           (e) => {
-            if(replaying) {
-              paused = true;
+            if (e.detail.name === "PauseClose") {
+              if(replaying) {
+                paused = true;
+              }
             }
           },
           false,
@@ -106,9 +130,12 @@
         window.addEventListener(
           "DialogClose",
           (e) => {
-            if(replaying) {
-              paused = false;
+            if (e.detail.name === "PauseClose") {
+              if(replaying) {
+                paused = false;
+              }
             }
+            
           },
           false,
         );
@@ -133,7 +160,6 @@
           let ghostArr = ghostArrType.instances[0];
           ghostArr.setSize(0, ghostArr.cy, ghostArr.cz);
           runtime.eventsheets.Player.events[2].subevents[2].subevents[1].actions.length = 0;
-          ghostPlayer = null;
       },
 
       createGhostPlayer(data) {
@@ -150,69 +176,66 @@
             data.x,
             data.y
           );
-          instance.visible = false; //whether hitbox is visible or not
+          instance.visible = data.hitboxShown; //whether hitbox is visible or not
           instance.instance_vars[16] = 1;
           instance.instance_vars[17] = "";
           instance.instance_vars[12] = data.skin;
           instance.instance_vars[0] = data.state;
-          instance.opacity = 0.5;
-          console.log(instance)
 
-          setTimeout(() => {
-            if (!getFlag()) return;
-            instance.siblings.forEach((sibling) => {
-              if (data.skin === "") {
-                sibling.opacity = 0.5;
-                cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
-                  sibling.behaviorSkins[0]
-                );
-              } else {
-                cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(
-                  sibling.behaviorSkins[0],
-                  data.skin
-                );
-              }
-            });
-          }, 200);
+          instance.siblings.forEach((sibling) => {
+            if (data.skin === "") {
+              cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
+                sibling.behaviorSkins[0]
+              );
+              sibling.opacity = data.opacity;
+              sibling.set_bbox_changed();
 
-          ghostPlayer = instance;
+            } else {
+              cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(
+                sibling.behaviorSkins[0],
+                data.skin
+              );
+            }
+          });
 
-          return {
-            instance,
-          };
+          return instance;
       },
       loadPlayerData(player, data) {
           if (data.layout !== getCurLayout()) {
-            console.log("killing")
             replaying = false;
-            ghostPlayer = null;
+            replayInstance = null;
+            runtime.tickMe(this);
             return;
           }
-          player.instance.x = data.x;
-          player.instance.y = data.y;
-          player.instance.angle = data.angle;
-          player.instance.instance_vars[0] = data.state;
-          player.instance.instance_vars[2] = data.side;
+          player.x = data.x;
+          player.y = data.y;
+          player.angle = data.angle;
+          player.instance_vars[0] = data.state;
+          player.instance_vars[2] = data.side;
           if (data.side > 0) {
-            c2_callFunction("Player > Unmirror", [player.instance.uid]);
+            c2_callFunction("Player > Unmirror", [player.uid]);
           }
           if (data.side < 0) {
-            c2_callFunction("Player > Mirror", [player.instance.uid]);
+            c2_callFunction("Player > Mirror", [player.uid]);
           }
           cr.plugins_.Sprite.prototype.acts.SetAnimFrame.call(
-            player.instance,
+            player,
             data.frame
           );
-          player.instance.set_bbox_changed();
+          player.set_bbox_changed();
       },
 
       keyUp(event) {
         if (event.keyCode == 85) { // key U
-          console.log(replayJSON);
+          // console.log(replayJSON);
           runtime.untickMe(this);
-          
+        }
+        if (event.keyCode == 89) { // key Y
+          // console.log(replayJSON);
+          runtime.tickMe(this);
         }
         if (event.keyCode == 73) { // key I
+            runtime.tickMe(this);
             replaying = true;
             replayIndex = 0;
             let totalFrames = replayJSON.size[0] * (165 / 60);
@@ -220,7 +243,21 @@
             for (let i = 0; i < numFrames; i++) {
                 frames.push(Math.floor((i * totalFrames) / numFrames));
             }
-        }  
+        } 
+        if (event.keyCode == 79) { // key O
+          let data = {
+            x: 522,
+            y: 352,
+            angle: 0,
+            state: "idle",
+            side: 1,
+            frame: 0,
+            skin: "",
+            layout: getCurLayout(),
+            layer: getPlayer().layer.name
+          }
+          replayInstance = this.createGhostPlayer(data);
+        }
       },
 
       tick() {
@@ -228,8 +265,7 @@
 
         if (replaying && !paused) { 
           if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1]) {
-            // console.log("replaying")
-            if(frames.includes(replayIndex)) {//only even frames because 120 fps (update for generic fps)
+            if(frames.includes(replayIndex)) {
 
               let replayFrame = replayJSON.data[frames.indexOf(replayIndex)]; //o(n) but n is small so it should be fine
               let data = {
@@ -239,25 +275,38 @@
                   state: replayFrame[3][0],
                   side: replayFrame[5][0],
                   frame: replayFrame[4][0],
-                  skin: "dream"
+                  skin: "",
+                  opacity: 0.5,
+                  hitboxShown: true
               }
               if(replayIndex === 0) {
                   data.layout = getCurLayout();
                   data.layer = getPlayer().layer.name;
                   replayInstance = this.createGhostPlayer(data);
-                  console.log(replayInstance)
-                  // replayInstance.instance.opacity = 0.1;
+                  // this.destroyNonPlayerGhosts();
+
+                  // replayInstance = getPlayer();
+                  // replayInstance.instance_vars[16] = 1;
+                  // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
+
               } else {
                   data.layout = replayJSON.data[replayJSON.data.length - 1][1][1]
-                  data.layer = ghostPlayer.layer.name;
+                  data.layer = replayInstance.layer.name;
                   this.loadPlayerData(replayInstance, data);
               }
             }
-            replayIndex+=1;
+            replayIndex += 1;
             if (replayIndex >= frames[frames.length - 1]) {
-                replaying = false;
-                replayIndex = 0;
-                frames = [];
+              ghostAtFlag = true;
+              replaying = false;
+              replayIndex = 0;
+
+              // replayInstance.instance_vars[16] = 0;
+              // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
+
+              // console.log("replay done")
+              // c2_callFunction("Menu > End", []);
+
             }
           } else {
             // replay
@@ -267,20 +316,51 @@
 
 
       },
+      toString() {
+          return "modloader.replay";
+      }
   };
   ticktest.init();
 
-  globalThis.beginRacing = function(replayData) {
+  globalThis.beginRacing = function(replayData, replayObj) {
     console.log("begin racing", replayData)
     runtime.tickMe(ticktest);
+    replayInfo = replayObj;
     replayJSON = replayData;
     replaying = true;
     replayIndex = 0;
     let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
     let numFrames = replayJSON.size[0];
+    frames = [];
     for (let i = 0; i < numFrames; i++) {
         frames.push(Math.floor((i * totalFrames) / numFrames));
     }
-
   }
+  globalThis.replaysInfo = function() {
+    return {
+      replayInstance: replayInstance,
+      replayJSON: replayJSON,
+      replayIndex: ghostAtFlag ? frames[frames.length - 1] : replayIndex,
+      replaying: replaying,
+      ghostAtFlag: ghostAtFlag,
+      playerDeath: playerDeath,
+      paused: paused,
+      playingBack: playingBack,
+      frames: frames,
+      replayInfo: replayInfo
+    }
+  }
+  // globalThis.beginReplay = function(replayData) {
+  //   console.log("begin replay", replayData)
+  //   runtime.tickMe(ticktest);
+  //   replayJSON = replayData;
+  //   replaying = true;
+  //   replayIndex = 0;
+  //   let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
+  //   let numFrames = replayJSON.size[0];
+  //   frames = [];
+  //   for (let i = 0; i < numFrames; i++) {
+  //       frames.push(Math.floor((i * totalFrames) / numFrames));
+  //   }
+  // }
 })();

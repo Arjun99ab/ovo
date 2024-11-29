@@ -10,7 +10,7 @@ import {renderSkinsMenu, searchSkins} from './util/pages/skins/render.js';
 import {renderReplaysMenu} from './util/pages/replays/render.js';
 import { useSkin } from './util/pages/skins/utils.js';
 
-import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createDeathHook} from './util/hooks.js';
+import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createCallFunctionHook} from './util/hooks.js';
 
 //constants constants!!!
 export let version = VERSION.version();
@@ -581,19 +581,23 @@ export let runtime;
             false,
           );
 
-          // createDeathHook("PlayerDeath");
+          createCallFunctionHook("CallFunction");
+          
           
 
           createDialogOpenHook("DialogOpen");
           window.addEventListener(
             "DialogOpen",
             (e) => {
-              // console.log("Dialog open")
-              // notify("Dialog Opened", "wow!", "./speedrunner.png");
-              document.getElementById("menu-button").style.display = "block";
-              inGame = false;
-              console.log(isPaused())
-              // console.log()
+              if(e.detail.name === "PauseClose") {
+                // console.log("Dialog open")
+                // notify("Dialog Opened", "wow!", "./speedrunner.png");
+                document.getElementById("menu-button").style.display = "block";
+                inGame = false;
+                console.log(isPaused())
+                // console.log()
+              }
+              
             },
             false,
           );
@@ -602,10 +606,12 @@ export let runtime;
           window.addEventListener(
             "DialogClose",
             (e) => {
-              // console.log("Dialog close")
-              // notify("Dialog Closed", "wow!", "./speedrunner.png");
-              document.getElementById("menu-button").style.display = "none";
-              inGame = true;
+              if(e.detail.name === "PauseClose") {
+                // console.log("Dialog close")
+                // notify("Dialog Closed", "wow!", "./speedrunner.png");
+                document.getElementById("menu-button").style.display = "none";
+                inGame = true;
+              }
             },
             false,
           );

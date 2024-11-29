@@ -3174,7 +3174,6 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 		if (typeof img.src !== "undefined" && textures_by_src.hasOwnProperty(tex_key))
 		{
 			webGL_texture = textures_by_src[tex_key];
-			console.log(textures_by_src)
 			webGL_texture.c2refcount++;
 			return webGL_texture;
 		}
@@ -5231,6 +5230,7 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 	};
 	Runtime.prototype.doChangeLayout = function (changeToLayout)
 	{
+		console.log("whats good")
 		var prev_layout = this.running_layout;
 		this.running_layout.stopRunning();
 		var i, len, j, lenj, k, lenk, type, inst, binst;
@@ -5259,6 +5259,7 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 	};
 	Runtime.prototype.runLayoutChangeMethods = function (isBeforeChange)
 	{
+		console.log("whats good2")
 		var i, len, beh, type, j, lenj, inst, k, lenk, binst;
 		for (i = 0, len = this.behaviors.length; i < len; i++)
 		{
@@ -15703,7 +15704,6 @@ cr.plugins_.Arr = function(runtime)
 	};
 	instanceProto.getAsJSON = function ()
 	{
-		console.log("hihi")
 		return JSON.stringify({
 			"c2array": true,
 			"size": [this.cx, this.cy, this.cz],
@@ -15724,7 +15724,6 @@ cr.plugins_.Arr = function(runtime)
 		this.cy = sz[1];
 		this.cz = sz[2];
 		this.arr = o["data"];
-		console.log(o)
 	};
 	instanceProto.setSize = function (w, h, d)
 	{
@@ -20605,6 +20604,7 @@ cr.plugins_.Function = function(runtime)
 		var self = this;
 		window["c2_callFunction"] = function (name_, params_)
 		{
+			// console.log("c2_callFunction", name_, params_);
 			var i, len, v;
 			var fs = pushFuncStack();
 			fs.name = name_.toLowerCase();
@@ -20654,6 +20654,7 @@ cr.plugins_.Function = function(runtime)
 	function Acts() {};
 	Acts.prototype.CallFunction = function (name_, params_)
 	{
+		console.log("CallFunction", name_, params_);
 		var fs = pushFuncStack();
 		fs.name = name_.toLowerCase();
 		fs.retVal = 0;
@@ -26660,7 +26661,6 @@ cr.plugins_.Sprite = function(runtime)
 	var typeProto = pluginProto.Type.prototype;
 	function frame_getDataUri()
 	{
-		console.log(this)
 		if (this.datauri.length === 0)
 		{
 			var tmpcanvas = document.createElement("canvas");
@@ -26686,13 +26686,11 @@ cr.plugins_.Sprite = function(runtime)
 			return;
 		var i, leni, j, lenj;
 		var anim, frame, animobj, frameobj, wt, uv;
-		// console.log(anim, frame, animobj, frameobj, wt, uv)
 		this.all_frames = [];
 		this.has_loaded_textures = false;
 		for (i = 0, leni = this.animations.length; i < leni; i++)
 		{
 			anim = this.animations[i];
-			console.log(anim)
 			animobj = {};
 			animobj.name = anim[0];
 			animobj.speed = anim[1];
@@ -26746,7 +26744,6 @@ cr.plugins_.Sprite = function(runtime)
 				this.all_frames.push(frameobj);
 			}
 			cr.seal(animobj);
-			console.log(animobj)
 			this.animations[i] = animobj;		// swap array data for object
 		}
 	};
@@ -26837,15 +26834,11 @@ cr.plugins_.Sprite = function(runtime)
 	var instanceProto = pluginProto.Instance.prototype;
 	instanceProto.onCreate = function()
 	{
-		console.log(this.properties)
 		this.visible = (this.properties[0] === 0);	// 0=visible, 1=invisible
 		this.isTicking = false;
 		this.inAnimTrigger = false;
 		this.collisionsEnabled = (this.properties[3] !== 0);
 		this.cur_animation = this.getAnimationByName(this.properties[1]) || this.type.animations[0];
-		if(this.properties[1] === "Modloader") {
-			console.log(this.getAnimationByName(this.properties[1]), this.type.animations[0])
-		}
 		this.cur_frame = this.properties[2];
 		if (this.cur_frame < 0)
 			this.cur_frame = 0;
@@ -33846,7 +33839,6 @@ cr.plugins_.aekiro_proui2 = function (runtime) {
 		}
 	};*/
   instanceProto.runCallback = function (callbackName, callbackParams) {
-	console.log("run call back")
     if (callbackName == "") {
       return;
     }
@@ -40041,43 +40033,34 @@ cr.behaviors.Platform = function(runtime)
 	function Acts() {};
 	Acts.prototype.SetIgnoreInput = function (ignoring)
 	{
-		// console.log("ignore input", ignoring)
-
 		this.ignoreInput = ignoring;
 	};
 	Acts.prototype.SetMaxSpeed = function (maxspeed)
 	{
-		// console.log("max speed")
 		this.maxspeed = maxspeed;
 		if (this.maxspeed < 0)
 			this.maxspeed = 0;
 	};
 	Acts.prototype.SetAcceleration = function (acc)
 	{
-		// console.log("accell")
-
 		this.acc = acc;
 		if (this.acc < 0)
 			this.acc = 0;
 	};
 	Acts.prototype.SetDeceleration = function (dec)
 	{
-		// console.log("decel")
-
 		this.dec = dec;
 		if (this.dec < 0)
 			this.dec = 0;
 	};
 	Acts.prototype.SetJumpStrength = function (js)
 	{
-		// console.log("jump strength")
-		this.jumpStrength = 1000;
+		this.jumpStrength = js;
 		if (this.jumpStrength < 0)
 			this.jumpStrength = 0;
 	};
 	Acts.prototype.SetGravity = function (grav)
 	{
-		// console.log("gravity")
 		if (this.g1 === grav)
 			return;		// no change
 		this.g = grav;
@@ -40093,8 +40076,6 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Acts.prototype.SetMaxFallSpeed = function (mfs)
 	{
-		// console.log("mfs")
-
 		this.maxFall = mfs;
 		if (this.maxFall < 0)
 			this.maxFall = 0;
@@ -42211,7 +42192,6 @@ cr.behaviors.SkymenSkin = function(runtime)
 			}
 			this.object = this.inst.runtime.createInstance(type, this.inst.layer)
 			var anim = this.getAnim(this.skinTag, this.subSkinTag);
-			console.log(anim)
 			cr.plugins_.Sprite.prototype.acts.SetAnim.call(this.object, anim, 0);
 			if(this.syncWithFrame){
 				cr.plugins_.Sprite.prototype.acts.SetAnimSpeed.call(this.object, 0);
@@ -43229,7 +43209,6 @@ cr.behaviors.aekiro_button = function(runtime)
 				this.state = HOVER;
 			}
 			this.updateView();
-			console.log(this)
 			this.proui.runCallback(this.callbackName,this.callbackParams);
 			for (var i = 0, l= this.callbacks.length; i < l; i++) {
 				this.callbacks[i]();
@@ -44137,6 +44116,7 @@ cr.behaviors.aekiro_dialog = function(runtime)
 	};
 	behinstProto.open = function (_targetX,_targetY,center)
 	{
+		console.log(this)
 		this.init();
 		if(this.isOpen || this.tween["isPlaying"]){//|| this.tween_close["isPlaying"]
 			return;
@@ -44238,6 +44218,7 @@ cr.behaviors.aekiro_dialog = function(runtime)
 	};
 	behinstProto.close = function ()
 	{
+		console.log(this)
 		if(!this.isOpen || this.tween["isPlaying"] || this.tween_close["isPlaying"]){
 			return;
 		}
@@ -44291,6 +44272,8 @@ cr.behaviors.aekiro_dialog = function(runtime)
 		}
 	};
 	behinstProto.postClose = function (){
+		console.log(this.pauseOnOpen)
+		
 		cr.system_object.prototype.acts.SetLayerVisible.call(this.runtime.system,this.inst.layer,false);
 		var layerInsts, self = this;
 		Object.keys(this.outLayerChildren).forEach(function(key) {

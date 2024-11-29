@@ -21,7 +21,7 @@ async function compressWithStream(data) {
   return compressedArrayBuffer;
 }
 
-async function compressAndStoreInIndexedDB(data, replayName, replayDescription) {
+async function compressAndStoreInIndexedDB(data, replayName, replayDescription, replayVersion, replayTime) {
   const encoder = new TextEncoder();
   const compressionStream = new CompressionStream('deflate-raw'); 
   const readableStream = new Blob([encoder.encode(data)]).stream();
@@ -37,6 +37,8 @@ async function compressAndStoreInIndexedDB(data, replayName, replayDescription) 
   let saveObj = {
     name: replayName,
     description: replayDescription,
+    version: replayVersion,
+    time: replayTime,
     replay: compressedArrayBuffer
   }
   

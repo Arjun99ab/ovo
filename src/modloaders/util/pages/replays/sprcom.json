@@ -1,0 +1,36 @@
+{
+    "page": 1,
+    "params": {
+       "categoryId": "w20g3y8k", //version
+       "emulator": 1,
+       "gameId": "m1zjml06",
+       "levelId": "rdnne2vd", //level 1
+       "obsolete": 0,
+       "platformIds": [],
+       "regionIds": [],
+       "timer": 0,
+       "values": [
+          {
+             "valueIds": [
+                "4qy800d1" 
+             ],
+             "variableId": "jlz5v3yl" //glitchless
+          },
+          {
+             "valueIds": [
+                "mlnkxxnl"
+             ],
+             "variableId": "9l71oe4l" //difficulty
+          },
+          {
+             "valueIds": [
+                "mlnrmgoq"
+             ],
+             "variableId": "e8mry0ql" //coins
+          }
+       ],
+       "verified": 1,
+       "video": 0
+    },
+    "vary": 1732757804
+ }

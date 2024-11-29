@@ -43,6 +43,9 @@ let renderReplaysMenu = (sectionDiv) => {
     sectionDiv.removeChild(sectionDiv.lastChild);
   }
 
+  let replaysInfo = globalThis.replaysInfo();
+  console.log(replaysInfo);
+
   let mainDiv = document.createElement("div");
       
   mainDiv.id = "main-div";
@@ -68,7 +71,7 @@ let renderReplaysMenu = (sectionDiv) => {
     overflowY: "auto",
     overflowX: "hidden",
     // borderTop: "2px solid black",
-    border: "2px solid red",
+    borderLeft: "2px solid black",
     scrollbarGutter: "stable",
     scrollbarWidth: "thin",
   };
@@ -76,30 +79,8 @@ let renderReplaysMenu = (sectionDiv) => {
     replaysListDiv.style[a] = c[a];
   });
 
-  let localforage = window.localforage;
-  var replayStore = localforage.createInstance({
-    name: "replays"
-  });
-
-  let replayObjs = []
-
-  replayStore.iterate(function(value, key, iterationNumber) {
-    replayObjs.push(value);
-  }).then(function() {
-    console.log('Iteration has completed');
-    loadReplayRows(replaysListDiv, replayObjs);
-  }).catch(function(err) {
-    // This code runs if there were any errors
-    console.log(err);
-  });
-
-
-
-
-
-
   c = {
-    border: "2px solid red",
+    // border: "2px solid red",
     width: "60%",
     height: "100%",
     display: "flex",
@@ -107,6 +88,11 @@ let renderReplaysMenu = (sectionDiv) => {
     // rowGap: "0px",
     // justifyContent: "space-between",
     alignItems: "center",
+    overflowY: "auto",
+    overflowX: "hidden",
+    // borderTop: "2px solid black",
+    scrollbarGutter: "stable",
+    scrollbarWidth: "thin",
   }
   Object.keys(c).forEach(function (a) {
     mainDiv.style[a] = c[a];
@@ -151,8 +137,9 @@ let renderReplaysMenu = (sectionDiv) => {
   });
 
   let titleText = document.createElement("p");
-  titleText.style.fontSize = "2.3vw";
+  titleText.style.fontSize = "2.5vw";
   titleText.style.textAlign = "center";
+  titleText.style.textDecoration = "underline";
   titleText.innerHTML = "Replays";
   headerText.appendChild(titleText);
 
@@ -160,27 +147,140 @@ let renderReplaysMenu = (sectionDiv) => {
 
   mainDiv.appendChild(navbar);
 
+
+
+  let navbar2 = document.createElement("nav");
+  
+  c = {
+    display: "flex",
+    // flex: "0 0 auto",
+    // alignItems: "center",
+    justifyContent: "space-between",
+    padding: "5px",
+    // position: "relative",
+    // backgroundColor: "#f2f2f2",
+  }
+  Object.keys(c).forEach(function (a) {
+    navbar2.style[a] = c[a];
+  });
+  navbar2.id = "navbar2";
+
+  navbar2.appendChild(document.createElement("div"));
+
+  //Title
+  let header2Text = document.createElement("div");
+  c = {
+      backgroundColor: "white",
+      border: "none",
+      fontFamily: "Retron2000",
+      // position: "relative",
+      // top: "2%",
+      //left: "35%",
+      color: "black",
+      cursor: "default",
+      // margin: "0",
+      textAlign: "center",
+
+  };
+  Object.keys(c).forEach(function (a) {
+    header2Text.style[a] = c[a];
+  });
+
+  let levelTitleText = document.createElement("p");
+  levelTitleText.style.fontSize = "1.5vw";
+  levelTitleText.style.textAlign = "center";
+  levelTitleText.innerHTML = (replaysInfo.replayInfo && "Replaying: " + replaysInfo.replayInfo.name) || "No replay playing";
+  header2Text.appendChild(levelTitleText);
+
+  navbar2.appendChild(header2Text);
+
+  mainDiv.appendChild(navbar2);
+
+
+
+  const progressWrapper = document.createElement('div');
+  progressWrapper.style.display = 'flex';
+  progressWrapper.style.alignItems = 'center';
+  progressWrapper.style.justifyContent = 'space-between';
+  progressWrapper.style.width = '80%';
+  progressWrapper.style.margin = '20px auto';
+  mainDiv.appendChild(progressWrapper);
+
+  // Create and style the current progress text
+  const currentProgressText = document.createElement('span');
+  if (replaysInfo.frames.length == 0) {
+    replaysInfo.frames = [0];
+  }
+  var closest = replaysInfo.frames.reduce(function(prev, curr) {
+    return (Math.abs(curr - replaysInfo.replayIndex) < Math.abs(prev - replaysInfo.replayIndex) ? curr : prev);
+  });
+  let progress = ((replaysInfo.frames.indexOf(closest) / (replaysInfo.frames.length - 1)) * 100).toFixed(2)
+  currentProgressText.textContent = progress + '%';
+  currentProgressText.style.marginRight = '10px';
+  progressWrapper.appendChild(currentProgressText);
+
+  // Create and style the progress bar container
+  const progressContainer = document.createElement('div');
+  progressContainer.style.width = '100%';
+  progressContainer.style.height = '20px';
+  progressContainer.style.backgroundColor = '#ddd';
+  progressContainer.style.borderRadius = '10px';
+  progressContainer.style.overflow = 'hidden';
+  progressWrapper.appendChild(progressContainer);
+
+  // Create and style the progress bar
+  const progressBar = document.createElement('div');
+  progressBar.style.width = progress + '%';
+  progressBar.style.height = '100%';
+  progressBar.style.backgroundColor = 'orange';
+  progressBar.style.transition = 'width 0.1s linear';
+  progressContainer.appendChild(progressBar);
+
+  // Create and style the total progress text
+  const totalProgressText = document.createElement('span');
+  totalProgressText.textContent = '100%';
+  totalProgressText.style.marginLeft = '10px';
+  progressWrapper.appendChild(totalProgressText);
+
+  function updateProgressText() {
+    currentProgressText.textContent = `${progress}%`;
+  }
+
+  let interval;
+
+  function startProgress() {
+    interval = setInterval(() => {
+      if (progress >= 100) {
+        clearInterval(interval);
+      } else {
+        replaysInfo = globalThis.replaysInfo();
+        if (replaysInfo.frames.length == 0) {
+          replaysInfo.frames = [0];
+        }
+        var closest = replaysInfo.frames.reduce(function(prev, curr) {
+          return (Math.abs(curr - replaysInfo.replayIndex) < Math.abs(prev - replaysInfo.replayIndex) ? curr : prev);
+        });
+        progress = ((replaysInfo.frames.indexOf(closest) / (replaysInfo.frames.length - 1)) * 100).toFixed(2)
+        progressBar.style.width = progress + '%';
+        updateProgressText();
+      }
+    }, 100);
+  }
+  
+  // Start the progress when the page loads
+  startProgress();
+  
+  // Add an event listener to the stop button
+
   let descText = document.createElement("div");
   descText.id = "descText";
   descText.innerHTML = "whats up";
   descText.style.fontSize = "1.5vw";
   descText.style.textAlign = "center";
   descText.style.margin = "15px"
-  mainDiv.appendChild(descText);
+  // mainDiv.appendChild(descText);
 
-  let buttonsContainer = document.createElement("div");
-  c = {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "15px",
-    marginBottom: "10px",
-    gap: "10px",
-  }
-  Object.keys(c).forEach(function (a) {
-    buttonsContainer.style[a] = c[a];
-  });
+  
 
   let playButton = document.createElement("button");
   c = {
@@ -216,9 +316,24 @@ let renderReplaysMenu = (sectionDiv) => {
 
 
   // Append buttons to the buttons container
-  buttonsContainer.appendChild(playButton);
-  buttonsContainer.appendChild(stopButton);
-  mainDiv.appendChild(buttonsContainer);
+  // buttonsContainer.appendChild(playButton);
+  mainDiv.appendChild(stopButton);
+  // mainDiv.appendChild(buttonsContainer);
+
+
+  let buttonsContainer = document.createElement("div");
+  c = {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "15px",
+    marginBottom: "10px",
+    gap: "10px",
+  }
+  Object.keys(c).forEach(function (a) {
+    buttonsContainer.style[a] = c[a];
+  });
 
 
   let settingsButton = document.createElement("button");
@@ -237,7 +352,7 @@ let renderReplaysMenu = (sectionDiv) => {
   });
   settingsButton.innerHTML = "Settings";
   // Create cancel button
-  mainDiv.appendChild(settingsButton);
+  buttonsContainer.appendChild(settingsButton);
 
   let uploadButton = document.createElement("button");
   c = {
@@ -249,8 +364,8 @@ let renderReplaysMenu = (sectionDiv) => {
     padding: "5px 10px",
     cursor: "pointer",
     borderRadius: "10px",
-    marginTop: "15px",
-    marginBottom: "10px",
+    // marginTop: "15px",
+    // marginBottom: "10px",
   }
   Object.keys(c).forEach(function (a) {
     uploadButton.style[a] = c[a];
@@ -264,7 +379,9 @@ let renderReplaysMenu = (sectionDiv) => {
   }
 
   // Create cancel button
-  mainDiv.appendChild(uploadButton);
+  buttonsContainer.appendChild(uploadButton);
+
+  mainDiv.appendChild(buttonsContainer);
 
   
 
@@ -324,5 +441,8 @@ let renderReplaysMenu = (sectionDiv) => {
 
   sectionDiv.appendChild(mainDiv);
   sectionDiv.appendChild(replaysListDiv);
+
+  loadReplayRows();
+
 
 };

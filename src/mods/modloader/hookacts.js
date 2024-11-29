@@ -81,6 +81,20 @@ for(const action of Object.values(runtime.actsBySid)) {
 }
 
 
+let map = new WeakMap()
+let runtime = cr_getC2Runtime()
+map.set(cr.plugins_.Function.prototype.acts.CallFunction, function (action) {
+  let old = action.func
+  action.func = function (...args) {
+	console.log("CallFunction", args)
+	old.apply(this, args)
+  }
+})
+for(const action of Object.values(runtime.actsBySid)) {
+    if (map.has(action.func)) map.get(action.func)(action)
+}
+
+
 
 tick() {
 	let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
