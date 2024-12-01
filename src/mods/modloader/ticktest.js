@@ -57,12 +57,12 @@
 
         document.addEventListener("keyup", (event) => {this.keyUp(event)});
 
-        replayJSON = await fetch('../src/mods/modloader/replay/level1_1.4.json')
-            .then((response) => response.json())
-            .then(jsondata => {
-                return jsondata;
-            });
-        console.log(replayJSON)
+        // replayJSON = await fetch('../src/mods/modloader/replay/level1_1.4.json')
+        //     .then((response) => response.json())
+        //     .then(jsondata => {
+        //         return jsondata;
+        //     });
+        // console.log(replayJSON)
 
         window.addEventListener(
           "LayoutChange",
@@ -76,10 +76,12 @@
                 playerDeath = false;
                 ghostAtFlag = false;
                 paused = false;
+
               }
             } else if (e.detail.currentLayout.name === replayJSON.data[replayJSON.data.length - 1][1][1] && e.detail.currentLayout !== e.detail.layout && e.detail.layout.name !== replayJSON.data[replayJSON.data.length - 1][1][1]) {
               //user leaves level
               if (replaying || playerDeath || ghostAtFlag) {
+                console.log("user leave")
                 replaying = false;
                 replayIndex = 0;
                 playerDeath = false;
@@ -282,12 +284,16 @@
               if(replayIndex === 0) {
                   data.layout = getCurLayout();
                   data.layer = getPlayer().layer.name;
-                  replayInstance = this.createGhostPlayer(data);
-                  // this.destroyNonPlayerGhosts();
+                  if (playingBack) {
+                    this.destroyNonPlayerGhosts();
 
-                  // replayInstance = getPlayer();
-                  // replayInstance.instance_vars[16] = 1;
-                  // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
+                    replayInstance = getPlayer();
+                    replayInstance.instance_vars[16] = 1;
+                    runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
+                  } else {
+                    replayInstance = this.createGhostPlayer(data);
+                  }
+                  
 
               } else {
                   data.layout = replayJSON.data[replayJSON.data.length - 1][1][1]
@@ -301,11 +307,15 @@
               replaying = false;
               replayIndex = 0;
 
-              // replayInstance.instance_vars[16] = 0;
-              // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
+              if (playingBack) {
 
-              // console.log("replay done")
-              // c2_callFunction("Menu > End", []);
+                replayInstance.instance_vars[16] = 0;
+                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
+
+                console.log("replay done")
+                c2_callFunction("Menu > End", []);
+              }
+              
 
             }
           } else {
@@ -350,17 +360,18 @@
       replayInfo: replayInfo
     }
   }
-  // globalThis.beginReplay = function(replayData) {
-  //   console.log("begin replay", replayData)
-  //   runtime.tickMe(ticktest);
-  //   replayJSON = replayData;
-  //   replaying = true;
-  //   replayIndex = 0;
-  //   let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
-  //   let numFrames = replayJSON.size[0];
-  //   frames = [];
-  //   for (let i = 0; i < numFrames; i++) {
-  //       frames.push(Math.floor((i * totalFrames) / numFrames));
-  //   }
-  // }
+  globalThis.beginReplay = function(replayData) {
+    console.log("begin replay", replayData)
+    runtime.tickMe(ticktest);
+    replayJSON = replayData;
+    replaying = true;
+    replayIndex = 0;
+    playingBack = true;
+    let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
+    let numFrames = replayJSON.size[0];
+    frames = [];
+    for (let i = 0; i < numFrames; i++) {
+        frames.push(Math.floor((i * totalFrames) / numFrames));
+    }
+  }
 })();

@@ -1,13 +1,24 @@
-import {backendConfig} from "../../../modloader.js";
-import {createConfirmReloadModal, createNotifyModal} from "../../modals.js"
+import { backendConfig } from "../../../modloader.js";
+import { createConfirmReloadModal, createNotifyModal } from "../../modals.js"
 import { modsPendingReload } from "../../modals.js";
 import { notify } from "../../ovo.js";
-export {customModNum, incCustomModNum, compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes}
+export { compareLevelQueue, setCompareLevelQueue, currentLevelObj, setLevel, customModNum, incCustomModNum, compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes}
 
 let customModNum = 0;
 function incCustomModNum() {
   customModNum++;
 }
+
+let currentLevelObj = null;
+function setLevel(levelObj) {
+  currentLevelObj = levelObj;
+}
+
+let compareLevelQueue = [];
+function setCompareLevelQueue(queue) {
+  compareLevelQueue = queue;
+} 
+
 
 async function compressWithStream(data) {
   const encoder = new TextEncoder();
@@ -41,12 +52,20 @@ async function compressAndStoreInIndexedDB(data, replayName, replayDescription, 
     time: replayTime,
     replay: compressedArrayBuffer
   }
-  
-  replayStore.setItem('replay1', saveObj, function (err) {
-    replayStore.getItem('replay1', function (err, value) {
-      console.log(value);
+
+  await replayStore.length().then(function(length) {
+    replayStore.setItem('replay' + (length + 1), saveObj, function (err) {
+      
     });
-  });
+  })
+
+  // replayStore.length().then(function(length) {
+  //   replayStore.setItem('replay' + (length + 1), saveObj, function (err) {
+      
+  //   });
+  // });
+  
+  
   
 }
 
