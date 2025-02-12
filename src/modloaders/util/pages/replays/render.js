@@ -129,21 +129,32 @@ let renderReplaysMenu = (sectionDiv) => {
   buttonContainer.style.borderTop = "2px solid black";
   buttonContainer.style.height = "15%";
 
+  let uploadButtonDiv = document.createElement("div");
+  uploadButtonDiv.style.display = "flex";
+  uploadButtonDiv.style.flexDirection = "column";
+  uploadButtonDiv.style.rowGap = "1px";
+  uploadButtonDiv.style.alignItems = "center";
+  uploadButtonDiv.style.justifyContent = "center";
+  uploadButtonDiv.style.width = "100%";
+  uploadButtonDiv.style.height = "100%";
+  uploadButtonDiv.style.padding = "3px";
+  uploadButtonDiv.style.borderRadius = "10px";
+
   let uploadButton = document.createElement("button");
   c = {
     fontFamily: "Retron2000",
-    fontSize: "3vh",
+    // fontSize: "3vh",
     // backgroundColor: "rgb(45, 186, 47)",
     color: "black",
     border: "none",
-    padding: "5px",
+    // padding: "5px",
     cursor: "pointer",
     borderRadius: "10px",
-    height: "100%",
-    width: "100%",
+    height: "7vh",
+    width: "7vh",
     // border: "2px solid red",
     background: "url(../src/img/modloader/replay/upload.png)",
-    backgroundSize: "7vh", //or 50% 
+    backgroundSize: "contain", //i love contain omg 
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   }
@@ -156,18 +167,48 @@ let renderReplaysMenu = (sectionDiv) => {
     document.getElementById("menu-bg").style.filter = "blur(1.2px)";
     createUploadPopup();
   }
-  // uploadButton.innerHTML = "Upload";
+  
+
+  let uploadButtonLabel = document.createElement("span");
+  uploadButtonLabel.innerText = "Upload";
+  uploadButtonLabel.style.fontFamily = "Retron2000";
+  uploadButtonLabel.style.fontSize = "2vh";
+  uploadButtonLabel.style.color = "black";
+
+  uploadButtonDiv.appendChild(uploadButton);
+  uploadButtonDiv.appendChild(uploadButtonLabel);
+
+
+
+  let settingsButtonDiv = document.createElement("div");
+  settingsButtonDiv.style.display = "flex";
+  settingsButtonDiv.style.flexDirection = "column";
+  settingsButtonDiv.style.rowGap = "1px";
+  settingsButtonDiv.style.alignItems = "center";
+  settingsButtonDiv.style.justifyContent = "center";
+  settingsButtonDiv.style.width = "100%";
+  settingsButtonDiv.style.height = "100%";
+  settingsButtonDiv.style.padding = "3px";
+  settingsButtonDiv.style.borderRadius = "10px";
 
   let settingsButton = document.createElement("button");
   c["background"] = "url(../src/img/modloader/replay/settings.png)";
   Object.keys(c).forEach(function (a) {
     settingsButton.style[a] = c[a];
   });
-  // settingsButton.innerHTML = "Settings";
+
+  let settingsButtonLabel = document.createElement("span");
+  settingsButtonLabel.innerText = "Settings";
+  settingsButtonLabel.style.fontFamily = "Retron2000";
+  settingsButtonLabel.style.fontSize = "2vh";
+  settingsButtonLabel.style.color = "black";
+
+  settingsButtonDiv.appendChild(settingsButton);
+  settingsButtonDiv.appendChild(settingsButtonLabel);
 
 
-  buttonContainer.appendChild(uploadButton);
-  buttonContainer.appendChild(settingsButton);
+  buttonContainer.appendChild(uploadButtonDiv);
+  buttonContainer.appendChild(settingsButtonDiv);
 
   replayRightDiv.appendChild(buttonContainer);
 
@@ -305,22 +346,39 @@ let renderReplaysMenu = (sectionDiv) => {
     raceReplayContainer.style[a] = c[a];
   });
 
+  let raceButtonDiv = document.createElement("div");
+  let b = {
+    display: "flex",
+    flexDirection: "column",
+    rowGap: "1px",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
+    padding: "3px",
+    borderRadius: "10px",
+    // border: "2px solid red",
+
+  }
+  Object.keys(b).forEach(function (a) {
+    raceButtonDiv.style[a] = b[a];
+  });
 
   let raceButton = document.createElement("button");
   c = {
     fontFamily: "Retron2000",
-    fontSize: "3vh",
+    // fontSize: "3vh",
     // backgroundColor: "rgb(45, 186, 47)",
     color: "black",
     border: "none",
-    padding: "5px",
+    // padding: "5px",
     cursor: "pointer",
     // borderRadius: "10px",
-    height: "100%",
-    width: "100%",
-    // border: "2px solid red",
+    height: "7vh",
+    width: "7vh",
+    // border: "2px solid green",
     background: "url(../src/img/modloader/replay/race.png)",
-    backgroundSize: "7vh", //or 50% 
+    backgroundSize: "contain", //or 50% 
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   }
@@ -346,6 +404,21 @@ let renderReplaysMenu = (sectionDiv) => {
     document.getElementById("x-button").click();
   }
 
+  let raceButtonLabel = document.createElement("span");
+  raceButtonLabel.innerText = "Race";
+  raceButtonLabel.style.fontFamily = "Retron2000";
+  raceButtonLabel.style.fontSize = "2vh";
+  raceButtonLabel.style.color = "black";
+
+  raceButtonDiv.appendChild(raceButton);
+  raceButtonDiv.appendChild(raceButtonLabel);
+
+
+
+  let replayButtonDiv = document.createElement("div");
+  Object.keys(b).forEach(function (a) {
+    replayButtonDiv.style[a] = b[a];
+  });
 
   let replayButton = document.createElement("button");
   c = {
@@ -354,15 +427,14 @@ let renderReplaysMenu = (sectionDiv) => {
     // backgroundColor: "rgb(45, 186, 47)",
     color: "black",
     border: "none",
-    padding: "5px",
+    // padding: "5px",
     cursor: "pointer",
     // borderRadius: "10px",
-    height: "100%",
-
-    width: "100%",
-    // border: "2px solid red",
+    height: "7vh",
+    width: "7vh",
+    // border: "2px solid green",
     background: "url(../src/img/modloader/replay/replay.png)",
-    backgroundSize: "7vh", //or 50% 
+    backgroundSize: "contain", //or 50% 
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   }
@@ -391,25 +463,51 @@ let renderReplaysMenu = (sectionDiv) => {
     document.getElementById("x-button").click();
   }
 
-  raceReplayContainer.appendChild(raceButton);
-  raceReplayContainer.appendChild(replayButton);
+  let replayButtonLabel = document.createElement("span");
+  replayButtonLabel.innerText = "Replay";
+  replayButtonLabel.style.fontFamily = "Retron2000";
+  replayButtonLabel.style.fontSize = "2vh";
+  replayButtonLabel.style.color = "black";
+
+  replayButtonDiv.appendChild(replayButton);
+  replayButtonDiv.appendChild(replayButtonLabel);
+
+  raceReplayContainer.appendChild(raceButtonDiv);
+  raceReplayContainer.appendChild(replayButtonDiv);
+
+  let addButtonDiv = document.createElement("div");
+  let b_add = {
+    display: "flex",
+    flexDirection: "column",
+    rowGap: "1px",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "34%",
+    padding: "3px",
+    borderRadius: "10px",
+    // border: "2px solid red",
+
+  }
+  Object.keys(b_add).forEach(function (a) {
+    addButtonDiv.style[a] = b_add[a];
+  });
 
   let addButton = document.createElement("button");
   c = {
     fontFamily: "Retron2000",
-    fontSize: "3vh",
+    // fontSize: "3vh",
     // backgroundColor: "rgb(45, 186, 47)",
     color: "black",
     border: "none",
-    padding: "5px",
+    // padding: "5px",
     cursor: "pointer",
     // borderRadius: "10px",
-    height: "34%",
-
-    width: "100%",
-    // borderBottom: "2px solid red",
+    height: "7vh", //34%
+    width: "7vh", //100%
+    // borderBottom: "2px solid green",
     background: "url(../src/img/modloader/replay/add.png)",
-    backgroundSize: "7vh", //or 50% 
+    backgroundSize: "contain", //or 50% 
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   }
@@ -426,6 +524,15 @@ let renderReplaysMenu = (sectionDiv) => {
     loadReplayCompare();
     
   }
+
+  let addButtonLabel = document.createElement("span");
+  addButtonLabel.innerText = "Add";
+  addButtonLabel.style.fontFamily = "Retron2000";
+  addButtonLabel.style.fontSize = "2vh";
+  addButtonLabel.style.color = "black";
+
+  addButtonDiv.appendChild(addButton);
+  addButtonDiv.appendChild(addButtonLabel);
 
   let replayActions = document.createElement("div");
   c = {
@@ -445,56 +552,71 @@ let renderReplaysMenu = (sectionDiv) => {
   });
 
 
-  let editLevel = document.createElement("button");
+  let editButtonDiv = document.createElement("div");
+  Object.keys(b).forEach(function (a) {
+    editButtonDiv.style[a] = b[a];
+  });
+
+  let editButton = document.createElement("button");
   c = {
     fontFamily: "Retron2000",
-    fontSize: "3vh",
+    // fontSize: "3vh",
     backgroundColor: "white",
     color: "black",
     border: "none",
-    padding: "5px",
+    // padding: "5px",
     cursor: "pointer",
     // borderRadius: "10px",
-    height: "100%",
-
-    width: "100%",
+    height: "7vh",
+    width: "7vh",
     // border: "2px solid red",
     background: "url(../src/img/modloader/replay/edit.png)",
-    backgroundSize: "7vh", //or 50% 
+    backgroundSize: "contain", //or 50% 
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   }
   Object.keys(c).forEach(function (a) {
-    editLevel.style[a] = c[a];
+    editButton.style[a] = c[a];
   });
-  // editLevel.innerHTML = "Race";
 
+  let editButtonLabel = document.createElement("span");
+  editButtonLabel.innerText = "Edit";
+  editButtonLabel.style.fontFamily = "Retron2000";
+  editButtonLabel.style.fontSize = "2vh";
+  editButtonLabel.style.color = "black";
 
-  let deleteLevel = document.createElement("button");
+  editButtonDiv.appendChild(editButton);
+  editButtonDiv.appendChild(editButtonLabel);
+
+  
+  let deleteButtonDiv = document.createElement("div");
+  Object.keys(b).forEach(function (a) {
+    deleteButtonDiv.style[a] = b[a];
+  });
+
+  let deleteButton = document.createElement("button");
   c = {
     fontFamily: "Retron2000",
-    fontSize: "3vh",
+    // fontSize: "3vh",
     backgroundColor: "black",
     color: "black",
     border: "none",
-    padding: "5px",
+    // padding: "5px",
     cursor: "pointer",
     // borderRadius: "10px",
-    height: "100%",
-
-
-    width: "100%",
+    height: "7vh",
+    width: "7vh",
     // border: "2px solid red",
     background: "url(../src/img/modloader/replay/delete.png)",
-    backgroundSize: "7vh", //or 50% 
+    backgroundSize: "contain", //or 50% 
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   }
   Object.keys(c).forEach(function (a) {
-    deleteLevel.style[a] = c[a];
+    deleteButton.style[a] = c[a];
   });
 
-  deleteLevel.onclick = function() {
+  deleteButton.onclick = function() {
     let localforage = window.localforage;
     var replayStore = localforage.createInstance({
         name: "replays"
@@ -508,14 +630,22 @@ let renderReplaysMenu = (sectionDiv) => {
     });
   }
 
+  let deleteButtonLabel = document.createElement("span");
+  deleteButtonLabel.innerText = "Delete";
+  deleteButtonLabel.style.fontFamily = "Retron2000";
+  deleteButtonLabel.style.fontSize = "2vh";
+  deleteButtonLabel.style.color = "black";
 
-  // deleteLevel.innerHTML = "Replay";
+  deleteButtonDiv.appendChild(deleteButton);
+  deleteButtonDiv.appendChild(deleteButtonLabel);
 
-  replayActions.appendChild(editLevel);
-  replayActions.appendChild(deleteLevel);
+
+
+  replayActions.appendChild(editButtonDiv);
+  replayActions.appendChild(deleteButtonDiv);
 
   replayDetailsButtonsDiv.appendChild(raceReplayContainer);
-  replayDetailsButtonsDiv.appendChild(addButton);
+  replayDetailsButtonsDiv.appendChild(addButtonDiv);
 
 
   replayDetailsButtonsDiv.appendChild(replayActions);
@@ -701,23 +831,26 @@ let renderReplaysMenu = (sectionDiv) => {
     compareActions.style[a] = c[a];
   });
 
+  let compareAddBtnDiv = document.createElement("div");
+  Object.keys(b).forEach(function (a) { 
+    compareAddBtnDiv.style[a] = b[a];
+  });
 
   let compareAddBtn = document.createElement("button");
   c = {
     fontFamily: "Retron2000",
-    fontSize: "3vh",
+    // fontSize: "3vh",
     backgroundColor: "white",
     color: "black",
     border: "none",
-    padding: "5px",
+    // padding: "5px",
     cursor: "pointer",
     // borderRadius: "10px",
-    height: "100%",
-
-    width: "100%",
+    height: "7vh",
+    width: "7vh",
     // border: "2px solid red",
     background: "url(../src/img/modloader/replay/queue.png)",
-    backgroundSize: "7vh", //or 50% 
+    backgroundSize: "contain", //or 50% 
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   }
@@ -732,24 +865,36 @@ let renderReplaysMenu = (sectionDiv) => {
     createViewListPopup();
   }
 
+  let compareAddBtnLabel = document.createElement("span");
+  compareAddBtnLabel.innerText = "Queue";
+  compareAddBtnLabel.style.fontFamily = "Retron2000";
+  compareAddBtnLabel.style.fontSize = "2vh";
+  compareAddBtnLabel.style.color = "black";
+
+  compareAddBtnDiv.appendChild(compareAddBtn);
+  compareAddBtnDiv.appendChild(compareAddBtnLabel);
+
+
+  let compareCompareBtnDiv = document.createElement("div");
+  Object.keys(b).forEach(function (a) {
+    compareCompareBtnDiv.style[a] = b[a];
+  });
 
   let compareCompareBtn = document.createElement("button");
   c = {
     fontFamily: "Retron2000",
-    fontSize: "3vh",
+    // fontSize: "3vh",
     backgroundColor: "black",
     color: "black",
     border: "none",
-    padding: "5px",
+    // padding: "5px",
     cursor: "pointer",
     // borderRadius: "10px",
-    height: "100%",
-
-
-    width: "100%",
+    height: "7vh",
+    width: "7vh",
     // border: "2px solid red",
     background: "url(../src/img/modloader/replay/compare-old.png)",
-    backgroundSize: "7vh", //or 50% 
+    backgroundSize: "contain", //or 50% 
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   }
@@ -771,11 +916,22 @@ let renderReplaysMenu = (sectionDiv) => {
     });
   }
 
+  let compareCompareBtnLabel = document.createElement("span");
+  compareCompareBtnLabel.innerText = "Compare";
+  compareCompareBtnLabel.style.fontFamily = "Retron2000";
+  compareCompareBtnLabel.style.fontSize = "2vh";
+  compareCompareBtnLabel.style.color = "black";
+
+  compareCompareBtnDiv.appendChild(compareCompareBtn);
+  compareCompareBtnDiv.appendChild(compareCompareBtnLabel);
+
+
+
 
   // deleteLevel.innerHTML = "Replay";
 
-  compareActions.appendChild(compareAddBtn);
-  compareActions.appendChild(compareCompareBtn);
+  compareActions.appendChild(compareAddBtnDiv);
+  compareActions.appendChild(compareCompareBtnDiv);
 
 
   replayCompareButtonsDiv.appendChild(compareActions);
