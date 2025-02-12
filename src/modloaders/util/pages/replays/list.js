@@ -121,15 +121,15 @@ let loadReplayRows = () => {
         name: "replays"
     });
     let replayObjs = []
+    console.log(replayStore)
     replayStore.iterate(function(value, key, iterationNumber) {
-        value["id"] = "replay" + iterationNumber
         replayObjs.push(value);
     }).then(function() {
         while (replayListDiv.firstChild) {
             replayListDiv.removeChild(replayListDiv.lastChild);
         }
         console.log(replayObjs);
-        replayObjs["id"] = replayObjs.length;
+        replayObjs.sort((a, b) => b.uploadTimestamp - a.uploadTimestamp);
         for (let i = 0; i < replayObjs.length; i++) {
             let replayObj = replayObjs[i];
             let levelBox = createReplayRow(replayObj);
@@ -143,6 +143,7 @@ let loadReplayRows = () => {
                 replayDetailsDescDiv.removeChild(replayDetailsDescDiv.lastChild);
             }
             let emptyReplayObj = {
+                id: "",
                 description: "",
                 name: "No replays saved",
                 version: "",

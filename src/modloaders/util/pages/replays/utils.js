@@ -44,20 +44,27 @@ async function compressAndStoreInIndexedDB(data, replayName, replayDescription, 
   var replayStore = localforage.createInstance({
     name: "replays"
   });
-
+  let uuid = self.crypto.randomUUID();
   let saveObj = {
+    id: uuid,
     name: replayName,
     description: replayDescription,
     version: replayVersion,
     time: replayTime,
-    replay: compressedArrayBuffer
+    replay: compressedArrayBuffer,
+    uploadTimestamp: Date.now()
   }
+  replayStore.setItem(uuid, saveObj, function (err) {
+    if (err) {
+      console.log(err);
+    }
+  });
 
-  await replayStore.length().then(function(length) {
-    replayStore.setItem('replay' + (length + 1), saveObj, function (err) {
+  // await replayStore.length().then(function(length) {
+  //   replayStore.setItem('replay' + (length + 1), saveObj, function (err) {
       
-    });
-  })
+  //   });
+  // })
 
   // replayStore.length().then(function(length) {
   //   replayStore.setItem('replay' + (length + 1), saveObj, function (err) {

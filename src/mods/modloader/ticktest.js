@@ -289,12 +289,16 @@
 
                     replayInstance = getPlayer();
                     replayInstance.instance_vars[16] = 1;
+                    console.log(replayInstance.behavior_insts[0].enabled)
                     runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
+                    console.log(replayInstance.behavior_insts[0].enabled)
                   } else {
                     replayInstance = this.createGhostPlayer(data);
                   }
-                  
-
+              } else if (replayIndex === 2) {
+                console.log(replayInstance.behavior_insts[0].enabled)
+                console.log(replayInstance)
+                console.log(getPlayer())
               } else {
                   data.layout = replayJSON.data[replayJSON.data.length - 1][1][1]
                   data.layer = replayInstance.layer.name;
@@ -302,18 +306,26 @@
               }
             }
             replayIndex += 1;
-            if (replayIndex >= frames[frames.length - 1]) {
-              ghostAtFlag = true;
-              replaying = false;
+            if (replayIndex >= frames[frames.length - 10]) {
+              // ghostAtFlag = true;
+              // replaying = false;
               replayIndex = 0;
+              
 
               if (playingBack) {
 
                 replayInstance.instance_vars[16] = 0;
                 runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
+                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
+                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
 
                 console.log("replay done")
-                c2_callFunction("Menu > End", []);
+
+                console.log(replayInstance)
+                console.log(getPlayer())
+
+                // c2_callFunction("Menu > End", []);
+                // runtime.untickMe(this);
               }
               
 
@@ -373,5 +385,6 @@
     for (let i = 0; i < numFrames; i++) {
         frames.push(Math.floor((i * totalFrames) / numFrames));
     }
+    // console.log(frames)
   }
 })();
