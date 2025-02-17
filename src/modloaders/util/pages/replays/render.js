@@ -526,6 +526,13 @@ let renderReplaysMenu = (sectionDiv) => {
         //   c2_callFunction("Menu > Transition", ['Level Menu']);
         // } 
         runtime.changelayout = runtime.layouts[levelName];
+        // this.runtime.changelayout = this.runtime.running_layout;
+        // var i, len, g;
+        // for (i = 0, len = runtime.allGroups.length; i < len; i++)
+        // {
+        //   g = runtime.allGroups[i];
+        //   g.setGroupActive(g.initially_activated);
+        // }
         window["beginReplay"](replay);
         // replay.play();
     }); //add error handling

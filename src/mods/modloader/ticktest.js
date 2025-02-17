@@ -266,7 +266,7 @@
         // console.log(runtime.deathRow);
 
         if (replaying && !paused) { 
-          if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1]) {
+          if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1] && (getPlayer())) {
             if(frames.includes(replayIndex)) {
 
               let replayFrame = replayJSON.data[frames.indexOf(replayIndex)]; //o(n) but n is small so it should be fine
@@ -290,8 +290,12 @@
                     replayInstance = getPlayer();
                     replayInstance.instance_vars[16] = 1;
                     console.log(replayInstance.behavior_insts[0].enabled)
+                    console.log(getPlayer())
+
                     runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
                     console.log(replayInstance.behavior_insts[0].enabled)
+                    console.log(getPlayer())
+
                   } else {
                     replayInstance = this.createGhostPlayer(data);
                   }
@@ -306,9 +310,9 @@
               }
             }
             replayIndex += 1;
-            if (replayIndex >= frames[frames.length - 10]) {
-              // ghostAtFlag = true;
-              // replaying = false;
+            if (replayIndex >= frames[frames.length - 1]) {
+              ghostAtFlag = true;
+              replaying = false;
               replayIndex = 0;
               
 
@@ -316,16 +320,19 @@
 
                 replayInstance.instance_vars[16] = 0;
                 runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
+                // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
                 runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
 
                 console.log("replay done")
 
                 console.log(replayInstance)
                 console.log(getPlayer())
+                playerType.instances.filter(
+                  (x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled
+                )[0] = replayInstance;
 
-                // c2_callFunction("Menu > End", []);
-                // runtime.untickMe(this);
+                c2_callFunction("Menu > End", []);
+                runtime.untickMe(this);
               }
               
 

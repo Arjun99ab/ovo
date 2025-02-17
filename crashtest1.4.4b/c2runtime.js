@@ -5231,6 +5231,7 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 	Runtime.prototype.doChangeLayout = function (changeToLayout)
 	{
 		console.log("whats good")
+		console.trace()
 		var prev_layout = this.running_layout;
 		this.running_layout.stopRunning();
 		var i, len, j, lenj, k, lenk, type, inst, binst;
@@ -20635,6 +20636,7 @@ cr.plugins_.Function = function(runtime)
 	function Cnds() {};
 	Cnds.prototype.OnFunction = function (name_)
 	{
+		console.log("OnFunction", name_);
 		var fs = getCurrentFuncStack();
 		if (!fs)
 			return false;
@@ -20642,6 +20644,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Cnds.prototype.CompareParam = function (index_, cmp_, value_)
 	{
+		console.log("CompareParam", index_, cmp_, value_);
 		var fs = getCurrentFuncStack();
 		if (!fs)
 			return false;
@@ -20668,6 +20671,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Acts.prototype.SetReturnValue = function (value_)
 	{
+		console.log("SetReturnValue", value_);
 		var fs = getCurrentFuncStack();
 		if (fs)
 			fs.retVal = value_;
@@ -20681,6 +20685,7 @@ cr.plugins_.Function = function(runtime)
 	function Exps() {};
 	Exps.prototype.ReturnValue = function (ret)
 	{
+		console.log("ReturnValue", ret);
 		var fs = getOneAboveFuncStack();
 		if (fs)
 			ret.set_any(fs.retVal);
@@ -20689,6 +20694,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Exps.prototype.ParamCount = function (ret)
 	{
+		console.log("ParamCount", ret);
 		var fs = getCurrentFuncStack();
 		if (fs)
 			ret.set_int(fs.params.length);
@@ -20700,6 +20706,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Exps.prototype.Param = function (ret, index_)
 	{
+		console.log("Param", ret, index_);
 		index_ = cr.floor(index_);
 		var fs = getCurrentFuncStack();
 		if (fs)
@@ -20722,6 +20729,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Exps.prototype.Call = function (ret, name_)
 	{
+		console.log("Call", ret, name_);
 		var fs = pushFuncStack();
 		fs.name = name_.toLowerCase();
 		fs.retVal = 0;
