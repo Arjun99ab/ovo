@@ -2,7 +2,7 @@ import { backendConfig } from "../../../modloader.js";
 import { createConfirmReloadModal, createNotifyModal } from "../../modals.js"
 import { modsPendingReload } from "../../modals.js";
 import { notify } from "../../ovo.js";
-export { compareLevelQueue, setCompareLevelQueue, currentLevelObj, setLevel, customModNum, incCustomModNum, compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes}
+export { compareLevelQueue, setCompareLevelQueue, currentLevelObj, setLevel, customModNum, incCustomModNum, compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes, compressedToLZMA}
 
 let customModNum = 0;
 function incCustomModNum() {
@@ -113,4 +113,30 @@ function convert_formated_hex_to_bytes(hex_str) {
   }
   
   return hex_data;
+}
+
+function compressedToLZMA(name, compressedData) {
+  decompressWithStream(compressedData).then((decompressedData) => {
+    let LZMA_WORKER = window.LZMA_WORKER;
+    LZMA_WORKER.compress(decompressedData, 1, function(result) {
+      console.log("Compressed data: ", result);
+      let hexString = Array.from(new Uint8Array(result))
+        .map(byte => byte.toString(16).padStart(2, '0'))
+        .join(' ');
+      hexString = hexString.replace(/((?:[0-9a-fA-F]{2} ){16})/g, '$1\n');
+      console.log("Hex string: ", hexString);
+      const blob = new Blob([hexString], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name + 'ovo';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+  ).catch((error) => {
+    notify("Decompression error: " + error);
+  });
 }

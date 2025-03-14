@@ -339,6 +339,7 @@
 
                 c2_callFunction("Menu > End", []);
                 runtime.untickMe(this);
+                playingBack = false;
               }
               
 
@@ -364,6 +365,7 @@
     replayJSON = replayData;
     replaying = true;
     replayIndex = 0;
+    playingBack = false;
     let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
     let numFrames = replayJSON.size[0];
     frames = [];

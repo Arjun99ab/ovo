@@ -1,10 +1,10 @@
 import { runtime, version, filters, backendConfig } from "../../../modloader.js";
 import { createNotifyModal } from "../../modals.js";
 import { detectDeviceType } from "../../utils.js";
-import { compareLevelQueue, setCompareLevelQueue, currentLevelObj, decompressWithStream } from "./utils.js";
+import { compareLevelQueue, setCompareLevelQueue, currentLevelObj, decompressWithStream, compressedToLZMA } from "./utils.js";
 import { createUploadPopup, createViewListPopup } from "./editmod.js";
 import { loadReplayRows } from "./list.js";
-
+import { createModSettingsPopup } from "./settings.js";
 
 export { renderReplaysMenu, loadReplayDetails, loadReplayCompare };
 
@@ -196,6 +196,13 @@ let renderReplaysMenu = (sectionDiv) => {
   Object.keys(c).forEach(function (a) {
     settingsButton.style[a] = c[a];
   });
+
+  settingsButton.onclick = function() {
+    document.getElementById("menu-bg").style.pointerEvents = "none";
+    document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+    // createModSettingsPopup("flymod");
+    createNotifyModal("Settings are not available yet.");
+  }
 
   let settingsButtonLabel = document.createElement("span");
   settingsButtonLabel.innerText = "Settings";
@@ -413,13 +420,13 @@ let renderReplaysMenu = (sectionDiv) => {
   raceButtonDiv.appendChild(raceButton);
   raceButtonDiv.appendChild(raceButtonLabel);
 
-  let addButtonDiv = document.createElement("div");
+  let downloadButtonDiv = document.createElement("div");
   
   Object.keys(b).forEach(function (a) {
-    addButtonDiv.style[a] = b[a];
+    downloadButtonDiv.style[a] = b[a];
   });
 
-  let addButton = document.createElement("button");
+  let downloadButton = document.createElement("button");
   c = {
     fontFamily: "Retron2000",
     // fontSize: "3vh",
@@ -432,40 +439,41 @@ let renderReplaysMenu = (sectionDiv) => {
     height: "7vh", //34%
     width: "7vh", //100%
     // borderBottom: "2px solid green",
-    background: "url(../src/img/modloader/replay/add.png)",
+    background: "url(../src/img/modloader/replay/download.png)",
     backgroundSize: "contain", //or 50% 
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   }
   Object.keys(c).forEach(function (a) {
-    addButton.style[a] = c[a];
+    downloadButton.style[a] = c[a];
   });
   // compareButton.innerHTML = "Compare";
 
-  addButton.onclick = function() {
-    let currentQueue = compareLevelQueue;
-    currentQueue.push(currentLevelObj);
-    setCompareLevelQueue(currentQueue);
+  downloadButton.onclick = function() {
+    // let currentQueue = compareLevelQueue;
+    // currentQueue.push(currentLevelObj);
+    // setCompareLevelQueue(currentQueue);
     
-    loadReplayCompare();
+    // loadReplayCompare();
+    compressedToLZMA(currentLevelObj.name, currentLevelObj.replay)
     
   }
 
-  let addButtonLabel = document.createElement("span");
-  addButtonLabel.innerText = "Enqueue";
-  addButtonLabel.style.fontFamily = "Retron2000";
-  addButtonLabel.style.fontSize = "2vh";
-  addButtonLabel.style.color = "black";
+  let downloadButtonLabel = document.createElement("span");
+  downloadButtonLabel.innerText = "Download";
+  downloadButtonLabel.style.fontFamily = "Retron2000";
+  downloadButtonLabel.style.fontSize = "2vh";
+  downloadButtonLabel.style.color = "black";
 
-  addButtonDiv.appendChild(addButton);
-  addButtonDiv.appendChild(addButtonLabel);
+  downloadButtonDiv.appendChild(downloadButton);
+  downloadButtonDiv.appendChild(downloadButtonLabel);
 
 
 
   
 
   raceReplayContainer.appendChild(raceButtonDiv);
-  raceReplayContainer.appendChild(addButtonDiv);
+  raceReplayContainer.appendChild(downloadButtonDiv);
 
 
 

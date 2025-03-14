@@ -297,8 +297,15 @@ let createUploadPopup = () => {
     dropdown.style.color = "white";
     dropdown.style.borderRadius = "10px";
     dropdown.style.width = "fit-content";
-    dropdown.innerHTML = "Select &#9660;";
-    dropdown.style.fontSize = "1.5vw";
+
+
+    let dropdownText2 = document.createElement("p");
+    dropdownText2.style.margin = "0";
+    dropdownText2.style.padding = "0";
+    dropdownText2.style.fontSize = "1.5vw";
+    dropdownText2.innerHTML = "Select &#9660;";
+    dropdown.appendChild(dropdownText2);
+    // dropdown.style.fontSize = "1.5vw";
 
 
     let menu = document.createElement("div");
@@ -314,39 +321,52 @@ let createUploadPopup = () => {
     menu.style.fontSize = "1.1vw";
     dropdown.appendChild(menu);
 
-    let options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+    // let options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+    let options = ["1.4", "1.4.4", "1.4.3", "1.4.2", "1.4.1"];
+    let replayVersion = null;
+
     options.forEach(option => {
-        let item = document.createElement("div");
-        item.innerText = option;
-        item.style.color = "black";
-        item.style.padding = "10px";
-        item.style.cursor = "pointer";
-        item.addEventListener("mouseover", () => item.style.background = "#f1f1f1");
-        item.addEventListener("mouseout", () => item.style.background = "white");
-        item.addEventListener("click", function() {
-            dropdown.firstChild.nodeValue = option;
-            menu.style.display = "none";
-        });
-        menu.appendChild(item);
+      let item = document.createElement("div");
+      item.class = "dropdown-item";
+      item.innerText = option;
+      item.style.color = "black";
+      item.style.padding = "10px";
+      item.style.cursor = "pointer";
+      item.addEventListener("mouseover", () => item.style.background = "#f1f1f1");
+      item.addEventListener("mouseout", () => item.style.background = "white");
+      item.addEventListener("click", function() {
+        // dropdown.firstChild.nodeValue = option;
+        dropdown.firstChild.innerHTML = option + " &#9660;";
+        menu.style.display = "none";
+        replayVersion = option;
+        console.log("option", option);
+      });
+      menu.appendChild(item);
     });
 
 
-    dropdown.addEventListener("click", function() {
+    dropdown.addEventListener("click", function(event) {
+      // console.log(event.target);
+      if(!event.target.classList.contains("dropdown-item")) { //make sure click is on top of the dropdown
+        console.log("dropdown clicked");
         menu.style.display = (menu.style.display === "block") ? "none" : "block";
+      }
     });
 
-    document.addEventListener("click", function(event) {
-        if (!dropdown.contains(event.target)) {
-            menu.style.display = "none";
-        }
+    menu.addEventListener("click", function() {
+      console.log("menu clicked");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    });
+
+    settingsDiv.addEventListener("click", function(event) {
+      console.log("hi")
+      if (!dropdown.contains(event.target)) {
+          menu.style.display = "none";
+      }
     });
 
     dropdownRow.appendChild(dropdownText);
     dropdownRow.appendChild(dropdown);
-
-
-    // .appendChild(dropdown);
-
 
     
     let uploadRow = document.createElement("div");
@@ -438,6 +458,14 @@ let createUploadPopup = () => {
         reader.onload = function(e) {
           let contents = e.target.result;
           console.log(contents);
+          try {
+            JSON.parse(contents);
+            console.log("Valid JSON");
+            replayContents = contents;
+            return;
+          } catch (e) {
+            console.log("invalid json, decompressing first")
+          }
           let hexList = convert_formated_hex_to_bytes(contents);
           console.log(hexList);
           let LZMA_WORKER = window.LZMA_WORKER;
@@ -505,7 +533,7 @@ let createUploadPopup = () => {
       console.log("save replay");
       console.log(replayName.value);
       console.log(replayContents);
-      compressAndStoreInIndexedDB(replayContents, replayName.value, replayDesc.value, "1.4.4", replayTime).then((result) => {
+      compressAndStoreInIndexedDB(replayContents, replayName.value, replayDesc.value, replayVersion, replayTime).then((result) => {
         console.log(result);
         loadReplayRows();
       });
@@ -665,66 +693,88 @@ let createUploadPopup = () => {
       overflowX: "hidden",
       scrollbarGutter: "stable",
       scrollbarWidth: "thin",
+      // padding: "10px",
     };
     Object.keys(c).forEach(function (a) {
       settingsDiv.style[a] = c[a];
     });
 
     let allRowsSection = document.createElement("div");
-    allRowsSection.style = "width: 100%; padding: 10px; border-bottom: solid 2px black;";
-    allRowsSection.innerHTML = "<h3>All Rows</h3>";
+    allRowsSection.style.width = "100%"
+    // allRowsSection.style.border = "solid 2px red";
+    
+    let allRowsSectionHeader = document.createElement("h3");
+    allRowsSectionHeader.style = "font-size: 2.5vw; border-bottom: solid 3.5px black; padding: 4px; text-align: center;";
+    allRowsSectionHeader.innerHTML = "All Replays";
+    allRowsSection.appendChild(allRowsSectionHeader);
+    
+    // allRowsSection.innerHTML = "<h3>All Rows</h3>";
 
     let selectedRowsSection = document.createElement("div");
-    selectedRowsSection.style = "width: 100%; padding: 10px;";
-    selectedRowsSection.innerHTML = "<h3>Selected Rows</h3>";
+    selectedRowsSection.style.width = "100%"
+
+    let selectedRowsSectionHeader = document.createElement("h3");
+    selectedRowsSectionHeader.style = "font-size: 2.5vw; border-bottom: solid 3.5px black; padding: 4px; text-align: center;";
+    selectedRowsSectionHeader.innerHTML = "Selected Replays";
+    selectedRowsSection.appendChild(selectedRowsSectionHeader);
+
+    let allRowsDropArea = document.createElement("div");
+    allRowsDropArea.style = "border: 2px dashed #ccc; padding: 10px; text-align: center; color: #999; font-size: 1.5vw;";
+    allRowsDropArea.innerHTML = "Drag replays here";
+    allRowsSection.appendChild(allRowsDropArea);
+
+    let selectedRowsDropArea = document.createElement("div");
+    selectedRowsDropArea.style = "border: 2px dashed #ccc; padding: 10px; text-align: center; color: #999; font-size: 1.5vw;";
+    selectedRowsDropArea.innerHTML = "Drag replays here";
+    selectedRowsSection.appendChild(selectedRowsDropArea);
 
     settingsDiv.appendChild(allRowsSection);
     settingsDiv.appendChild(selectedRowsSection);
 
-    function createRow(text) {
-      let row = document.createElement("div");
-      row.textContent = text;
-      row.style = "padding: 5px; margin: 5px; background: lightgray; cursor: grab; border: 1px solid black;";
-      row.draggable = true;
+    // function createRow(text) {
+    //   let row = document.createElement("div");
+    //   row.textContent = text;
+    //   row.style = "padding: 5px; margin: 5px; background: lightgray; cursor: grab; border: 1px solid black;";
+    //   row.draggable = true;
 
-      row.addEventListener("onclick", function (e) {
-        e.preventDefault();
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        row.focus();
-      });
-      row.addEventListener('mousedown', (e) => {
-        // console.log("please0")
-        // e.preventDefault();
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        row.focus();
-        // settingLine.select();
-      });
+    //   row.addEventListener("onclick", function (e) {
+    //     e.preventDefault();
+    //     e.stopImmediatePropagation()
+    //     e.stopPropagation();
+    //     row.focus();
+    //   });
+    //   row.addEventListener('mousedown', (e) => {
+    //     // console.log("please0")
+    //     // e.preventDefault();
+    //     e.stopImmediatePropagation()
+    //     e.stopPropagation();
+    //     row.focus();
+    //     // settingLine.select();
+    //   });
 
-      row.addEventListener("ontouch", function (e) {
-        console.log("ontouch")
-        // e.preventDefault();
-        e.stopImmediatePropagation()
-        e.stopPropagation();
-        row.focus();
-      });
+    //   row.addEventListener("ontouch", function (e) {
+    //     console.log("ontouch")
+    //     // e.preventDefault();
+    //     e.stopImmediatePropagation()
+    //     e.stopPropagation();
+    //     row.focus();
+    //   });
 
 
-      row.addEventListener("dragstart", function (e) {
-        console.log("dragstart", text);
-        e.dataTransfer.setData("text/plain", row.textContent);
-        row.style.opacity = "0.5";
-      });
+    //   row.addEventListener("dragstart", function (e) {
+    //     console.log("dragstart", text);
+    //     e.dataTransfer.setData("text/plain", row.textContent);
+    //     // row.style.opacity = "0.5";
+    //   });
 
-      row.addEventListener("dragend", function () {
-        console.log("dragend", text);
+    //   row.addEventListener("dragend", function () {
+    //     console.log("dragend", text);
         
-        row.style.opacity = "1";
-      });
+    //     row.style.opacity = "1";
+    //   });
 
-      return row;
-    }
+    //   return row;
+    // }
 
     function makeDroppable(section) {
       section.addEventListener("dragover", function (e) {
@@ -898,7 +948,7 @@ let createUploadPopup = () => {
         height: "20%",
         // alignSelf: "flex-start",
         // maxHeight: "20%",
-        borderBottom: "2px solid black",
+        borderBottom: "solid 2px black",
         // position: "relative",
         padding: "5px",
         display: "flex",
@@ -1117,7 +1167,7 @@ let createUploadPopup = () => {
   levelBox.addEventListener("dragstart", function (e) {
     console.log("dragstart");
     e.dataTransfer.setData("text/plain", JSON.stringify(replayObj));
-    levelBox.style.opacity = "0.5";
+    // levelBox.style.opacity = "0.5";
   });
 
   levelBox.addEventListener("dragend", function () {
