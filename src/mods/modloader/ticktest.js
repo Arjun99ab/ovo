@@ -266,7 +266,8 @@
         // console.log(runtime.deathRow);
 
         if (replaying && !paused) { 
-          if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1] && (getPlayer())) {
+          if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1]) {
+
             if(frames.includes(replayIndex)) {
 
               let replayFrame = replayJSON.data[frames.indexOf(replayIndex)]; //o(n) but n is small so it should be fine
@@ -282,13 +283,18 @@
                   hitboxShown: true
               }
               if(replayIndex === 0) {
+                  if(getPlayer() === undefined) { //if they were on the same level, and they replay, they will be undefined
+                    return;
+                  }
                   data.layout = getCurLayout();
                   data.layer = getPlayer().layer.name;
                   if (playingBack) {
                     this.destroyNonPlayerGhosts();
 
                     replayInstance = getPlayer();
-                    replayInstance.instance_vars[16] = 1;
+                    replayInstance.instance_vars[16] = 1; //this line makes behaivour insts disabled, breaking the getPlayer() function
+                    // however we need this line otherwise the player sprite looks weird
+                    
                     console.log(replayInstance.behavior_insts[0].enabled)
                     console.log(getPlayer())
 

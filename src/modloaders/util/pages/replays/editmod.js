@@ -33,6 +33,7 @@ let createUploadPopup = () => {
         width: "auto",
         minWidth: "50%",
         height: "auto",
+        // minHeight: "50%",
         overflow: "auto",
         margin: "0",
         maxHeight: "85%",
@@ -51,8 +52,8 @@ let createUploadPopup = () => {
       // e.stopPropagation();
       document.activeElement.blur();
       
-      dropdownContent.style.display = "none";
-      dropdownButton.blur();
+      // dropdownContent.style.display = "none";
+      // dropdownButton.blur();
 
     }
   
@@ -273,131 +274,79 @@ let createUploadPopup = () => {
     replayDescRow.appendChild(replayDescText);
     replayDescRow.appendChild(replayDesc);
 
-    let versionDropdownRow = document.createElement("div");
+
+    let dropdownRow = document.createElement("div");
+
     Object.keys(rowStyle).forEach(function (a) {
-      versionDropdownRow.style[a] = rowStyle[a];
+      dropdownRow.style[a] = rowStyle[a];
     });
 
-    let versionDropdownText = document.createElement("p");
-    versionDropdownText.innerHTML = "Version: ";
-    versionDropdownText.style.fontSize = "1.8vw";
-    versionDropdownText.style.margin = "0";
-    versionDropdownText.style.padding = "0";
+    let dropdownText = document.createElement("p");
+    dropdownText.innerHTML = "Version: ";
+    dropdownText.style.fontSize = "1.8vw";
+    dropdownText.style.margin = "0";
+    dropdownText.style.padding = "0";
 
-    // let versionDropdown = document.createElement("select");
 
-    // let versionOption = document.createElement("option");
-    // versionOption.value = "1.4.4";
-    // versionOption.text = "1.4.4";
-    // versionDropdown.appendChild(versionOption);
-    // let versionOption2 = document.createElement("option");
-    // versionOption2.value = "1.0.1";
-    // versionOption2.text = "1.0.1";
-    // versionDropdown.appendChild(versionOption2);
+    let dropdown = document.createElement("div");
+    dropdown.style.position = "relative";
+    dropdown.style.display = "inline-block";
+    dropdown.style.cursor = "pointer";
+    dropdown.style.padding = "5px 10px";
+    dropdown.style.backgroundColor = "#007bff";
+    dropdown.style.color = "white";
+    dropdown.style.borderRadius = "10px";
+    dropdown.style.width = "fit-content";
+    dropdown.innerHTML = "Select &#9660;";
+    dropdown.style.fontSize = "1.5vw";
 
-    // versionDropdown.onclick = (e) => { //ensure that input box focus
-    //   console.log("please");
-    //   e.stopImmediatePropagation()
-    //   e.stopPropagation();
-    //   e.preventDefault();
-    //   versionDropdown.focus()
-    // }
 
-    let dropdownDiv = document.createElement("div");
-    dropdownDiv.className = "dropdown";
-    dropdownDiv.style.display = "inline-block";
-    
-    let dropdownButton = document.createElement("button");
-    dropdownButton.className = "dropbtn";
-    dropdownButton.innerHTML = "Dropdown";
-    dropdownButton.onclick = (e) => {
-      console.log("please")
-      e.stopImmediatePropagation()
-      e.stopPropagation();
-      e.preventDefault();
+    let menu = document.createElement("div");
+    menu.style.display = "none";
+    menu.style.position = "absolute";
+    menu.style.top = "100%";
+    menu.style.left = "0";
+    menu.style.background = "white";
+    menu.style.border = "1px solid #ccc";
+    menu.style.borderRadius = "5px";
+    menu.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+    menu.style.width = "100%";
+    menu.style.fontSize = "1.1vw";
+    dropdown.appendChild(menu);
 
-      // document.getElementById("myDropdown").classList.toggle("show");
-      document.getElementById("myDropdown").focus();
-      document.getElementById("myDropdown").style.display = "block";
-    }
-
-    c = {
-      fontFamily: "Retron2000",
-      fontSize: "14pt",
-      backgroundColor: "rgb(45, 186, 47)",
-      color: "white",
-      border: "none",
-      padding: "5px 10px",
-      cursor: "pointer",
-      borderRadius: "10px",
-      alignItems: "center",
-  }
-    Object.keys(c).forEach(function (a) {
-      dropdownButton.style[a] = c[a];
+    let options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+    options.forEach(option => {
+        let item = document.createElement("div");
+        item.innerText = option;
+        item.style.color = "black";
+        item.style.padding = "10px";
+        item.style.cursor = "pointer";
+        item.addEventListener("mouseover", () => item.style.background = "#f1f1f1");
+        item.addEventListener("mouseout", () => item.style.background = "white");
+        item.addEventListener("click", function() {
+            dropdown.firstChild.nodeValue = option;
+            menu.style.display = "none";
+        });
+        menu.appendChild(item);
     });
 
-    let dropdownContent = document.createElement("div");
-    dropdownContent.id = "myDropdown";
-    dropdownContent.className = "dropdown-content";
 
-    c = {
-      display: "none",
-      position: "absolute",
-      backgroundColor: "#f1f1f1",
-      minWidth: "160px",
-      boxShadow: "0px 8px 16px 0px rgba(0,0,0,0.2)",
-      zIndex: "2000"
-    }
-    Object.keys(c).forEach(function (a) {
-      dropdownContent.style[a] = c[a];
+    dropdown.addEventListener("click", function() {
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
     });
 
-    let versionOption = document.createElement("a");
-    versionOption.innerHTML = "1.4.4";
-    versionOption.onclick = (e) => {
-      console.log("please")
-      
-      e.stopImmediatePropagation()
-      e.stopPropagation();
-      e.preventDefault();
-      dropdownButton.innerHTML = "1.4.4";
-      dropdownContent.style.display = "none";
-    }
-
-
-    let versionOption2 = document.createElement("a");
-    versionOption2.innerHTML = "1.0.1";
-    versionOption2.onclick = (e) => {
-      console.log("please")
-      
-      e.stopImmediatePropagation()
-      e.stopPropagation();
-      e.preventDefault();
-      dropdownButton.innerHTML = "1.0.1";
-      dropdownContent.style.display = "none";
-    }
-    dropdownContent.appendChild(versionOption);
-    dropdownContent.appendChild(versionOption2);
-
-    c = {
-      color: "black",
-      padding: "12px 16px",
-      textDecoration: "none",
-      display: "block",
-      cursor: "pointer",
-    }
-    Object.keys(c).forEach(function (a) {
-      versionOption.style[a] = c[a];
-      versionOption2.style[a] = c[a];
+    document.addEventListener("click", function(event) {
+        if (!dropdown.contains(event.target)) {
+            menu.style.display = "none";
+        }
     });
 
-    dropdownDiv.appendChild(dropdownButton);
-    dropdownDiv.appendChild(dropdownContent);
+    dropdownRow.appendChild(dropdownText);
+    dropdownRow.appendChild(dropdown);
 
 
+    // .appendChild(dropdown);
 
-    versionDropdownRow.appendChild(versionDropdownText);
-    versionDropdownRow.appendChild(dropdownDiv);
 
     
     let uploadRow = document.createElement("div");
@@ -427,7 +376,7 @@ let createUploadPopup = () => {
     // Apply styles to the label
     customLabel.style.display = "inline-block";
     customLabel.style.padding = "5px 10px";
-    customLabel.style.fontSize = "14pt";
+    customLabel.style.fontSize = "1.5vw";
     // customLabel.style.fontWeight = "bold";
     customLabel.style.color = "#fff";
     customLabel.style.backgroundColor = "#007bff";
@@ -592,7 +541,7 @@ let createUploadPopup = () => {
     
     settingsDiv.appendChild(replayNameRow); 
     settingsDiv.appendChild(replayDescRow);
-    settingsDiv.appendChild(versionDropdownRow);
+    settingsDiv.appendChild(dropdownRow);
     settingsDiv.appendChild(uploadRow);
     settingsDiv.appendChild(saveButton);
     

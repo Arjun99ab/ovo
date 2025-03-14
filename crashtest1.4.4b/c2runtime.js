@@ -20644,7 +20644,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Cnds.prototype.CompareParam = function (index_, cmp_, value_)
 	{
-		console.log("CompareParam", index_, cmp_, value_);
+		// console.log("CompareParam", index_, cmp_, value_);
 		var fs = getCurrentFuncStack();
 		if (!fs)
 			return false;
@@ -20694,7 +20694,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Exps.prototype.ParamCount = function (ret)
 	{
-		console.log("ParamCount", ret);
+		// console.log("ParamCount", ret);
 		var fs = getCurrentFuncStack();
 		if (fs)
 			ret.set_int(fs.params.length);
@@ -20706,7 +20706,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Exps.prototype.Param = function (ret, index_)
 	{
-		console.log("Param", ret, index_);
+		// console.log("Param", ret, index_);
 		index_ = cr.floor(index_);
 		var fs = getCurrentFuncStack();
 		if (fs)
@@ -20729,7 +20729,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Exps.prototype.Call = function (ret, name_)
 	{
-		console.log("Call", ret, name_);
+		// console.log("Call", ret, name_);
 		var fs = pushFuncStack();
 		fs.name = name_.toLowerCase();
 		fs.retVal = 0;

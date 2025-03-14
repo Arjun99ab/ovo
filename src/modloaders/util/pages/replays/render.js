@@ -525,14 +525,14 @@ let renderReplaysMenu = (sectionDiv) => {
         // if(runtime.running_layout.name === replay.data[replay.data.length - 1][1][1]) {
         //   c2_callFunction("Menu > Transition", ['Level Menu']);
         // } 
-        runtime.changelayout = runtime.layouts[levelName];
-        // this.runtime.changelayout = this.runtime.running_layout;
-        // var i, len, g;
-        // for (i = 0, len = runtime.allGroups.length; i < len; i++)
-        // {
-        //   g = runtime.allGroups[i];
-        //   g.setGroupActive(g.initially_activated);
-        // }
+        // runtime.changelayout = runtime.layouts[levelName];
+        runtime.changelayout = runtime.running_layout;
+        var i, len, g;
+        for (i = 0, len = runtime.allGroups.length; i < len; i++)
+        {
+          g = runtime.allGroups[i];
+          g.setGroupActive(g.initially_activated);
+        }
         window["beginReplay"](replay);
         // replay.play();
     }); //add error handling
