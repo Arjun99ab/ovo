@@ -708,30 +708,110 @@ let createUploadPopup = () => {
     let settingsDiv = document.createElement("div");
     c = {
       display: "flex",
-      // flex: "1",
       alignItems: "center",
-      // justifyContent: "space-between",
-      // padding: "15px",
-      // margin: "5px",
       flexDirection: "column",
-      // rowGap: "20px",
-      // width: "10%",
       borderTop: "solid 3px black",
-  
       height: "100%",
       overflowY: "scroll",
       overflowX: "hidden",
-      // backgroundColor: "red",
-  
       scrollbarGutter: "stable",
       scrollbarWidth: "thin",
-      // backgroundColor: "red",
-      // position: "sticky",
-      // marginRight: "2%",
-    }
+    };
     Object.keys(c).forEach(function (a) {
       settingsDiv.style[a] = c[a];
     });
+
+    let allRowsSection = document.createElement("div");
+    allRowsSection.style = "width: 100%; padding: 10px; border-bottom: solid 2px black;";
+    allRowsSection.innerHTML = "<h3>All Rows</h3>";
+
+    let selectedRowsSection = document.createElement("div");
+    selectedRowsSection.style = "width: 100%; padding: 10px;";
+    selectedRowsSection.innerHTML = "<h3>Selected Rows</h3>";
+
+    settingsDiv.appendChild(allRowsSection);
+    settingsDiv.appendChild(selectedRowsSection);
+
+    function createRow(text) {
+      let row = document.createElement("div");
+      row.textContent = text;
+      row.style = "padding: 5px; margin: 5px; background: lightgray; cursor: grab; border: 1px solid black;";
+      row.draggable = true;
+
+      row.addEventListener("onclick", function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        row.focus();
+      });
+      row.addEventListener('mousedown', (e) => {
+        // console.log("please0")
+        // e.preventDefault();
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        row.focus();
+        // settingLine.select();
+      });
+
+      row.addEventListener("ontouch", function (e) {
+        console.log("ontouch")
+        // e.preventDefault();
+        e.stopImmediatePropagation()
+        e.stopPropagation();
+        row.focus();
+      });
+
+
+      row.addEventListener("dragstart", function (e) {
+        console.log("dragstart", text);
+        e.dataTransfer.setData("text/plain", row.textContent);
+        row.style.opacity = "0.5";
+      });
+
+      row.addEventListener("dragend", function () {
+        console.log("dragend", text);
+        
+        row.style.opacity = "1";
+      });
+
+      return row;
+    }
+
+    function makeDroppable(section) {
+      section.addEventListener("dragover", function (e) {
+        console.log("dragover")
+        e.preventDefault();
+      });
+
+      section.addEventListener("drop", function (e) {
+        console.log("drop")
+        e.preventDefault();
+        let text = e.dataTransfer.getData("text/plain");
+
+        let replayObj = JSON.parse(text)
+
+
+        let oldElement = document.getElementById("levelbox-" + replayObj.id);
+        if (oldElement) {
+          oldElement.remove();
+        }
+        section.appendChild(createViewListReplayRow(replayObj, false));
+
+
+        
+        // if (![...section.children].some(child => child.textContent === text)) {
+        //   section.appendChild(createRow(text));
+        // }
+      });
+    }
+
+    makeDroppable(allRowsSection);
+    makeDroppable(selectedRowsSection);
+
+    // ["Row 1", "Row 2", "Row 3", "Row 4"].forEach(text => {
+    //   allRowsSection.appendChild(createRow(text));
+    // });
+
     settingsDiv.addEventListener('wheel', (e) => {
       // console.log("hello)")
       e.stopImmediatePropagation()
@@ -758,7 +838,7 @@ let createUploadPopup = () => {
             let levelBox = createViewListReplayRow(replayObj, ids.includes(replayObj.id));
             let levelQueue = compareLevelQueue;
             
-            settingsDiv.appendChild(levelBox);
+            allRowsSection.appendChild(levelBox);
         }
 
         
@@ -1014,51 +1094,90 @@ let createUploadPopup = () => {
 
     // Add the click event listener to toggle the checkbox state
     customCheckbox.addEventListener('click', function () {
-        isChecked = !isChecked;
+      isChecked = !isChecked;
 
 
 
-        if (isChecked) {
-            customCheckbox.style.backgroundColor = '#4caf50';
-            customCheckbox.style.borderColor = '#4caf50';
+      if (isChecked) {
+          customCheckbox.style.backgroundColor = '#4caf50';
+          customCheckbox.style.borderColor = '#4caf50';
 
-            // Create and display the checkmark (if it doesn't exist)
-            if (!customCheckbox.querySelector('.checkmark')) {
-                const checkmark = document.createElement('div');
-                checkmark.classList.add('checkmark');
-                Object.assign(checkmark.style, {
-                    content: '""',
-                    position: 'absolute',
-                    left: '6px',
-                    top: '2px',
-                    width: '6px',
-                    height: '12px',
-                    border: 'solid white',
-                    borderWidth: '0 2px 2px 0',
-                    transform: 'rotate(45deg)',
-                    opacity: '1',
-                    transition: 'opacity 0.2s'
-                });
-                customCheckbox.appendChild(checkmark);
-            }
-        } else {
-            customCheckbox.style.backgroundColor = '#f0f0f0';
-            customCheckbox.style.borderColor = '#999';
+          // Create and display the checkmark (if it doesn't exist)
+          if (!customCheckbox.querySelector('.checkmark')) {
+              const checkmark = document.createElement('div');
+              checkmark.classList.add('checkmark');
+              Object.assign(checkmark.style, {
+                  content: '""',
+                  position: 'absolute',
+                  left: '6px',
+                  top: '2px',
+                  width: '6px',
+                  height: '12px',
+                  border: 'solid white',
+                  borderWidth: '0 2px 2px 0',
+                  transform: 'rotate(45deg)',
+                  opacity: '1',
+                  transition: 'opacity 0.2s'
+              });
+              customCheckbox.appendChild(checkmark);
+          }
+      } else {
+          customCheckbox.style.backgroundColor = '#f0f0f0';
+          customCheckbox.style.borderColor = '#999';
 
-            // Remove the checkmark if unchecked
-            const checkmark = customCheckbox.querySelector('.checkmark');
-            if (checkmark) {
-                customCheckbox.removeChild(checkmark);
-            }
-        }
+          // Remove the checkmark if unchecked
+          const checkmark = customCheckbox.querySelector('.checkmark');
+          if (checkmark) {
+              customCheckbox.removeChild(checkmark);
+          }
+      }
 
-        // Log the state
-        console.log('Checkbox is checked:', isChecked);
-    });
+      // Log the state
+      console.log('Checkbox is checked:', isChecked);
+  });
 
-    checkboxDiv.appendChild(customCheckbox);
+  checkboxDiv.appendChild(customCheckbox);
   levelBox.appendChild(checkboxDiv);
+
+  levelBox.draggable = true;
+
+  levelBox.addEventListener("onclick", function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation()
+    e.stopPropagation();
+    levelBox.focus();
+  });
+  levelBox.addEventListener('mousedown', (e) => {
+    // console.log("please0")
+    // e.preventDefault();
+    e.stopImmediatePropagation()
+    e.stopPropagation();
+    levelBox.focus();
+    // settingLine.select();
+  });
+
+  levelBox.addEventListener("ontouch", function (e) {
+    console.log("ontouch")
+    // e.preventDefault();
+    e.stopImmediatePropagation()
+    e.stopPropagation();
+    levelBox.focus();
+  });
+
+
+  levelBox.addEventListener("dragstart", function (e) {
+    console.log("dragstart");
+    e.dataTransfer.setData("text/plain", JSON.stringify(replayObj));
+    levelBox.style.opacity = "0.5";
+  });
+
+  levelBox.addEventListener("dragend", function () {
+    console.log("dragend", levelBox);
+
+    
+    levelBox.style.opacity = "1";
+  });
     
 
-    return levelBox;  
+  return levelBox;  
 }
