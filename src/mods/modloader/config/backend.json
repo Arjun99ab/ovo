@@ -587,12 +587,12 @@
         },
         
         "console": {
-            "name": "console",
+            "name": "Console",
             "author": "Awesomeguy",
-            "desc": "Shows your keystrokes on screen.",
+            "desc": "For debugging without devtools.",
             "url": "../src/mods/modloader/mobileconsole.js",
-            "icon": "https://cdn-icons-png.flaticon.com/128/1548/1548686.png",
-            "platform": [],
+            "icon": "../src/img/mods/terminal.png",
+            "platform": ["mobile", "pc"],
             "version": ["1.4", "1.4.4", "CTLE"],
             "tags": ["visual"],
             "reload": false,
