@@ -1,10 +1,10 @@
 import { backendConfig } from "../../../modloader.js";
 import { createConfirmDeleteModal } from "../../modals.js";
 import { loadReplayCompare } from "./render.js";
-import { compareLevelQueue, setCompareLevelQueue, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes } from "./utils.js";
+import { compareLevelQueue, setCompareLevelQueue, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes, saveToIndexedDB } from "./utils.js";
 import { loadReplayRows } from "./list.js";
 
-export { createUploadPopup, createViewListPopup }
+export { createUploadPopup, createViewListPopup, createEditPopup }
 
 let createUploadPopup = () => {
     //Create background div
@@ -576,6 +576,443 @@ let createUploadPopup = () => {
     uploadPopup.appendChild(settingsDiv);
   
     document.body.appendChild(uploadPopup);
+  }
+
+
+  let createEditPopup = (replayObj) => {
+    //Create background div
+    console.log(replayObj)
+    let editPopup = document.createElement("div");
+    editPopup.id = "editPopup-bg";
+    editPopup.className = "modloader-popups"
+
+  
+    let c = {
+        display: "flex",
+        flexDirection: "column",
+        // justifyContent: "center",
+        // alignItems: "center",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "white",
+        border: "solid",
+        borderColor: "black",
+        borderWidth: "2px",
+        fontFamily: "Retron2000",
+        cursor: "default",
+        color: "black",
+        fontSize: "10pt",
+        width: "auto",
+        minWidth: "50%",
+        height: "auto",
+        // minHeight: "50%",
+        overflow: "auto",
+        margin: "0",
+        maxHeight: "85%",
+        zIndex: "1002",
+        
+        // padding: "10px",
+        borderRadius: "10px",
+    };
+    Object.keys(c).forEach(function (a) {
+      editPopup.style[a] = c[a];
+    });
+  
+    editPopup.onclick = (e) => {
+      console.log("apple ^2")
+      // e.stopImmediatePropagation()
+      // e.stopPropagation();
+      document.activeElement.blur();
+      
+      // dropdownContent.style.display = "none";
+      // dropdownButton.blur();
+
+    }
+  
+    
+  
+    //Title
+    let titleText = document.createElement("div");
+    c = {
+        backgroundColor: "white",
+        border: "none",
+        fontFamily: "Retron2000",
+        // position: "relative",
+        // top: "2%",
+        //left: "35%",
+        color: "black",
+        fontSize: "2.3vw",
+        textAlign: "center",
+        cursor: "default",
+        padding: "10px",
+        // textAlign: "center",
+    };
+    Object.keys(c).forEach(function (a) {
+        titleText.style[a] = c[a];
+    });
+    titleText.id = "title-text";
+    let newContent = document.createTextNode("Edit Replay");
+    titleText.appendChild(newContent);
+  
+    editPopup.appendChild(titleText);
+  
+    //X button CSS
+    let xButton = document.createElement("button");
+    c = {
+      position: "absolute",
+      top: "5px",
+      right: "5px",
+      backgroundColor: "white",
+      border: "none",
+      fontFamily: "Retron2000",
+      color: "black",
+      fontSize: "2.3vw",
+      cursor: "pointer",
+    };
+    Object.keys(c).forEach(function (a) {
+        xButton.style[a] = c[a];
+    });
+  
+    xButton.innerHTML = "❌";
+    xButton.id = "x-button";
+  
+    xButton.onclick = function() {
+      editPopup.remove();
+        document.getElementById("menu-bg").style.pointerEvents = "auto";
+        document.getElementById("menu-bg").style.filter = "none";
+    }
+    // navbar.appendChild(xButton);
+    editPopup.appendChild(xButton);
+  
+  
+    let settingsDiv = document.createElement("div");
+    c = {
+      display: "flex",
+      // flex: "1",
+      alignItems: "left",
+      // justifyContent: "space-between",
+      padding: "15px",
+      // margin: "5px",
+      flexDirection: "column",
+      rowGap: "20px",
+      // width: "10%",
+      borderTop: "solid 3px black",
+  
+      height: "100%",
+      overflowY: "scroll",
+      overflowX: "hidden",
+      // backgroundColor: "red",
+  
+      scrollbarGutter: "stable",
+      scrollbarWidth: "thin",
+      // backgroundColor: "red",
+      // position: "sticky",
+      // marginRight: "2%",
+    }
+    Object.keys(c).forEach(function (a) {
+      settingsDiv.style[a] = c[a];
+    });
+    settingsDiv.addEventListener('wheel', (e) => {
+      // console.log("hello)")
+      e.stopImmediatePropagation()
+      e.stopPropagation();
+      // e.preventDefault();
+      settingsDiv.focus();
+    });
+
+
+    let replayNameRow = document.createElement("div");
+    let rowStyle = {
+      display: "flex",
+      flexDirection: "row",
+      // justifyContent: "space-between",
+      alignItems: "center",
+      margin: "5px",
+      columnGap: "1.5vw",
+      // rowGap: "5vh",
+    }
+    Object.keys(rowStyle).forEach(function (a) {
+      replayNameRow.style[a] = rowStyle[a];
+    });
+
+    let replayNameText = document.createElement("p");
+    replayNameText.innerHTML = "Name: ";
+    replayNameText.style.fontSize = "1.8vw";
+    replayNameText.style.margin = "0";
+    replayNameText.style.padding = "0";
+    
+    let replayName = document.createElement("input");
+    replayName.value = replayObj.name || ""; // set the initial value to the level's name
+
+    let d = {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "55%",
+      height: "2.5vw",
+      cursor: "text",
+      backgroundColor: "white",
+      verticalAlign: "middle",
+      border: "solid 3px black",
+      fontSize: "2vw",
+      color: "black",
+      fontFamily: "Retron2000",
+      paddingLeft: "10px",
+      borderRadius: "10px 10px 10px 10px",
+    }
+    Object.keys(d).forEach(function (a) {
+      replayName.style[a] = d[a];
+    });
+    replayName.onclick = (e) => { //ensure that input box focus
+      // console.log("please");
+      e.stopImmediatePropagation()
+      e.stopPropagation();
+      e.preventDefault();
+      replayName.focus()
+    }
+    document.getElementById('menu-bg').onclick = (e) => { //ensure that input box focus
+      // console.log("please");
+      replayName.blur()
+    }
+    replayName.onkeydown = (e) => { // ensures that user is able to type in input box
+      e.stopImmediatePropagation()
+      e.stopPropagation();
+      if(e.keyCode === 27) {
+        replayName.blur();
+      }
+      if(e.keyCode === 13) {
+        replayName.blur();
+      } 
+    };
+
+    replayNameRow.appendChild(replayNameText);
+    replayNameRow.appendChild(replayName);
+
+
+    let replayDescRow = document.createElement("div");
+    Object.keys(rowStyle).forEach(function (a) {
+      replayDescRow.style[a] = rowStyle[a];
+    });
+
+    let replayDescText = document.createElement("p");
+    replayDescText.innerHTML = "Desc: ";
+    replayDescText.style.fontSize = "1.8vw";
+    replayDescText.style.margin = "0";
+    replayDescText.style.padding = "0";
+
+    let replayDesc = document.createElement("input");
+    replayDesc.value = replayObj.description || ""; // set the initial value to the level's description
+    d = {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "70%",
+      height: "2.5vw",
+      cursor: "text",
+      backgroundColor: "white",
+      verticalAlign: "middle",
+      border: "solid 3px black",
+      fontSize: "2vw",
+      color: "black",
+      fontFamily: "Retron2000",
+      paddingLeft: "10px",
+      borderRadius: "10px 10px 10px 10px",
+    }
+    Object.keys(d).forEach(function (a) {
+      replayDesc.style[a] = d[a];
+    });
+    replayDesc.onclick = (e) => { //ensure that input box focus
+      // console.log("please");
+      e.stopImmediatePropagation()
+      e.stopPropagation();
+      e.preventDefault();
+      replayDesc.focus()
+    }
+    document.getElementById('menu-bg').onclick = (e) => { //ensure that input box focus
+      // console.log("please");
+      replayDesc.blur()
+
+    }
+    replayDesc.onkeydown = (e) => { // ensures that user is able to type in input box
+      e.stopImmediatePropagation()
+      e.stopPropagation();
+      if(e.keyCode === 27) {
+        replayDesc.blur();
+      }
+      if(e.keyCode === 13) {
+        replayDesc.blur();
+      } 
+    };
+
+    replayDescRow.appendChild(replayDescText);
+    replayDescRow.appendChild(replayDesc);
+
+
+    let dropdownRow = document.createElement("div");
+
+    Object.keys(rowStyle).forEach(function (a) {
+      dropdownRow.style[a] = rowStyle[a];
+    });
+
+    let dropdownText = document.createElement("p");
+    dropdownText.innerHTML = "Version: ";
+    dropdownText.style.fontSize = "1.8vw";
+    dropdownText.style.margin = "0";
+    dropdownText.style.padding = "0";
+
+
+    let dropdown = document.createElement("div");
+    dropdown.style.position = "relative";
+    dropdown.style.display = "inline-block";
+    dropdown.style.cursor = "pointer";
+    dropdown.style.padding = "5px 10px";
+    dropdown.style.backgroundColor = "#007bff";
+    dropdown.style.color = "white";
+    dropdown.style.borderRadius = "10px";
+    dropdown.style.width = "fit-content";
+
+
+    let dropdownText2 = document.createElement("p");
+    dropdownText2.style.margin = "0";
+    dropdownText2.style.padding = "0";
+    dropdownText2.style.fontSize = "1.5vw";
+    dropdownText2.innerHTML = replayObj.version + " &#9660;";
+    dropdown.appendChild(dropdownText2);
+    // dropdown.style.fontSize = "1.5vw";
+
+
+    let menu = document.createElement("div");
+    menu.style.display = "none";
+    menu.style.position = "absolute";
+    menu.style.top = "100%";
+    menu.style.left = "0";
+    menu.style.background = "white";
+    menu.style.border = "1px solid #ccc";
+    menu.style.borderRadius = "5px";
+    menu.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+    menu.style.width = "100%";
+    menu.style.fontSize = "1.1vw";
+    dropdown.appendChild(menu);
+
+    // let options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+    let options = ["1.4", "1.4.4", "1.4.3", "1.4.2", "1.4.1"];
+    let replayVersion = replayObj.version || null; // set the initial value to the level's version
+
+    options.forEach(option => {
+      let item = document.createElement("div");
+      item.class = "dropdown-item";
+      item.innerText = option;
+      item.style.color = "black";
+      item.style.padding = "10px";
+      item.style.cursor = "pointer";
+      item.addEventListener("mouseover", () => item.style.background = "#f1f1f1");
+      item.addEventListener("mouseout", () => item.style.background = "white");
+      item.addEventListener("click", function() {
+        // dropdown.firstChild.nodeValue = option;
+        dropdown.firstChild.innerHTML = option + " &#9660;";
+        menu.style.display = "none";
+        replayVersion = option;
+        console.log("option", option);
+      });
+      menu.appendChild(item);
+    });
+
+
+    dropdown.addEventListener("click", function(event) {
+      // console.log(event.target);
+      if(!event.target.classList.contains("dropdown-item")) { //make sure click is on top of the dropdown
+        console.log("dropdown clicked");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+      }
+    });
+
+    menu.addEventListener("click", function() {
+      console.log("menu clicked");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    });
+
+    settingsDiv.addEventListener("click", function(event) {
+      console.log("hi")
+      if (!dropdown.contains(event.target)) {
+          menu.style.display = "none";
+      }
+    });
+
+    dropdownRow.appendChild(dropdownText);
+    dropdownRow.appendChild(dropdown);
+
+
+
+    // Create confirm button
+    let saveButton = document.createElement("button");
+    saveButton.innerHTML = "Save Replay";
+    let g = {
+        fontFamily: "Retron2000",
+        fontSize: "14pt",
+        backgroundColor: "rgb(45, 186, 47)",
+        color: "white",
+        border: "none",
+        padding: "5px 10px",
+        cursor: "pointer",
+        borderRadius: "10px",
+        alignItems: "center",
+        margin: "auto"
+    }
+    Object.keys(g).forEach(function (a) {
+        saveButton.style[a] = g[a];
+    });
+
+    saveButton.onclick = function() {
+      console.log("save replay");
+      console.log(replayName.value);
+      // console.log(replayContents);
+      replayObj.name = replayName.value; // update the name
+      replayObj.description = replayDesc.value; // update the description
+      replayObj.version = replayVersion; // update the version
+      saveToIndexedDB(replayObj).then((result) => {
+        console.log(result);
+        loadReplayRows();
+      });
+
+      editPopup.remove();
+      document.getElementById("menu-bg").style.pointerEvents = "auto";
+      document.getElementById("menu-bg").style.filter = "none";
+    }
+
+    // let deleteButton = document.createElement("button");
+    // deleteButton.innerHTML = "Delete Mod";
+    // let h = {
+    //     fontFamily: "Retron2000",
+    //     fontSize: "14pt",
+    //     backgroundColor: "rgb(222, 48, 51)",
+    //     color: "white",
+    //     border: "none",
+    //     padding: "5px 10px",
+    //     cursor: "pointer",
+    //     borderRadius: "10px",
+    // }
+    // Object.keys(h).forEach(function (a) {
+    //     deleteButton.style[a] = h[a];
+    // });
+    // deleteButton.onclick = function() {
+    //     createConfirmDeleteModal(modId);
+    //     uploadPopup.remove();
+    // }
+
+
+    // Append buttons to the buttons container
+    // buttonsContainer.appendChild(saveButton);
+    
+    settingsDiv.appendChild(replayNameRow); 
+    settingsDiv.appendChild(replayDescRow);
+    settingsDiv.appendChild(dropdownRow);
+    settingsDiv.appendChild(saveButton);
+    
+    editPopup.appendChild(settingsDiv);
+  
+    document.body.appendChild(editPopup);
   }
 
 

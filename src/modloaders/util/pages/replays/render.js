@@ -2,7 +2,7 @@ import { runtime, version, filters, backendConfig } from "../../../modloader.js"
 import { createNotifyModal } from "../../modals.js";
 import { detectDeviceType } from "../../utils.js";
 import { compareLevelQueue, setCompareLevelQueue, currentLevelObj, decompressWithStream, compressedToLZMA } from "./utils.js";
-import { createUploadPopup, createViewListPopup } from "./editmod.js";
+import { createEditPopup, createUploadPopup, createViewListPopup } from "./editmod.js";
 import { loadReplayRows } from "./list.js";
 import { createModSettingsPopup } from "./settings.js";
 
@@ -602,6 +602,12 @@ let renderReplaysMenu = (sectionDiv) => {
   Object.keys(c).forEach(function (a) {
     editButton.style[a] = c[a];
   });
+  
+  editButton.onclick = function() {
+    document.getElementById("menu-bg").style.pointerEvents = "none";
+    document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+    createEditPopup(currentLevelObj);
+  }
 
   let editButtonLabel = document.createElement("span");
   editButtonLabel.innerText = "Edit";

@@ -2,7 +2,7 @@ import { backendConfig } from "../../../modloader.js";
 import { createConfirmReloadModal, createNotifyModal } from "../../modals.js"
 import { modsPendingReload } from "../../modals.js";
 import { notify } from "../../ovo.js";
-export { compareLevelQueue, setCompareLevelQueue, currentLevelObj, setLevel, customModNum, incCustomModNum, compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes, compressedToLZMA}
+export { compareLevelQueue, setCompareLevelQueue, currentLevelObj, setLevel, customModNum, incCustomModNum, compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes, compressedToLZMA, saveToIndexedDB}
 
 let customModNum = 0;
 function incCustomModNum() {
@@ -30,6 +30,34 @@ async function compressWithStream(data) {
   const compressedArrayBuffer = await compressedBlob.arrayBuffer();
 
   return compressedArrayBuffer;
+}
+
+async function saveToIndexedDB(replayObj) {
+  
+  let localforage = window.localforage;
+  var replayStore = localforage.createInstance({
+    name: "replays"
+  });
+  replayStore.setItem(replayObj.id, replayObj, function (err) {
+    if (err) {
+      console.log(err);
+    }
+  });
+
+  // await replayStore.length().then(function(length) {
+  //   replayStore.setItem('replay' + (length + 1), saveObj, function (err) {
+      
+  //   });
+  // })
+
+  // replayStore.length().then(function(length) {
+  //   replayStore.setItem('replay' + (length + 1), saveObj, function (err) {
+      
+  //   });
+  // });
+  
+  
+  
 }
 
 async function compressAndStoreInIndexedDB(data, replayName, replayDescription, replayVersion, replayTime) {
