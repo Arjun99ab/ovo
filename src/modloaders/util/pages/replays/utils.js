@@ -2,7 +2,7 @@ import { backendConfig } from "../../../modloader.js";
 import { createConfirmReloadModal, createNotifyModal } from "../../modals.js"
 import { modsPendingReload } from "../../modals.js";
 import { notify } from "../../ovo.js";
-export { compareLevelQueue, setCompareLevelQueue, currentLevelObj, setLevel, customModNum, incCustomModNum, compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes, compressedToLZMA, saveToIndexedDB}
+export { compareLevelQueue, setCompareLevelQueue, currentLevelObj, setLevel, customModNum, incCustomModNum, compressWithStream, decompressWithStream, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes, compressedToLZMA, saveToIndexedDB, decompressMultipleWithStream}
 
 let customModNum = 0;
 function incCustomModNum() {
@@ -102,6 +102,27 @@ async function compressAndStoreInIndexedDB(data, replayName, replayDescription, 
   
   
   
+}
+
+async function decompressMultipleWithStream(compressedDataArray) {
+  const decompressionPromises = compressedDataArray.map(async (compressedData) => {
+    try {
+      console.log(compressedData)
+      const decompressionStream = new DecompressionStream('deflate-raw');
+      const compressedBlob = new Blob([compressedData]); 
+      const decompressedStream = compressedBlob.stream().pipeThrough(decompressionStream);
+
+      const decompressedArrayBuffer = await new Response(decompressedStream).arrayBuffer();
+
+      const decoder = new TextDecoder();
+      return decoder.decode(decompressedArrayBuffer);
+    } catch (error) {
+      console.error("Decompression error: ", error);
+      throw error;
+    }
+  });
+
+  return Promise.all(decompressionPromises);
 }
 
 async function decompressWithStream(compressedData) {

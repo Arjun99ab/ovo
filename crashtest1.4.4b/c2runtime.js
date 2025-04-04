@@ -20636,7 +20636,7 @@ cr.plugins_.Function = function(runtime)
 	function Cnds() {};
 	Cnds.prototype.OnFunction = function (name_)
 	{
-		console.log("OnFunction", name_);
+		// console.log("OnFunction", name_);
 		var fs = getCurrentFuncStack();
 		if (!fs)
 			return false;
@@ -20657,7 +20657,7 @@ cr.plugins_.Function = function(runtime)
 	function Acts() {};
 	Acts.prototype.CallFunction = function (name_, params_)
 	{
-		console.log("CallFunction", name_, params_);
+		// console.log("CallFunction", name_, params_);
 		var fs = pushFuncStack();
 		fs.name = name_.toLowerCase();
 		fs.retVal = 0;
@@ -20671,7 +20671,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Acts.prototype.SetReturnValue = function (value_)
 	{
-		console.log("SetReturnValue", value_);
+		// console.log("SetReturnValue", value_);
 		var fs = getCurrentFuncStack();
 		if (fs)
 			fs.retVal = value_;
@@ -20685,7 +20685,7 @@ cr.plugins_.Function = function(runtime)
 	function Exps() {};
 	Exps.prototype.ReturnValue = function (ret)
 	{
-		console.log("ReturnValue", ret);
+		// console.log("ReturnValue", ret);
 		var fs = getOneAboveFuncStack();
 		if (fs)
 			ret.set_any(fs.retVal);

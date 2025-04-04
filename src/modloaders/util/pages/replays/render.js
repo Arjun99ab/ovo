@@ -1,7 +1,7 @@
 import { runtime, version, filters, backendConfig } from "../../../modloader.js";
 import { createNotifyModal } from "../../modals.js";
 import { detectDeviceType } from "../../utils.js";
-import { compareLevelQueue, setCompareLevelQueue, currentLevelObj, decompressWithStream, compressedToLZMA } from "./utils.js";
+import { compareLevelQueue, setCompareLevelQueue, currentLevelObj, decompressWithStream, compressedToLZMA, decompressMultipleWithStream } from "./utils.js";
 import { createEditPopup, createUploadPopup, createViewListPopup } from "./editmod.js";
 import { loadReplayRows } from "./list.js";
 import { createModSettingsPopup } from "./settings.js";
@@ -930,17 +930,53 @@ let renderReplaysMenu = (sectionDiv) => {
   });
 
   compareCompareBtn.onclick = function() {
+    console.log("compare button clicked");
+    console.log(compareLevelQueue);
+    let queueIds = compareLevelQueue.map(level => level.id);
+    console.log(queueIds);
+
+    let queueObjs = []
+
     let localforage = window.localforage;
     var replayStore = localforage.createInstance({
         name: "replays"
     });
-    console.log(currentLevelObj);
-    replayStore.removeItem(currentLevelObj.id).then(function() {
-      console.log('Item was removed');
-      loadReplayRows();
-    }).catch(function(err) {
-      console.log(err);
+
+    for(let i = 0; i < queueIds.length; i++) {
+      replayStore.getItem(queueIds[i], function(err, value) {
+        queueObjs.push(value.replay)
+      }).catch(function(err) {
+        console.error("Error retrieving replay for id: " + queueIds[i], err);
+      });
+    };
+
+    replayStore.iterate(function(value, key, iterationNumber) {
+        queueObjs.push({id: key, replay: value.replay});
+    }).then(function() {
+      console.log(queueObjs);
+
+      queueObjs = queueObjs.filter(x => queueIds.includes(x.id)); 
+      queueObjs = queueObjs.map(x => x.replay);
+      console.log(queueObjs)
+
+      decompressMultipleWithStream(queueObjs).then((dataArray) => {
+        console.log(dataArray);
+        let replays = dataArray.map((data) => {
+            return JSON.parse(data);
+        });
+        console.log(replays);
+        let replay = replays[0]; // use the first replay as the base for comparison
+        let levelName = replay.data[replay.data.length - 1][1][1]
+        //launch level in individual level mode
+        runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 1
+        runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 1
+        // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[22] = 1
+
+        runtime.changelayout = runtime.layouts[levelName];
+        window["beginComparing"](replays);
+      })
     });
+    document.getElementById("x-button").click();
   }
 
   let compareCompareBtnLabel = document.createElement("span");

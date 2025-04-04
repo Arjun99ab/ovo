@@ -46,6 +46,10 @@
   
   let frames = []; 
 
+  let replaying_compare = false; 
+  let compareReplayJSONs = [];
+  let replayInstances = [];
+
 
   
   
@@ -55,7 +59,7 @@
     
       async init() {
 
-        // document.addEventListener("keyup", (event) => {this.keyUp(event)});
+        document.addEventListener("keyup", (event) => {this.keyUp(event)});
 
         // replayJSON = await fetch('../src/mods/modloader/replay/level1_1.4.json')
         //     .then((response) => response.json())
@@ -228,24 +232,24 @@
       },
 
       keyUp(event) {
-        if (event.keyCode == 85) { // key U
-          // console.log(replayJSON);
-          runtime.untickMe(this);
-        }
-        if (event.keyCode == 89) { // key Y
-          // console.log(replayJSON);
-          runtime.tickMe(this);
-        }
-        if (event.keyCode == 73) { // key I
-            runtime.tickMe(this);
-            replaying = true;
-            replayIndex = 0;
-            let totalFrames = replayJSON.size[0] * (165 / 60);
-            let numFrames = replayJSON.size[0];
-            for (let i = 0; i < numFrames; i++) {
-                frames.push(Math.floor((i * totalFrames) / numFrames));
-            }
-        } 
+        // if (event.keyCode == 85) { // key U
+        //   // console.log(replayJSON);
+        //   runtime.untickMe(this);
+        // }
+        // if (event.keyCode == 89) { // key Y
+        //   // console.log(replayJSON);
+        //   runtime.tickMe(this);
+        // }
+        // if (event.keyCode == 73) { // key I
+        //     runtime.tickMe(this);
+        //     replaying = true;
+        //     replayIndex = 0;
+        //     let totalFrames = replayJSON.size[0] * (165 / 60);
+        //     let numFrames = replayJSON.size[0];
+        //     for (let i = 0; i < numFrames; i++) {
+        //         frames.push(Math.floor((i * totalFrames) / numFrames));
+        //     }
+        // } 
         if (event.keyCode == 79) { // key O
           let data = {
             x: 522,
@@ -256,14 +260,108 @@
             frame: 0,
             skin: "",
             layout: getCurLayout(),
-            layer: getPlayer().layer.name
+            layer: getPlayer().layer.name,
+            hitboxShown: true,
+            opacity: 1
           }
           replayInstance = this.createGhostPlayer(data);
+
+          runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0] = replayInstance; // set the camera to follow the ghost player
         }
       },
 
       tick() {
         // console.log(runtime.deathRow);
+
+        if(replaying_compare && !paused) {
+          if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1]) {
+
+            if(frames.includes(replayIndex)) {
+              for(let i = 0; i < compareReplayJSONs.length; i++) {
+                let compareReplay = compareReplayJSONs[i];
+              
+                let replayFrame = compareReplay.data[frames.indexOf(replayIndex)]; //o(n) but n is small so it should be fine
+                let data = {
+                    x: replayFrame[0][0],
+                    y: replayFrame[1][0],
+                    angle: replayFrame[2][0],
+                    state: replayFrame[3][0],
+                    side: replayFrame[5][0],
+                    frame: replayFrame[4][0],
+                    skin: "",
+                    opacity: 0.5,
+                    hitboxShown: true
+                }
+                if(replayIndex === 0) {
+                    if(getPlayer() === undefined) { //if they were on the same level, and they replay, they will be undefined
+                      return;
+                    }
+                    data.layout = getCurLayout();
+                    data.layer = getPlayer().layer.name;
+                    if (playingBack && i === 0) {
+                      console.log("replay done for compare, but this is the first one, so we will use it")
+                      this.destroyNonPlayerGhosts();
+
+                      replayInstances[i] = getPlayer(); // save the first instance for comparison
+                      replayInstances[i].instance_vars[16] = 1; //this line makes behaivour insts disabled, breaking the getPlayer() function
+                      // however we need this line otherwise the player sprite looks weird
+                      
+                      console.log(replayInstances[i].behavior_insts[0].enabled)
+                      console.log(getPlayer())
+
+                      runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
+                      console.log(replayInstances[i].behavior_insts[0].enabled)
+                      console.log(getPlayer())
+
+                    } else {
+                      console.log("yo")
+                      replayInstances[i] = this.createGhostPlayer(data);
+                    }
+                } else if (replayIndex === 2) {
+                  console.log(replayInstances[i].behavior_insts[0].enabled)
+                  console.log(replayInstances[i])
+                  console.log(getPlayer())
+                } else {
+                    data.layout = compareReplay.data[compareReplay.data.length - 1][1][1]
+                    data.layer = replayInstances[i].layer.name;
+                    this.loadPlayerData(replayInstances[i], data);
+                }
+              }
+            }
+            replayIndex += 1;
+            if (replayIndex >= frames[frames.length - 1]) {
+              ghostAtFlag = true;
+              replaying_compare = false;
+              replayIndex = 0;
+              
+
+              if (playingBack) {
+
+                replayInstances[i].instance_vars[16] = 0;
+                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
+                // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
+                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
+
+                console.log("replay done")
+
+                console.log(replayInstance)
+                console.log(getPlayer())
+                playerType.instances.filter(
+                  (x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled
+                )[0] = replayInstance;
+
+                c2_callFunction("Menu > End", []);
+                runtime.untickMe(this);
+                playingBack = false;
+              }
+              
+
+            }
+          } else {
+            // replay
+            runtime.changelayout = runtime.layouts[replayJSON.data[replayJSON.data.length - 1][1][1]];
+          }
+        }
 
         if (replaying && !paused) { 
           if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1]) {
@@ -401,5 +499,42 @@
         frames.push(Math.floor((i * totalFrames) / numFrames));
     }
     // console.log(frames)
+  }
+
+  globalThis.beginComparing = function(compareReplayList) {
+    console.log("begin comparing", compareReplayList);
+    runtime.tickMe(ticktest);
+    
+    let largestSubarray = compareReplayList.reduce((largest, current) => {
+      return current.size[0] > largest.size[0] ? current : largest;
+    }, compareReplayList[0]);
+
+    console.log("largest", largestSubarray);
+
+    compareReplayList.forEach((replay) => {
+      if (replay !== largestSubarray) {
+      let difference = largestSubarray.size[0] - replay.size[0];
+      for (let i = 0; i < difference; i++) {
+        replay.data.push([...replay.data[replay.data.length - 1]]);
+      }
+      replay.size[0] = largestSubarray.size[0];
+      }
+    });
+
+    console.log(compareReplayList)
+    replayJSON = largestSubarray; 
+    replaying_compare = true;
+    replayIndex = 0;
+    replayInstances = []; // clear previous instances
+    playingBack = true; // for the purposes of the end flag
+    let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
+    let numFrames = replayJSON.size[0];
+    frames = [];
+    for (let i = 0; i < numFrames; i++) {
+        frames.push(Math.floor((i * totalFrames) / numFrames));
+    }
+
+    compareReplayJSONs = compareReplayList
+
   }
 })();

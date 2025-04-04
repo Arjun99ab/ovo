@@ -1224,7 +1224,14 @@ let createUploadPopup = () => {
         e.preventDefault();
         let text = e.dataTransfer.getData("text/plain");
 
+        console.log("Dropped text:", text);
         let replayObj = JSON.parse(text)
+        console.log(replayObj)
+
+        compareLevelQueue.push(replayObj); // add to the compare level queue
+        setCompareLevelQueue(compareLevelQueue); // update the global compare level queue
+
+        console.log("compareLevelQueue after drop", compareLevelQueue);
 
 
         let oldElement = document.getElementById("levelbox-" + replayObj.id);
@@ -1262,11 +1269,11 @@ let createUploadPopup = () => {
     });
     let replayObjs = []
     replayStore.iterate(function(value, key, iterationNumber) {
-        value["id"] = "replay" + iterationNumber
+        // value["id"] = "replay" + iterationNumber
         replayObjs.push(value);
     }).then(function() {
         console.log(replayObjs);
-        replayObjs["id"] = replayObjs.length;
+        // replayObjs["id"] = replayObjs.length;
         for (let i = 0; i < replayObjs.length; i++) {
             let replayObj = replayObjs[i];
             let ids = compareLevelQueue.map(obj => obj.id);
@@ -1377,6 +1384,7 @@ let createUploadPopup = () => {
 
 
   let createViewListReplayRow = (replayObj, replayInQueue) => {
+    console.log("creating view list replay row for", replayObj);
     var levelBox = document.createElement("div");
     levelBox.className = "levelbox";
     levelBox.id = "levelbox-" + replayObj.id;
@@ -1604,6 +1612,7 @@ let createUploadPopup = () => {
   levelBox.addEventListener("dragstart", function (e) {
     console.log("dragstart");
     e.dataTransfer.setData("text/plain", JSON.stringify(replayObj));
+    console.log(replayObj)
     // levelBox.style.opacity = "0.5";
   });
 
