@@ -60,6 +60,12 @@ async function saveToIndexedDB(replayObj) {
   
 }
 
+function uuidv4() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+  );
+}
+
 async function compressAndStoreInIndexedDB(data, replayName, replayDescription, replayVersion, replayTime) {
   const encoder = new TextEncoder();
   const compressionStream = new CompressionStream('deflate-raw'); 
@@ -72,7 +78,8 @@ async function compressAndStoreInIndexedDB(data, replayName, replayDescription, 
   var replayStore = localforage.createInstance({
     name: "replays"
   });
-  let uuid = self.crypto.randomUUID();
+  // let uuid = crypto.randomUUID();
+  let uuid = uuidv4();
   let saveObj = {
     id: uuid,
     name: replayName,

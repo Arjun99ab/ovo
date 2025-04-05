@@ -6,6 +6,8 @@ import { loadReplayRows } from "./list.js";
 
 export { createUploadPopup, createViewListPopup, createEditPopup }
 
+let draggedReplayObj = null;
+
 let createUploadPopup = () => {
     //Create background div
     let uploadPopup = document.createElement("div");
@@ -1041,9 +1043,9 @@ let createUploadPopup = () => {
         color: "black",
         fontSize: "10pt",
         width: "auto",
-        minWidth: "50%",
-        height: "auto",
-        overflow: "auto",
+        minWidth: "75%",
+        height: "85%",
+        // overflow: "auto",
         margin: "0",
         maxHeight: "85%",
         zIndex: "1002",
@@ -1085,7 +1087,7 @@ let createUploadPopup = () => {
         titleText.style[a] = c[a];
     });
     titleText.id = "title-text";
-    let newContent = document.createTextNode("Saved Replays");
+    let newContent = document.createTextNode("Compare Replays");
     titleText.appendChild(newContent);
   
     viewListPopup.appendChild(titleText);
@@ -1120,35 +1122,97 @@ let createUploadPopup = () => {
   
   
     let settingsDiv = document.createElement("div");
+    // c = {
+    //   display: "flex",
+    //   alignItems: "center",
+    //   flexDirection: "row",
+    //   borderTop: "solid 3px black",
+    //   height: "100%",
+    //   overflowY: "scroll",
+    //   overflowX: "hidden",
+    //   scrollbarGutter: "stable",
+    //   scrollbarWidth: "thin",
+    //   // padding: "10px",
+    // };
     c = {
-      display: "flex",
-      alignItems: "center",
-      flexDirection: "column",
-      borderTop: "solid 3px black",
-      height: "100%",
-      overflowY: "scroll",
-      overflowX: "hidden",
-      scrollbarGutter: "stable",
-      scrollbarWidth: "thin",
-      // padding: "10px",
-    };
+        display: "flex",
+        flex: "1",
+        // alignItems: "center",
+        overflow: "hidden",
+        borderTop: "solid 3px black",
+    }
     Object.keys(c).forEach(function (a) {
       settingsDiv.style[a] = c[a];
     });
 
     let allRowsSection = document.createElement("div");
-    allRowsSection.style.width = "100%"
+    c = {
+      width: "50%",
+      height: "auto",
+      maxHeight: "100%",
+      display: "flex",
+      flexDirection: "column",
+      // rowGap: "0px",
+      justifyContent: "start",
+      alignItems: "center",
+      overflowY: "auto",
+      overflowX: "hidden",
+      // borderTop: "2px solid black",
+      scrollbarGutter: "stable",
+      scrollbarWidth: "thin",
+      border: "solid 2px blue",
+    }
+    Object.keys(c).forEach(function (a) {
+      allRowsSection.style[a] = c[a];
+    });
+    allRowsSection.addEventListener('wheel', (e) => {
+      console.log("hello)")
+      e.stopImmediatePropagation()
+      e.stopPropagation();
+      // e.preventDefault();
+      allRowsSection.focus();
+    });
     // allRowsSection.style.border = "solid 2px red";
     
     let allRowsSectionHeader = document.createElement("h3");
     allRowsSectionHeader.style = "font-size: 2.5vw; border-bottom: solid 3.5px black; padding: 4px; text-align: center;";
     allRowsSectionHeader.innerHTML = "All Replays";
     allRowsSection.appendChild(allRowsSectionHeader);
+
+
     
     // allRowsSection.innerHTML = "<h3>All Rows</h3>";
 
+
+
+
     let selectedRowsSection = document.createElement("div");
-    selectedRowsSection.style.width = "100%"
+    c = {
+      width: "50%",
+      height: "auto",
+      maxHeight: "100%",
+      display: "flex",
+      flexDirection: "column",
+      // rowGap: "0px",
+      justifyContent: "start",
+      alignItems: "center",
+      overflowY: "auto",
+      overflowX: "hidden",
+      // borderTop: "2px solid black",
+      scrollbarGutter: "stable",
+      scrollbarWidth: "thin",
+      border: "solid 2px red",
+    }
+    Object.keys(c).forEach(function (a) {
+      selectedRowsSection.style[a] = c[a];
+    });
+    selectedRowsSection.addEventListener('wheel', (e) => {
+      console.log("hello)2")
+      e.stopImmediatePropagation()
+      e.stopPropagation();
+      // e.preventDefault();
+      selectedRowsSection.focus();
+    });
 
     let selectedRowsSectionHeader = document.createElement("h3");
     selectedRowsSectionHeader.style = "font-size: 2.5vw; border-bottom: solid 3.5px black; padding: 4px; text-align: center;";
@@ -1233,11 +1297,14 @@ let createUploadPopup = () => {
 
         console.log("compareLevelQueue after drop", compareLevelQueue);
 
-
-        let oldElement = document.getElementById("levelbox-" + replayObj.id);
+        let oldElement = document.getElementById("levelbox2-" + replayObj.id);
+        
+        console.log("oldElement", oldElement)
         if (oldElement) {
+          console.log("removing old element")
           oldElement.remove();
         }
+
         section.appendChild(createViewListReplayRow(replayObj, false));
 
 
@@ -1245,6 +1312,26 @@ let createUploadPopup = () => {
         // if (![...section.children].some(child => child.textContent === text)) {
         //   section.appendChild(createRow(text));
         // }
+      });
+
+      section.addEventListener("touchend", function (e) {
+        if (draggedReplayObj) {
+          console.log("touchend -> drop", draggedReplayObj);
+      
+          compareLevelQueue.push(draggedReplayObj);
+          setCompareLevelQueue(compareLevelQueue);
+      
+          let oldElement = document.getElementById("levelbox2-" + draggedReplayObj.id);
+          if (oldElement) {
+            oldElement.remove();
+          }
+      
+          section.appendChild(createViewListReplayRow(draggedReplayObj, false));
+      
+          // cleanup
+          draggedReplayObj = null;
+          document.querySelectorAll(".dragging").forEach(el => el.classList.remove("dragging"));
+        }
       });
     }
 
@@ -1279,9 +1366,17 @@ let createUploadPopup = () => {
             let ids = compareLevelQueue.map(obj => obj.id);
             console.log(ids);
             let levelBox = createViewListReplayRow(replayObj, ids.includes(replayObj.id));
-            let levelQueue = compareLevelQueue;
             
             allRowsSection.appendChild(levelBox);
+            selectedRowsSection
+        }
+        for(let i = 0; i < compareLevelQueue.length; i++) {
+            let replayObj = compareLevelQueue[i];
+            let ids = replayObjs.map(obj => obj.id);
+            console.log(ids);
+            let levelBox = createViewListReplayRow(replayObj, ids.includes(replayObj.id));
+            
+            selectedRowsSection.appendChild(levelBox);
         }
 
         
@@ -1336,42 +1431,9 @@ let createUploadPopup = () => {
     });
 
     saveButton.onclick = function() {
-      let levelQueue = [];
-
-      document.querySelectorAll('.custom-checkbox').forEach((checkbox) => {
-        console.log(checkbox.style.backgroundColor);
-        if(checkbox.style.backgroundColor === "rgb(76, 175, 80)") {
-          console.log("hi guys", checkbox.id)
-          let id = checkbox.id.split("-")[1];
-          let replayStore = localforage.createInstance({
-              name: "replays"
-          });
-          replayStore.iterate(function(value, key, iterationNumber) {
-          value["id"] = "replay" + iterationNumber
-            console.log(value.id, id);
-            if(value.id === id) {
-              levelQueue.push(value);
-              setCompareLevelQueue(levelQueue);
-            }
-          }).then(function() {
-              console.log("saved", compareLevelQueue);
-              loadReplayCompare();
-              viewListPopup.remove();
-              document.getElementById("menu-bg").style.pointerEvents = "auto";
-              document.getElementById("menu-bg").style.filter = "none";
-          }).catch(function(err) {
-              console.log(err);
-          });
-        } else {
-          console.log("no")
-          setCompareLevelQueue(levelQueue);
-          loadReplayCompare();
-          viewListPopup.remove();
-          document.getElementById("menu-bg").style.pointerEvents = "auto";
-          document.getElementById("menu-bg").style.filter = "none";
-
-        }
-      });
+      viewListPopup.remove();
+      document.getElementById("menu-bg").style.pointerEvents = "auto";
+      document.getElementById("menu-bg").style.filter = "none";
       
     }
 
@@ -1387,10 +1449,10 @@ let createUploadPopup = () => {
     console.log("creating view list replay row for", replayObj);
     var levelBox = document.createElement("div");
     levelBox.className = "levelbox";
-    levelBox.id = "levelbox-" + replayObj.id;
+    levelBox.id = "levelbox2-" + replayObj.id;
     let c = {
         width: "100%",
-        height: "20%",
+        height: "5vh",
         // alignSelf: "flex-start",
         // maxHeight: "20%",
         borderBottom: "solid 2px black",
@@ -1581,7 +1643,7 @@ let createUploadPopup = () => {
   });
 
   checkboxDiv.appendChild(customCheckbox);
-  levelBox.appendChild(checkboxDiv);
+  // levelBox.appendChild(checkboxDiv);
 
   levelBox.draggable = true;
 
@@ -1610,14 +1672,24 @@ let createUploadPopup = () => {
 
 
   levelBox.addEventListener("dragstart", function (e) {
-    console.log("dragstart");
+    console.log("dragstart", levelBox);
     e.dataTransfer.setData("text/plain", JSON.stringify(replayObj));
     console.log(replayObj)
     // levelBox.style.opacity = "0.5";
   });
 
-  levelBox.addEventListener("dragend", function () {
+  levelBox.addEventListener("touchstart", function (e) {
+    console.log("touchstart", levelBox);
+    draggedReplayObj = replayObj;
+    levelBox.classList.add("dragging");
+    console.log(replayObj)
+    // levelBox.style.opacity = "0.5";
+  });
+
+  levelBox.addEventListener("dragend", function (e) {
     console.log("dragend", levelBox);
+    // e.dataTransfer.setData("text/plain", JSON.stringify(replayObj));
+    console.log(replayObj)
 
     
     levelBox.style.opacity = "1";

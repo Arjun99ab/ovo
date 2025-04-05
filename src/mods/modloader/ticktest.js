@@ -337,7 +337,7 @@
 
               if (playingBack) {
 
-                replayInstances[i].instance_vars[16] = 0;
+                replayInstances[0].instance_vars[16] = 0;
                 runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
                 // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
                 runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
@@ -353,6 +353,10 @@
                 c2_callFunction("Menu > End", []);
                 runtime.untickMe(this);
                 playingBack = false;
+                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0] = replayInstances[0]; // set the camera to follow the ghost player
+                document.querySelectorAll(".replay-compare-arrow").forEach((element) => {
+                  element.remove();
+                });
               }
               
 
@@ -511,6 +515,12 @@
 
     console.log("largest", largestSubarray);
 
+    let largestIndex = compareReplayList.indexOf(largestSubarray);
+    if (largestIndex !== 0) {
+      [compareReplayList[0], compareReplayList[largestIndex]] = [compareReplayList[largestIndex], compareReplayList[0]];
+    }
+
+    console.log(compareReplayList)
     compareReplayList.forEach((replay) => {
       if (replay !== largestSubarray) {
       let difference = largestSubarray.size[0] - replay.size[0];
@@ -520,6 +530,10 @@
       replay.size[0] = largestSubarray.size[0];
       }
     });
+    console.log(compareReplayList)
+
+
+
 
     console.log(compareReplayList)
     replayJSON = largestSubarray; 
@@ -535,6 +549,54 @@
     }
 
     compareReplayJSONs = compareReplayList
+
+    // Create UI arrow elements
+    let leftArrow = document.createElement("img");
+    leftArrow.src = "https://cdn-icons-png.flaticon.com/128/93/93634.png";
+    leftArrow.style.position = "absolute";
+    leftArrow.style.bottom = "10%";
+    leftArrow.style.left = "46%";
+    leftArrow.style.width = "6%";
+    // leftArrow.style.height = "10%";
+    leftArrow.style.cursor = "pointer";
+    leftArrow.style.zIndex = "1000";
+    leftArrow.classList.add("replay-compare-arrow");
+
+    document.body.appendChild(leftArrow);
+
+
+    let rightArrow = document.createElement("img");
+    rightArrow.src = "https://cdn-icons-png.flaticon.com/128/2767/2767192.png"; 
+    rightArrow.style.position = "absolute";
+    rightArrow.style.bottom = "10%";
+    rightArrow.style.left = "54%";
+    rightArrow.style.width = "6%";
+    // rightArrow.style.height = "10%";
+    rightArrow.style.cursor = "pointer";
+    rightArrow.style.zIndex = "1000";
+    rightArrow.classList.add("replay-compare-arrow");
+    
+    document.body.appendChild(rightArrow);
+
+    // Add event listeners for arrows
+    leftArrow.addEventListener("click", () => {
+      console.log("Left arrow clicked");
+
+      let currentFollowing = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0]
+      let currentFollowingIndex = replayInstances.indexOf(currentFollowing);
+      runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0] = replayInstances[(currentFollowingIndex - 1 + replayInstances.length) % replayInstances.length]
+
+      // Add functionality for left arrow click
+    });
+
+    rightArrow.addEventListener("click", () => {
+      console.log("Right arrow clicked");
+
+      let currentFollowing = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0]
+      let currentFollowingIndex = replayInstances.indexOf(currentFollowing);
+      runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0] = replayInstances[(currentFollowingIndex + 1) % replayInstances.length]
+      // Add functionality for right arrow click
+    });
 
   }
 })();
