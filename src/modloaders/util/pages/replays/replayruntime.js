@@ -91,8 +91,12 @@
                 playerDeath = false;
                 ghostAtFlag = false;
                 replayInstance = null;
+                playingBack = false;
+                paused = false;
                 runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
                 runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
+                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
+
                 runtime.untickMe(this);
 
               }
@@ -310,6 +314,7 @@
                       console.log(getPlayer())
 
                       runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
+
                       console.log(replayInstances[i].behavior_insts[0].enabled)
                       console.log(getPlayer())
 

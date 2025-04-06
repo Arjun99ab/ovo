@@ -1052,6 +1052,14 @@ export let runtime;
             }
           }
           skinFilters = Array.from(skinFilters);
+
+
+          let js = document.createElement("script");
+          js.type = "application/javascript";
+          
+          js.src = '../src/modloaders/util/pages/replays/replayruntime.js';
+          js.id = 'replayruntime';
+          document.head.appendChild(js);
           
           
           document.addEventListener("keydown", (event) => {

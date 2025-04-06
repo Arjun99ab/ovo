@@ -1,5 +1,5 @@
 import { backendConfig } from "../../../modloader.js";
-import { createConfirmDeleteModal } from "../../modals.js";
+import { createNotifyModal } from "../../modals.js";
 import { loadReplayCompare } from "./render.js";
 import { compareLevelQueue, setCompareLevelQueue, compressAndStoreInIndexedDB, convert_formated_hex_to_bytes, saveToIndexedDB } from "./utils.js";
 import { loadReplayRows } from "./list.js";
@@ -462,7 +462,7 @@ let createUploadPopup = () => {
           console.log(contents);
           try {
             JSON.parse(contents);
-            console.log("Valid JSON");
+            console.log("Valid JSON"); //if its 1.4
             replayContents = contents;
             return;
           } catch (e) {
@@ -535,7 +535,11 @@ let createUploadPopup = () => {
       console.log("save replay");
       console.log(replayName.value);
       console.log(replayContents);
-      compressAndStoreInIndexedDB(replayContents, replayName.value, replayDesc.value, replayVersion, replayTime).then((result) => {
+      let jsoned = JSON.parse(replayContents);
+      console.log(jsoned)
+      let levelNumber = parseInt(jsoned.data[jsoned.data.length - 1][1][1].split(" ")[1]);
+      console.log(levelNumber);
+      compressAndStoreInIndexedDB(replayContents, replayName.value, replayDesc.value, replayVersion, replayTime, levelNumber).then((result) => {
         console.log(result);
         loadReplayRows();
       });
@@ -1081,6 +1085,8 @@ let createUploadPopup = () => {
         textAlign: "center",
         cursor: "default",
         padding: "10px",
+        borderRadius: "10px",
+
         // textAlign: "center",
     };
     Object.keys(c).forEach(function (a) {
@@ -1139,7 +1145,8 @@ let createUploadPopup = () => {
         flex: "1",
         // alignItems: "center",
         overflow: "hidden",
-        borderTop: "solid 3px black",
+        borderTop: "solid 2px black",
+        borderBottom: "solid 2px black",
     }
     Object.keys(c).forEach(function (a) {
       settingsDiv.style[a] = c[a];
@@ -1160,7 +1167,7 @@ let createUploadPopup = () => {
       // borderTop: "2px solid black",
       scrollbarGutter: "stable",
       scrollbarWidth: "thin",
-      border: "solid 2px blue",
+      borderRight: "solid 2px black",
     }
     Object.keys(c).forEach(function (a) {
       allRowsSection.style[a] = c[a];
@@ -1172,9 +1179,11 @@ let createUploadPopup = () => {
       // e.preventDefault();
       allRowsSection.focus();
     });
+    allRowsSection.id = "all-rows-section";
+
     // allRowsSection.style.border = "solid 2px red";
     
-    let allRowsSectionHeader = document.createElement("h3");
+    let allRowsSectionHeader = document.createElement("p");
     allRowsSectionHeader.style = "font-size: 2.5vw; border-bottom: solid 3.5px black; padding: 4px; text-align: center;";
     allRowsSectionHeader.innerHTML = "All Replays";
     allRowsSection.appendChild(allRowsSectionHeader);
@@ -1201,7 +1210,7 @@ let createUploadPopup = () => {
       // borderTop: "2px solid black",
       scrollbarGutter: "stable",
       scrollbarWidth: "thin",
-      border: "solid 2px red",
+      // border: "solid 2px red",
     }
     Object.keys(c).forEach(function (a) {
       selectedRowsSection.style[a] = c[a];
@@ -1213,8 +1222,9 @@ let createUploadPopup = () => {
       // e.preventDefault();
       selectedRowsSection.focus();
     });
+    selectedRowsSection.id = "selected-rows-section";
 
-    let selectedRowsSectionHeader = document.createElement("h3");
+    let selectedRowsSectionHeader = document.createElement("p");
     selectedRowsSectionHeader.style = "font-size: 2.5vw; border-bottom: solid 3.5px black; padding: 4px; text-align: center;";
     selectedRowsSectionHeader.innerHTML = "Selected Replays";
     selectedRowsSection.appendChild(selectedRowsSectionHeader);
@@ -1292,8 +1302,15 @@ let createUploadPopup = () => {
         let replayObj = JSON.parse(text)
         console.log(replayObj)
 
-        compareLevelQueue.push(replayObj); // add to the compare level queue
-        setCompareLevelQueue(compareLevelQueue); // update the global compare level queue
+        if(section.id == "all-rows-section") {
+          console.log("dragged to all rows section")
+          let compareLevelQueue2 = compareLevelQueue.filter(obj => obj.id !== replayObj.id); 
+          setCompareLevelQueue(compareLevelQueue2);
+        } else if(section.id == "selected-rows-section") {
+          console.log("dragged to selected rows section")
+          compareLevelQueue.push(replayObj); 
+          setCompareLevelQueue(compareLevelQueue); 
+        }
 
         console.log("compareLevelQueue after drop", compareLevelQueue);
 
@@ -1361,8 +1378,14 @@ let createUploadPopup = () => {
     }).then(function() {
         console.log(replayObjs);
         // replayObjs["id"] = replayObjs.length;
+        replayObjs.sort((a, b) => b.uploadTimestamp - a.uploadTimestamp);
+
+        let compareLevelIds = compareLevelQueue.map(obj => obj.id);
         for (let i = 0; i < replayObjs.length; i++) {
             let replayObj = replayObjs[i];
+            if(compareLevelIds.includes(replayObj.id)) {
+                continue;
+            }
             let ids = compareLevelQueue.map(obj => obj.id);
             console.log(ids);
             let levelBox = createViewListReplayRow(replayObj, ids.includes(replayObj.id));
@@ -1404,6 +1427,7 @@ let createUploadPopup = () => {
         textAlign: "center",
         cursor: "default",
         padding: "10px",
+        borderRadius: "10px",
         // textAlign: "center",
     };
     Object.keys(c).forEach(function (a) {
@@ -1431,6 +1455,18 @@ let createUploadPopup = () => {
     });
 
     saveButton.onclick = function() {
+      if (!compareLevelQueue.every(level => level.levelNumber === compareLevelQueue[0].levelNumber)) {
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        createNotifyModal("All replays must be from the same level to compare.");
+        return;
+      }
+      if(compareLevelQueue.length < 2) {
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        createNotifyModal("Please select at least 2 replays to compare.");
+        return;
+      }
       viewListPopup.remove();
       document.getElementById("menu-bg").style.pointerEvents = "auto";
       document.getElementById("menu-bg").style.filter = "none";
@@ -1516,6 +1552,25 @@ let createUploadPopup = () => {
     levelVersionText.innerHTML = replayObj.version;
     levelBox.appendChild(levelVersionText);
 
+    let levelLevelText = document.createElement("div");
+    c = {
+        fontFamily: "Retron2000",
+        color: "black",
+        fontSize: "3vh",
+        // cursor: "default",
+        // border: "2px solid blue",
+        display: "flex",
+        justifyContent: "left",
+        alignItems: "center",
+        color: "grey",
+    };
+    Object.keys(c).forEach(function (a) {
+        levelLevelText.style[a] = c[a];
+    });
+
+    levelLevelText.innerHTML = replayObj.levelNumber;
+    levelBox.appendChild(levelLevelText);
+
     let levelTimeText = document.createElement("div");
     c = {
         fontFamily: "Retron2000",
@@ -1535,115 +1590,7 @@ let createUploadPopup = () => {
     levelTimeText.innerHTML = replayObj.time;
     levelBox.appendChild(levelTimeText);
 
-    let checkboxDiv = document.createElement("div");
-    c = {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-    }
-    Object.keys(c).forEach(function (a) {
-        checkboxDiv.style[a] = c[a];
-    });
-
-    const customCheckbox = document.createElement('span');
-    customCheckbox.className = 'custom-checkbox';
-    customCheckbox.id = "customCheckbox-" + replayObj.id;
-    let isChecked = replayInQueue;
-
-    // Set up the initial style for the checkbox
-    Object.assign(customCheckbox.style, {
-        display: 'inline-block',
-        width: '20px',
-        height: '20px',
-        backgroundColor: '#f0f0f0',
-        border: '2px solid #999',
-        borderRadius: '4px',
-        position: 'relative',
-        cursor: 'pointer'
-        // alignItems: "center",
-    });
-
-    if (isChecked) {
-        customCheckbox.style.backgroundColor = '#4caf50';
-        customCheckbox.style.borderColor = '#4caf50';
-
-        // Create and display the checkmark (if it doesn't exist)
-        if (!customCheckbox.querySelector('.checkmark')) {
-            const checkmark = document.createElement('div');
-            checkmark.classList.add('checkmark');
-            Object.assign(checkmark.style, {
-                content: '""',
-                position: 'absolute',
-                left: '6px',
-                top: '2px',
-                width: '6px',
-                height: '12px',
-                border: 'solid white',
-                borderWidth: '0 2px 2px 0',
-                transform: 'rotate(45deg)',
-                opacity: '1',
-                transition: 'opacity 0.2s'
-            });
-            customCheckbox.appendChild(checkmark);
-        }
-    } else {
-        customCheckbox.style.backgroundColor = '#f0f0f0';
-        customCheckbox.style.borderColor = '#999';
-
-        // Remove the checkmark if unchecked
-        const checkmark = customCheckbox.querySelector('.checkmark');
-        if (checkmark) {
-            customCheckbox.removeChild(checkmark);
-        }
-    }
-
-    // Add the click event listener to toggle the checkbox state
-    customCheckbox.addEventListener('click', function () {
-      isChecked = !isChecked;
-
-
-
-      if (isChecked) {
-          customCheckbox.style.backgroundColor = '#4caf50';
-          customCheckbox.style.borderColor = '#4caf50';
-
-          // Create and display the checkmark (if it doesn't exist)
-          if (!customCheckbox.querySelector('.checkmark')) {
-              const checkmark = document.createElement('div');
-              checkmark.classList.add('checkmark');
-              Object.assign(checkmark.style, {
-                  content: '""',
-                  position: 'absolute',
-                  left: '6px',
-                  top: '2px',
-                  width: '6px',
-                  height: '12px',
-                  border: 'solid white',
-                  borderWidth: '0 2px 2px 0',
-                  transform: 'rotate(45deg)',
-                  opacity: '1',
-                  transition: 'opacity 0.2s'
-              });
-              customCheckbox.appendChild(checkmark);
-          }
-      } else {
-          customCheckbox.style.backgroundColor = '#f0f0f0';
-          customCheckbox.style.borderColor = '#999';
-
-          // Remove the checkmark if unchecked
-          const checkmark = customCheckbox.querySelector('.checkmark');
-          if (checkmark) {
-              customCheckbox.removeChild(checkmark);
-          }
-      }
-
-      // Log the state
-      console.log('Checkbox is checked:', isChecked);
-  });
-
-  checkboxDiv.appendChild(customCheckbox);
-  // levelBox.appendChild(checkboxDiv);
+    
 
   levelBox.draggable = true;
 

@@ -528,6 +528,8 @@ let renderReplaysMenu = (sectionDiv) => {
         let levelName = replay.data[replay.data.length - 1][1][1]
         //launch level in individual level mode
         runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 1
+        runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
+
         runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 1
         // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[22] = 1
         // if(runtime.running_layout.name === replay.data[replay.data.length - 1][1][1]) {
@@ -535,12 +537,13 @@ let renderReplaysMenu = (sectionDiv) => {
         // } 
         // runtime.changelayout = runtime.layouts[levelName];
         runtime.changelayout = runtime.running_layout;
-        var i, len, g;
-        for (i = 0, len = runtime.allGroups.length; i < len; i++)
-        {
-          g = runtime.allGroups[i];
-          g.setGroupActive(g.initially_activated);
-        }
+        // var i, len, g;
+        // for (i = 0, len = runtime.allGroups.length; i < len; i++)
+        // {
+        //   g = runtime.allGroups[i];
+        //   g.setGroupActive(g.initially_activated);
+        // }
+        
         window["beginReplay"](replay);
         // replay.play();
     }); //add error handling
@@ -933,6 +936,20 @@ let renderReplaysMenu = (sectionDiv) => {
     console.log("compare button clicked");
     console.log(compareLevelQueue);
     let queueIds = compareLevelQueue.map(level => level.id);
+
+    if (!compareLevelQueue.every(level => level.levelNumber === compareLevelQueue[0].levelNumber)) {
+      document.getElementById("menu-bg").style.pointerEvents = "none";
+      document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+      createNotifyModal("All replays must be from the same level to compare.");
+      return;
+    }
+    if(compareLevelQueue.length < 2) {
+      document.getElementById("menu-bg").style.pointerEvents = "none";
+      document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+      createNotifyModal("Please select at least 2 replays to compare.");
+      return;
+    }
+
     console.log(queueIds);
 
     let queueObjs = []
@@ -1162,6 +1179,11 @@ let loadReplayDetails = (replayObj) => {
   timeText.style.fontSize = "3vh";
   // timeText.style.padding = "10px";
 
+  let levelText = document.createElement("div");
+  levelText.id = "level-number-text";
+  levelText.innerHTML = "Level: " + replayObj.levelNumber;
+  levelText.style.fontSize = "3vh";
+  // levelText.style.padding = "10px";
 
   let descText = document.createElement("div");
   descText.id = "desc-text";
@@ -1169,11 +1191,15 @@ let loadReplayDetails = (replayObj) => {
   descText.style.fontSize = "3vh";
   // descText.style.padding = "10px";
 
+  
+
 
 
   replayDetailsDescDiv.appendChild(versionText);
   replayDetailsDescDiv.appendChild(timeText);
+  replayDetailsDescDiv.appendChild(levelText);
   replayDetailsDescDiv.appendChild(descText);
+
 
 }
 

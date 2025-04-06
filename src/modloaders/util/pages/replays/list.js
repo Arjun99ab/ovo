@@ -90,6 +90,25 @@ let createReplayRow = (replayObj) => {
     levelVersionText.innerHTML = replayObj.version;
     levelBox.appendChild(levelVersionText);
 
+    let levelLevelText = document.createElement("div");
+    c = {
+        fontFamily: "Retron2000",
+        color: "black",
+        fontSize: "3vh",
+        // cursor: "default",
+        // border: "2px solid blue",
+        display: "flex",
+        justifyContent: "left",
+        alignItems: "center",
+        color: "grey",
+    };
+    Object.keys(c).forEach(function (a) {
+        levelLevelText.style[a] = c[a];
+    });
+
+    levelLevelText.innerHTML = replayObj.levelNumber;
+    levelBox.appendChild(levelLevelText);
+
     let levelTimeText = document.createElement("div");
     c = {
         fontFamily: "Retron2000",
