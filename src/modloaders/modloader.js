@@ -290,7 +290,7 @@ export let runtime;
           titleText.style[a] = c[a];
       });
       titleText.id = "title-text";
-      let newContent = document.createTextNode("apple");
+      let newContent = document.createTextNode("OvO Modloader");
       titleText.appendChild(newContent);
       navbar.appendChild(titleText);
 

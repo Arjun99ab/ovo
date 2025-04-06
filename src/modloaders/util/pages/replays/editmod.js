@@ -461,10 +461,11 @@ let createUploadPopup = () => {
           let contents = e.target.result;
           console.log(contents);
           try {
-            JSON.parse(contents);
+            let x = JSON.parse(contents);
             console.log("Valid JSON"); //if its 1.4
             replayContents = contents;
-            replayTime = contents.data.at(-1)[0][1];
+
+            replayTime = x.data.at(-1)[0][1];
             return;
           } catch (e) {
             console.log("invalid json, decompressing first")
