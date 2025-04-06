@@ -391,6 +391,7 @@
               }
               if(replayIndex === 0) {
                   if(getPlayer() === undefined) { //if they were on the same level, and they replay, they will be undefined
+                    console.log("undefined player")
                     return;
                   }
                   data.layout = getCurLayout();
@@ -405,7 +406,7 @@
                     console.log(replayInstance.behavior_insts[0].enabled)
                     console.log(getPlayer())
 
-                    runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
+                    // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
                     console.log(replayInstance.behavior_insts[0].enabled)
                     console.log(getPlayer())
 
