@@ -464,6 +464,7 @@ let createUploadPopup = () => {
             JSON.parse(contents);
             console.log("Valid JSON"); //if its 1.4
             replayContents = contents;
+            replayTime = contents.data.at(-1)[0][1];
             return;
           } catch (e) {
             console.log("invalid json, decompressing first")
@@ -1334,9 +1335,17 @@ let createUploadPopup = () => {
       section.addEventListener("touchend", function (e) {
         if (draggedReplayObj) {
           console.log("touchend -> drop", draggedReplayObj);
-      
-          compareLevelQueue.push(draggedReplayObj);
-          setCompareLevelQueue(compareLevelQueue);
+
+          if(section.id == "all-rows-section") {
+            console.log("dragged to all rows section")
+            let compareLevelQueue2 = compareLevelQueue.filter(obj => obj.id !== draggedReplayObj.id); 
+            setCompareLevelQueue(compareLevelQueue2);
+          } else if(section.id == "selected-rows-section") {
+            console.log("dragged to selected rows section")
+            compareLevelQueue.push(draggedReplayObj); 
+            setCompareLevelQueue(compareLevelQueue); 
+          }
+          
       
           let oldElement = document.getElementById("levelbox2-" + draggedReplayObj.id);
           if (oldElement) {

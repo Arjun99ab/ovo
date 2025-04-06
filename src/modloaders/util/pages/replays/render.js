@@ -530,7 +530,7 @@ let renderReplaysMenu = (sectionDiv) => {
         runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 1
         // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
 
-        // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 1
+        runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 1
         // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[22] = 1
         // if(runtime.running_layout.name === replay.data[replay.data.length - 1][1][1]) {
         //   c2_callFunction("Menu > Transition", ['Level Menu']);
