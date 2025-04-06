@@ -35,7 +35,7 @@ let createReplayRow = (replayObj) => {
         for(let i = 0; i < elements.length; i++) {
           elements[i].style.backgroundColor = 'white';
         }
-        levelBox.style.backgroundColor = "burlywood";
+        levelBox.style.backgroundColor = "lightblue";
         let replayDetailsDescDiv = document.getElementById("replay-details-desc-div");
         while (replayDetailsDescDiv.firstChild) {
             replayDetailsDescDiv.removeChild(replayDetailsDescDiv.lastChild);
