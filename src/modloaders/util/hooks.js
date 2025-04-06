@@ -1,6 +1,6 @@
 import { runtime } from "../modloader.js"
 
-export {createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook}
+export {createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createCallFunctionHook}
 
 let createChangeLayoutHook = (eventName) => {
     let funcCode = runtime.doChangeLayout.toString();
@@ -13,7 +13,7 @@ let createChangeLayoutHook = (eventName) => {
         window.dispatchEvent(
             new CustomEvent("${eventName}",  {
                 bubbles: true,
-                detail: { layout: changeToLayout },
+                detail: { currentLayout: this.running_layout, layout: changeToLayout },
             })
         );
         this.doChangeLayout2(changeToLayout);`);
@@ -22,32 +22,31 @@ let createChangeLayoutHook = (eventName) => {
 }
 
 let createDialogOpenHook = (eventName) => {
-    let funcCode = cr.behaviors.aekiro_dialog.prototype.Instance.prototype.open.toString();
-    // let params = 
-    let start = funcCode.indexOf('{') + 1;
-    let end = funcCode.lastIndexOf('}');
-    let body = funcCode.substring(start, end);
+    let originalOpen = cr.behaviors.aekiro_dialog.prototype.Instance.prototype.open;
 
-    cr.behaviors.aekiro_dialog.prototype.Instance.prototype.open = new Function("_targetX","_targetY", "center", `
-        event = new Event("${eventName}");
-        window.dispatchEvent(event);
-        this.open2(_targetX,_targetY,center);`);
-
-    cr.behaviors.aekiro_dialog.prototype.Instance.prototype.open2 = new Function("_targetX","_targetY", "center", body);
+    cr.behaviors.aekiro_dialog.prototype.Instance.prototype.open = function(...args) {
+        window.dispatchEvent(
+            new CustomEvent(eventName,  {
+                bubbles: true,
+                detail: { name: this.closeButtonUID },
+            })
+        );
+        originalOpen.apply(this, args);
+    };
 }
 
 let createDialogCloseHook = (eventName) => {
-    let funcCode = cr.behaviors.aekiro_dialog.prototype.Instance.prototype.close.toString();
-    let start = funcCode.indexOf('{') + 1;
-    let end = funcCode.lastIndexOf('}');
-    let body = funcCode.substring(start, end);
+    let originalClose = cr.behaviors.aekiro_dialog.prototype.Instance.prototype.close;
 
-    cr.behaviors.aekiro_dialog.prototype.Instance.prototype.close = new Function(`
-        event = new Event("${eventName}");
-        window.dispatchEvent(event);
-        this.close2();`);
-
-    cr.behaviors.aekiro_dialog.prototype.Instance.prototype.close2 = new Function(body);
+    cr.behaviors.aekiro_dialog.prototype.Instance.prototype.close = function(...args) {
+        window.dispatchEvent(
+            new CustomEvent(eventName,  {
+                bubbles: true,
+                detail: { name: this.closeButtonUID },
+            })
+        );
+        originalClose.apply(this, args);
+    };
 }
 
 let createDialogShowOverlayHook = (eventName) => {
@@ -90,4 +89,44 @@ let createSaveHook = (eventName) => {
         return this.isLocalStorageReady2();`);
 
     cr.plugins_.SyncStorage.prototype.Instance.prototype.isLocalStorageReady2 = new Function(body);
+}
+
+
+let createCallFunctionHook = (eventName) => {
+    let map = new WeakMap()
+    map.set(cr.plugins_.Function.prototype.acts.CallFunction, function (action) {
+    let old = action.func
+    action.func = function (...args) {
+        window.dispatchEvent(
+            new CustomEvent(eventName,  {
+                bubbles: true,
+                detail: { name: args[0], params: args[1] },
+            })
+        );
+        old.apply(this, args)
+    }
+    })
+    for(const action of Object.values(runtime.actsBySid)) {
+        if (map.has(action.func)) map.get(action.func)(action)
+    }
+    
+    // let map = new WeakMap()
+    // map.set(cr.plugins_.GameAnalytics.prototype.acts.addProgressionEvent, function (action) {
+    // let old = action.func
+    // action.func = function (...args) {
+    //     console.log(args)
+    //     if(args[0] === 3) { //death
+    //         window.dispatchEvent(
+    //             new CustomEvent(eventName,  {
+    //                 bubbles: true,
+    //                 detail: { layout: args[1] },
+    //             })
+    //         );
+    //     }
+    //     old.apply(this, args)
+    // }
+    // })
+    // for(const action of Object.values(runtime.actsBySid)) {
+    //     if (map.has(action.func)) map.get(action.func)(action)
+    // }
 }

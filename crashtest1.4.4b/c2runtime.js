@@ -5230,6 +5230,8 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 	};
 	Runtime.prototype.doChangeLayout = function (changeToLayout)
 	{
+		console.log("whats good")
+		console.trace()
 		var prev_layout = this.running_layout;
 		this.running_layout.stopRunning();
 		var i, len, j, lenj, k, lenk, type, inst, binst;
@@ -5258,6 +5260,7 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 	};
 	Runtime.prototype.runLayoutChangeMethods = function (isBeforeChange)
 	{
+		console.log("whats good2")
 		var i, len, beh, type, j, lenj, inst, k, lenk, binst;
 		for (i = 0, len = this.behaviors.length; i < len; i++)
 		{
@@ -15702,7 +15705,6 @@ cr.plugins_.Arr = function(runtime)
 	};
 	instanceProto.getAsJSON = function ()
 	{
-		console.log("hihi")
 		return JSON.stringify({
 			"c2array": true,
 			"size": [this.cx, this.cy, this.cz],
@@ -15723,7 +15725,6 @@ cr.plugins_.Arr = function(runtime)
 		this.cy = sz[1];
 		this.cz = sz[2];
 		this.arr = o["data"];
-		console.log(o)
 	};
 	instanceProto.setSize = function (w, h, d)
 	{
@@ -20604,6 +20605,7 @@ cr.plugins_.Function = function(runtime)
 		var self = this;
 		window["c2_callFunction"] = function (name_, params_)
 		{
+			// console.log("c2_callFunction", name_, params_);
 			var i, len, v;
 			var fs = pushFuncStack();
 			fs.name = name_.toLowerCase();
@@ -20634,6 +20636,7 @@ cr.plugins_.Function = function(runtime)
 	function Cnds() {};
 	Cnds.prototype.OnFunction = function (name_)
 	{
+		// console.log("OnFunction", name_);
 		var fs = getCurrentFuncStack();
 		if (!fs)
 			return false;
@@ -20641,6 +20644,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Cnds.prototype.CompareParam = function (index_, cmp_, value_)
 	{
+		// console.log("CompareParam", index_, cmp_, value_);
 		var fs = getCurrentFuncStack();
 		if (!fs)
 			return false;
@@ -20653,6 +20657,7 @@ cr.plugins_.Function = function(runtime)
 	function Acts() {};
 	Acts.prototype.CallFunction = function (name_, params_)
 	{
+		// console.log("CallFunction", name_, params_);
 		var fs = pushFuncStack();
 		fs.name = name_.toLowerCase();
 		fs.retVal = 0;
@@ -20666,6 +20671,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Acts.prototype.SetReturnValue = function (value_)
 	{
+		// console.log("SetReturnValue", value_);
 		var fs = getCurrentFuncStack();
 		if (fs)
 			fs.retVal = value_;
@@ -20679,6 +20685,7 @@ cr.plugins_.Function = function(runtime)
 	function Exps() {};
 	Exps.prototype.ReturnValue = function (ret)
 	{
+		// console.log("ReturnValue", ret);
 		var fs = getOneAboveFuncStack();
 		if (fs)
 			ret.set_any(fs.retVal);
@@ -20687,6 +20694,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Exps.prototype.ParamCount = function (ret)
 	{
+		// console.log("ParamCount", ret);
 		var fs = getCurrentFuncStack();
 		if (fs)
 			ret.set_int(fs.params.length);
@@ -20698,6 +20706,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Exps.prototype.Param = function (ret, index_)
 	{
+		// console.log("Param", ret, index_);
 		index_ = cr.floor(index_);
 		var fs = getCurrentFuncStack();
 		if (fs)
@@ -20720,6 +20729,7 @@ cr.plugins_.Function = function(runtime)
 	};
 	Exps.prototype.Call = function (ret, name_)
 	{
+		// console.log("Call", ret, name_);
 		var fs = pushFuncStack();
 		fs.name = name_.toLowerCase();
 		fs.retVal = 0;
@@ -33837,7 +33847,6 @@ cr.plugins_.aekiro_proui2 = function (runtime) {
 		}
 	};*/
   instanceProto.runCallback = function (callbackName, callbackParams) {
-	console.log("run call back")
     if (callbackName == "") {
       return;
     }
@@ -43208,7 +43217,6 @@ cr.behaviors.aekiro_button = function(runtime)
 				this.state = HOVER;
 			}
 			this.updateView();
-			console.log(this)
 			this.proui.runCallback(this.callbackName,this.callbackParams);
 			for (var i = 0, l= this.callbacks.length; i < l; i++) {
 				this.callbacks[i]();
@@ -44116,6 +44124,7 @@ cr.behaviors.aekiro_dialog = function(runtime)
 	};
 	behinstProto.open = function (_targetX,_targetY,center)
 	{
+		console.log(this)
 		this.init();
 		if(this.isOpen || this.tween["isPlaying"]){//|| this.tween_close["isPlaying"]
 			return;
@@ -44217,6 +44226,7 @@ cr.behaviors.aekiro_dialog = function(runtime)
 	};
 	behinstProto.close = function ()
 	{
+		console.log(this)
 		if(!this.isOpen || this.tween["isPlaying"] || this.tween_close["isPlaying"]){
 			return;
 		}
@@ -44270,6 +44280,8 @@ cr.behaviors.aekiro_dialog = function(runtime)
 		}
 	};
 	behinstProto.postClose = function (){
+		console.log(this.pauseOnOpen)
+		
 		cr.system_object.prototype.acts.SetLayerVisible.call(this.runtime.system,this.inst.layer,false);
 		var layerInsts, self = this;
 		Object.keys(this.outLayerChildren).forEach(function(key) {

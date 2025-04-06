@@ -67,6 +67,12 @@
         "changes": [
             "Added keystrokes mod for mobile"
         ]
+    },
+    "2.2.0": {
+        "changes": [
+            "Added the replay system!",
+            "Save your replays, view them, race against them, and compare them against each other"
+        ]
     }
 
 }

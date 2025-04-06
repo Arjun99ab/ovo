@@ -7,9 +7,10 @@ import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/re
 import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
 
 import {renderSkinsMenu, searchSkins} from './util/pages/skins/render.js';
+import {renderReplaysMenu} from './util/pages/replays/render.js';
 import { useSkin } from './util/pages/skins/utils.js';
 
-import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook} from './util/hooks.js';
+import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createCallFunctionHook} from './util/hooks.js';
 
 //constants constants!!!
 export let version = VERSION.version();
@@ -289,7 +290,7 @@ export let runtime;
           titleText.style[a] = c[a];
       });
       titleText.id = "title-text";
-      let newContent = document.createTextNode("OvO Modloader");
+      let newContent = document.createTextNode("apple");
       titleText.appendChild(newContent);
       navbar.appendChild(titleText);
 
@@ -423,7 +424,7 @@ export let runtime;
         while (sectionDiv.firstChild) {
           sectionDiv.removeChild(sectionDiv.lastChild);
         }
-        // renderAddModMenu(document.getElementById('filters-div'), document.getElementById('cards-div'));
+        renderReplaysMenu(document.getElementById('filters-and-cards-div'));
         
       }
 
@@ -497,10 +498,10 @@ export let runtime;
      
       buttonContainer.appendChild(modsButton);
       buttonContainer.appendChild(settingsButton);
-      buttonContainer.appendChild(profilesButton);
+      // buttonContainer.appendChild(profilesButton);
       buttonContainer.appendChild(skinsButton);
+      buttonContainer.appendChild(replaysButton);
       buttonContainer.appendChild(addmodButton);
-      // buttonContainer.appendChild(replaysButton);
       buttonContainer.appendChild(searchBar);
 
 
@@ -568,7 +569,7 @@ export let runtime;
           window.addEventListener(
             "LayoutChange",
             (e) => {
-              // console.log(e.detail.layout.name)
+              console.log(e.detail.layout.name)
               if(e.detail.layout.name.startsWith("Level") && e.detail.layout.name !== "Level Menu") {
                 document.getElementById("menu-button").style.display = "none";
                 inGame = true;
@@ -580,16 +581,23 @@ export let runtime;
             false,
           );
 
+          createCallFunctionHook("CallFunction");
+          
+          
+
           createDialogOpenHook("DialogOpen");
           window.addEventListener(
             "DialogOpen",
             (e) => {
-              // console.log("Dialog open")
-              // notify("Dialog Opened", "wow!", "./speedrunner.png");
-              document.getElementById("menu-button").style.display = "block";
-              inGame = false;
-              console.log(isPaused())
-              // console.log()
+              if(e.detail.name === "PauseClose") {
+                // console.log("Dialog open")
+                // notify("Dialog Opened", "wow!", "./speedrunner.png");
+                document.getElementById("menu-button").style.display = "block";
+                inGame = false;
+                console.log(isPaused())
+                // console.log()
+              }
+              
             },
             false,
           );
@@ -598,10 +606,12 @@ export let runtime;
           window.addEventListener(
             "DialogClose",
             (e) => {
-              // console.log("Dialog close")
-              // notify("Dialog Closed", "wow!", "./speedrunner.png");
-              document.getElementById("menu-button").style.display = "none";
-              inGame = true;
+              if(e.detail.name === "PauseClose") {
+                // console.log("Dialog close")
+                // notify("Dialog Closed", "wow!", "./speedrunner.png");
+                document.getElementById("menu-button").style.display = "none";
+                inGame = true;
+              }
             },
             false,
           );
@@ -1042,6 +1052,14 @@ export let runtime;
             }
           }
           skinFilters = Array.from(skinFilters);
+
+
+          let js = document.createElement("script");
+          js.type = "application/javascript";
+          
+          js.src = '../src/modloaders/util/pages/replays/replayruntime.js';
+          js.id = 'replayruntime';
+          document.head.appendChild(js);
           
           
           document.addEventListener("keydown", (event) => {

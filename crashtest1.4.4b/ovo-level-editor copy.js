@@ -1,4 +1,4 @@
-(() => {
+() => {
   globalThis.ovoLevelEditor = {
     init() {
       let sdk_runtime = cr_getC2Runtime();
@@ -293,14 +293,19 @@
         }
       ) => {
         if (!types.hasOwnProperty(type)) return;
-        console.log(type)
         let inst = sdk_runtime.createInstance(types[type], layers[layer], x, y);
-        inst.width = width ?? inst.width;
-        inst.height = height ?? inst.height;
-        inst.angle = angle ?? inst.angle;
-        inst.visible = visible ?? inst.visible;
-        inst.opacity = opacity ?? inst.opacity;
-        inst.collisionsEnabled = collisionsEnabled ?? inst.collisionsEnabled;
+        inst.width = width === undefined || width === null ? inst.width : width;
+        inst.height =
+          height === undefined || height === null ? inst.height : height;
+        inst.angle = angle === undefined || angle === null ? inst.angle : angle;
+        inst.visible =
+          visible === undefined || visible === null ? inst.visible : visible;
+        inst.opacity =
+          opacity === undefined || opacity === null ? inst.opacity : opacity;
+        inst.collisionsEnabled =
+          collisionsEnabled === undefined || collisionsEnabled === null
+            ? inst.collisionsEnabled
+            : collisionsEnabled;
         inst.set_bbox_changed();
         if (initInstVars.hasOwnProperty(type))
           initInstVars[type](inst, instVars, extra);
@@ -400,15 +405,25 @@
                 this.curLevel.layers[layer][type].map((x) => ({ ...x, type }))
               )
               .flat()
-              .sort((a, b) => (a.zIndex ?? 0) - (b.zIndex ?? 0));
+              .sort(
+                (a, b) =>
+                  (a.zIndex === undefined || a.zIndex === null ? 0 : a.zIndex) -
+                  (b.zIndex === undefined || b.zIndex === null ? 0 : b.zIndex)
+              );
             for (let i = 0; i < allInstances.length; i++) {
               const inst = allInstances[i];
-              let zIndex = inst.zIndex ?? i;
+              let zIndex =
+                inst.zIndex === undefined || inst.zIndex === null
+                  ? i
+                  : inst.zIndex;
               if (
                 !playerInitialised &&
                 this.curLevel.player &&
                 this.curLevel.player.layer === layer &&
-                (this.curLevel.player.zIndex ?? 0) <= zIndex
+                (this.curLevel.player.zIndex === undefined ||
+                this.curLevel.player.zIndex === null
+                  ? i
+                  : this.curLevel.player.zIndex) <= zIndex
               ) {
                 playerInitialised = true;
                 initInstVars.Player(player, this.curLevel.player.instVars);
@@ -467,7 +482,6 @@
         },
         handleDrop(ev) {
           console.log("File(s) dropped");
-          console.log(ev)
 
           // Prevent default behavior (Prevent file from being opened)
           ev.preventDefault();
@@ -477,10 +491,8 @@
               console.log(text);
               try {
                 let json = JSON.parse(text);
-                console.log(json)
                 if (globalThis.ovoLevelEditor.startLevel)
                   globalThis.ovoLevelEditor.startLevel(json);
-                  console.log("STARTING LEVEL")
               } catch (error) {
                 alert("not a valid level file");
               }
@@ -549,4 +561,4 @@
     }
   };
   globalThis.window.addEventListener("message", messageHandler);
-})();
+}; //();
