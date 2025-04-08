@@ -188,9 +188,12 @@
           );
           instance.visible = data.hitboxShown; //whether hitbox is visible or not
           instance.instance_vars[16] = 1;
-          instance.instance_vars[17] = "";
+          instance.instance_vars[17] = "test";
+          instance.instance_vars[18] = 1;
+
           instance.instance_vars[12] = data.skin;
           instance.instance_vars[0] = data.state;
+          instance.collisionsEnabled = false;
 
           instance.siblings.forEach((sibling) => {
             if (data.skin === "") {
@@ -429,6 +432,7 @@
 
                   } else {
                     replayInstance = this.createGhostPlayer(data);
+                    // console.log(replayInstance);
                   }
               } else {
                   data.layout = replayJSON.data[replayJSON.data.length - 1][1][1]
