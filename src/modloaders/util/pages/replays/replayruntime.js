@@ -59,7 +59,7 @@
     
       async init() {
 
-        document.addEventListener("keyup", (event) => {this.keyUp(event)});
+        // document.addEventListener("keyup", (event) => {this.keyUp(event)});
 
         // replayJSON = await fetch('../src/mods/modloader/replay/level1_1.4.json')
         //     .then((response) => response.json())
