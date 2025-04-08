@@ -313,7 +313,7 @@
                       console.log(replayInstances[i].behavior_insts[0].enabled)
                       console.log(getPlayer())
 
-                      runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
+                      // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
 
                       console.log(replayInstances[i].behavior_insts[0].enabled)
                       console.log(getPlayer())
@@ -322,7 +322,7 @@
                       console.log("yo")
                       replayInstances[i] = this.createGhostPlayer(data);
                     }
-                } else if (replayIndex === 2) {
+                } else if (replayIndex === 3) {
                   console.log(replayInstances[i].behavior_insts[0].enabled)
                   console.log(replayInstances[i])
                   console.log(getPlayer())
@@ -332,6 +332,23 @@
                     this.loadPlayerData(replayInstances[i], data);
                 }
               }
+              let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
+              let numFrames = replayJSON.size[0];
+              frames = [];
+              for (let i = 0; i < numFrames; i++) {
+                frames.push(Math.floor((i * totalFrames) / numFrames));
+              }
+
+              compareReplayJSONs.forEach((compareReplay) => {
+                if (compareReplay !== replayJSON) {
+                  let compareTotalFrames = compareReplay.size[0] * (runtime.fps / 60);
+                  let compareNumFrames = compareReplay.size[0];
+                  compareReplay.frames = [];
+                  for (let i = 0; i < compareNumFrames; i++) {
+                    compareReplay.frames.push(Math.floor((i * compareTotalFrames) / compareNumFrames));
+                  }
+                }
+              });
             }
             replayIndex += 1;
             if (replayIndex >= frames[frames.length - 1]) {
@@ -413,16 +430,19 @@
                   } else {
                     replayInstance = this.createGhostPlayer(data);
                   }
-              } else if (replayIndex === 2) {
-                console.log(replayInstance.behavior_insts[0].enabled)
-                console.log(replayInstance)
-                console.log(getPlayer())
               } else {
                   data.layout = replayJSON.data[replayJSON.data.length - 1][1][1]
                   data.layer = replayInstance.layer.name;
                   this.loadPlayerData(replayInstance, data);
               }
+              let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
+              let numFrames = replayJSON.size[0];
+              frames = [];
+              for (let i = 0; i < numFrames; i++) {
+                  frames.push(Math.floor((i * totalFrames) / numFrames));
+              }
             }
+            
             replayIndex += 1;
             if (replayIndex >= frames[frames.length - 1]) {
               ghostAtFlag = true;

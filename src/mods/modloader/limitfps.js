@@ -3,13 +3,13 @@ let runtime = cr_getC2Runtime();
 let maxFPS = 80;
 
 let lastTime = cr.performance_now();
-console.log(lastTime)
+// console.log(lastTime)
 const oldFn = runtime.tick.bind(runtime);
 let raf = window["requestAnimationFrame"] || window["mozRequestAnimationFrame"] || window["webkitRequestAnimationFrame"] || window["msRequestAnimationFrame"];
 
 runtime.tick = async (...args) => {
     const now = args[1];
-    console.log(now)
+    // console.log(now)
     const timeDelta = now - lastTime;
     // console.log(timeDelta)
     const frameTime = 1000 / maxFPS;

@@ -523,7 +523,7 @@ let renderReplaysMenu = (sectionDiv) => {
   replayButton.onclick = function() {
     let replayData = currentLevelObj.replay;
     decompressWithStream(replayData).then((data) => {
-        console.log(data);
+        // console.log(data);
         let replay = JSON.parse(data);
         let levelName = replay.data[replay.data.length - 1][1][1]
         //launch level in individual level mode

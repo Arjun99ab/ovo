@@ -452,17 +452,14 @@ let createUploadPopup = () => {
 
     
     uploadArea.addEventListener("change", (e) => {
-      console.log(e.target.files[0]);
       let file = e.target.files[0];
       if (file) {
         fileInfo.innerText = `${file.name}\n(${(file.size / 1024).toFixed(2)} KB)`;
         let reader = new FileReader();
         reader.onload = function(e) {
           let contents = e.target.result;
-          console.log(contents);
           try {
             let x = JSON.parse(contents);
-            console.log("Valid JSON"); //if its 1.4
             replayContents = contents;
 
             replayTime = x.data.at(-1)[0][1];
@@ -471,12 +468,9 @@ let createUploadPopup = () => {
             console.log("invalid json, decompressing first")
           }
           let hexList = convert_formated_hex_to_bytes(contents);
-          console.log(hexList);
           let LZMA_WORKER = window.LZMA_WORKER;
           LZMA_WORKER.decompress(hexList, function on_decompress_complete(result) {
-            console.log(result);
             let jsoned = JSON.parse(result);
-            console.log(jsoned.data.at(-1));
             replayTime = jsoned.data.at(-1)[0][1];
             replayContents = result;
             // compressWithStream(result).then((result2) => {

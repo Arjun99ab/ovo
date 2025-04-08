@@ -245,6 +245,7 @@ spritePlugin.animations[33] = animobj;		// swap array data for object
 
 //wait for all textures to load
 
+while (!runtime.areAllTexturesAndSoundsLoaded()) {}
 
 var i, len, frame;
 for (i = 0, len = spritePlugin.all_frames.length; i < len; ++i)
