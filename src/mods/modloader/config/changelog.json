@@ -73,6 +73,11 @@
             "Added the replay system!",
             "Save your replays, view them, race against them, and compare them against each other"
         ]
+    },
+    "2.2.1": {
+        "changes": [
+            "Fixed bugs with the replay system"
+        ]
     }
 
 }

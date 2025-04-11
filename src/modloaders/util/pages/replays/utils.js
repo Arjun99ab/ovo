@@ -186,7 +186,7 @@ function compressedToLZMA(name, compressedData) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = name + 'ovo';
+      a.download = name.trim().replace(/\s+/g, '-') + '.ovo';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

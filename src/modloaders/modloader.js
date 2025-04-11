@@ -17,6 +17,7 @@ export let version = VERSION.version();
 export let skinVersion = VERSION.skinVersion();
 export let filters = new Set();
 export let skinFilters = new Set();
+export let settingFilters = new Set();
 export let backendConfig;
 export let runtime;
 
@@ -811,7 +812,34 @@ export let runtime;
                   } else {
                     delete userConfig['mods'][key]; //if mod is not in backend, delete it
                   }
+              }
+
+              for (const [key] of Object.entries(backendConfig['settings'])) {
+                if(userConfig['settings'][key] === undefined) {
+                  freshUserConfig['settings'][key] = backendConfig["settings"][key]['defaultSettings'];
+                } else {
+                  console.log(key)
+                  if (backendConfig['settings'][key]['defaultSettings']['settings'] !== null) {
+                    let backendSettingSettings = Object.keys(backendConfig['settings'][key]['defaultSettings']['settings'])
+                    if (userConfig['settings'][key]['settings'] === null) {
+                      userConfig['settings'][key]['settings'] = {}
+                    }
+                    let userSettingSettings = Object.keys(userConfig['settings'][key]['settings'])
+                    if(!arraysEqual(backendSettingSettings, userSettingSettings)) {
+                      let newSettings = backendSettingSettings.filter(x => !userSettingSettings.includes(x))
+                      let badSettings = userSettingSettings.filter(x => !backendSettingSettings.includes(x))
+                      for(const setting of newSettings) {
+                        userConfig['settings'][key]['settings'][setting] = backendConfig['settings'][key]['defaultSettings']['settings'][setting]
+                      }
+                      for(const setting of badSettings) {
+                        delete userConfig['settings'][key]['settings'][setting]
+                      }
+                    }
+                  }
+                  freshUserConfig['setting'][key] = userConfig['setting'][key];
                 }
+            }
+
               for(const [key] of Object.entries(backendConfig['settings'])) {
                   if(userConfig['settings'][key] === undefined) {
                       freshUserConfig['settings'][key] = backendConfig['settings'][key];
@@ -1052,6 +1080,16 @@ export let runtime;
             }
           }
           skinFilters = Array.from(skinFilters);
+
+          settingFilters.add('all');
+          settingFilters.add('favorite');
+          settingFilters.add('custom');
+          for (const [key] of Object.entries(backendConfig['skins'])) {
+            for(let i = 0; i < backendConfig["skins"][key]['tags'].length; i++) {
+              settingFilters.add(backendConfig["skins"][key]['tags'][i]);
+            }
+          }
+          settingFilters = Array.from(skinFilters);
 
 
           let js = document.createElement("script");
