@@ -51,6 +51,9 @@
   let replayInstances = [];
 
 
+  let lastNonDeathState = "";
+
+
   
   
 
@@ -223,7 +226,12 @@
           player.x = data.x;
           player.y = data.y;
           player.angle = data.angle;
-          player.instance_vars[0] = data.state;
+
+          //if any player instances have a state of “dead”, the game makes all the other player instances in an “invincible state”
+          if (data.state !== "dead") {
+            lastNonDeathState = data.state;
+          }
+          player.instance_vars[0] = data.state === "dead" ? lastNonDeathState : data.state; 
           player.instance_vars[2] = data.side;
           if (data.side > 0) {
             c2_callFunction("Player > Unmirror", [player.uid]);
@@ -452,6 +460,9 @@
               ghostAtFlag = true;
               replaying = false;
               replayIndex = 0;
+
+              console.log("replay done")
+              console.log(getPlayer())
               
 
               if (playingBack) {
@@ -461,7 +472,7 @@
                 // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
                 runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
 
-                console.log("replay done")
+                console.log("replay done2")
 
                 console.log(replayInstance)
                 console.log(getPlayer())
