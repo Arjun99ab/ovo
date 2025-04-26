@@ -1,5 +1,6 @@
 import { notify } from "./ovo.js";
 import { toggleMod } from "./pages/mods/utils.js";
+import { enableClick } from "./ovo.js";
 export {modsPendingReload};
 let modsPendingReload = [];
 
@@ -113,7 +114,7 @@ function createNotifyModal (text) {
     // confirmBg.appendChild(xButton);
     document.body.appendChild(notifyBg);
 }
-function createChangelogPopup(changelog, userVersion, currentVersion) {
+function createChangelogPopup(changelog, userVersion, currentVersion, map) {
   //Create background div
   let changelogPopup = document.createElement("div");
   changelogPopup.addEventListener('wheel', (e) => {
@@ -205,8 +206,8 @@ function createChangelogPopup(changelog, userVersion, currentVersion) {
 
   xButton.onclick = function() {
     changelogPopup.remove();
-    // document.getElementById("c2canvasdiv").style.filter = "none";
-    // enableClick(map);
+    document.getElementById("c2canvasdiv").style.filter = "none";
+    enableClick(map);
   }
   // navbar.appendChild(xButton);
   changelogPopup.appendChild(xButton);

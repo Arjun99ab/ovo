@@ -78,6 +78,12 @@
         "changes": [
             "Fixed bugs with the replay system"
         ]
+    }, 
+    "2.2.2": {
+        "changes": [
+            "Fixed bugs with the custom skin system",
+            "Added the skin STEVE from the Minecraft Movie! (1.4.4+)"
+        ]
     }
 
 }

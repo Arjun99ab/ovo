@@ -771,9 +771,9 @@ export let runtime;
           } else  { //
               //new version
               if(userConfig['version'] !== backendConfig['version']) {
-                // document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
-                // map = disableClick(runtime);
-                createChangelogPopup(changelog, userConfig['version'], backendConfig['version']);
+                document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
+                map = disableClick(runtime);
+                createChangelogPopup(changelog, userConfig['version'], backendConfig['version'], map);
               }
               console.log("new version")
               userConfig['mods'] = userConfig['mods'] === undefined ? {} : userConfig['mods']

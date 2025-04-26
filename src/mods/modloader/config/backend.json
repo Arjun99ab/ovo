@@ -1,5 +1,5 @@
 {
-    "version": "2.2.1",
+    "version": "2.2.2",
     "settings": {
     },
     "skins": {
@@ -558,6 +558,20 @@
             "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
             "tags": ["community"],
             "replaces": "pole",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "minecraftsteve": {
+            "name": "STEVE",
+            "author": "Newkem",
+            "desc": "with help from GCube and BlueFan77",
+            "url": "../src/skins/minecraftsteve.png",
+            "icon": "../src/skins/icons/minecraftsteve.png",
+            "version": ["1.4.4"],
+            "tags": ["community"],
+            "replaces": "french",
             "defaultSettings": {
                 "favorite": false,
                 "using": false
