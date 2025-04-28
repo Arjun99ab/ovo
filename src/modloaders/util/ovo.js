@@ -478,9 +478,15 @@ let addSkin = (skinId, templateId, url, data_response) => {
 
   let template_default_instance = structuredClone(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0].skins[templateId].head.type.default_instance) // copy skin type
   type_inst.default_instance = template_default_instance
+  console.log(type_inst.default_instance)
 
   type_inst.default_instance[1] = index
-  type_inst.default_instance[3][0][0] = skinId;
+  // type_inst.default_instance[3][0][0] = skinId;
+  type_inst.default_instance[3] = [
+      [
+          skinId
+      ]
+  ];
 
   cr.plugins_.skymen_skinsCore.prototype.acts.AddSkin.call(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0], type_inst, skinId, 0, '', '')
 
