@@ -27726,6 +27726,7 @@ cr.plugins_.Sprite = function(runtime)
 	};
 	Acts.prototype.SetAnim = function (animname, from)
 	{
+		// console.log("SetAnim: " + animname, from);
 		this.changeAnimName = animname;
 		this.changeAnimFrom = from;
 		if (!this.isTicking)

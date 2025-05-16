@@ -245,28 +245,125 @@ spritePlugin.animations[33] = animobj;		// swap array data for object
 
 //wait for all textures to load
 
-while (!runtime.areAllTexturesAndSoundsLoaded()) {}
+// while (!runtime.areAllTexturesAndSoundsLoaded()) {
+//   console.log("waiting for textures to load");
+// }
 
 var i, len, frame;
 for (i = 0, len = spritePlugin.all_frames.length; i < len; ++i)
 {
   frame = spritePlugin.all_frames[i];
+  console.log(frame)
   frame.webGL_texture = runtime.glwrap.loadTexture(frame.texture_img, true, runtime.linearSampling, frame.pixelformat);
-  if (i >= 104 && i <= 106) { //hardcode for now bc i have no idea why webgl doesnt populate the heights correctly
-    frame.webGL_texture.c2height = 64;
-    frame.webGL_texture.c2width = 64;
-  }
+  // if (i >= 104 && i <= 106) { //hardcode for now bc i have no idea why webgl doesnt populate the heights correctly
+  //   frame.webGL_texture.c2height = 64;
+  //   frame.webGL_texture.c2width = 64;
+  // }
 }
 spritePlugin.updateAllCurrentTexture();
 
 // spri
 
 let inst = runtime.createInstance(types[0], runtime.layouts["Level 1"].layers[7], 180.5, 38); //228, -61
-inst.width = 64;
-inst.height = 64;
-inst.set_bbox_changed();
+// inst.width = 64;
+// inst.height = 64;
 inst.instance_vars[4] = 'Modloader'
 inst.properties[1] = 'Modloader'
 inst.behavior_insts[0].callbackName = "Menu > Pause"
-inst.onCreate();
-runtime.redraw = true
+inst.behavior_insts[2].properties[4] = 1;
+
+inst.set_bbox_changed();
+cr.plugins_.Sprite.prototype.acts.SetAnim.call(inst, "Modloader"); // or specify animation name if needed
+
+
+let y = [
+    [
+        128,
+        38,
+        0,
+        64,
+        64,
+        0,
+        0,
+        1,
+        0.5,
+        0.5,
+        0,
+        0,
+        []
+    ],
+    70,
+    3102,
+    [
+        [
+            0
+        ],
+        [
+            1
+        ],
+        [
+            0
+        ],
+        [
+            0
+        ],
+        [
+            ""
+        ],
+        [
+            ""
+        ],
+        [
+            0
+        ],
+        [
+            0
+        ],
+        [
+            0
+        ],
+        [
+            0
+        ]
+    ],
+    [
+        [
+            1,
+            "1",
+            "2",
+            "",
+            "Click",
+            1,
+            "Hover",
+            1,
+            "Menu > Pause",
+            ""
+        ],
+        [
+            ""
+        ],
+        [
+            0,
+            0,
+            0,
+            0,
+            1
+        ],
+        [
+            "",
+            ""
+        ]
+    ],
+    [
+        0,
+        "Modloader",
+        0,
+        1
+    ]
+]
+
+runtime.layouts["Level 1"].layers[7].instances.push(y);
+
+// runtime.trigger(inst.type.plugin.cnds.OnCreated, inst);
+// // inst.onCreate();
+// runtime.redraw = true
