@@ -1,3 +1,4 @@
+// was for mobile keystrokes
 let map = new WeakMap()
 let runtime = cr_getC2Runtime()
 map.set(cr.plugins_.Touch.prototype.cnds.IsTouchingObject, function (action) {
@@ -46,7 +47,18 @@ for(const action of Object.values(runtime.cndsBySid)) {
     if (map.has(action.func)) map.get(action.func)(action)
 }
 
+tick() {
+	let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
+	let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
+	if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
+		console.log("touching")
+	}
+}
 
+
+// ----------------------------
+
+// idk what this is for
 let map = new WeakMap()
 let runtime = cr_getC2Runtime()
 map.set(cr.plugins_.Sprite.prototype.acts.SetAnimFrame, function (action) {
@@ -60,33 +72,27 @@ for(const action of Object.values(runtime.actsBySid)) {
     if (map.has(action.func)) map.get(action.func)(action)
 }
 
+// WORKING SETTINGS
 let map = new WeakMap()
-let runtime = cr_getC2Runtime()
+// let runtime = cr_getC2Runtime()
 map.set(cr.behaviors.Platform.prototype.acts.SetMaxSpeed, function (action) {
   let old = action.func
   action.func = function (...args) {
 	args[0] = 10000;
-	console.log("hi2")
 	old.apply(this, args)
   }
 })
-for(const action of Object.values(runtime.actsBySid)) {
-    if (map.has(action.func)) map.get(action.func)(action)
-}
-
-let map = new WeakMap()
-
-for(const action of Object.values(runtime.actsBySid)) {
-    if (map.has(action.func)) map.get(action.func)(action)
-}
-
-
-let map = new WeakMap()
-let runtime = cr_getC2Runtime()
-map.set(cr.plugins_.Function.prototype.acts.CallFunction, function (action) {
+map.set(cr.behaviors.Platform.prototype.acts.SetDeceleration, function (action) {
   let old = action.func
   action.func = function (...args) {
-	console.log("CallFunction", args)
+	args[0] = 10000;
+	old.apply(this, args)
+  }
+})
+map.set(cr.behaviors.Platform.prototype.acts.SetMaxFallSpeed, function (action) {
+  let old = action.func
+  action.func = function (...args) {
+	args[0] = 10000;
 	old.apply(this, args)
   }
 })
@@ -94,12 +100,20 @@ for(const action of Object.values(runtime.actsBySid)) {
     if (map.has(action.func)) map.get(action.func)(action)
 }
 
-
-
-tick() {
-	let touch = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Touch).instances[0]
-	let uiDirection = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Sprite && x.all_frames && x.all_frames[0].texture_file.includes("uidirection"))
-	if (cr.plugins_.Touch.prototype.cnds.IsTouchingObject.call(touch, uiDirection)) {
-		console.log("touching")
-	}
+let map = new WeakMap()
+// let runtime = cr_getC2Runtime()
+map.set(cr.behaviors.Platform.prototype.cnds.OnJump, function (action) {
+  let old = action.func
+  action.func = function (...args) {
+	console.log("hi", this)
+	this.jumpStrength = 950;
+	this.
+	old.apply(this, args)
+  }
+})
+for(const action of Object.values(runtime.cndsBySid)) {
+    if (map.has(action.func)) map.get(action.func)(action)
 }
+
+// EXPERIMENTAL SETTINGS
+

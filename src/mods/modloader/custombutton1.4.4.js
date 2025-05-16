@@ -243,19 +243,22 @@ cr.seal(animobj);
 console.log(animobj)
 spritePlugin.animations[33] = animobj;		// swap array data for object
 
+spritePlugin.loadTextures()
+
 //wait for all textures to load
 
 
-var i, len, frame;
-for (i = 0, len = spritePlugin.all_frames.length; i < len; ++i)
-{
-  frame = spritePlugin.all_frames[i];
-  frame.webGL_texture = runtime.glwrap.loadTexture(frame.texture_img, true, runtime.linearSampling, frame.pixelformat);
-  if (i >= 104 && i <= 106) { //hardcode for now bc i have no idea why webgl doesnt populate the heights correctly
-    frame.webGL_texture.c2height = 64;
-    frame.webGL_texture.c2width = 64;
-  }
-}
+// var i, len, frame;
+// for (i = 0, len = spritePlugin.all_frames.length; i < len; ++i)
+// {
+//   frame = spritePlugin.all_frames[i];
+//   frame.webGL_texture = runtime.glwrap.loadTexture(frame.texture_img, true, runtime.linearSampling, frame.pixelformat);
+//   // if (i >= 104 && i <= 106) { //hardcode for now bc i have no idea why webgl doesnt populate the heights correctly
+//   //   frame.webGL_texture.c2height = 64;
+//   //   frame.webGL_texture.c2width = 64;
+//   // }
+// }
+spritePlugin.loadTextures()
 spritePlugin.updateAllCurrentTexture();
 
 // spri

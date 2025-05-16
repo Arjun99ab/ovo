@@ -74,7 +74,7 @@ let x = [
   1, //repeat count
   0, //repeat to
   false, //pingpong
-  12341234214, //sid --
+  21341235213523, //sid --
   [
       [
           "../src/img/modloader/menubutton64.png", //texture file --
@@ -181,7 +181,16 @@ types = runtime.types_by_index.filter((x) =>
 var anim, frame, animobj, frameobj, wt, uv;
 var i, leni, j, lenj;
 
-let spritePlugin = types[0].instances[7].type; //probably find a better call for this bc of version differences
+let spritePlugin = runtime.types_by_index.filter((x) =>
+  x.plugin instanceof cr.plugins_.Sprite &&
+  x.all_frames &&
+  x.all_frames.some(frame => frame.texture_file && frame.texture_file.includes("menubutton")) &&
+  x.instances.some(
+    (y) => y.uiType === "button"
+  )
+)[0];
+
+// let spritePlugin = types[0].instances[7].type; //probably find a better call for this bc of version differences
 
 spritePlugin.animations.push({})
 
@@ -233,7 +242,19 @@ for (j = 0, lenj = anim[7].length; j < lenj; j++)
     frameobj.texture_img.cr_src = frame[0];
     frameobj.texture_img.cr_filesize = frame[1];
     frameobj.texture_img.c2webGL_texture = null;
-    runtime.waitForImageLoad(frameobj.texture_img, frame[0]);
+    frameobj.texture_img.onload = (function(f) {
+      return function() {
+        f.webGL_texture = runtime.glwrap.loadTexture(f.texture_img, true, runtime.linearSampling, f.pixelformat);
+        console.log("Loaded texture: " + f.texture_img.cr_src);
+      };
+    })(frameobj);
+
+    frameobj.texture_img.onerror = function() {
+      console.error("fail " + frame[0]);
+    };
+
+    frameobj.texture_img.src = frame[0];
+    // runtime.waitForImageLoad(frameobj.texture_img, frame[0]);
   }
   cr.seal(frameobj);
   animobj.frames.push(frameobj);
@@ -241,8 +262,11 @@ for (j = 0, lenj = anim[7].length; j < lenj; j++)
 }
 cr.seal(animobj);
 console.log(animobj)
-spritePlugin.animations[33] = animobj;		// swap array data for object
+console.log(spritePlugin.animations.length)
+spritePlugin.animations[spritePlugin.animations.length - 1] = animobj;		// swap array data for object
 
+
+// spritePlugin.loadTextures();
 //wait for all textures to load
 
 // while (!runtime.areAllTexturesAndSoundsLoaded()) {
@@ -263,8 +287,9 @@ for (i = 0, len = spritePlugin.all_frames.length; i < len; ++i)
 spritePlugin.updateAllCurrentTexture();
 
 // spri
+let pauseLayer = runtime.running_layout.layers.find(function(a) {return "Overlay" === a.name})
 
-let inst = runtime.createInstance(types[0], runtime.layouts["Level 1"].layers[7], 180.5, 38); //228, -61
+let inst = runtime.createInstance(spritePlugin, pauseLayer, 238, 38); //228, -61
 // inst.width = 64;
 // inst.height = 64;
 inst.instance_vars[4] = 'Modloader'
@@ -275,10 +300,11 @@ inst.behavior_insts[2].properties[4] = 1;
 inst.set_bbox_changed();
 cr.plugins_.Sprite.prototype.acts.SetAnim.call(inst, "Modloader"); // or specify animation name if needed
 
+let pauseLayer = runtime.layouts["Level 1"].layers.find(function(a) {return "Overlay" === a.name})
 
 let y = [
     [
-        128,
+        228,
         38,
         0,
         64,
@@ -292,8 +318,8 @@ let y = [
         0,
         []
     ],
-    70,
-    3102,
+    spritePlugin.index,
+    3104,
     [
         [
             0
@@ -336,7 +362,7 @@ let y = [
             1,
             "Hover",
             1,
-            "Menu > Pause",
+            "Menu > Modloader",
             ""
         ],
         [
@@ -362,8 +388,117 @@ let y = [
     ]
 ]
 
-runtime.layouts["Level 1"].layers[7].instances.push(y);
+let y1 = [
+    [
+        38,
+        38,
+        0,
+        64,
+        64,
+        0,
+        0,
+        1,
+        0.5,
+        0.5,
+        0,
+        0,
+        []
+    ],
+    spritePlugin.index,
+    3104,
+    [
+        [
+            0
+        ],
+        [
+            1
+        ],
+        [
+            0
+        ],
+        [
+            0
+        ],
+        [
+            ""
+        ],
+        [
+            ""
+        ],
+        [
+            0
+        ],
+        [
+            0
+        ],
+        [
+            0
+        ],
+        [
+            0
+        ]
+    ],
+    [
+        [
+            1,
+            "1",
+            "2",
+            "",
+            "Click",
+            1,
+            "Hover",
+            1,
+            "Menu > Modloader",
+            ""
+        ],
+        [
+            ""
+        ],
+        [
+            0,
+            0,
+            0,
+            0,
+            1
+        ],
+        [
+            "",
+            ""
+        ]
+    ],
+    [
+        0,
+        "Modloader",
+        0,
+        1
+    ]
+]
+
+// pauseLayer.startup_initial_instances.push(y);
+// pauseLayer.initial_instances.push(y);
 
 // runtime.trigger(inst.type.plugin.cnds.OnCreated, inst);
 // // inst.onCreate();
 // runtime.redraw = true
+
+
+runtime.layouts_by_index.forEach(layout => {
+  layout.layers.forEach(layer => {
+    if (layer.name === "Pause") {
+      layer.startup_initial_instances.push(y);
+      layer.initial_instances.push(y);
+    }
+  });
+  if (layout.sheetname === "Main Menu") {
+    layout.layers.forEach(layer => {
+      if (layer.name === "Layer 1") {
+        layer.startup_initial_instances.push(y1);
+        layer.initial_instances.push(y1);
+      }
+      if(layout.name === "Level Menu" && layer.name === "Layer 0") {
+        layer.startup_initial_instances.push(y1);
+        layer.initial_instances.push(y1);
+      }
+    });
+  }
+});

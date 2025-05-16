@@ -58,7 +58,7 @@
   
 
 
-  let ticktest = {
+  let replayruntime = {
     
       async init() {
 
@@ -499,11 +499,11 @@
           return "modloader.replay";
       }
   };
-  ticktest.init();
+  replayruntime.init();
 
   globalThis.beginRacing = function(replayData, replayObj) {
     console.log("begin racing", replayData)
-    runtime.tickMe(ticktest);
+    runtime.tickMe(replayruntime);
     replayInfo = replayObj;
     replayJSON = replayData;
     replaying = true;
@@ -532,7 +532,7 @@
   }
   globalThis.beginReplay = function(replayData) {
     console.log("begin replay", replayData)
-    runtime.tickMe(ticktest);
+    runtime.tickMe(replayruntime);
     replayJSON = replayData;
     replaying = true;
     replayIndex = 0;
@@ -548,7 +548,7 @@
 
   globalThis.beginComparing = function(compareReplayList) {
     console.log("begin comparing", compareReplayList);
-    runtime.tickMe(ticktest);
+    runtime.tickMe(replayruntime);
     
     let largestSubarray = compareReplayList.reduce((largest, current) => {
       return current.size[0] > largest.size[0] ? current : largest;

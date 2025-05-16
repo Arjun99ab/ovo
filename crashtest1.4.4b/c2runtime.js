@@ -20603,7 +20603,7 @@ cr.plugins_.Function = function(runtime)
 		var self = this;
 		window["c2_callFunction"] = function (name_, params_)
 		{
-			// console.log("c2_callFunction", name_, params_);
+			console.log("c2_callFunction", name_, params_) ;
 			var i, len, v;
 			var fs = pushFuncStack();
 			fs.name = name_.toLowerCase();
@@ -20634,7 +20634,7 @@ cr.plugins_.Function = function(runtime)
 	function Cnds() {};
 	Cnds.prototype.OnFunction = function (name_)
 	{
-		// console.log("OnFunction", name_);
+		console.log("OnFunction", name_);
 		var fs = getCurrentFuncStack();
 		if (!fs)
 			return false;
@@ -26792,6 +26792,7 @@ cr.plugins_.Sprite = function(runtime)
 	{
 		if (this.is_family || this.has_loaded_textures || !this.runtime.glwrap)
 			return;
+		console.log("[Sprite] loading textures for type: " + this.name);
 		var i, len, frame;
 		for (i = 0, len = this.all_frames.length; i < len; ++i)
 		{
@@ -33846,12 +33847,15 @@ cr.plugins_.aekiro_proui2 = function (runtime) {
 		}
 	};*/
   instanceProto.runCallback = function (callbackName, callbackParams) {
+	console.log("proui", callbackName, callbackParams)
     if (callbackName == "") {
       return;
     }
     var params = callbackParams.split(",");
     var callFunction = window["c2_callFunction"];
+	console.log("hi chat")
     if (callFunction) {
+		console.log("has chat", callFunction)
       callFunction(callbackName, params);
     } else {
       console.error("ProUI : Please add the Function plugin to the project.");
@@ -40050,24 +40054,28 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Acts.prototype.SetAcceleration = function (acc)
 	{
+		console.log("accel")
 		this.acc = acc;
 		if (this.acc < 0)
 			this.acc = 0;
 	};
 	Acts.prototype.SetDeceleration = function (dec)
 	{
+		// console.log("decel")
 		this.dec = dec;
 		if (this.dec < 0)
 			this.dec = 0;
 	};
 	Acts.prototype.SetJumpStrength = function (js)
 	{
+		console.log("jumpstrength")
 		this.jumpStrength = js;
 		if (this.jumpStrength < 0)
 			this.jumpStrength = 0;
 	};
 	Acts.prototype.SetGravity = function (grav)
 	{
+		console.log("gravity")
 		if (this.g1 === grav)
 			return;		// no change
 		this.g = grav;
@@ -40083,6 +40091,7 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Acts.prototype.SetMaxFallSpeed = function (mfs)
 	{
+		console.log("maxfallspeed")
 		this.maxFall = mfs;
 		if (this.maxFall < 0)
 			this.maxFall = 0;
@@ -40166,10 +40175,13 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Exps.prototype.JumpStrength = function (ret)
 	{
+		// console.log("jumpstrength exp", ret, this.jumpStrength)
+		// this.jumpStrength = 1000;
 		ret.set_float(this.jumpStrength);
 	};
 	Exps.prototype.Gravity = function (ret)
 	{
+		console.log("gravity exp", ret, this.g)
 		ret.set_float(this.g);
 	};
 	Exps.prototype.GravityAngle = function (ret)

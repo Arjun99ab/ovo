@@ -1,6 +1,6 @@
 import { runtime } from "../modloader.js"
 
-export {isInLevel, isPaused, closePaused, getPlayer, disableClick, enableClick, notify, menuButtonHover, levelButtonHover, addSkin} 
+export {isInLevel, isPaused, closePaused, getPlayer, disableClick, enableClick, notify, menuButtonHover, levelButtonHover, addSkin, addModloaderButtonTexture } 
 
 let isInLevel = () => {
     return runtime.running_layout.name.startsWith("Level") && runtime.running_layout.name !== "Level Menu"
@@ -490,4 +490,420 @@ let addSkin = (skinId, templateId, url, data_response) => {
 
   cr.plugins_.skymen_skinsCore.prototype.acts.AddSkin.call(runtime.types_by_index.filter(x=>x.plugin instanceof cr.plugins_.skymen_skinsCore)[0].instances[0], type_inst, skinId, 0, '', '')
 
+}
+
+let addModloaderButtonTexture = () => {
+  let x = [
+    "Modloader", //name --
+    0, //speed
+    false, //loop
+    1, //repeat count
+    0, //repeat to
+    false, //pingpong
+    12341234214, //sid --
+    [
+        [
+            "../src/img/modloader/menubutton64.png", //texture file --
+            176, //texture filesize --
+            0, //offx --
+            0, //offy --
+            64, //width
+            64, //height
+            1, //duration
+            0.5, //hotspotX
+            0.5, //hotspotY
+            [
+              [
+                  "topLeft",
+                  0,
+                  0
+              ]
+            ], //image pts
+            [], //poly pts
+            0 // pixelformat
+        ],
+        [
+            "../src/img/modloader/menubutton64.png", //texture file --
+            176, //texture filesize --
+            0, //offx --
+            0, //offy --
+            64, //width
+            64, //height
+            1, //duration
+            0.5, //hotspotX
+            0.5, //hotspotY
+            [
+              [
+                  "topLeft",
+                  0,
+                  0
+              ]
+            ], //image pts
+            [], //poly pts
+            0 // pixelformat
+        ],
+        [
+            "../src/img/modloader/menubutton64.png", //texture file --
+            176, //texture filesize --
+            0, //offx --
+            0, //offy --
+            64, //width
+            64, //height
+            1, //duration
+            0.5, //hotspotX
+            0.5, //hotspotY
+            [
+              [
+                  "topLeft",
+                  0,
+                  0
+              ]
+            ], //image pts
+            [
+                0.5,
+                0.5,
+                -0.5,
+                0.5,
+                -0.5,
+                -0.5,
+                0.5,
+                -0.5
+            ], //poly pts
+            0 // pixelformat
+        ],
+    ]
+  ]
+
+
+
+  function frame_getDataUri()
+  {
+    if (this.datauri.length === 0)
+    {
+      var tmpcanvas = document.createElement("canvas");
+      tmpcanvas.width = this.width;
+      tmpcanvas.height = this.height;
+      var tmpctx = tmpcanvas.getContext("2d");
+      if (this.spritesheeted)
+      {
+        tmpctx.drawImage(this.texture_img, this.offx, this.offy, this.width, this.height,
+                      0, 0, this.width, this.height);
+      }
+      else
+      {
+        tmpctx.drawImage(this.texture_img, 0, 0, this.width, this.height);
+      }
+      this.datauri = tmpcanvas.toDataURL("image/png");
+    }
+    return this.datauri;
+  };
+
+  // types = runtime.types_by_index.filter((x) =>
+  //   x.behaviors.some(
+  //     (y) => y.behavior instanceof cr.behaviors.aekiro_button
+  //   )
+  // );
+
+  var anim, frame, animobj, frameobj, wt, uv;
+  var i, leni, j, lenj;
+
+  let spritePlugin = runtime.types_by_index.filter((x) =>
+    x.plugin instanceof cr.plugins_.Sprite &&
+    x.all_frames &&
+    x.all_frames.some(frame => frame.texture_file && frame.texture_file.includes("menubutton")) &&
+    x.instances.some(
+      (y) => y.uiType === "button"
+    )
+  )[0];
+
+  // let spritePlugin = types[0].instances[7].type; //probably find a better call for this bc of version differences
+
+  spritePlugin.animations.push({})
+
+  anim = x;
+  console.log(anim)
+  animobj = {};
+  animobj.name = anim[0];
+  animobj.speed = anim[1];
+  animobj.loop = anim[2];
+  animobj.repeatcount = anim[3];
+  animobj.repeatto = anim[4];
+  animobj.pingpong = anim[5];
+  animobj.sid = anim[6];
+  animobj.frames = [];
+  for (j = 0, lenj = anim[7].length; j < lenj; j++)
+  {
+    frame = anim[7][j];
+    frameobj = {};
+    frameobj.texture_file = frame[0];
+    frameobj.texture_filesize = frame[1];
+    frameobj.offx = frame[2];
+    frameobj.offy = frame[3];
+    frameobj.width = frame[4];
+    frameobj.height = frame[5];
+    frameobj.duration = frame[6];
+    frameobj.hotspotX = frame[7];
+    frameobj.hotspotY = frame[8];
+    frameobj.image_points = frame[9];
+    frameobj.poly_pts = frame[10];
+    frameobj.pixelformat = frame[11];
+    frameobj.spritesheeted = (frameobj.width !== 0);
+    frameobj.datauri = "";		// generated on demand and cached
+    frameobj.getDataUri = frame_getDataUri;
+    uv = {};
+    uv.left = 0;
+    uv.top = 0;
+    uv.right = 1;
+    uv.bottom = 1;
+    frameobj.sheetTex = uv;
+    frameobj.webGL_texture = null;
+    wt = runtime.findWaitingTexture(frame[0]);
+    if (wt)
+    {
+      frameobj.texture_img = wt;
+    }
+    else
+    {
+      frameobj.texture_img = new Image();
+      frameobj.texture_img.cr_src = frame[0];
+      frameobj.texture_img.cr_filesize = frame[1];
+      frameobj.texture_img.c2webGL_texture = null;
+      frameobj.texture_img.onload = (function(f) {
+        return function() {
+          f.webGL_texture = runtime.glwrap.loadTexture(f.texture_img, true, runtime.linearSampling, f.pixelformat);
+          console.log("Loaded texture: " + f.texture_img.cr_src);
+          let y = [
+              [
+                 //bascially find the x position of the Reload button in the Pause menu, and adjust relative to that
+                  runtime.layouts["Level 1"].layers.find(function(a) {return "Overlay" === a.name}).initial_instances.find(item => JSON.stringify(item).includes("Reload"))[0][0] + 70,
+                  38,
+                  0,
+                  64,
+                  64,
+                  0,
+                  0,
+                  1,
+                  0.5,
+                  0.5,
+                  0,
+                  0,
+                  []
+              ],
+              spritePlugin.index,
+              3104, // check this too maybe
+              [
+                  [
+                      0
+                  ],
+                  [
+                      1
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      ""
+                  ],
+                  [
+                      ""
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      0
+                  ]
+              ],
+              [
+                  [
+                      1,
+                      "1",
+                      "2",
+                      "",
+                      "Click",
+                      1,
+                      "Hover",
+                      1,
+                      "Menu > Modloader",
+                      ""
+                  ],
+                  [
+                      ""
+                  ],
+                  [
+                      0,
+                      0,
+                      0,
+                      0,
+                      1
+                  ],
+                  [
+                      "",
+                      ""
+                  ]
+              ],
+              [
+                  0,
+                  "Modloader",
+                  0,
+                  1
+              ]
+          ]
+
+          let y1 = [
+              [
+                  38,
+                  38,
+                  0,
+                  64,
+                  64,
+                  0,
+                  0,
+                  1,
+                  0.5,
+                  0.5,
+                  0,
+                  0,
+                  []
+              ],
+              spritePlugin.index,
+              3104,
+              [
+                  [
+                      0
+                  ],
+                  [
+                      1
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      ""
+                  ],
+                  [
+                      ""
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      0
+                  ],
+                  [
+                      0
+                  ]
+              ],
+              [
+                  [
+                      1,
+                      "1",
+                      "2",
+                      "",
+                      "Click",
+                      1,
+                      "Hover",
+                      1,
+                      "Menu > Modloader",
+                      ""
+                  ],
+                  [
+                      ""
+                  ],
+                  [
+                      0,
+                      0,
+                      0,
+                      0,
+                      1
+                  ],
+                  [
+                      "",
+                      ""
+                  ]
+              ],
+              [
+                  0,
+                  "Modloader",
+                  0,
+                  1
+              ]
+          ]
+
+          // pauseLayer.startup_initial_instances.push(y);
+          // pauseLayer.initial_instances.push(y);
+
+          // runtime.trigger(inst.type.plugin.cnds.OnCreated, inst);
+          // // inst.onCreate();
+          // runtime.redraw = true
+
+          runtime.layouts_by_index.forEach(layout => {
+            layout.layers.forEach(layer => {
+              if (layer.name === "Pause") {
+                layer.startup_initial_instances.push(y);
+                layer.initial_instances.push(y);
+              }
+            });
+            if (layout.sheetname === "Main Menu") {
+              layout.layers.forEach(layer => {
+                if (layer.name === "Layer 1") {
+                  layer.startup_initial_instances.push(y1);
+                  layer.initial_instances.push(y1);
+                }
+                if(layout.name === "Level Menu" && layer.name === "Layer 0") {
+                  layer.startup_initial_instances.push(y1);
+                  layer.initial_instances.push(y1);
+                }
+              });
+            }
+          });
+          runtime.changelayout = runtime.running_layout; //to fix not rendering
+          // let pauseLayer = runtime.running_layout.layers.find(function(a) {return "Layer 1" === a.name})
+
+          // let inst = runtime.createInstance(spritePlugin, pauseLayer, 38, 38); //228, -61
+          // inst.width = 64;
+          // inst.height = 64;
+          // inst.instance_vars[4] = 'Modloader'
+          // inst.properties[1] = 'Modloader'
+          // inst.behavior_insts[0].callbackName = "Menu > Pause"
+          // inst.behavior_insts[2].properties[4] = 1;
+
+          // inst.set_bbox_changed();
+          // cr.plugins_.Sprite.prototype.acts.SetAnim.call(inst, "Modloader"); // or specify animation name if needed
+
+
+          
+        };
+      })(frameobj);
+
+      frameobj.texture_img.onerror = function() {
+        console.error("fail " + frame[0]);
+      };
+
+      frameobj.texture_img.src = frame[0];
+      // runtime.waitForImageLoad(frameobj.texture_img, frame[0]);
+    }
+    cr.seal(frameobj);
+    animobj.frames.push(frameobj);
+    spritePlugin.all_frames.push(frameobj);
+  }
+  cr.seal(animobj);
+  console.log(animobj)
+  console.log(spritePlugin.animations.length)
+  spritePlugin.animations[spritePlugin.animations.length - 1] = animobj;		// swap array data for object
 }
