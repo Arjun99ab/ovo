@@ -1,6 +1,71 @@
 {
     "version": "2.2.2",
     "settings": {
+        
+        "maxspeed": {
+            "name": "Max Speed",
+            "desc": "The maximum speed of the player.",
+            "platform": ["pc", "mobile"],
+            "version": ["1.4", "1.4.4", "CTLE"],
+            "tags": ["player"],
+            "setting": {
+                "type": "slider",
+                "min": 0,
+                "max": 10000,
+                "increment": 10
+            },
+            "defaultSettings": {
+                "value": 330
+            }
+        },
+        "jumpstrength": {
+            "name": "Jump Strength",
+            "desc": "The strength of the player's jump.",
+            "platform": ["pc", "mobile"],
+            "version": ["1.4", "1.4.4", "CTLE"],
+            "tags": ["player"],
+            "setting": {
+                "type": "slider",
+                "min": 0,
+                "max": 100,
+                "increment": 1
+            },
+            "defaultSettings": {
+                "value": 10
+            }
+        },
+        "deceleration": {
+            "name": "Deceleration",
+            "desc": "The deceleration of the player..",
+            "platform": ["pc", "mobile"],
+            "version": ["1.4", "1.4.4", "CTLE"],
+            "tags": ["player"],
+            "setting": {
+                "type": "slider",
+                "min": 1,
+                "max": 100,
+                "increment": 1
+            },
+            "defaultSettings": {
+                "value": 10
+            }
+        },
+        "maxfallspeed": {
+            "name": "Max Fall Speed",
+            "desc": "The maximum fall speed of the player.",
+            "platform": ["pc", "mobile"],
+            "version": ["1.4", "1.4.4", "CTLE"],
+            "tags": ["player"],
+            "setting": {
+                "type": "slider",
+                "min": 1,
+                "max": 100,
+                "increment": 1
+            },
+            "defaultSettings": {
+                "value": 10
+            }
+        }
     },
     "skins": {
         "": {

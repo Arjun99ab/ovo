@@ -73,15 +73,59 @@ for(const action of Object.values(runtime.actsBySid)) {
 }
 
 // WORKING SETTINGS
-let map = new WeakMap()
 // let runtime = cr_getC2Runtime()
+
+let modification_map = new WeakMap()
+let original_map = new WeakMap()
+
+function customSetMaxSpeed(...args) {
+	let original = cr.behaviors.Platform.prototype.acts.SetMaxSpeed
+	args[0] = customSetMaxSpeed.value;
+	original.apply(this, args)
+}
+
+modification_map.set(cr.behaviors.Platform.prototype.acts.SetMaxSpeed, function (action) {
+	customSetMaxSpeed.value = 10000;
+	action.func = customSetMaxSpeed;
+})
+
+
+for(const action of Object.values(runtime.actsBySid)) {
+    if (modification_map.has(action.func)) {
+		console.log(modification_map, action)
+		modification_map.get(action.func)(action)
+	}
+}
+
+
+original_map.set(customSetMaxSpeed, function(action) {
+  	action.func = cr.behaviors.Platform.prototype.acts.SetMaxSpeed
+})
+
+for(const action of Object.values(runtime.actsBySid)) {
+	if (original_map.has(action.func)) {
+		console.log(original_map, action)
+		original_map.get(action.func)(action)
+	}
+}
+//back to original settings, remove custom function from maps
+modification_map.delete(cr.behaviors.Platform.prototype.acts.SetMaxSpeed)
+original_map.delete(customSetMaxSpeed)
+
+
+
+
+
 map.set(cr.behaviors.Platform.prototype.acts.SetMaxSpeed, function (action) {
   let old = action.func
-  action.func = function (...args) {
-	args[0] = 10000;
-	old.apply(this, args)
-  }
+  action.func = customSetMaxSpeed;
 })
+for(const action of Object.values(runtime.actsBySid)) {
+    if (map.has(action.func)) {
+		console.log(map, action)
+		map.get(action.func)(action)
+	}
+}
 map.set(cr.behaviors.Platform.prototype.acts.SetDeceleration, function (action) {
   let old = action.func
   action.func = function (...args) {

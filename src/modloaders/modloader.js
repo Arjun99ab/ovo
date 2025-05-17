@@ -11,6 +11,7 @@ import {renderReplaysMenu} from './util/pages/replays/render.js';
 import { useSkin } from './util/pages/skins/utils.js';
 
 import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createCallFunctionHook } from './util/hooks.js';
+import { renderSettingsMenu } from './util/pages/settings/render.js';
 
 //constants constants!!!
 export let version = VERSION.version();
@@ -76,43 +77,6 @@ export let runtime;
     let map2 = null;
 
     let customModNum = 0;
-
-      
-
-    
-    
-    
-
-
-
-    
-
-
-    
-    
-    
-
-    
-
-    
-
-
-
-
-
-
-
-
-
-  //Create background div
-  
-  
-
-
-    
-
-    
-
     
     let createNavButton = (id, text, width) => {
       let menuButton = document.createElement("div");
@@ -147,11 +111,6 @@ export let runtime;
     }
 
     
-
-    
-
-
-
     let createModLoaderMenuBtn = () => {
       let menuButton = document.createElement("button");
       let c = {
@@ -374,10 +333,19 @@ export let runtime;
       }
       let settingsButton = createNavButton("nav-settings-btn", "Settings", "13vw");
       settingsButton.onclick = function() {
+        // searchBar.blur()
+        // document.getElementById("menu-bg").style.pointerEvents = "none";
+        // document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        // createNotifyModal("Settings are not available yet.");
+        setFilter("all");
+        searchBar.disabled = false;
         searchBar.blur()
-        document.getElementById("menu-bg").style.pointerEvents = "none";
-        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-        createNotifyModal("Settings are not available yet.");
+        let elements = document.getElementsByClassName('nav-button');
+        for(let i = 0; i < elements.length; i++) {
+          elements[i].style.backgroundColor = 'white';
+        }
+        settingsButton.style.backgroundColor = "lightblue";
+        renderSettingsMenu(sectionDiv);
       }
 
       let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "13vw");
@@ -846,30 +814,30 @@ export let runtime;
                   freshUserConfig['settings'][key] = backendConfig["settings"][key]['defaultSettings'];
                 } else {
                   console.log(key)
-                  if (backendConfig['settings'][key]['defaultSettings']['settings'] !== null) {
-                    let backendSettingSettings = Object.keys(backendConfig['settings'][key]['defaultSettings']['settings'])
-                    if (userConfig['settings'][key]['settings'] === null) {
-                      userConfig['settings'][key]['settings'] = {}
+                  if (backendConfig['settings'][key]['defaultSettings'] !== null) {
+                    let backendSettingSettings = Object.keys(backendConfig['settings'][key]['defaultSettings'])
+                    if (userConfig['settings'][key] === null) {
+                      userConfig['settings'][key] = {}
                     }
-                    let userSettingSettings = Object.keys(userConfig['settings'][key]['settings'])
+                    let userSettingSettings = Object.keys(userConfig['settings'][key])
                     if(!arraysEqual(backendSettingSettings, userSettingSettings)) {
                       let newSettings = backendSettingSettings.filter(x => !userSettingSettings.includes(x))
                       let badSettings = userSettingSettings.filter(x => !backendSettingSettings.includes(x))
                       for(const setting of newSettings) {
-                        userConfig['settings'][key]['settings'][setting] = backendConfig['settings'][key]['defaultSettings']['settings'][setting]
+                        userConfig['settings'][key] = backendConfig['settings'][key]['defaultSettings']
                       }
                       for(const setting of badSettings) {
-                        delete userConfig['settings'][key]['settings'][setting]
+                        delete userConfig['settings'][key]
                       }
                     }
                   }
-                  freshUserConfig['setting'][key] = userConfig['setting'][key];
+                  freshUserConfig['settings'][key] = userConfig['settings'][key];
                 }
             }
 
               for(const [key] of Object.entries(backendConfig['settings'])) {
                   if(userConfig['settings'][key] === undefined) {
-                      freshUserConfig['settings'][key] = backendConfig['settings'][key];
+                      freshUserConfig['settings'][key] = backendConfig['settings'][key]['defaultSettings'];
                   } else {
                     // console.log('SDHUIOFASDHUO');
                       freshUserConfig['settings'][key] = userConfig['settings'][key];
@@ -1109,14 +1077,12 @@ export let runtime;
           skinFilters = Array.from(skinFilters);
 
           settingFilters.add('all');
-          settingFilters.add('favorite');
-          settingFilters.add('custom');
-          for (const [key] of Object.entries(backendConfig['skins'])) {
-            for(let i = 0; i < backendConfig["skins"][key]['tags'].length; i++) {
-              settingFilters.add(backendConfig["skins"][key]['tags'][i]);
+          for (const [key] of Object.entries(backendConfig['settings'])) {
+            for(let i = 0; i < backendConfig["settings"][key]['tags'].length; i++) {
+              settingFilters.add(backendConfig["settings"][key]['tags'][i]);
             }
           }
-          settingFilters = Array.from(skinFilters);
+          settingFilters = Array.from(settingFilters);
 
           // for replay system
           let js = document.createElement("script");

@@ -503,8 +503,8 @@ let addModloaderButtonTexture = () => {
     12341234214, //sid --
     [
         [
-            "../src/img/modloader/menubutton64.png", //texture file --
-            176, //texture filesize --
+            "../src/img/modloader/menubuttonanim.png", //texture file --
+            1796, //texture filesize --
             0, //offx --
             0, //offy --
             64, //width
@@ -523,9 +523,9 @@ let addModloaderButtonTexture = () => {
             0 // pixelformat
         ],
         [
-            "../src/img/modloader/menubutton64.png", //texture file --
-            176, //texture filesize --
-            0, //offx --
+            "../src/img/modloader/menubuttonanim.png", //texture file --
+            1796, //texture filesize --
+            66, //offx --
             0, //offy --
             64, //width
             64, //height
@@ -543,8 +543,8 @@ let addModloaderButtonTexture = () => {
             0 // pixelformat
         ],
         [
-            "../src/img/modloader/menubutton64.png", //texture file --
-            176, //texture filesize --
+            "../src/img/modloader/menubuttonanim.png", //texture file --
+            1796, //texture filesize --
             0, //offx --
             0, //offy --
             64, //width

@@ -1,6 +1,5 @@
 import {backendConfig, filters, version} from '../../../modloader.js';
 import {detectDeviceType} from "../../utils.js";
-import {createMenuCard} from './cards.js';
 export {createFilterButton, currentFilter, setFilter}
 
 let currentFilter = 'all';
