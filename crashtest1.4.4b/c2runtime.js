@@ -4388,6 +4388,11 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			type_inst.extra = {};
 			type_inst.toString = cr.type_toString;
 			type_inst.behaviors = [];
+			// console.log(type_inst, type_inst.texture_file, m);
+			if(type_inst.index == 51) {
+				console.log(type_inst, type_inst.texture_file);
+				console.log(m);
+			}
 			for (j = 0, lenj = m[8].length; j < lenj; j++)
 			{
 				b = m[8][j];
@@ -4443,6 +4448,10 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			type_inst.tile_poly_data = m[13];
 			if (!this.uses_loader_layout || type_inst.is_family || type_inst.isOnLoaderLayout || !plugin.is_world)
 			{
+				if(type_inst.index == 51) {
+					console.log(type_inst, type_inst.texture_file);
+					console.log(m);
+				}
 				type_inst.onCreate();
 				cr.seal(type_inst);
 			}
@@ -4451,6 +4460,10 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			this.types_by_index.push(type_inst);
 			if (plugin.singleglobal)
 			{
+				if(type_inst.index == 51) {
+					console.log(type_inst, type_inst.texture_file);
+					console.log(m);
+				}
 				var instance = new plugin.Instance(type_inst);
 				instance.uid = this.next_uid++;
 				instance.puid = this.next_puid++;
@@ -4518,6 +4531,10 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 				for (j = 0, lenj = t.effect_types.length; j < lenj; j++)
 					t.effect_types[j].index = j;
 			}
+		}
+		console.log("hih")
+		if(type_inst.index == 51) {
+			console.log(type_inst.default_instance)
 		}
 		for (i = 0, len = pm[5].length; i < len; i++)
 		{
@@ -26697,6 +26714,7 @@ cr.plugins_.Sprite = function(runtime)
 		for (i = 0, leni = this.animations.length; i < leni; i++)
 		{
 			anim = this.animations[i];
+			// console.log(this, anim)
 			animobj = {};
 			animobj.name = anim[0];
 			animobj.speed = anim[1];
@@ -30060,6 +30078,8 @@ cr.plugins_.TiledBg = function(runtime)
 	{
 		if (this.is_family)
 			return;
+		console.log("hello??")
+
 		this.texture_img = new Image();
 		this.texture_img.cr_filesize = this.texture_filesize;
 		this.runtime.waitForImageLoad(this.texture_img, this.texture_file);
@@ -40091,7 +40111,7 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Acts.prototype.SetMaxFallSpeed = function (mfs)
 	{
-		console.log("maxfallspeed")
+		// console.log("maxfallspeed")
 		this.maxFall = mfs;
 		if (this.maxFall < 0)
 			this.maxFall = 0;
@@ -40181,7 +40201,7 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Exps.prototype.Gravity = function (ret)
 	{
-		console.log("gravity exp", ret, this.g)
+		// console.log("gravity exp", ret, this.g)
 		ret.set_float(this.g);
 	};
 	Exps.prototype.GravityAngle = function (ret)

@@ -392,18 +392,19 @@ let addSkin = (skinId, templateId, url, data_response) => {
   // familytype.members.push(familymember);
 
 
-  for (let i = 0, len = pm[28].length; i < len; i++)
-  {
-      var containerdata = pm[28][i];
-      var containertypes = [];
-      for (let j = 0, lenj = containerdata.length; j < lenj; j++)
-          containertypes.push(runtime.types_by_index[containerdata[j]]);
-      for (let j = 0, lenj = containertypes.length; j < lenj; j++)
-      {
-          containertypes[j].is_contained = true;
-          containertypes[j].container = containertypes;
-      }
-  }
+  // for (let i = 0, len = pm[28].length; i < len; i++)
+  // {
+  //   console.log(pm[28][i])
+  //     var containerdata = pm[28][i];
+  //     var containertypes = [];
+  //     for (let j = 0, lenj = containerdata.length; j < lenj; j++)
+  //         containertypes.push(runtime.types_by_index[containerdata[j]]);
+  //     for (let j = 0, lenj = containertypes.length; j < lenj; j++)
+  //     {
+  //         containertypes[j].is_contained = true;
+  //         containertypes[j].container = containertypes;
+  //     }
+  // }
 
 
   let i = index

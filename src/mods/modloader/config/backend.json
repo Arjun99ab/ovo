@@ -647,6 +647,23 @@
     },
     "mods": 
     {        
+        "leveleditor": {
+            "name": "Editor",
+            "author": "Awesomeguy",
+            "desc": "For debugging without devtools.",
+            "url": "../src/mods/modloader/custom-ovo-level-editor.js",
+            "icon": "../src/img/mods/terminal.png",
+            "platform": ["mobile", "pc"],
+            "version": ["1.4", "1.4.4", "CTLE"],
+            "tags": ["visual"],
+            "reload": false,
+            "settings": null,
+            "defaultSettings": {
+                "settings": null,
+                "favorite": false,
+                "enabled": false
+            }
+        },
         "console": {
             "name": "Console",
             "author": "Awesomeguy",
@@ -1291,7 +1308,7 @@
             "url": "../src/mods/modloader/community.js",
             "icon": "../src/img/mods/community.png",
             "platform": ["pc"],
-            "version": ["CTLE"],
+            "version": ["1.4.4", "CTLE"],
             "tags": ["fun"],
             "reload": false,
             "settings": {
