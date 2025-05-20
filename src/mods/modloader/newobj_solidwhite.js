@@ -1,7 +1,14 @@
+//need to add
+// families
+// family_beh_map
+// family_fx_map
+// family_var_map
+
+
 
 let m = [
     "t69",
-    16, //ctle: 13, ct1.4: 16, - needs to be adjusted based on plugin index of game version
+    13, //ctle: 13, ct1.4: 16, - needs to be adjusted based on plugin index of game version
     false,
     [],
     1,
@@ -55,11 +62,11 @@ var type_inst = new plugin.Type(plugin);
 
 type_inst.name = m[0];
 type_inst.is_family = m[2];
-type_inst.instvar_sids = [987654321987654321] //m[3].slice(0);
+type_inst.instvar_sids = [] //m[3].slice(0);
 type_inst.vars_count = m[3].length;
 type_inst.behs_count = m[4];
 type_inst.fx_count = m[5];
-type_inst.sid = [123456789123456789] //m[11];
+type_inst.sid = m[11]; //m[11];
 if (type_inst.is_family)
 {
     type_inst.members = [];				// types in runtime family
@@ -200,6 +207,15 @@ if (plugin.singleglobal)
     type_inst.instances.push(instance);
     runtime.objectsByUid[instance.uid.toString()] = instance;
 }
+
+let solidmove = runtime.types_by_index.find(
+          (x) =>
+            x.name === "SolidMove" ||
+            (x.plugin instanceof cr.plugins_.TiledBg &&
+              x.texture_file &&
+              x.texture_file.includes("/solidmove.png"))
+        );
+
 // i = 7
 // j = 15
 // var familydata = pm[4][i];
@@ -227,7 +243,11 @@ if (plugin.singleglobal)
 //         containertypes[j].container = containertypes;
 //     }
 // }
+type_inst.families.push(cr.shallowCopy({}, solidmove.families[0]))
+type_inst.families.push(cr.shallowCopy({}, solidmove.families[1]))
 
+solidmove.families[0].members.push(type_inst)
+solidmove.families[1].members.push(type_inst)
 
 let i = index
 let t = runtime.types_by_index[i];

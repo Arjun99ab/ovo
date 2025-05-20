@@ -4388,7 +4388,7 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			type_inst.extra = {};
 			type_inst.toString = cr.type_toString;
 			type_inst.behaviors = [];
-			// console.log(type_inst, type_inst.texture_file, m);
+			console.log(type_inst, type_inst.texture_file, m);
 			if(type_inst.index == 51) {
 				console.log(type_inst, type_inst.texture_file);
 				console.log(m);
