@@ -855,7 +855,7 @@ let addModloaderButtonTexture = () => {
 
           runtime.layouts_by_index.forEach(layout => {
             layout.layers.forEach(layer => {
-              if (layer.name === "Pause") {
+              if (layer.name === "Pause" || layer.name === "End Game" || layer.name === "End Card") {
                 layer.startup_initial_instances.push(y);
                 layer.initial_instances.push(y);
               }

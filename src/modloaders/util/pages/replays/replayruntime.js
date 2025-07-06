@@ -172,7 +172,7 @@
           });
           let ghostArr = ghostArrType.instances[0];
           ghostArr.setSize(0, ghostArr.cy, ghostArr.cz);
-          runtime.eventsheets.Player.events[2].subevents[2].subevents[1].actions.length = 0;
+          runtime.eventsheets.Player.events.at(-1).subevents[2].subevents[1].actions.length = 0;
       },
 
       createGhostPlayer(data) {

@@ -333,19 +333,19 @@ export let runtime;
       }
       let settingsButton = createNavButton("nav-settings-btn", "Settings", "13vw");
       settingsButton.onclick = function() {
-        // searchBar.blur()
-        // document.getElementById("menu-bg").style.pointerEvents = "none";
-        // document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-        // createNotifyModal("Settings are not available yet.");
-        setFilter("all");
-        searchBar.disabled = false;
         searchBar.blur()
-        let elements = document.getElementsByClassName('nav-button');
-        for(let i = 0; i < elements.length; i++) {
-          elements[i].style.backgroundColor = 'white';
-        }
-        settingsButton.style.backgroundColor = "lightblue";
-        renderSettingsMenu(sectionDiv);
+        document.getElementById("menu-bg").style.pointerEvents = "none";
+        document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+        createNotifyModal("Settings are not available yet.");
+        // setFilter("all");
+        // searchBar.disabled = false;
+        // searchBar.blur()
+        // let elements = document.getElementsByClassName('nav-button');
+        // for(let i = 0; i < elements.length; i++) {
+        //   elements[i].style.backgroundColor = 'white';
+        // }
+        // settingsButton.style.backgroundColor = "lightblue";
+        // renderSettingsMenu(sectionDiv);
       }
 
       let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "13vw");
