@@ -74,7 +74,7 @@
             "desc": "The default skin.",
             "url": "../src/skins/default.png",
             "icon": "../src/skins/icons/default.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "default",
             "defaultSettings": {
@@ -88,7 +88,7 @@
             "desc": "",
             "url": "../src/skins/electrical.png",
             "icon": "../src/skins/icons/electrical.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "elec",
             "defaultSettings": {
@@ -102,7 +102,7 @@
             "desc": "",
             "url": "../src/skins/pole.png",
             "icon": "../src/skins/icons/pole.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "pole",
             "defaultSettings": {
@@ -116,7 +116,7 @@
             "desc": "",
             "url": "../src/skins/frank.png",
             "icon": "../src/skins/icons/frank.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "frank",
             "defaultSettings": {
@@ -130,7 +130,7 @@
             "desc": "",
             "url": "../src/skins/ovoplus.png",
             "icon": "../src/skins/icons/ovoplus.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "ovo++",
             "defaultSettings": {
@@ -144,7 +144,7 @@
             "desc": "",
             "url": "../src/skins/knight.png",
             "icon": "../src/skins/icons/knight.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "knight",
             "defaultSettings": {
@@ -158,7 +158,7 @@
             "desc": "",
             "url": "../src/skins/dknight.png",
             "icon": "../src/skins/icons/dknight.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "dknight",
             "defaultSettings": {
@@ -172,7 +172,7 @@
             "desc": "",
             "url": "../src/skins/lknight.png",
             "icon": "../src/skins/icons/lknight.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "lknight",
             "defaultSettings": {
@@ -186,7 +186,7 @@
             "desc": "",
             "url": "../src/skins/astronaut.png",
             "icon": "../src/skins/icons/astronaut.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "astronaut",
             "defaultSettings": {
@@ -200,7 +200,7 @@
             "desc": "",
             "url": "../src/skins/alien.png",
             "icon": "../src/skins/icons/alien.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "alien",
             "defaultSettings": {
@@ -214,7 +214,7 @@
             "desc": "",
             "url": "../src/skins/erigato.png",
             "icon": "../src/skins/icons/erigato.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "erigato",
             "defaultSettings": {
@@ -228,7 +228,7 @@
             "desc": "",
             "url": "../src/skins/batter.png",
             "icon": "../src/skins/icons/batter.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "batter",
             "defaultSettings": {
@@ -242,7 +242,7 @@
             "desc": "",
             "url": "../src/skins/ada.png",
             "icon": "../src/skins/icons/ada.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "ada",
             "defaultSettings": {
@@ -256,7 +256,7 @@
             "desc": "",
             "url": "../src/skins/thefall.png",
             "icon": "../src/skins/icons/thefall.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "thefall",
             "defaultSettings": {
@@ -270,7 +270,7 @@
             "desc": "",
             "url": "../src/skins/pulse.png",
             "icon": "../src/skins/icons/pulse.png",
-            "version": ["1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "pulse",
             "defaultSettings": {
@@ -284,7 +284,7 @@
             "desc": "",
             "url": "../src/skins/materwelon.png",
             "icon": "../src/skins/icons/materwelon.png",
-            "version": ["1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "materwelon",
             "defaultSettings": {
@@ -298,7 +298,7 @@
             "desc": "",
             "url": "../src/skins/fl1ckd.png",
             "icon": "../src/skins/icons/fl1ckd.png",
-            "version": [ "1.4.3", "1.4.4"],
+            "version": [ "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "fl1ckd",
             "defaultSettings": {
@@ -312,7 +312,7 @@
             "desc": "",
             "url": "../src/skins/theliljoker.png",
             "icon": "../src/skins/icons/theliljoker.png",
-            "version": ["1.4.3", "1.4.4"],
+            "version": ["1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "theliljoker",
             "defaultSettings": {
@@ -326,7 +326,7 @@
             "desc": "",
             "url": "../src/skins/amongus.png",
             "icon": "../src/skins/icons/amongus.png",
-            "version": ["1.4.3", "1.4.4"],
+            "version": ["1.4.3", "1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "amongus",
             "defaultSettings": {
@@ -340,7 +340,7 @@
             "desc": "",
             "url": "../src/skins/french.png",
             "icon": "../src/skins/icons/french.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "french",
             "defaultSettings": {
@@ -354,7 +354,7 @@
             "desc": "",
             "url": "../src/skins/english.png",
             "icon": "../src/skins/icons/english.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "english",
             "defaultSettings": {
@@ -368,7 +368,7 @@
             "desc": "",
             "url": "../src/skins/spanish.png",
             "icon": "../src/skins/icons/spanish.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "spanish",
             "defaultSettings": {
@@ -382,7 +382,7 @@
             "desc": "",
             "url": "../src/skins/brazilian.png",
             "icon": "../src/skins/icons/brazilian.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "brazilian",
             "defaultSettings": {
@@ -396,7 +396,7 @@
             "desc": "",
             "url": "../src/skins/cmg.png",
             "icon": "../src/skins/icons/cmg.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "cmg",
             "defaultSettings": {
@@ -410,21 +410,63 @@
             "desc": "",
             "url": "../src/skins/shyguy.png",
             "icon": "../src/skins/icons/shyguy.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["official"],
             "replaces": "shyguy",
             "defaultSettings": {
                 "favorite": false,
                 "using": false
             }
-        },  
+        },
+        "ctd": {
+            "name": "CoolTasDude",
+            "author": "CoolTasDude",
+            "desc": "",
+            "url": "../src/skins/ctd.png",
+            "icon": "../src/skins/icons/ctd.png",
+            "version": ["1.4.5"],
+            "tags": ["official"],
+            "replaces": "ctd",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "annihilazer": {
+            "name": "Annihilazer",
+            "author": "Annihilazer",
+            "desc": "",
+            "url": "../src/skins/annihilazer.png",
+            "icon": "../src/skins/icons/annihilazer.png",
+            "version": ["1.4.5"],
+            "tags": ["official"],
+            "replaces": "annihilazer",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "ov": {
+            "name": "Ov",
+            "author": "CoolTasDude",
+            "desc": "",
+            "url": "../src/skins/ov.png",
+            "icon": "../src/skins/icons/ov.png",
+            "version": ["1.4.5"],
+            "tags": ["official"],
+            "replaces": "ov",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },   
         "xmaselec": {
             "name": "Xmas Electrical",
             "author": "Awesovven",
             "desc": "Christmas Electric made for @Plant",
             "url": "../src/skins/xmaselec.png",
             "icon": "../src/skins/icons/xmaselec.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "english",
             "defaultSettings": {
@@ -438,7 +480,7 @@
             "desc": "",
             "url": "../src/skins/grunt.png",
             "icon": "../src/skins/icons/grunt.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "cmg",
             "defaultSettings": {
@@ -452,7 +494,7 @@
             "desc": "Speedrun!",
             "url": "../src/skins/dream.png",
             "icon": "../src/skins/icons/dream.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "shyguy",
             "defaultSettings": {
@@ -466,7 +508,7 @@
             "desc": "Legends never die.",
             "url": "../src/skins/technoblade.png",
             "icon": "../src/skins/icons/technoblade.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "erigato",
             "defaultSettings": {
@@ -480,7 +522,7 @@
             "desc": "",
             "url": "../src/skins/skeppyplant.png",
             "icon": "../src/skins/icons/skeppyplant.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "shyguy",
             "defaultSettings": {
@@ -494,7 +536,7 @@
             "desc": "",
             "url": "../src/skins/mario.png",
             "icon": "../src/skins/icons/mario.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "erigato",
             "defaultSettings": {
@@ -508,7 +550,7 @@
             "desc": "",
             "url": "../src/skins/goldenpole.png",
             "icon": "../src/skins/icons/goldenpole.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "pole",
             "defaultSettings": {
@@ -522,7 +564,7 @@
             "desc": "",
             "url": "../src/skins/goldenovoplus.png",
             "icon": "../src/skins/icons/goldenovoplus.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "ovo+",
             "defaultSettings": {
@@ -536,7 +578,7 @@
             "desc": "",
             "url": "../src/skins/goldenerigato.png",
             "icon": "../src/skins/icons/goldenerigato.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "erigato",
             "defaultSettings": {
@@ -550,7 +592,7 @@
             "desc": "",
             "url": "../src/skins/goldenknight.png",
             "icon": "../src/skins/icons/goldenknight.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "knight",
             "defaultSettings": {
@@ -564,7 +606,7 @@
             "desc": "",
             "url": "../src/skins/kirby.png",
             "icon": "../src/skins/icons/kirby.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "ada",
             "defaultSettings": {
@@ -578,7 +620,7 @@
             "desc": "",
             "url": "../src/skins/goldenfrank.png",
             "icon": "../src/skins/icons/goldenfrank.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "frank",
             "defaultSettings": {
@@ -592,7 +634,7 @@
             "desc": "",
             "url": "../src/skins/earth.png",
             "icon": "../src/skins/icons/earth.png",
-            "version": ["1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "pulse",
             "defaultSettings": {
@@ -606,7 +648,7 @@
             "desc": "",
             "url": "../src/skins/coffee.png",
             "icon": "../src/skins/icons/coffee.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "pole",
             "defaultSettings": {
@@ -620,7 +662,7 @@
             "desc": "",
             "url": "../src/skins/chronos.png",
             "icon": "../src/skins/icons/chronos.png",
-            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4"],
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "pole",
             "defaultSettings": {
@@ -634,7 +676,7 @@
             "desc": "with help from GCube and BlueFan77",
             "url": "../src/skins/minecraftsteve.png",
             "icon": "../src/skins/icons/minecraftsteve.png",
-            "version": ["1.4.4"],
+            "version": ["1.4.4", "1.4.5"],
             "tags": ["community"],
             "replaces": "french",
             "defaultSettings": {
