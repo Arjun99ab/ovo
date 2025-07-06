@@ -1,6 +1,6 @@
 import { runtime } from "../modloader.js"
 
-export {createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createCallFunctionHook}
+export {createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createCallFunctionHook }
 
 let createChangeLayoutHook = (eventName) => {
     let funcCode = runtime.doChangeLayout.toString();
@@ -64,17 +64,17 @@ let createDialogShowOverlayHook = (eventName) => {
 }
 
 let createButtonClickHook = (eventName) => {
-    let funcCode = cr.plugins_.aekiro_proui2.prototype.Instance.prototype.runCallback.toString();
-    let start = funcCode.indexOf('{') + 1;
-    let end = funcCode.lastIndexOf('}');
-    let body = funcCode.substring(start, end);
+    let originalButtonClick = cr.plugins_.aekiro_proui2.prototype.Instance.prototype.runCallback;
 
-    cr.plugins_.aekiro_proui2.prototype.Instance.prototype.runCallback = new Function("callbackName", "callbackParams", `
-        event = new Event("${eventName}");
-        window.dispatchEvent(event);
-        this.runCallback2(callbackName, callbackParams);`);
-
-    cr.plugins_.aekiro_proui2.prototype.Instance.prototype.runCallback2 = new Function("callbackName", "callbackParams", body);
+    cr.plugins_.aekiro_proui2.prototype.Instance.prototype.runCallback = function(...args) {
+        window.dispatchEvent(
+            new CustomEvent(eventName,  {
+                bubbles: true,
+                detail: { name: args[0], params: args[1] },
+            })
+        );
+        originalButtonClick.apply(this, args);
+    };
 }
 
 let createSaveHook = (eventName) => {
@@ -130,3 +130,19 @@ let createCallFunctionHook = (eventName) => {
     //     if (map.has(action.func)) map.get(action.func)(action)
     // }
 }
+
+//not a viable hook bc of stack overflow issues
+// let createc2_callFunctionHook = (eventName) => {
+//     let originalc2_callFunction = window["c2_callFunction"]
+
+//     window["c2_callFunction"] = function(...args) {
+//         window.dispatchEvent(
+//             new CustomEvent(eventName,  {
+//                 bubbles: true,
+//                 detail: { name: args[0], params: args[1] },
+//             })
+//         );
+//         window["c2_callFunction"].apply(this, args);
+//     };
+
+// }

@@ -4388,6 +4388,12 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			type_inst.extra = {};
 			type_inst.toString = cr.type_toString;
 			type_inst.behaviors = [];
+			console.log(type_inst, type_inst.texture_file, m);
+			if(i == 69) {
+				console.log(type_inst, type_inst.texture_file);
+				console.log(m)
+
+			}
 			for (j = 0, lenj = m[8].length; j < lenj; j++)
 			{
 				b = m[8][j];
@@ -4468,10 +4474,12 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 		{
 			var familydata = pm[4][i];
 			var familytype = this.types_by_index[familydata[0]];
+			console.log(i, familytype, familydata);
 			var familymember;
 			for (j = 1, lenj = familydata.length; j < lenj; j++)
 			{
 				familymember = this.types_by_index[familydata[j]];
+				console.log(i, j, familymember);
 				familymember.families.push(familytype);
 				familytype.members.push(familymember);
 			}

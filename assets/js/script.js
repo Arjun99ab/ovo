@@ -1,26 +1,27 @@
 var niceNames = {
   "crashtest144b": "1.4.4b",
-  "144": "1.4.4",
-  "14": "1.4",
-  "141": "1.4.1",
-  "142": "1.4.2",
-  "143": "1.4.3",
+  "v-144": "1.4.4",
+  "v-14": "1.4",
+  "v-141": "1.4.1",
+  "v-142": "1.4.2",
+  "v-143": "1.4.3",
   "reverse": "Reverse",
   "kaizo": "Kaizo",
   "crashtestleveleditor": "CrashTestLevelEditor",
-    "dimensions_qa_v3": "Dimensions Beta v3",
-    "dimensions_qa_v4": "Dimensions Beta v4",
-    "dimensions_qa_v7": "Dimensions Beta v7",
-    "dimensions_v101": "Dimensions v1.0.1"
+  "dimensions_qa_v3": "Dimensions Beta v3",
+  "dimensions_qa_v4": "Dimensions Beta v4",
+  "dimensions_qa_v7": "Dimensions Beta v7",
+  "dimensions_v101": "Dimensions v1.0.1"
 }
 
 var versionsDict = {
   "crashtest144b": "crashtest1.4.4b",
-  "144": "1.4.4",
-  "14": "1.4",
-  "141": "1.4.1",
-  "142": "1.4.2",
-  "143": "1.4.3",
+  "v-144": "1.4.4",
+  "v-14": "1.4",
+  "v-141": "1.4.1",
+  "v-142": "1.4.2",
+  "v-143": "1.4.3",
+  "v-145": "1.4.5",
 }
 
 

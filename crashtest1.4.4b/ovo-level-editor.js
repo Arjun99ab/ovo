@@ -293,8 +293,9 @@
         }
       ) => {
         if (!types.hasOwnProperty(type)) return;
-        console.log(type)
+        console.log(type, types[type])
         let inst = sdk_runtime.createInstance(types[type], layers[layer], x, y);
+        console.log(inst, width, layer)
         inst.width = width ?? inst.width;
         inst.height = height ?? inst.height;
         inst.angle = angle ?? inst.angle;

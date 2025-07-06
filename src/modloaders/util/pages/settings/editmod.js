@@ -1,6 +1,6 @@
 import { backendConfig } from "../../../modloader.js";
 import { createConfirmDeleteModal } from "../../modals.js";
-import { renderModsMenu } from "./render.js";
+import { renderSettingsMenu } from "./render.js";
 
 export {createEditModPopup}
 

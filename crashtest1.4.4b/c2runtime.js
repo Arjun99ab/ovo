@@ -4388,6 +4388,11 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			type_inst.extra = {};
 			type_inst.toString = cr.type_toString;
 			type_inst.behaviors = [];
+			console.log(type_inst, type_inst.texture_file, m);
+			if(type_inst.index == 51) {
+				console.log(type_inst, type_inst.texture_file);
+				console.log(m);
+			}
 			for (j = 0, lenj = m[8].length; j < lenj; j++)
 			{
 				b = m[8][j];
@@ -4443,6 +4448,10 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			type_inst.tile_poly_data = m[13];
 			if (!this.uses_loader_layout || type_inst.is_family || type_inst.isOnLoaderLayout || !plugin.is_world)
 			{
+				if(type_inst.index == 51) {
+					console.log(type_inst, type_inst.texture_file);
+					console.log(m);
+				}
 				type_inst.onCreate();
 				cr.seal(type_inst);
 			}
@@ -4451,6 +4460,10 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			this.types_by_index.push(type_inst);
 			if (plugin.singleglobal)
 			{
+				if(type_inst.index == 51) {
+					console.log(type_inst, type_inst.texture_file);
+					console.log(m);
+				}
 				var instance = new plugin.Instance(type_inst);
 				instance.uid = this.next_uid++;
 				instance.puid = this.next_puid++;
@@ -4518,6 +4531,10 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 				for (j = 0, lenj = t.effect_types.length; j < lenj; j++)
 					t.effect_types[j].index = j;
 			}
+		}
+		console.log("hih")
+		if(type_inst.index == 51) {
+			console.log(type_inst.default_instance)
 		}
 		for (i = 0, len = pm[5].length; i < len; i++)
 		{
@@ -20603,7 +20620,7 @@ cr.plugins_.Function = function(runtime)
 		var self = this;
 		window["c2_callFunction"] = function (name_, params_)
 		{
-			// console.log("c2_callFunction", name_, params_);
+			console.log("c2_callFunction", name_, params_) ;
 			var i, len, v;
 			var fs = pushFuncStack();
 			fs.name = name_.toLowerCase();
@@ -20634,7 +20651,7 @@ cr.plugins_.Function = function(runtime)
 	function Cnds() {};
 	Cnds.prototype.OnFunction = function (name_)
 	{
-		// console.log("OnFunction", name_);
+		console.log("OnFunction", name_);
 		var fs = getCurrentFuncStack();
 		if (!fs)
 			return false;
@@ -26697,6 +26714,7 @@ cr.plugins_.Sprite = function(runtime)
 		for (i = 0, leni = this.animations.length; i < leni; i++)
 		{
 			anim = this.animations[i];
+			// console.log(this, anim)
 			animobj = {};
 			animobj.name = anim[0];
 			animobj.speed = anim[1];
@@ -26792,6 +26810,7 @@ cr.plugins_.Sprite = function(runtime)
 	{
 		if (this.is_family || this.has_loaded_textures || !this.runtime.glwrap)
 			return;
+		console.log("[Sprite] loading textures for type: " + this.name);
 		var i, len, frame;
 		for (i = 0, len = this.all_frames.length; i < len; ++i)
 		{
@@ -27726,6 +27745,7 @@ cr.plugins_.Sprite = function(runtime)
 	};
 	Acts.prototype.SetAnim = function (animname, from)
 	{
+		// console.log("SetAnim: " + animname, from);
 		this.changeAnimName = animname;
 		this.changeAnimFrom = from;
 		if (!this.isTicking)
@@ -30058,6 +30078,8 @@ cr.plugins_.TiledBg = function(runtime)
 	{
 		if (this.is_family)
 			return;
+		console.log("hello??")
+
 		this.texture_img = new Image();
 		this.texture_img.cr_filesize = this.texture_filesize;
 		this.runtime.waitForImageLoad(this.texture_img, this.texture_file);
@@ -33845,12 +33867,15 @@ cr.plugins_.aekiro_proui2 = function (runtime) {
 		}
 	};*/
   instanceProto.runCallback = function (callbackName, callbackParams) {
+	console.log("proui", callbackName, callbackParams)
     if (callbackName == "") {
       return;
     }
     var params = callbackParams.split(",");
     var callFunction = window["c2_callFunction"];
+	console.log("hi chat")
     if (callFunction) {
+		console.log("has chat", callFunction)
       callFunction(callbackName, params);
     } else {
       console.error("ProUI : Please add the Function plugin to the project.");
@@ -40049,24 +40074,28 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Acts.prototype.SetAcceleration = function (acc)
 	{
+		console.log("accel")
 		this.acc = acc;
 		if (this.acc < 0)
 			this.acc = 0;
 	};
 	Acts.prototype.SetDeceleration = function (dec)
 	{
+		// console.log("decel")
 		this.dec = dec;
 		if (this.dec < 0)
 			this.dec = 0;
 	};
 	Acts.prototype.SetJumpStrength = function (js)
 	{
+		console.log("jumpstrength")
 		this.jumpStrength = js;
 		if (this.jumpStrength < 0)
 			this.jumpStrength = 0;
 	};
 	Acts.prototype.SetGravity = function (grav)
 	{
+		console.log("gravity")
 		if (this.g1 === grav)
 			return;		// no change
 		this.g = grav;
@@ -40082,6 +40111,7 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Acts.prototype.SetMaxFallSpeed = function (mfs)
 	{
+		// console.log("maxfallspeed")
 		this.maxFall = mfs;
 		if (this.maxFall < 0)
 			this.maxFall = 0;
@@ -40165,10 +40195,13 @@ cr.behaviors.Platform = function(runtime)
 	};
 	Exps.prototype.JumpStrength = function (ret)
 	{
+		// console.log("jumpstrength exp", ret, this.jumpStrength)
+		// this.jumpStrength = 1000;
 		ret.set_float(this.jumpStrength);
 	};
 	Exps.prototype.Gravity = function (ret)
 	{
+		// console.log("gravity exp", ret, this.g)
 		ret.set_float(this.g);
 	};
 	Exps.prototype.GravityAngle = function (ret)

@@ -1,10 +1,8 @@
 (() => {
   globalThis.ovoLevelEditor = {
     init() {
-      let old = globalThis.sdk_runtime;
-      c2_callFunction("execCode", ["globalThis.sdk_runtime = this.runtime"]);
-      let sdk_runtime = globalThis.sdk_runtime;
-      globalThis.sdk_runtime = old;
+      let sdk_runtime = cr_getC2Runtime();
+      if (!sdk_runtime) return;
 
       let setLayout = (name) => {
         if (sdk_runtime.layouts.hasOwnProperty(name)) {
@@ -22,6 +20,7 @@
         oldFn();
         globalThis.ovoLevelEditor.applyCurrentLevel();
       };
+
       let setLayoutToBase = () => {
         sdk_runtime.changelayout = baseLayout;
       };
@@ -35,12 +34,33 @@
               x.texture_file.includes("/solid.png") &&
               x.behs_count === 2)
         ),
+        SolidWhite: sdk_runtime.types_by_index.find(
+          (x) =>
+            x.name === "SolidWhite" ||
+            (x.plugin instanceof cr.plugins_.TiledBg &&
+              x.texture_file &&
+              x.texture_file.includes("/solidwhite.png"))
+        ),
+        SolidRed: sdk_runtime.types_by_index.find(
+          (x) =>
+            x.name === "SolidMove" ||
+            (x.plugin instanceof cr.plugins_.TiledBg &&
+              x.texture_file &&
+              x.texture_file.includes("/solidmove.png"))
+        ),
         Spike: sdk_runtime.types_by_index.find(
           (x) =>
             x.name === "Spike" ||
             (x.plugin instanceof cr.plugins_.Sprite &&
               x.all_frames &&
               x.all_frames[0].texture_file.includes("spike-"))
+        ),
+        SpikeWhite: sdk_runtime.types_by_index.find(
+          (x) =>
+            x.name === "Spike2" ||
+            (x.plugin instanceof cr.plugins_.Sprite &&
+              x.all_frames &&
+              x.all_frames[0].texture_file.includes("spike2-"))
         ),
         Flag: sdk_runtime.types_by_index.find(
           (x) =>
@@ -79,6 +99,13 @@
               x.all_frames &&
               x.all_frames[0].texture_file.includes("jumpboost"))
         ),
+        Gradient: sdk_runtime.types_by_index.find(
+          (x) =>
+            x.name === "Gradient" ||
+            (x.plugin instanceof cr.plugins_.Sprite &&
+              x.all_frames &&
+              x.all_frames[0].texture_file.includes("gradient"))
+        ),
         LayoutNameHolder: sdk_runtime.types_by_index.find(
           (x) =>
             x.name === "LayoutNameHolder" ||
@@ -100,19 +127,183 @@
               x.all_frames &&
               x.all_frames[0].texture_file.includes("layoutsubtitle"))
         ),
+        Text: sdk_runtime.types_by_index.find(
+          (x) =>
+            x.name === "TextAlign" ||
+            (x.plugin instanceof cr.plugins_.TextModded &&
+              x.vars_count === 8 &&
+              !x.is_family)
+        ),
+        PlayerRig: sdk_runtime.types_by_index.find(
+          (x) =>
+            x.name === "PlayerRig" || (x.is_family && x.members.length === 10)
+        ),
+        Portal: sdk_runtime.types_by_index.find(
+          (x) =>
+            x.name === "Portal" ||
+            (x.plugin instanceof cr.plugins_.Sprite &&
+              x.all_frames &&
+              x.all_frames[0].texture_file.includes("portal"))
+        ),
+      };
+
+      const initInstVars = {
+        RocketLauncher: (
+          inst,
+          {
+            Range = 300,
+            RateOfFire = 2,
+            RotateSpeed = 180,
+            ProjectileRotateSpeed = 180,
+            ProjectileSpeed = 150,
+            PredictiveAim = false,
+            ConeOfView = 360,
+          } = {}
+        ) => {
+          inst.instance_vars[1] = ProjectileSpeed;
+          inst.instance_vars[2] = ProjectileRotateSpeed;
+          let turretBehavior = inst.behavior_insts.find(
+            (beh) => beh.behavior instanceof cr.behaviors.Turret
+          );
+          turretBehavior.rateOfFire = RateOfFire;
+          turretBehavior.range = Range;
+          turretBehavior.rotateSpeed = cr.to_radians(RotateSpeed);
+          turretBehavior.projectileSpeed = ProjectileSpeed;
+          turretBehavior.predictiveAim = PredictiveAim;
+          let losBehavior = inst.behavior_insts.find(
+            (beh) => beh.behavior instanceof cr.behaviors.LOS
+          );
+          losBehavior.cone = cr.to_radians(ConeOfView);
+        },
+        JumpBoost: (
+          inst,
+          { Force = 0.7, SetDecelerationToZero = false } = {}
+        ) => {
+          inst.instance_vars[0] = Force;
+          inst.instance_vars[1] = SetDecelerationToZero ? 1 : 0;
+        },
+        Portal: (
+          inst,
+          {
+            ID = 0,
+            Target = 0,
+            ForceAngle = false,
+            ForcedAngle = 0,
+            ForceSpeed = false,
+            ForcedSpeed = 0,
+            InversePortal = false,
+          } = {},
+          { color: [r = 1, g = 1, b = 1] = [] } = {}
+        ) => {
+          inst.instance_vars[0] = ID;
+          inst.instance_vars[1] = Target;
+          inst.instance_vars[2] = ForceAngle ? 1 : 0;
+          inst.instance_vars[3] = ForcedAngle;
+          inst.instance_vars[4] = ForceSpeed ? 1 : 0;
+          inst.instance_vars[5] = ForcedSpeed;
+          inst.instance_vars[6] = InversePortal ? 1 : 0;
+          inst.effect_params[0][3] = r * 255;
+          inst.effect_params[0][4] = g * 255;
+          inst.effect_params[0][5] = b * 255;
+        },
+        SolidWhite: (inst, _, { color: [r = 1, g = 1, b = 1] = [] } = {}) => {
+          inst.effect_params[0][0] = r;
+          inst.effect_params[0][1] = g;
+          inst.effect_params[0][2] = b;
+        },
+        Gradient: (inst, _, { color: [r = 1, g = 1, b = 1] = [] } = {}) => {
+          inst.effect_params[0][0] = r;
+          inst.effect_params[0][1] = g;
+          inst.effect_params[0][2] = b;
+        },
+        Text: (
+          inst,
+          _,
+          {
+            text,
+            fontSize,
+            fontFace,
+            wordWrapMode,
+            horizontalAlign,
+            verticalAlign,
+            isBold,
+            isItalic,
+            fontColor: [r = 0, g = 0, b = 0],
+            lineHeight,
+          } = {}
+        ) => {
+          inst.facename = fontFace;
+          inst.text = text;
+          inst.ptSize = fontSize;
+          let wrap = ["word", "character"].findIndex((x) => x === wordWrapMode);
+          inst.wrapbyword = wrap === 0;
+          inst.nowrap = wrap === 2;
+          inst.wrap = wrap; // 0=word, 1=character 2=none
+          inst.halign =
+            ["left", "center", "right"].findIndex(
+              (x) => x === horizontalAlign
+            ) * 50;
+          inst.valign =
+            ["top", "center", "bottom"].findIndex((x) => x === verticalAlign) *
+            50;
+          inst.fontStyle = `${isBold && "bold"} ${isItalic && "italic"}`;
+          inst.line_height_offset = lineHeight;
+          inst.color = `rgb(${r * 255},${g * 255},${b * 255})`;
+          inst.updateFont();
+        },
+        Player: (
+          inst,
+          { SlideTime = 0.8, SlideRefresh = 0.5, Gravity = 1500 } = {}
+        ) => {
+          inst.instance_vars[5] = SlideTime;
+          inst.instance_vars[6] = SlideRefresh;
+          let platformerBehavior = inst.behavior_insts.find(
+            (beh) => beh.behavior instanceof cr.behaviors.Platform
+          );
+          cr.behaviors.Platform.prototype.acts.__proto__.SetGravity.call(
+            platformerBehavior,
+            Gravity
+          );
+        },
       };
 
       const layers = {
         "Layer 0": baseLayout.layers.find((x) => x.name === "Layer 0"),
+        "Layer 1": baseLayout.layers.find((x) => x.name === "Layer 1"),
+        "Layer 2": baseLayout.layers.find((x) => x.name === "Layer 2"),
+        "Layer 3": baseLayout.layers.find((x) => x.name === "Layer 3"),
+        "Layer 4": baseLayout.layers.find((x) => x.name === "Layer 4"),
         Background: baseLayout.layers.find((x) => x.name === "Background"),
       };
 
-      let create = (type, layer, { x, y, width, height, angle }) => {
+      let create = (
+        type,
+        layer,
+        {
+          x,
+          y,
+          visible,
+          opacity,
+          collisionsEnabled,
+          width,
+          height,
+          angle,
+          instVars,
+          extra,
+        }
+      ) => {
+        if (!types.hasOwnProperty(type)) return;
+        console.log(type, types, types[type]);  
         let inst = sdk_runtime.createInstance(types[type], layers[layer], x, y);
-        inst.width = width || inst.width;
-        inst.height = height || inst.height;
-        inst.angle = angle || inst.angle;
+        inst.width = width ?? inst.width;
+        inst.height = height ?? inst.height;
+        inst.angle = angle ?? inst.angle;
+        inst.visible = visible ?? inst.visible;
+        inst.opacity = opacity ?? inst.opacity;
+        inst.collisionsEnabled = collisionsEnabled ?? inst.collisionsEnabled;
         inst.set_bbox_changed();
+        if (initInstVars.hasOwnProperty(type))
+          initInstVars[type](inst, instVars, extra);
         return inst;
       };
 
@@ -158,7 +349,7 @@
           }
           return player;
         },
-        async setPlayerPosition(x, y) {
+        async setPlayerPosition(x, y, layer) {
           let player = this.getPlayer();
           while (!player) {
             await new Promise((resolve) => setTimeout(resolve, 20));
@@ -166,6 +357,12 @@
           }
           if (x) player.x = x;
           if (y) player.y = y;
+          player.type.plugin.acts.MoveToLayer.call(player, layer);
+          let instances = [...types.PlayerRig.instances];
+          instances.sort((a, b) => a.instance_vars[0] - b.instance_vars[0]);
+          instances.forEach((inst) => {
+            inst.type.plugin.acts.MoveToLayer.call(inst, layer);
+          });
           player.set_bbox_changed();
         },
         applySetup() {
@@ -184,26 +381,65 @@
         async applyCurrentLevel() {
           if (!this.curLevel) return;
           this.wipeAllInstances();
-          await this.awaitForPlayer();
-          if (this.curLevel.player) {
-            this.setPlayerPosition(
-              this.curLevel.player.x,
-              this.curLevel.player.y
-            );
-          }
+          let player = await this.awaitForPlayer();
+          let playerInitialised = false;
+
+          // if (this.curLevel.player) {
+          //   initInstVars.Player(player, this.curLevel.player.instVars);
+          //   this.setPlayerPosition(
+          //     this.curLevel.player.x,
+          //     this.curLevel.player.y,
+          //     layers[this.curLevel.player.layer]
+          //   );
+          // }
+
           Object.keys(this.curLevel.layers).forEach((layer) => {
             if (!layers[layer]) return;
-            Object.keys(this.curLevel.layers[layer]).forEach((type) => {
-              if (!types[type]) return;
-              this.curLevel.layers[layer][type].forEach((inst) => {
-                let newInst = create(type, layer, inst);
-                sdk_runtime.trigger(
-                  newInst.type.plugin.cnds.OnCreated,
-                  newInst
+            let allInstances = Object.keys(this.curLevel.layers[layer])
+              .map((type) =>
+                this.curLevel.layers[layer][type].map((x) => ({ ...x, type }))
+              )
+              .flat()
+              .sort((a, b) => (a.zIndex ?? 0) - (b.zIndex ?? 0));
+            for (let i = 0; i < allInstances.length; i++) {
+              const inst = allInstances[i];
+              let zIndex = inst.zIndex ?? i;
+              if (
+                !playerInitialised &&
+                this.curLevel.player &&
+                this.curLevel.player.layer === layer &&
+                (this.curLevel.player.zIndex ?? 0) <= zIndex
+              ) {
+                playerInitialised = true;
+                initInstVars.Player(player, this.curLevel.player.instVars);
+                this.setPlayerPosition(
+                  this.curLevel.player.x,
+                  this.curLevel.player.y,
+                  layers[this.curLevel.player.layer]
                 );
-              });
-            });
+              }
+              let newInst = create(inst.type, layer, inst);
+              sdk_runtime.trigger(newInst.type.plugin.cnds.OnCreated, newInst);
+            }
+            // Object.keys(this.curLevel.layers[layer]).forEach((type) => {
+            //   if (!types[type]) return;
+            //   this.curLevel.layers[layer][type].forEach((inst) => {
+            //     let newInst = create(type, layer, inst);
+            //     sdk_runtime.trigger(
+            //       newInst.type.plugin.cnds.OnCreated,
+            //       newInst
+            //     );
+            //   });
+            // });
           });
+          if (!playerInitialised && this.curLevel.player) {
+            initInstVars.Player(player, this.curLevel.player.instVars);
+            this.setPlayerPosition(
+              this.curLevel.player.x,
+              this.curLevel.player.y,
+              layers[this.curLevel.player.layer]
+            );
+          }
           sdk_runtime.trigger(sdk_runtime.system.cnds.OnLayoutStart);
           if (
             this.curLevel.layout.holder &&
@@ -226,10 +462,12 @@
           });
           holder.instance_vars[0] = this.curLevel.layout.name || "";
           holder.instance_vars[2] = !!this.curLevel.layout.useSlope;
+          holder.instance_vars[3] = true;
           sdk_runtime.trigger(holder.type.plugin.cnds.OnCreated, holder);
         },
         handleDrop(ev) {
           console.log("File(s) dropped");
+          console.log(ev)
 
           // Prevent default behavior (Prevent file from being opened)
           ev.preventDefault();
@@ -239,8 +477,10 @@
               console.log(text);
               try {
                 let json = JSON.parse(text);
+                console.log(json)
                 if (globalThis.ovoLevelEditor.startLevel)
                   globalThis.ovoLevelEditor.startLevel(json);
+                  console.log("STARTING LEVEL")
               } catch (error) {
                 alert("not a valid level file");
               }
@@ -269,10 +509,13 @@
       );
     },
   };
-
+  let previewBuffer = 3;
   let messageHandler = (event) => {
     if (!event.data.isLevelEditor || !event.data.messageType) return;
     if (event.data.messageType.toLowerCase() === "isready") {
+      if (!!globalThis.cr_is_preview) previewBuffer--;
+      console.log(previewBuffer);
+      if (previewBuffer <= 0) globalThis.ovoLevelEditor.init();
       event.source.postMessage(
         {
           isReady: !globalThis.ovoLevelEditor.hasOwnProperty("init"),
