@@ -1,4 +1,4 @@
-() => {
+(() => {
   globalThis.ovoLevelEditor = {
     init() {
       let sdk_runtime = cr_getC2Runtime();
@@ -19,6 +19,8 @@
         globalThis.ovoLevelEditor.applySetup();
         oldFn();
         globalThis.ovoLevelEditor.applyCurrentLevel();
+        console.log(globalThis.ovoLevelEditor.getPlayer())
+
       };
 
       let setLayoutToBase = () => {
@@ -550,6 +552,7 @@
         return;
       }
       globalThis.ovoLevelEditor.startLevel(event.data.level);
+      console.log(globalThis.ovoLevelEditor.getPlayer())
       event.source.postMessage(
         {
           levelStarted: true,
@@ -561,4 +564,4 @@
     }
   };
   globalThis.window.addEventListener("message", messageHandler);
-}; //();
+})();
