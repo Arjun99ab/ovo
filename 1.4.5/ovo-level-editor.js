@@ -1,4 +1,4 @@
-() => {
+(() => {
   globalThis.ovoLevelEditor = {
     init() {
       let sdk_runtime = cr_getC2Runtime();
@@ -479,6 +479,15 @@
           holder.instance_vars[2] = !!this.curLevel.layout.useSlope;
           holder.instance_vars[3] = true;
           sdk_runtime.trigger(holder.type.plugin.cnds.OnCreated, holder);
+
+          cr.plugins_.MagiCam.prototype.acts.SetActiveCamera.call(sdk_runtime.types_by_index.find(
+            (type) => type.plugin instanceof cr.plugins_.MagiCam
+          ).instances[0], "Player");
+          let camera = sdk_runtime.types_by_index.find(
+            (type) => type.plugin instanceof cr.plugins_.MagiCam
+          ).instances[0];
+          camera.activeCamera = camera.localCameras[0]; //choose right player camera, because both cameras are named the same thing
+
         },
         handleDrop(ev) {
           console.log("File(s) dropped");
@@ -550,6 +559,7 @@
         return;
       }
       globalThis.ovoLevelEditor.startLevel(event.data.level);
+      console.log(globalThis.ovoLevelEditor.getPlayer())
       event.source.postMessage(
         {
           levelStarted: true,
@@ -561,4 +571,4 @@
     }
   };
   globalThis.window.addEventListener("message", messageHandler);
-}; //();
+})();
