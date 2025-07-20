@@ -324,7 +324,7 @@ let createUploadPopup = () => {
     dropdown.appendChild(menu);
 
     // let options = ["Option 1", "Option 2", "Option 3", "Option 4"];
-    let options = ["1.4", "1.4.4", "1.4.3", "1.4.2", "1.4.1"];
+    let options = ["1.4", "1.4.5", "1.4.4", "1.4.3", "1.4.2", "1.4.1"];
     let replayVersion = null;
 
     options.forEach(option => {
@@ -899,7 +899,7 @@ let createUploadPopup = () => {
     dropdown.appendChild(menu);
 
     // let options = ["Option 1", "Option 2", "Option 3", "Option 4"];
-    let options = ["1.4", "1.4.4", "1.4.3", "1.4.2", "1.4.1"];
+    let options = ["1.4", "1.4.5", "1.4.4", "1.4.3", "1.4.2", "1.4.1"];
     let replayVersion = replayObj.version || null; // set the initial value to the level's version
 
     options.forEach(option => {
