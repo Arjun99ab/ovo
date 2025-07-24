@@ -41,6 +41,10 @@
               x.texture_file &&
               x.texture_file.includes("/solidwhite.png"))
         ),
+        // SolidWhite: sdk_runtime.types_by_index.find(
+        //   (x) =>
+        //     x.name === "t234"
+        // ),
         SolidRed: sdk_runtime.types_by_index.find(
           (x) =>
             x.name === "SolidMove" ||

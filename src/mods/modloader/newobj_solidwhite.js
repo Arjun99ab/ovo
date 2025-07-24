@@ -5,10 +5,29 @@
 // family_var_map
 
 
+// cr.shaders["tint"] = {src: ["varying mediump vec2 vTex;",
+// "uniform lowp sampler2D samplerFront;",
+// "uniform lowp float red;",
+// "uniform lowp float green;",
+// "uniform lowp float blue;",
+// "void main(void)",
+// "{",
+// "lowp vec4 front = texture2D(samplerFront, vTex);",
+// "gl_FragColor = front * vec4(red, green, blue, 1.0);",
+// "}"
+// ].join("\n"),
+// 	extendBoxHorizontal: 0,
+// 	extendBoxVertical: 0,
+// 	crossSampling: false,
+// 	preservesOpaqueness: true,
+// 	animated: false,
+// 	parameters: [["red", 0, 1], ["green", 0, 1], ["blue", 0, 1]] }
+// ;
+
 
 let m = [
     "t69",
-    13, //ctle: 13, ct1.4: 16, - needs to be adjusted based on plugin index of game version
+    16, //ctle: 13, ct1.4: 16, - needs to be adjusted based on plugin index of game version
     false,
     [],
     1,
@@ -297,7 +316,7 @@ type_inst.default_instance = [
             ]
         ]
     ],
-    69,
+    index,
     7918,
     [],
     [
@@ -314,3 +333,8 @@ type_inst.default_instance = [
     ]
 ]
 type_inst.default_instance[1] = index
+
+type_inst.effect_types[0].shaderindex = 6;
+
+
+delete ovoLevelEditor;

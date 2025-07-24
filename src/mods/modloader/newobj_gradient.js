@@ -207,8 +207,10 @@ for (let j = 0, lenj = m[12].length; j < lenj; j++)
     });
 }
 type_inst.tile_poly_data = m[13];
+console.log(type_inst.animations.length)
 if (!runtime.uses_loader_layout || type_inst.is_family || type_inst.isOnLoaderLayout || !plugin.is_world)
 {
+    console.log("hi")
     type_inst.onCreate();
     cr.seal(type_inst);
 }
@@ -320,3 +322,137 @@ type_inst.default_instance = [
 ]
 
 type_inst.default_instance[1] = index
+
+let x = [
+    "Default",
+    5,
+    false,
+    1,
+    0,
+    false,
+    148494698565384,
+    [
+        [
+            "images/gradient-sheet0.png",
+            2790,
+            0,
+            0,
+            640,
+            640,
+            1,
+            0.5,
+            0.5,
+            [],
+            [],
+            0
+        ]
+    ]
+]
+
+function frame_getDataUri()
+{
+if (this.datauri.length === 0)
+{
+    var tmpcanvas = document.createElement("canvas");
+    tmpcanvas.width = this.width;
+    tmpcanvas.height = this.height;
+    var tmpctx = tmpcanvas.getContext("2d");
+    if (this.spritesheeted)
+    {
+    tmpctx.drawImage(this.texture_img, this.offx, this.offy, this.width, this.height,
+                    0, 0, this.width, this.height);
+    }
+    else
+    {
+    tmpctx.drawImage(this.texture_img, 0, 0, this.width, this.height);
+    }
+    this.datauri = tmpcanvas.toDataURL("image/png");
+}
+return this.datauri;
+};
+
+// types = runtime.types_by_index.filter((x) =>
+//   x.behaviors.some(
+//     (y) => y.behavior instanceof cr.behaviors.aekiro_button
+//   )
+// );
+
+var anim, frame, animobj, frameobj, wt, uv;
+var leni, j, lenj;
+
+// type_inst.animations.push({})
+type_inst.all_frames = [];
+
+anim = x;
+console.log(anim)
+animobj = {};
+animobj.name = anim[0];
+animobj.speed = anim[1];
+animobj.loop = anim[2];
+animobj.repeatcount = anim[3];
+animobj.repeatto = anim[4];
+animobj.pingpong = anim[5];
+animobj.sid = anim[6];
+animobj.frames = [];
+for (j = 0, lenj = anim[7].length; j < lenj; j++)
+{
+frame = anim[7][j];
+frameobj = {};
+frameobj.texture_file = frame[0];
+frameobj.texture_filesize = frame[1];
+frameobj.offx = frame[2];
+frameobj.offy = frame[3];
+frameobj.width = frame[4];
+frameobj.height = frame[5];
+frameobj.duration = frame[6];
+frameobj.hotspotX = frame[7];
+frameobj.hotspotY = frame[8];
+frameobj.image_points = frame[9];
+frameobj.poly_pts = frame[10];
+frameobj.pixelformat = frame[11];
+frameobj.spritesheeted = (frameobj.width !== 0);
+frameobj.datauri = "";		// generated on demand and cached
+frameobj.getDataUri = frame_getDataUri;
+uv = {};
+uv.left = 0;
+uv.top = 0;
+uv.right = 1;
+uv.bottom = 1;
+frameobj.sheetTex = uv;
+frameobj.webGL_texture = null;
+wt = runtime.findWaitingTexture(frame[0]);
+if (wt)
+{
+    frameobj.texture_img = wt;
+}
+else
+{
+    frameobj.texture_img = new Image();
+    frameobj.texture_img.cr_src = frame[0];
+    frameobj.texture_img.cr_filesize = frame[1];
+    frameobj.texture_img.c2webGL_texture = null;
+    frameobj.texture_img.onload = (function(f) {
+    return function() {
+        f.webGL_texture = runtime.glwrap.loadTexture(f.texture_img, true, runtime.linearSampling, f.pixelformat);
+        console.log("Loaded texture: " + f.texture_img.cr_src);
+               
+    };
+    })(frameobj);
+
+    frameobj.texture_img.onerror = function() {
+    console.error("fail " + frame[0]);
+    };
+
+    frameobj.texture_img.src = frame[0];
+    // runtime.waitForImageLoad(frameobj.texture_img, frame[0]);
+}
+cr.seal(frameobj);
+animobj.frames.push(frameobj);
+type_inst.all_frames.push(frameobj);
+}
+cr.seal(animobj);
+console.log(animobj)
+console.log(type_inst.animations.length)
+type_inst.animations[type_inst.animations.length - 1] = animobj;		// swap array data for object
+
+type_inst.effect_types[0].shaderindex = 6;

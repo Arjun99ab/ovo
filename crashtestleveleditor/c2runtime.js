@@ -4287,6 +4287,10 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 		{
 			m = pm[2][i];
 			p = this.GetObjectReference(m[0]);
+
+			if (i == 13) {
+				console.log("Plugin2: ", p.prototype, m);
+			}
 ;
 			cr.add_common_aces(m, p.prototype);
 			plugin = new p(this);
@@ -4313,6 +4317,11 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 					plugin = this.plugins[j];
 					break;
 				}
+			}
+
+			console.log(type_inst, m);
+			if(i == 205) {
+				console.log(JSON.stringify(m))
 			}
 ;
 ;
@@ -4356,6 +4365,9 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			}
 			if (m[7])
 			{
+				if(i == 205) {
+					console.log(m[7])
+				}
 				type_inst.animations = m[7];
 			}
 			else
@@ -4449,6 +4461,7 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 			type_inst.tile_poly_data = m[13];
 			if (!this.uses_loader_layout || type_inst.is_family || type_inst.isOnLoaderLayout || !plugin.is_world)
 			{
+				
 				type_inst.onCreate();
 				cr.seal(type_inst);
 			}
@@ -26712,6 +26725,9 @@ cr.plugins_.Sprite = function(runtime)
 		for (i = 0, leni = this.animations.length; i < leni; i++)
 		{
 			anim = this.animations[i];
+			if(this.index === 69) {
+				console.log(anim);
+			}
 			animobj = {};
 			animobj.name = anim[0];
 			animobj.speed = anim[1];
