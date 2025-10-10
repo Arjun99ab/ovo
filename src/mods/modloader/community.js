@@ -381,7 +381,8 @@
         flexDirection: "column",
         fontFamily: "Retron2000",
         overflow: "hidden",
-        border: "2px solid black"
+        border: "2px solid black",
+        zIndex: 1000
       });
 
       const header = document.createElement("div");
