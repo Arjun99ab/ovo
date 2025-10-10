@@ -4,17 +4,19 @@
   let runtime = globalThis.sdk_runtime;
   globalThis.sdk_runtime = old;
 
+  // ===== STATE MANAGEMENT (In-Memory) =====
   const state = {
-    favorites: new Set(),
+    favourites: new Set(),
     hidden: new Set(),
     searchQuery: '',
-    showFavorites: false,
+    showFavourites: false,
     showHidden: false,
     map: null,
     map2: null,
     levelData: null
   };
 
+  // ===== UTILITY FUNCTIONS =====
   const utils = {
     getPlayer() {
       return runtime.types_by_index
@@ -107,8 +109,9 @@
     }
   };
 
+  // ===== DATA MANAGEMENT =====
   const dataManager = {
-    queryDatabase(query, showFavorites, showHidden) {
+    queryDatabase(query, showFavourites, showHidden) {
       const lowerQuery = query.toLowerCase();
       
       return state.levelData.filter(level => {
@@ -116,23 +119,23 @@
           level.levelname.replace(/_/g, " ").toLowerCase().includes(lowerQuery) ||
           level.username.toLowerCase().includes(lowerQuery);
         
-        const isFavourite = state.favorites.has(level.id);
+        const isFavourite = state.favourites.has(level.id);
         const isHidden = state.hidden.has(level.id);
         
-        if (!showHidden && showFavorites && !isFavourite) return false;
+        if (!showHidden && showFavourites && !isFavourite) return false;
         if (!showHidden && isHidden) return false;
-        if (showHidden && !isHidden && (!showFavorites || !isFavourite)) return false;
+        if (showHidden && !isHidden && (!showFavourites || !isFavourite)) return false;
         
         return matchesQuery;
       });
     },
 
     toggleFavourite(levelId) {
-      if (state.favorites.has(levelId)) {
-        state.favorites.delete(levelId);
+      if (state.favourites.has(levelId)) {
+        state.favourites.delete(levelId);
         return false;
       } else {
-        state.favorites.add(levelId);
+        state.favourites.add(levelId);
         return true;
       }
     },
@@ -148,6 +151,7 @@
     }
   };
 
+  // ===== UI COMPONENTS =====
   const UI = {
     createButton(text, styles, onClick) {
       const btn = document.createElement("button");
@@ -155,12 +159,23 @@
         fontFamily: "Retron2000",
         cursor: "pointer",
         border: "none",
+        // transition: "all 0.3s ease",
         ...styles
       };
       utils.applyStyles(btn, baseStyles);
       btn.innerHTML = text;
       btn.onclick = onClick;
-            
+      
+      // Hover effect
+      // btn.addEventListener('mouseenter', () => {
+      //   btn.style.transform = 'scale(1.05)';
+      //   btn.style.filter = 'brightness(1.1)';
+      // });
+      // btn.addEventListener('mouseleave', () => {
+      //   btn.style.transform = 'scale(1)';
+      //   btn.style.filter = 'brightness(1)';
+      // });
+      
       return btn;
     },
 
@@ -170,23 +185,21 @@
         minHeight: "250px",
         height: "auto",
         borderRadius: "15px",
-        overflow: "hidden",
+        overflow: "visible",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
         boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
+        transition: "all 0.3s ease",
         backgroundColor: "white",
-        border: "2px solid #e0e0e0",
-        width: "auto",
-        maxWidth: "100%",
-        boxSizing: "border-box"
+        border: "2px solid #e0e0e0"
       });
 
+      // Update gradient based on state
       const updateGradient = () => {
         if (state.hidden.has(level.id)) {
           card.style.background = "linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)";
           card.style.borderColor = "#ef5350";
-        } else if (state.favorites.has(level.id)) {
+        } else if (state.favourites.has(level.id)) {
           card.style.background = "linear-gradient(135deg, #fff8e1 0%, #ffe082 100%)";
           card.style.borderColor = "#ffa726";
         } else {
@@ -196,6 +209,7 @@
       };
       updateGradient();
 
+      // Header section
       const header = document.createElement("div");
       utils.applyStyles(header, {
         flexShrink: "0",
@@ -207,7 +221,7 @@
       utils.applyStyles(title, {
         fontFamily: "Retron2000",
         fontSize: "16pt",
-        color: "black",
+        color: "#2c3e50",
         marginBottom: "5px",
         fontWeight: "bold"
       });
@@ -225,18 +239,20 @@
       header.appendChild(title);
       header.appendChild(author);
 
+      // Content section
       const content = document.createElement("div");
       utils.applyStyles(content, {
         padding: "15px 20px",
         flex: "1",
         fontFamily: "Retron2000",
         fontSize: "11pt",
-        color: "black",
-        overflowY: "auto",
+        color: "#34495e",
+        // overflow: "hidden",
         textOverflow: "ellipsis"
       });
-      content.innerHTML = level.content || "N/A";
+      content.innerHTML = level.content || "No description available.";
 
+      // Actions section
       const actions = document.createElement("div");
       utils.applyStyles(actions, {
         padding: "15px 20px",
@@ -266,7 +282,7 @@
       });
 
       const favBtn = this.createButton(
-        state.favorites.has(level.id) ? "★" : "☆",
+        state.favourites.has(level.id) ? "★" : "☆",
         {
           backgroundColor: "#ffa726",
           color: "white",
@@ -313,27 +329,22 @@
     createLevelsList(levels) {
       const container = document.createElement("div");
       utils.applyStyles(container, {
-        position: "relative",
-        // top: "25%",
-        // left: "0",
-        width: "99%",
+        position: "absolute",
+        top: "25%",
+        left: "0",
+        width: "100%",
         height: "75%",
-        overflowY: "auto",
+        overflowY: "scroll",
         overflowX: "hidden",
-        padding: "10px",
-        // paddingRight: "30px",
+        padding: "20px",
         display: "grid",
         gridTemplateColumns: "repeat(2, 1fr)",
-        // gridTemplateRows: "max-content",
-        gap: "2%",
-        // alignContent: "center",
-        // justifyContent: "center",
+        gap: "15px",
+        alignContent: "start",
         backgroundColor: "white",
-        scrollbarGutter: "stable", 
         scrollbarWidth: "thin",
-
-        borderTop: "2px solid black",
-        // boxSizing: "border-box"
+        scrollbarColor: "#667eea #e0e0e0",
+        borderTop: "2px solid black"
       });
       container.id = "levels-list";
 
@@ -381,12 +392,30 @@
         flexDirection: "column",
         fontFamily: "Retron2000",
         overflow: "hidden",
-        border: "2px solid black",
-        zIndex: 1000
+        // animation: "slideIn 0.3s ease"
+        border: "2px solid black"
       });
 
+      // Add animation
+      // const style = document.createElement("style");
+      // style.textContent = `
+      //   @keyframes slideIn {
+      //     from {
+      //       opacity: 0;
+      //       transform: translate(-50%, -45%);
+      //     }
+      //     to {
+      //       opacity: 1;
+      //       transform: translate(-50%, -50%);
+      //     }
+      //   }
+      // `;
+      // document.head.appendChild(style);
+
+      // Header
       const header = document.createElement("div");
       utils.applyStyles(header, {
+        // background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
         padding: "25px 30px",
         color: "white",
         position: "relative",
@@ -417,6 +446,7 @@
       header.appendChild(title);
       header.appendChild(closeBtn);
 
+      // Search bar
       const searchBar = document.createElement("div");
       utils.applyStyles(searchBar, {
         padding: "20px 30px",
@@ -438,6 +468,7 @@
         border: "2px solid #e0e0e0",
         borderRadius: "25px",
         outline: "none",
+        transition: "all 0.3s ease"
       });
       searchInput.placeholder = "Search levels or authors...";
       searchInput.addEventListener('focus', () => {
@@ -448,17 +479,6 @@
         searchInput.style.borderColor = "#e0e0e0";
         searchInput.style.boxShadow = "none";
       });
-      searchInput.addEventListener('keydown', (e) => {
-        e.stopImmediatePropagation();
-        if (e.key === 'Enter') performSearch();
-        if (e.key === 'Escape') searchInput.blur();
-      });
-      searchInput.onclick = (e) => {
-        e.stopImmediatePropagation();
-        e.stopPropagation();
-        e.preventDefault();
-        searchInput.focus();
-      };
 
       const createCheckbox = (label, checked = false) => {
         const wrapper = document.createElement("label");
@@ -468,7 +488,7 @@
           gap: "8px",
           cursor: "pointer",
           fontSize: "10pt",
-          color: "black"
+          color: "#34495e"
         });
 
         const checkbox = document.createElement("input");
@@ -485,10 +505,10 @@
         return { wrapper, checkbox };
       };
 
-      const { wrapper: favWrapper, checkbox: favCheckbox } = createCheckbox("⭐ Favorites");
+      const { wrapper: favWrapper, checkbox: favCheckbox } = createCheckbox("⭐ Favourites");
       const { wrapper: hiddenWrapper, checkbox: hiddenCheckbox } = createCheckbox("🚫 Hidden");
 
-      const searchBtn = this.createButton("Search", {
+      const searchBtn = this.createButton("🔍 Search", {
         backgroundColor: "#667eea",
         color: "white",
         padding: "12px 30px",
@@ -511,13 +531,18 @@
         modal.appendChild(newList);
       };
 
-      
+      searchInput.addEventListener('keydown', (e) => {
+        e.stopImmediatePropagation();
+        if (e.key === 'Enter') performSearch();
+        if (e.key === 'Escape') searchInput.blur();
+      });
 
       searchBar.appendChild(searchInput);
       searchBar.appendChild(favWrapper);
       searchBar.appendChild(hiddenWrapper);
       searchBar.appendChild(searchBtn);
 
+      // Initial levels list
       const initialLevels = dataManager.queryDatabase("", false, false);
       const levelsList = this.createLevelsList(initialLevels);
 
@@ -529,8 +554,10 @@
     }
   };
 
+  // ===== MAIN MOD =====
   const communityLevelsMod = {
     async init() {
+      // Add global styles
       const style = document.createElement("style");
       style.textContent = `
         #ovo-multiplayer-disconnected-container,
@@ -562,16 +589,25 @@
       `;
       document.head.appendChild(style);
 
-      state.levelData = await fetch("../src/communitylevels/config/data.json")
-        .then(res => res.json());
+      try {
+        state.levelData = await fetch("../src/communitylevels/config/data.json")
+          .then(res => res.json());
 
-      document.addEventListener("keydown", this.keyDown);
+        document.addEventListener("keydown", this.keyDown);
 
-      utils.notify(
-        "Community Levels Loaded",
-        "by Awesomeguy<br/>Press Shift + L to open",
-        "../src/img/mods/community.png"
-      );
+        utils.notify(
+          "Community Levels Loaded",
+          "by Awesomeguy<br/>Press Shift + L to open",
+          "../src/img/mods/community.png"
+        );
+      } catch (error) {
+        console.error("Failed to load community levels:", error);
+        utils.notify(
+          "Error Loading Levels",
+          "Failed to load community levels data",
+          "./speedrunner.png"
+        );
+      }
     },
 
     keyDown(event) {
@@ -588,6 +624,7 @@
     }
   };
 
+  // ===== GLOBAL TOGGLE =====
   globalThis.communityToggle = function (enable) {
     if (enable) {
       document.addEventListener("keydown", communityLevelsMod.keyDown);
@@ -601,5 +638,6 @@
     }
   };
 
+  // Initialize the mod
   communityLevelsMod.init();
 })();
