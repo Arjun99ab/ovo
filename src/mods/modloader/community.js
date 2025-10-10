@@ -315,21 +315,23 @@
       utils.applyStyles(container, {
         position: "relative",
         // top: "25%",
-        left: "0",
-        width: "100%",
+        // left: "0",
+        width: "99%",
         height: "75%",
-        overflowY: "scroll",
+        overflowY: "auto",
         overflowX: "hidden",
         padding: "10px",
         // paddingRight: "30px",
         display: "grid",
         gridTemplateColumns: "repeat(2, 1fr)",
         // gridTemplateRows: "max-content",
-        gap: "3%",
+        gap: "2%",
         // alignContent: "center",
         // justifyContent: "center",
         backgroundColor: "white",
+        scrollbarGutter: "stable", 
         scrollbarWidth: "thin",
+
         borderTop: "2px solid black",
         // boxSizing: "border-box"
       });
@@ -445,6 +447,17 @@
         searchInput.style.borderColor = "#e0e0e0";
         searchInput.style.boxShadow = "none";
       });
+      searchInput.addEventListener('keydown', (e) => {
+        e.stopImmediatePropagation();
+        if (e.key === 'Enter') performSearch();
+        if (e.key === 'Escape') searchInput.blur();
+      });
+      searchInput.onclick = (e) => {
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        e.preventDefault();
+        searchInput.focus();
+      };
 
       const createCheckbox = (label, checked = false) => {
         const wrapper = document.createElement("label");
@@ -497,11 +510,7 @@
         modal.appendChild(newList);
       };
 
-      searchInput.addEventListener('keydown', (e) => {
-        e.stopImmediatePropagation();
-        if (e.key === 'Enter') performSearch();
-        if (e.key === 'Escape') searchInput.blur();
-      });
+      
 
       searchBar.appendChild(searchInput);
       searchBar.appendChild(favWrapper);
