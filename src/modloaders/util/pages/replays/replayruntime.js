@@ -1,643 +1,661 @@
 (function() {
-  let runtime = cr_getC2Runtime();
-
-
-
-
-  let playerType = runtime.types_by_index.find(
-      (x) =>
-        !!x.animations &&
-        x.animations[0].frames[0].texture_file.includes("collider")
-  );
-
-  let getPlayer = () =>
-      playerType.instances.filter(
-        (x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled
-      )[0];
-
-  let ghostArrType = runtime.types_by_index.find(
-  (x) =>
-      x.plugin instanceof cr.plugins_.Arr && x.default_instance[5][1] === 6
-  );
-
-  let getFlag = () =>
-      runtime.types_by_index.find(
-        (x) =>
-          x.name === "EndFlag" ||
-          (x.plugin instanceof cr.plugins_.Sprite &&
-            x.all_frames &&
-            x.all_frames[0].texture_file.includes("endflag"))
-      ).instances[0];
-  let getCurLayout = () => runtime.running_layout.name;
-
-  let replayInstance = null;
-  let replayJSON = null;
-  let replayIndex = 0;
-
-
-  let replaying = false;
-  let ghostAtFlag = false;
-  let playerDeath = false;
-  let paused = false;
-
-  let playingBack = false;
-
-  let replayInfo = null;
   
-  let frames = []; 
-
-  let replaying_compare = false; 
-  let compareReplayJSONs = [];
-  let replayInstances = [];
-
-
-  let lastNonDeathState = "";
-
-
-  
-  
-
-
-  let replayruntime = {
-    
-      async init() {
-
-        // document.addEventListener("keyup", (event) => {this.keyUp(event)});
-
-        // replayJSON = await fetch('../src/mods/modloader/replay/level1_1.4.json')
-        //     .then((response) => response.json())
-        //     .then(jsondata => {
-        //         return jsondata;
-        //     });
-        // console.log(replayJSON)
-
-        window.addEventListener(
-          "LayoutChange",
-          (e) => {
-            if (e.detail.currentLayout === e.detail.layout && e.detail.layout.name.startsWith("Level")) {
-              //player respawned
-              if (replaying || playerDeath || ghostAtFlag) {
-                console.log("YEP")
-                replayIndex = 0;
-                replaying = true;
-                playerDeath = false;
-                ghostAtFlag = false;
-                paused = false;
-
-              }
-            } else if (e.detail.currentLayout.name === replayJSON.data[replayJSON.data.length - 1][1][1] && e.detail.currentLayout !== e.detail.layout && e.detail.layout.name !== replayJSON.data[replayJSON.data.length - 1][1][1]) {
-              //user leaves level
-              if (replaying || playerDeath || ghostAtFlag) {
-                console.log("user leave")
-                replaying = false;
-                replayIndex = 0;
-                playerDeath = false;
-                ghostAtFlag = false;
-                replayInstance = null;
-                playingBack = false;
-                paused = false;
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
-
-                runtime.untickMe(this);
-
-              }
-            }
-          },
-          false,
-        );
-
-        window.addEventListener(
-          "CallFunction",
-          (e) => {
-            if(e.detail.name === "Gameplay > Death") {
-              if(replaying) {
-                //note that player died
-                playerDeath = true;
-                //stop replay ghost, will resume when player respawns
-                replaying = false
-              }
-            }
-            if(e.detail.name === "Menu > End") {
-              if(replaying) {
-                paused = true;
-              }
-            }
-          },
-          false,
-        );
-      
-        window.addEventListener(
-          "DialogOpen",
-          (e) => {
-            if (e.detail.name === "PauseClose") {
-              if(replaying) {
-                paused = true;
-              }
-            }
-          },
-          false,
-        );
-
-        window.addEventListener(
-          "DialogClose",
-          (e) => {
-            if (e.detail.name === "PauseClose") {
-              if(replaying) {
-                paused = false;
-              }
-            }
-            
-          },
-          false,
-        );
-
-
-      },
-
-      destroyNonPlayerGhosts() {
-          if (!getFlag()) return;
-          let ghosts = playerType.instances.filter(
-            (x) => x.instance_vars[16] && x.instance_vars[17] !== ""
-          );
-          if (!ghosts) return;
-          ghosts.forEach((ghost) => {
-            runtime.DestroyInstance(ghost);
-            ghost.siblings.forEach((sibling) => {
-              cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
-                sibling.behaviorSkins[0]
-              );
-            });
-          });
-          let ghostArr = ghostArrType.instances[0];
-          ghostArr.setSize(0, ghostArr.cy, ghostArr.cz);
-          runtime.eventsheets.Player.events.at(-1).subevents[2].subevents[1].actions.length = 0;
-      },
-
-      createGhostPlayer(data) {
-          console.log("create ghost player")
-          if (!data || data.layout !== getCurLayout()) return null;
-          let layer = runtime.running_layout.layers.find(
-            (layer) => layer.name === data.layer
-          );
-          if (!layer) return null;
-          this.destroyNonPlayerGhosts();
-          let instance = runtime.createInstance(
-            playerType,
-            layer,
-            data.x,
-            data.y
-          );
-          instance.visible = data.hitboxShown; //whether hitbox is visible or not
-          instance.instance_vars[16] = 1;
-          instance.instance_vars[17] = "test";
-          instance.instance_vars[18] = 1;
-
-          instance.instance_vars[12] = data.skin;
-          instance.instance_vars[0] = data.state;
-          instance.collisionsEnabled = false;
-
-          instance.siblings.forEach((sibling) => {
-            if (data.skin === "") {
-              cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
-                sibling.behaviorSkins[0]
-              );
-              sibling.opacity = data.opacity;
-              sibling.set_bbox_changed();
-
-            } else {
-              cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(
-                sibling.behaviorSkins[0],
-                data.skin
-              );
-            }
-          });
-
-          return instance;
-      },
-      loadPlayerData(player, data) {
-          if (data.layout !== getCurLayout()) {
-            replaying = false;
-            replayInstance = null;
-            runtime.tickMe(this);
-            return;
-          }
-          player.x = data.x;
-          player.y = data.y;
-          player.angle = data.angle;
-
-          //if any player instances have a state of “dead”, the game makes all the other player instances in an “invincible state”
-          if (data.state !== "dead") {
-            lastNonDeathState = data.state;
-          }
-          player.instance_vars[0] = data.state === "dead" ? lastNonDeathState : data.state; 
-          player.instance_vars[2] = data.side;
-          if (data.side > 0) {
-            c2_callFunction("Player > Unmirror", [player.uid]);
-          }
-          if (data.side < 0) {
-            c2_callFunction("Player > Mirror", [player.uid]);
-          }
-          cr.plugins_.Sprite.prototype.acts.SetAnimFrame.call(
-            player,
-            data.frame
-          );
-          player.set_bbox_changed();
-      },
-
-      keyUp(event) {
-        // if (event.keyCode == 85) { // key U
-        //   // console.log(replayJSON);
-        //   runtime.untickMe(this);
-        // }
-        // if (event.keyCode == 89) { // key Y
-        //   // console.log(replayJSON);
-        //   runtime.tickMe(this);
-        // }
-        // if (event.keyCode == 73) { // key I
-        //     runtime.tickMe(this);
-        //     replaying = true;
-        //     replayIndex = 0;
-        //     let totalFrames = replayJSON.size[0] * (165 / 60);
-        //     let numFrames = replayJSON.size[0];
-        //     for (let i = 0; i < numFrames; i++) {
-        //         frames.push(Math.floor((i * totalFrames) / numFrames));
-        //     }
-        // } 
-        if (event.keyCode == 79) { // key O
-          let data = {
-            x: 522,
-            y: 352,
-            angle: 0,
-            state: "idle",
-            side: 1,
-            frame: 0,
-            skin: "",
-            layout: getCurLayout(),
-            layer: getPlayer().layer.name,
-            hitboxShown: true,
-            opacity: 1
-          }
-          replayInstance = this.createGhostPlayer(data);
-
-          runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0] = replayInstance; // set the camera to follow the ghost player
-        }
-      },
-
-      tick() {
-        // console.log(runtime.deathRow);
-
-        if(replaying_compare && !paused) {
-          if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1]) {
-
-            if(frames.includes(replayIndex)) {
-              for(let i = 0; i < compareReplayJSONs.length; i++) {
-                let compareReplay = compareReplayJSONs[i];
-              
-                let replayFrame = compareReplay.data[frames.indexOf(replayIndex)]; //o(n) but n is small so it should be fine
-                let data = {
-                    x: replayFrame[0][0],
-                    y: replayFrame[1][0],
-                    angle: replayFrame[2][0],
-                    state: replayFrame[3][0],
-                    side: replayFrame[5][0],
-                    frame: replayFrame[4][0],
-                    skin: "",
-                    opacity: 0.5,
-                    hitboxShown: true
-                }
-                if(replayIndex === 0) {
-                    if(getPlayer() === undefined) { //if they were on the same level, and they replay, they will be undefined
-                      return;
-                    }
-                    data.layout = getCurLayout();
-                    data.layer = getPlayer().layer.name;
-                    if (playingBack && i === 0) {
-                      console.log("replay done for compare, but this is the first one, so we will use it")
-                      this.destroyNonPlayerGhosts();
-
-                      replayInstances[i] = getPlayer(); // save the first instance for comparison
-                      replayInstances[i].instance_vars[16] = 1; //this line makes behaivour insts disabled, breaking the getPlayer() function
-                      // however we need this line otherwise the player sprite looks weird
-                      
-                      console.log(replayInstances[i].behavior_insts[0].enabled)
-                      console.log(getPlayer())
-
-                      // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
-
-                      console.log(replayInstances[i].behavior_insts[0].enabled)
-                      console.log(getPlayer())
-
-                    } else {
-                      console.log("yo")
-                      replayInstances[i] = this.createGhostPlayer(data);
-                    }
-                } else if (replayIndex === 3) {
-                  console.log(replayInstances[i].behavior_insts[0].enabled)
-                  console.log(replayInstances[i])
-                  console.log(getPlayer())
-                } else {
-                    data.layout = compareReplay.data[compareReplay.data.length - 1][1][1]
-                    data.layer = replayInstances[i].layer.name;
-                    this.loadPlayerData(replayInstances[i], data);
-                }
-              }
-              let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
-              let numFrames = replayJSON.size[0];
-              frames = [];
-              for (let i = 0; i < numFrames; i++) {
-                frames.push(Math.floor((i * totalFrames) / numFrames));
-              }
-
-              compareReplayJSONs.forEach((compareReplay) => {
-                if (compareReplay !== replayJSON) {
-                  let compareTotalFrames = compareReplay.size[0] * (runtime.fps / 60);
-                  let compareNumFrames = compareReplay.size[0];
-                  compareReplay.frames = [];
-                  for (let i = 0; i < compareNumFrames; i++) {
-                    compareReplay.frames.push(Math.floor((i * compareTotalFrames) / compareNumFrames));
-                  }
-                }
-              });
-            }
-            replayIndex += 1;
-            if (replayIndex >= frames[frames.length - 1]) {
-              ghostAtFlag = true;
-              replaying_compare = false;
-              replayIndex = 0;
-              
-
-              if (playingBack) {
-
-                replayInstances[0].instance_vars[16] = 0;
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
-                // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
-
-                console.log("replay done")
-
-                console.log(replayInstance)
-                console.log(getPlayer())
-                playerType.instances.filter(
-                  (x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled
-                )[0] = replayInstance;
-
-                c2_callFunction("Menu > End", []);
-                runtime.untickMe(this);
-                playingBack = false;
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0] = replayInstances[0]; // set the camera to follow the ghost player
-                document.querySelectorAll(".replay-compare-arrow").forEach((element) => {
-                  element.remove();
-                });
-              }
-              
-
-            }
-          } else {
-            // replay
-            runtime.changelayout = runtime.layouts[replayJSON.data[replayJSON.data.length - 1][1][1]];
-          }
-        }
-
-        if (replaying && !paused) { 
-          if (runtime.running_layout.name === replayJSON.data[replayJSON.data.length - 1][1][1]) {
-
-            if(frames.includes(replayIndex)) {
-
-              let replayFrame = replayJSON.data[frames.indexOf(replayIndex)]; //o(n) but n is small so it should be fine
-              let data = {
-                  x: replayFrame[0][0],
-                  y: replayFrame[1][0],
-                  angle: replayFrame[2][0],
-                  state: replayFrame[3][0],
-                  side: replayFrame[5][0],
-                  frame: replayFrame[4][0],
-                  skin: "",
-                  opacity: 0.5,
-                  hitboxShown: true
-              }
-              if(replayIndex === 0) {
-                  if(getPlayer() === undefined) { //if they were on the same level, and they replay, they will be undefined
-                    console.log("undefined player")
-                    return;
-                  }
-                  data.layout = getCurLayout();
-                  data.layer = getPlayer().layer.name;
-                  if (playingBack) {
-                    this.destroyNonPlayerGhosts();
-
-                    replayInstance = getPlayer();
-                    replayInstance.instance_vars[16] = 1; //this line makes behaivour insts disabled, breaking the getPlayer() function
-                    // however we need this line otherwise the player sprite looks weird
-                    
-                    console.log(replayInstance.behavior_insts[0].enabled)
-                    console.log(getPlayer())
-
-                    // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 1
-                    console.log(replayInstance.behavior_insts[0].enabled)
-                    console.log(getPlayer())
-
-                  } else {
-                    replayInstance = this.createGhostPlayer(data);
-                    // console.log(replayInstance);
-                  }
-              } else {
-                  data.layout = replayJSON.data[replayJSON.data.length - 1][1][1]
-                  data.layer = replayInstance.layer.name;
-                  this.loadPlayerData(replayInstance, data);
-              }
-              let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
-              let numFrames = replayJSON.size[0];
-              frames = [];
-              for (let i = 0; i < numFrames; i++) {
-                  frames.push(Math.floor((i * totalFrames) / numFrames));
-              }
-            }
-            
-            replayIndex += 1;
-            if (replayIndex >= frames[frames.length - 1]) {
-              ghostAtFlag = true;
-              replaying = false;
-              replayIndex = 0;
-
-              console.log("replay done")
-              console.log(getPlayer())
-              
-
-              if (playingBack) {
-
-                replayInstance.instance_vars[16] = 0;
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[18] = 0;
-                // runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[3] = 0
-                runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.Globals).instances[0].instance_vars[21] = 0
-
-                console.log("replay done2")
-
-                console.log(replayInstance)
-                console.log(getPlayer())
-                playerType.instances.filter(
-                  (x) => x.instance_vars[17] === "" && x.behavior_insts[0].enabled
-                )[0] = replayInstance;
-
-                c2_callFunction("Menu > End", []);
-                runtime.untickMe(this);
-                playingBack = false;
-              }
-              
-
-            }
-          } else {
-            // replay
-            runtime.changelayout = runtime.layouts[replayJSON.data[replayJSON.data.length - 1][1][1]];
-          }
-        }
-
-
-      },
-      toString() {
-          return "modloader.replay";
-      }
+  const CONFIG = {
+    GHOST_OPACITY: 0.5,
+    HITBOX_VISIBLE: true,
+    DEFAULT_SKIN: "",
+    FPS_BASE: 60,
+    UI: {
+      ARROW_SIZE: "6%",
+      ARROW_BOTTOM: "10%",
+      LEFT_ARROW_POSITION: "46%",
+      RIGHT_ARROW_POSITION: "54%",
+      ARROW_ZINDEX: "1000",
+      LEFT_ARROW_ICON: "https://cdn-icons-png.flaticon.com/128/93/93634.png",
+      RIGHT_ARROW_ICON: "https://cdn-icons-png.flaticon.com/128/2767/2767192.png"
+    }
   };
-  replayruntime.init();
 
-  globalThis.beginRacing = function(replayData, replayObj) {
-    console.log("begin racing", replayData)
-    runtime.tickMe(replayruntime);
-    replayInfo = replayObj;
-    replayJSON = replayData;
-    replaying = true;
-    replayIndex = 0;
-    playingBack = false;
-    let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
-    let numFrames = replayJSON.size[0];
-    frames = [];
+  const runtime = cr_getC2Runtime();
+
+  const getPlayerType = () => runtime.types_by_index.find(
+    x => !!x.animations && x.animations[0].frames[0].texture_file.includes("collider")
+  );
+
+  const getGhostArrType = () => runtime.types_by_index.find(
+    x => x.plugin instanceof cr.plugins_.Arr && x.default_instance[5][1] === 6
+  );
+
+  const getGlobalsType = () => runtime.types_by_index.find(
+    x => x.plugin instanceof cr.plugins_.Globals
+  );
+
+  const getCameraType = () => runtime.types_by_index.find(
+    x => x.plugin instanceof cr.plugins_.MagiCam
+  );
+  
+  const getPlayer = () => {
+    const playerType = getPlayerType();
+    if (!playerType) return null;
+    
+    return playerType.instances.find(
+      x => x.instance_vars[17] === "" && x.behavior_insts[0].enabled
+    );
+  };
+  
+  const getFlag = () => {
+    const flagType = runtime.types_by_index.find(
+      x => x.name === "EndFlag" || 
+        (x.plugin instanceof cr.plugins_.Sprite && 
+         x.all_frames && 
+         x.all_frames[0].texture_file.includes("endflag"))
+    );
+    return flagType ? flagType.instances[0] : null;
+  };
+
+  
+  const getCurrentLayout = () => runtime.running_layout.name;
+
+  
+  const calculateFrames = (replayData) => {
+    // const currentReplayIndex = state.replayIndex;
+    // const currentTotalFrames = state.frames.length;
+
+    const totalFrames = replayData.size[0] * (runtime.fps / CONFIG.FPS_BASE);
+    const numFrames = replayData.size[0];
+    const frames = [];
+    
     for (let i = 0; i < numFrames; i++) {
-        frames.push(Math.floor((i * totalFrames) / numFrames));
+      frames.push(Math.floor((i * totalFrames) / numFrames));
+    }
+
+    // state.replayIndex = Math.floor(currentReplayIndex * (numFrames / currentTotalFrames));
+    
+    return frames;
+  };
+
+  class ReplayState {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.replayInstance = null;
+      this.replayJSON = null;
+      this.replayIndex = 0;
+      this.frames = [];
+      this.replaying = false;
+      this.ghostAtFlag = false;
+      this.playerDeath = false;
+      this.paused = false;
+      this.playingBack = false;
+      this.replayInfo = null;
+      this.lastNonDeathState = "";
+    }
+
+    isActive() {
+      return this.replaying || this.playerDeath || this.ghostAtFlag;
     }
   }
+
+  class CompareState {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.active = false;
+      this.replayJSONs = [];
+      this.replayInstances = [];
+    }
+  }
+
+  const state = new ReplayState();
+  const compareState = new CompareState();
+
+  class GhostManager {
+    static destroyNonPlayerGhosts() {
+      if (!getFlag()) return;
+
+      const playerType = getPlayerType();
+      if (!playerType) return;
+
+      const ghosts = playerType.instances.filter(
+        x => x.instance_vars[16] && x.instance_vars[17] !== ""
+      );
+
+      ghosts.forEach(ghost => {
+        runtime.DestroyInstance(ghost);
+        ghost.siblings.forEach(sibling => {
+          cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
+            sibling.behaviorSkins[0]
+          );
+        });
+      });
+
+      const ghostArrType = getGhostArrType();
+      if (ghostArrType) {
+        const ghostArr = ghostArrType.instances[0];
+        ghostArr.setSize(0, ghostArr.cy, ghostArr.cz);
+      }
+
+      const playerEvents = runtime.eventsheets.Player?.events?.[2]?.subevents?.[2]?.subevents?.[1];
+      if (playerEvents) {
+        playerEvents.actions.length = 0;
+      }
+    }
+
+    static createGhostPlayer(data) {
+      if (!data || data.layout !== getCurrentLayout()) return null;
+
+      const layer = runtime.running_layout.layers.find(
+        layer => layer.name === data.layer
+      );
+      
+      if (!layer) return null;
+
+      this.destroyNonPlayerGhosts();
+
+      const playerType = getPlayerType();
+      const instance = runtime.createInstance(playerType, layer, data.x, data.y);
+
+      instance.visible = data.hitboxShown;
+      instance.instance_vars[16] = 1; 
+      instance.instance_vars[17] = "test";
+      instance.instance_vars[18] = 1;
+      instance.instance_vars[12] = data.skin;
+      instance.instance_vars[0] = data.state;
+      instance.collisionsEnabled = false;
+
+      instance.siblings.forEach(sibling => {
+        if (data.skin === "") {
+          cr.behaviors.SkymenSkin.prototype.acts.UseDefault.call(
+            sibling.behaviorSkins[0]
+          );
+          sibling.opacity = data.opacity;
+          sibling.set_bbox_changed();
+        } else {
+          cr.behaviors.SkymenSkin.prototype.acts.SetSkin.call(
+            sibling.behaviorSkins[0],
+            data.skin
+          );
+        }
+      });
+
+      return instance;
+    }
+
+    static loadPlayerData(player, data) {
+      if (data.layout !== getCurrentLayout()) {
+        state.replaying = false;
+        state.replayInstance = null;
+        return;
+      }
+
+      player.x = data.x;
+      player.y = data.y;
+      player.angle = data.angle;
+
+      if (data.state !== "dead") {
+        state.lastNonDeathState = data.state;
+      }
+      player.instance_vars[0] = data.state === "dead" ? state.lastNonDeathState : data.state;
+      player.instance_vars[2] = data.side;
+
+      if (data.side > 0) {
+        c2_callFunction("Player > Unmirror", [player.uid]);
+      } else if (data.side < 0) {
+        c2_callFunction("Player > Mirror", [player.uid]);
+      }
+
+      cr.plugins_.Sprite.prototype.acts.SetAnimFrame.call(player, data.frame);
+      player.set_bbox_changed();
+    }
+  }
+
+
+  class ReplayProcessor {
+    static createPlayerData(replayFrame, includeLayout = false) {
+      const data = {
+        x: replayFrame[0][0],
+        y: replayFrame[1][0],
+        angle: replayFrame[2][0],
+        state: replayFrame[3][0],
+        side: replayFrame[5][0],
+        frame: replayFrame[4][0],
+        skin: CONFIG.DEFAULT_SKIN,
+        opacity: CONFIG.GHOST_OPACITY,
+        hitboxShown: CONFIG.HITBOX_VISIBLE
+      };
+
+      if (includeLayout) {
+        const player = getPlayer();
+        if (!player) return null;
+        
+        data.layout = getCurrentLayout();
+        data.layer = player.layer.name;
+      }
+
+      return data;
+    }
+
+   
+    static normalizeReplayLengths(replayList) {
+      if (!replayList || replayList.length === 0) return replayList;
+
+      // find the longest replay
+      const longestReplay = replayList.reduce((longest, current) => 
+        current.size[0] > longest.size[0] ? current : longest,
+        replayList[0]
+      );
+
+      // move longest to front
+      const longestIndex = replayList.indexOf(longestReplay);
+      if (longestIndex !== 0) {
+        [replayList[0], replayList[longestIndex]] = [replayList[longestIndex], replayList[0]];
+      }
+
+      // pad shorter replays
+      replayList.forEach(replay => {
+        if (replay !== longestReplay) {
+          const difference = longestReplay.size[0] - replay.size[0];
+          const lastFrame = replay.data[replay.data.length - 1];
+          
+          for (let i = 0; i < difference; i++) {
+            replay.data.push([...lastFrame]);
+          }
+          replay.size[0] = longestReplay.size[0];
+        }
+      });
+
+      return replayList;
+    }
+  }
+
+
+  class GlobalsManager {
+    static setGlobalVar(index, value) {
+      const globals = getGlobalsType();
+      if (globals && globals.instances[0]) {
+        globals.instances[0].instance_vars[index] = value;
+      }
+    }
+
+    static resetReplayGlobals() {
+      this.setGlobalVar(3, 0);
+      this.setGlobalVar(21, 0);
+      this.setGlobalVar(18, 0);
+    }
+  }
+
+  class CameraManager {
+    static setFollowTarget(target) {
+      const cameraType = getCameraType();
+      if (cameraType && cameraType.instances[0]) {
+        cameraType.instances[0].activeCamera.followedObjects[0] = target;
+      }
+    }
+
+    static cycleFollowTarget(direction) {
+      if (compareState.replayInstances.length === 0) return;
+
+      const cameraType = getCameraType();
+      if (!cameraType || !cameraType.instances[0]) return;
+
+      const currentFollowing = cameraType.instances[0].activeCamera.followedObjects[0];
+      const currentIndex = compareState.replayInstances.indexOf(currentFollowing);
+      
+      const numInstances = compareState.replayInstances.length;
+      const newIndex = (currentIndex + direction + numInstances) % numInstances;
+      
+      this.setFollowTarget(compareState.replayInstances[newIndex]);
+    }
+  }
+
+  class UIManager {
+    static createComparisonControls() {
+      this.removeComparisonControls();
+
+      const leftArrow = this.createArrowElement(
+        CONFIG.UI.LEFT_ARROW_ICON,
+        CONFIG.UI.LEFT_ARROW_POSITION,
+        () => CameraManager.cycleFollowTarget(-1)
+      );
+
+      const rightArrow = this.createArrowElement(
+        CONFIG.UI.RIGHT_ARROW_ICON,
+        CONFIG.UI.RIGHT_ARROW_POSITION,
+        () => CameraManager.cycleFollowTarget(1)
+      );
+
+      document.body.appendChild(leftArrow);
+      document.body.appendChild(rightArrow);
+    }
+
+    static createArrowElement(iconSrc, leftPosition, clickHandler) {
+      const arrow = document.createElement("img");
+      arrow.src = iconSrc;
+      arrow.classList.add("replay-compare-arrow");
+      
+      Object.assign(arrow.style, {
+        position: "absolute",
+        bottom: CONFIG.UI.ARROW_BOTTOM,
+        left: leftPosition,
+        width: CONFIG.UI.ARROW_SIZE,
+        cursor: "pointer",
+        zIndex: CONFIG.UI.ARROW_ZINDEX
+      });
+
+      arrow.addEventListener("click", clickHandler);
+      return arrow;
+    }
+
+    static removeComparisonControls() {
+      document.querySelectorAll(".replay-compare-arrow").forEach(element => {
+        element.remove();
+      });
+    }
+  }
+  
+  class ReplayTicker {
+    static processReplayFrame(replayData, frames, replayIndex, isFirstReplay = false) {
+      if (!frames.includes(replayIndex)) return null;
+
+      const frameIndex = frames.indexOf(replayIndex);
+      const replayFrame = replayData.data[frameIndex];
+      
+      if (replayIndex === 0) {
+        const data = ReplayProcessor.createPlayerData(replayFrame, true);
+        if (!data) return null;
+
+        if (state.playingBack && isFirstReplay) {
+          GhostManager.destroyNonPlayerGhosts();
+          const instance = getPlayer();
+          if (instance) {
+            instance.instance_vars[16] = 1;
+            return instance;
+          }
+        } else {
+          return GhostManager.createGhostPlayer(data);
+        }
+      } else {
+        const data = ReplayProcessor.createPlayerData(replayFrame);
+        data.layout = replayData.data[replayData.data.length - 1][1][1];
+        return data;
+      }
+    }
+
+
+    static tickSingleReplay() {
+      if (!state.replaying || state.paused) return;
+
+      const targetLayout = state.replayJSON.data[state.replayJSON.data.length - 1][1][1];
+      
+      if (runtime.running_layout.name !== targetLayout) {
+        runtime.changelayout = runtime.layouts[targetLayout];
+        return;
+      }
+
+      const result = this.processReplayFrame(
+        state.replayJSON,
+        state.frames,
+        state.replayIndex,
+        true
+      );
+
+      if (result) {
+        if (state.replayIndex === 0) {
+          state.replayInstance = result;
+        } else if (state.replayInstance) {
+          GhostManager.loadPlayerData(state.replayInstance, result);
+        }
+        
+        state.frames = calculateFrames(state.replayJSON);
+      }
+
+      state.replayIndex++;
+
+      if (state.replayIndex >= state.frames[state.frames.length - 1]) {
+        this.finishReplay();
+      }
+    }
+
+    
+    static tickCompareMode() {
+      if (!compareState.active || state.paused) return;
+
+      const targetLayout = state.replayJSON.data[state.replayJSON.data.length - 1][1][1];
+      
+      if (runtime.running_layout.name !== targetLayout) {
+        runtime.changelayout = runtime.layouts[targetLayout];
+        return;
+      }
+
+      compareState.replayJSONs.forEach((replayData, index) => {
+        const result = this.processReplayFrame(
+          replayData,
+          replayData.frames,
+          state.replayIndex,
+          index === 0 && state.playingBack
+        );
+
+        if (result) {
+          if (state.replayIndex === 0) {
+            compareState.replayInstances[index] = result;
+          } else if (compareState.replayInstances[index] && typeof result === 'object') {
+            result.layer = compareState.replayInstances[index].layer.name;
+            GhostManager.loadPlayerData(compareState.replayInstances[index], result);
+          }
+
+          replayData.frames = calculateFrames(replayData);
+        }
+      });
+
+      state.replayIndex++;
+
+      if (state.replayIndex >= state.frames[state.frames.length - 1]) {
+        this.finishComparison();
+      }
+    }
+
+    static finishReplay() {
+      state.ghostAtFlag = true;
+      state.replaying = false;
+      state.replayIndex = 0;
+
+      if (state.playingBack) {
+        console.log("done playing")
+        state.replayInstance.instance_vars[16] = 0;
+        GlobalsManager.setGlobalVar(18, 0);
+        GlobalsManager.setGlobalVar(21, 0);
+        // GlobalsManager.resetReplayGlobals();
+        
+        c2_callFunction("Menu > End", []);
+
+
+        runtime.untickMe(replaySystem);
+        state.playingBack = false;
+      }
+    }
+
+    
+    static finishComparison() {
+      state.ghostAtFlag = true;
+      compareState.active = false;
+      state.replayIndex = 0;
+
+      if (state.playingBack) {
+        compareState.replayInstances[0].instance_vars[16] = 0;
+        GlobalsManager.resetReplayGlobals();
+
+        c2_callFunction("Menu > End", []);
+        runtime.untickMe(replaySystem);
+        state.playingBack = false;
+        
+        CameraManager.setFollowTarget(compareState.replayInstances[0]);
+        UIManager.removeComparisonControls();
+      }
+    }
+  }
+
+  class EventHandlers {
+    static handleLayoutChange(event) {
+      const { currentLayout, layout } = event.detail;
+      
+      if (currentLayout === layout && layout.name.startsWith("Level")) {
+        // player respawned
+        if (state.isActive()) {
+          state.replayIndex = 0;
+          state.replaying = true;
+          state.playerDeath = false;
+          state.ghostAtFlag = false;
+          state.paused = false;
+        }
+      } else if (
+        currentLayout.name === state.replayJSON?.data[state.replayJSON.data.length - 1][1][1] &&
+        currentLayout !== layout &&
+        layout.name !== state.replayJSON.data[state.replayJSON.data.length - 1][1][1]
+      ) {
+        // player leaves level
+        if (state.isActive()) {
+          this.resetAllState();
+        }
+      }
+    }
+
+    static handleFunctionCall(event) {
+      if (event.detail.name === "Gameplay > Death" && state.replaying) {
+        state.playerDeath = true;
+        state.replaying = false;
+      }
+      
+      if (event.detail.name === "Menu > End" && state.replaying) {
+        state.paused = true;
+      }
+    }
+
+    static handleDialogOpen(event) {
+      if (event.detail.name === "PauseClose" && state.replaying) {
+        state.paused = true;
+      }
+    }
+
+    static handleDialogClose(event) {
+      if (event.detail.name === "PauseClose" && state.replaying) {
+        state.paused = false;
+      }
+    }
+
+    static resetAllState() {
+      state.replaying = false;
+      state.replayIndex = 0;
+      state.playerDeath = false;
+      state.ghostAtFlag = false;
+      state.replayInstance = null;
+      state.playingBack = false;
+      state.paused = false;
+      
+      GlobalsManager.resetReplayGlobals();
+      runtime.untickMe(replaySystem);
+    }
+  }
+
+
+  const replaySystem = {
+    init() {
+      // register hooks
+      window.addEventListener("LayoutChange", (e) => EventHandlers.handleLayoutChange(e), false);
+      window.addEventListener("CallFunction", (e) => EventHandlers.handleFunctionCall(e), false);
+      window.addEventListener("DialogOpen", (e) => EventHandlers.handleDialogOpen(e), false);
+      window.addEventListener("DialogClose", (e) => EventHandlers.handleDialogClose(e), false);
+    },
+
+    tick() {
+      if (compareState.active) {
+        ReplayTicker.tickCompareMode();
+      } else if (state.replaying) {
+        ReplayTicker.tickSingleReplay();
+      }
+    },
+
+    toString() {
+      return "modloader.replay";
+    }
+  };
+
+  
+  globalThis.beginRacing = function(replayData, replayObj) {
+    // console.log("begin racing", replayData);
+    
+    runtime.tickMe(replaySystem);
+    state.replayInfo = replayObj;
+    state.replayJSON = replayData;
+    state.replaying = true;
+    state.replayIndex = 0;
+    state.playingBack = false;
+    state.frames = calculateFrames(replayData);
+    GlobalsManager.setGlobalVar(3, 1);
+    GlobalsManager.setGlobalVar(21, 1);
+  };
+
+  
+  globalThis.beginReplay = function(replayData) {
+    // console.log("begin replaying", replayData);
+    
+    runtime.tickMe(replaySystem);
+    state.replayJSON = replayData;
+    state.replaying = true;
+    state.replayIndex = 0;
+    state.playingBack = true;
+    state.frames = calculateFrames(replayData);
+    GlobalsManager.setGlobalVar(3, 1);
+    GlobalsManager.setGlobalVar(21, 1);
+  };
+
+  
+  globalThis.beginComparing = function(compareReplayList) {
+    // console.log("begin comparing", compareReplayList);
+    
+    runtime.tickMe(replaySystem);
+    
+    const normalizedReplays = ReplayProcessor.normalizeReplayLengths(compareReplayList);
+    
+    state.replayJSON = normalizedReplays[0];
+    compareState.active = true;
+    compareState.replayJSONs = normalizedReplays;
+    state.replayIndex = 0;
+    compareState.replayInstances = [];
+    state.playingBack = true;
+    
+    normalizedReplays.forEach(replay => {
+      replay.frames = calculateFrames(replay);
+    });
+    
+    state.frames = state.replayJSON.frames;
+    
+    UIManager.createComparisonControls();
+    GlobalsManager.setGlobalVar(3, 1);
+    GlobalsManager.setGlobalVar(21, 1);
+  };
+
+  
   globalThis.replaysInfo = function() {
     return {
-      replayInstance: replayInstance,
-      replayJSON: replayJSON,
-      replayIndex: ghostAtFlag ? frames[frames.length - 1] : replayIndex,
-      replaying: replaying,
-      ghostAtFlag: ghostAtFlag,
-      playerDeath: playerDeath,
-      paused: paused,
-      playingBack: playingBack,
-      frames: frames,
-      replayInfo: replayInfo
-    }
-  }
-  globalThis.beginReplay = function(replayData) {
-    console.log("begin replay", replayData)
-    runtime.tickMe(replayruntime);
-    replayJSON = replayData;
-    replaying = true;
-    replayIndex = 0;
-    playingBack = true;
-    let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
-    let numFrames = replayJSON.size[0];
-    frames = [];
-    for (let i = 0; i < numFrames; i++) {
-        frames.push(Math.floor((i * totalFrames) / numFrames));
-    }
-    // console.log(frames)
-  }
+      replayInstance: state.replayInstance,
+      replayJSON: state.replayJSON,
+      replayIndex: state.ghostAtFlag ? state.frames[state.frames.length - 1] : state.replayIndex,
+      replaying: state.replaying,
+      ghostAtFlag: state.ghostAtFlag,
+      playerDeath: state.playerDeath,
+      paused: state.paused,
+      playingBack: state.playingBack,
+      frames: state.frames,
+      replayInfo: state.replayInfo,
+      compareMode: compareState.active,
+      compareInstances: compareState.replayInstances
+    };
+  };
 
-  globalThis.beginComparing = function(compareReplayList) {
-    console.log("begin comparing", compareReplayList);
-    runtime.tickMe(replayruntime);
-    
-    let largestSubarray = compareReplayList.reduce((largest, current) => {
-      return current.size[0] > largest.size[0] ? current : largest;
-    }, compareReplayList[0]);
+  replaySystem.init();
 
-    console.log("largest", largestSubarray);
-
-    let largestIndex = compareReplayList.indexOf(largestSubarray);
-    if (largestIndex !== 0) {
-      [compareReplayList[0], compareReplayList[largestIndex]] = [compareReplayList[largestIndex], compareReplayList[0]];
-    }
-
-    console.log(compareReplayList)
-    compareReplayList.forEach((replay) => {
-      if (replay !== largestSubarray) {
-      let difference = largestSubarray.size[0] - replay.size[0];
-      for (let i = 0; i < difference; i++) {
-        replay.data.push([...replay.data[replay.data.length - 1]]);
-      }
-      replay.size[0] = largestSubarray.size[0];
-      }
-    });
-    console.log(compareReplayList)
-
-
-
-
-    console.log(compareReplayList)
-    replayJSON = largestSubarray; 
-    replaying_compare = true;
-    replayIndex = 0;
-    replayInstances = []; // clear previous instances
-    playingBack = true; // for the purposes of the end flag
-    let totalFrames = replayJSON.size[0] * (runtime.fps / 60);
-    let numFrames = replayJSON.size[0];
-    frames = [];
-    for (let i = 0; i < numFrames; i++) {
-        frames.push(Math.floor((i * totalFrames) / numFrames));
-    }
-
-    compareReplayJSONs = compareReplayList
-
-    // Create UI arrow elements
-    let leftArrow = document.createElement("img");
-    leftArrow.src = "https://cdn-icons-png.flaticon.com/128/93/93634.png";
-    leftArrow.style.position = "absolute";
-    leftArrow.style.bottom = "10%";
-    leftArrow.style.left = "46%";
-    leftArrow.style.width = "6%";
-    // leftArrow.style.height = "10%";
-    leftArrow.style.cursor = "pointer";
-    leftArrow.style.zIndex = "1000";
-    leftArrow.classList.add("replay-compare-arrow");
-
-    document.body.appendChild(leftArrow);
-
-
-    let rightArrow = document.createElement("img");
-    rightArrow.src = "https://cdn-icons-png.flaticon.com/128/2767/2767192.png"; 
-    rightArrow.style.position = "absolute";
-    rightArrow.style.bottom = "10%";
-    rightArrow.style.left = "54%";
-    rightArrow.style.width = "6%";
-    // rightArrow.style.height = "10%";
-    rightArrow.style.cursor = "pointer";
-    rightArrow.style.zIndex = "1000";
-    rightArrow.classList.add("replay-compare-arrow");
-    
-    document.body.appendChild(rightArrow);
-
-    // Add event listeners for arrows
-    leftArrow.addEventListener("click", () => {
-      console.log("Left arrow clicked");
-
-      let currentFollowing = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0]
-      let currentFollowingIndex = replayInstances.indexOf(currentFollowing);
-      runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0] = replayInstances[(currentFollowingIndex - 1 + replayInstances.length) % replayInstances.length]
-
-      // Add functionality for left arrow click
-    });
-
-    rightArrow.addEventListener("click", () => {
-      console.log("Right arrow clicked");
-
-      let currentFollowing = runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0]
-      let currentFollowingIndex = replayInstances.indexOf(currentFollowing);
-      runtime.types_by_index.find(x=>x.plugin instanceof cr.plugins_.MagiCam).instances[0].activeCamera.followedObjects[0] = replayInstances[(currentFollowingIndex + 1) % replayInstances.length]
-      // Add functionality for right arrow click
-    });
-
-  }
 })();
