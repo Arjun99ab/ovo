@@ -585,7 +585,7 @@
 
   
   globalThis.beginRacing = function(replayData, replayObj) {
-    console.log("Begin racing mode", replayData);
+    // console.log("begin racing", replayData);
     
     runtime.tickMe(replaySystem);
     state.replayInfo = replayObj;
@@ -600,7 +600,7 @@
 
   
   globalThis.beginReplay = function(replayData) {
-    console.log("Begin replay playback", replayData);
+    // console.log("begin replaying", replayData);
     
     runtime.tickMe(replaySystem);
     state.replayJSON = replayData;
@@ -614,7 +614,7 @@
 
   
   globalThis.beginComparing = function(compareReplayList) {
-    console.log("Begin comparison mode", compareReplayList);
+    // console.log("begin comparing", compareReplayList);
     
     runtime.tickMe(replaySystem);
     
@@ -634,6 +634,8 @@
     state.frames = state.replayJSON.frames;
     
     UIManager.createComparisonControls();
+    GlobalsManager.setGlobalVar(3, 1);
+    GlobalsManager.setGlobalVar(21, 1);
   };
 
   
