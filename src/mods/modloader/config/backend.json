@@ -1349,7 +1349,7 @@
             "desc": "Play custom levels made by the community!<br/><br/> 'Shift + l' to open the level menu",
             "url": "../src/mods/modloader/community.js",
             "icon": "../src/img/mods/community.png",
-            "platform": ["pc"],
+            "platform": ["pc", "mobile"],
             "version": ["1.4.4", "CTLE"],
             "tags": ["fun"],
             "reload": false,
@@ -1365,7 +1365,7 @@
                     "openlevelmenukeybind": ["shift", "l"]
                 },
                 "favorite": false,
-                "enabled": false
+                "enabled": true
             }
 
         }
