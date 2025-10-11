@@ -472,7 +472,6 @@
         
         c2_callFunction("Menu > End", []);
 
-
         runtime.untickMe(replaySystem);
         state.playingBack = false;
       }
@@ -486,7 +485,9 @@
 
       if (state.playingBack) {
         compareState.replayInstances[0].instance_vars[16] = 0;
-        GlobalsManager.resetReplayGlobals();
+        // GlobalsManager.resetReplayGlobals();
+        GlobalsManager.setGlobalVar(18, 0);
+        GlobalsManager.setGlobalVar(21, 0);
 
         c2_callFunction("Menu > End", []);
         runtime.untickMe(replaySystem);
