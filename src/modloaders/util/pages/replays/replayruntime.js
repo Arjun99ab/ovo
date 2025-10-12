@@ -188,6 +188,7 @@
     static loadPlayerData(player, data) {
       if (data.layout !== getCurrentLayout()) {
         state.replaying = false;
+        compareState.active = false;
         state.replayInstance = null;
         return;
       }
@@ -381,6 +382,7 @@
       } else {
         const data = ReplayProcessor.createPlayerData(replayFrame);
         data.layout = replayData.data[replayData.data.length - 1][1][1];
+        console.log(isFirstReplay, data)
         return data;
       }
     }
@@ -468,9 +470,10 @@
         state.replayInstance.instance_vars[16] = 0;
         GlobalsManager.setGlobalVar(18, 0);
         GlobalsManager.setGlobalVar(21, 0);
-        // GlobalsManager.resetReplayGlobals();
         
         c2_callFunction("Menu > End", []);
+        // GlobalsManager.resetReplayGlobals();
+
 
         runtime.untickMe(replaySystem);
         state.playingBack = false;
@@ -511,6 +514,7 @@
           state.playerDeath = false;
           state.ghostAtFlag = false;
           state.paused = false;
+          compareState.active = true;
         }
       } else if (
         currentLayout.name === state.replayJSON?.data[state.replayJSON.data.length - 1][1][1] &&
@@ -532,6 +536,7 @@
       
       if (event.detail.name === "Menu > End" && state.replaying) {
         state.paused = true;
+        console.log("hi chatters")
       }
     }
 
@@ -544,6 +549,17 @@
     static handleDialogClose(event) {
       if (event.detail.name === "PauseClose" && state.replaying) {
         state.paused = false;
+      }
+    }
+
+    static handleButtonClick(event) {
+      if (event.detail.name === "Menu > GiveUp" && state.replaying) {
+        // this.resetAllState();
+        GlobalsManager.setGlobalVar(18, 0);
+        GlobalsManager.setGlobalVar(21, 0);
+        state.reset()
+        compareState.reset()
+        UIManager.removeComparisonControls();
       }
     }
 
@@ -569,6 +585,8 @@
       window.addEventListener("CallFunction", (e) => EventHandlers.handleFunctionCall(e), false);
       window.addEventListener("DialogOpen", (e) => EventHandlers.handleDialogOpen(e), false);
       window.addEventListener("DialogClose", (e) => EventHandlers.handleDialogClose(e), false);
+      window.addEventListener("ButtonClick", (e) => EventHandlers.handleButtonClick(e), false);
+
     },
 
     tick() {
@@ -616,6 +634,8 @@
   
   globalThis.beginComparing = function(compareReplayList) {
     // console.log("begin comparing", compareReplayList);
+
+    // runtime.changelayout = runtime.running_layout
     
     runtime.tickMe(replaySystem);
     
@@ -627,6 +647,8 @@
     state.replayIndex = 0;
     compareState.replayInstances = [];
     state.playingBack = true;
+    state.replaying = true;
+
     
     normalizedReplays.forEach(replay => {
       replay.frames = calculateFrames(replay);

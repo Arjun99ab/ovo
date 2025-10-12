@@ -79,7 +79,7 @@ async function compressAndStoreInIndexedDB(data, replayName, replayDescription, 
     name: "replays"
   });
   let uuid = crypto.randomUUID();
-  // let uuid = uuidv4();
+  // let uuid = uuidv4(); // for local testing on ios
   let saveObj = {
     id: uuid,
     name: replayName,
