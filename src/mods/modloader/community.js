@@ -589,6 +589,7 @@
           ovoLevelEditor.startLevel(levelJson);
           document.getElementById("community-menu")?.remove();
           utils.enableClick(state.map);
+          document.getElementById("c2canvasdiv").style.filter = "none";
         } catch (error) {
           console.error("Failed to load level:", error);
           utils.notify("Error", "Failed to load level", "./speedrunner.png");
@@ -931,6 +932,7 @@
         } else {
           menu.remove();
           utils.enableClick(state.map);
+          document.getElementById("c2canvasdiv").style.filter = "none";
         }
       }
     }
@@ -944,6 +946,7 @@
       if (menu) {
         menu.remove();
         utils.enableClick(state.map);
+        document.getElementById("c2canvasdiv").style.filter = "none";
       }
       document.removeEventListener("keydown", communityLevelsMod.keyDown);
     }
