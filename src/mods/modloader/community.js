@@ -286,6 +286,93 @@
             return function() {
               f.webGL_texture = runtime.glwrap.loadTexture(f.texture_img, true, runtime.linearSampling, f.pixelformat);
               console.log("Loaded texture: " + f.texture_img.cr_src);
+
+              let y = [
+                    [
+                        //bascially find the x position of the Reload button in the Pause menu, and adjust relative to that
+                        runtime.layouts["Level 1"].layers.find(function(a) {return "Overlay" === a.name}).initial_instances.find(item => JSON.stringify(item).includes("Reload"))[0][0] + 140,
+                        38,
+                        0,
+                        64,
+                        64,
+                        0,
+                        0,
+                        1,
+                        0.5,
+                        0.5,
+                        0,
+                        0,
+                        []
+                    ],
+                    spritePlugin.index,
+                    3104, // check this too maybe
+                    [
+                        [
+                            0
+                        ],
+                        [
+                            1
+                        ],
+                        [
+                            0
+                        ],
+                        [
+                            0
+                        ],
+                        [
+                            ""
+                        ],
+                        [
+                            ""
+                        ],
+                        [
+                            0
+                        ],
+                        [
+                            0
+                        ],
+                        [
+                            0
+                        ],
+                        [
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            1,
+                            "1",
+                            "2",
+                            "",
+                            "Click",
+                            1,
+                            "Hover",
+                            1,
+                            "Menu > CommunityLevels",
+                            ""
+                        ],
+                        [
+                            ""
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            "",
+                            ""
+                        ]
+                    ],
+                    [
+                        0,
+                        "CommunityLevels",
+                        0,
+                        1
+                    ]
+                ]
               
               let y1 = [
                   [
@@ -381,12 +468,12 @@
               // runtime.redraw = true
     
               runtime.layouts_by_index.forEach(layout => {
-                // layout.layers.forEach(layer => {
-                //   if (layer.name === "Pause" || layer.name === "End Game" || layer.name === "End Card") {
-                //     layer.startup_initial_instances.push(y);
-                //     layer.initial_instances.push(y);
-                //   }
-                // });
+                layout.layers.forEach(layer => {
+                  if (layer.name === "Pause" || layer.name === "End Game" || layer.name === "End Card") {
+                    layer.startup_initial_instances.push(y);
+                    layer.initial_instances.push(y);
+                  }
+                });
                 if (layout.sheetname === "Main Menu") {
                   layout.layers.forEach(layer => {
                     if (layer.name === "Layer 1") {
@@ -434,6 +521,21 @@
       console.log(animobj)
       console.log(spritePlugin.animations.length)
       spritePlugin.animations[spritePlugin.animations.length - 1] = animobj;		// swap array data for object
+    },
+
+    async playLevel(level) {
+      console.log("Playing level:", level);
+      try {
+        const levelJson = await fetch("../src/communitylevels/" + level.levelname)
+          .then(res => res.json());
+        ovoLevelEditor.startLevel(levelJson);
+        document.getElementById("community-menu")?.remove();
+        utils.enableClick(state.map);
+        document.getElementById("c2canvasdiv").style.filter = "none";
+      } catch (error) {
+        console.error("Failed to load level:", error);
+        utils.notify("Error", "Failed to load level", "./speedrunner.png");
+      }
     }
   };
 
@@ -509,6 +611,7 @@
         border: "2px solid #e0e0e0",
         width: "auto",
         maxWidth: "100%",
+        // maxHeight: "10vh",
         boxSizing: "border-box"
       });
 
@@ -583,17 +686,7 @@
         fontSize: "11pt",
         flex: "1"
       }, async () => {
-        try {
-          const levelJson = await fetch("../src/communitylevels/" + level.levelname)
-            .then(res => res.json());
-          ovoLevelEditor.startLevel(levelJson);
-          document.getElementById("community-menu")?.remove();
-          utils.enableClick(state.map);
-          document.getElementById("c2canvasdiv").style.filter = "none";
-        } catch (error) {
-          console.error("Failed to load level:", error);
-          utils.notify("Error", "Failed to load level", "./speedrunner.png");
-        }
+        await utils.playLevel(level);
       });
 
       const favBtn = this.createButton(
@@ -759,8 +852,9 @@
         display: "flex",
         gap: "15px",
         alignItems: "center",
-        flexWrap: "wrap",
-        borderBottom: "2px solid #e0e0e0"
+        flexWrap: "nowrap",
+        borderBottom: "2px solid #e0e0e0",
+        overflow: "hidden"
       });
 
       const searchInput = document.createElement("input");
@@ -803,7 +897,8 @@
           gap: "8px",
           cursor: "pointer",
           fontSize: "10pt",
-          color: "black"
+          color: "black",
+          textWrap: "nowrap"
         });
 
         const checkbox = document.createElement("input");
@@ -823,12 +918,26 @@
       const { wrapper: favWrapper, checkbox: favCheckbox } = createCheckbox("⭐ Favorites");
       const { wrapper: hiddenWrapper, checkbox: hiddenCheckbox } = createCheckbox("🚫 Hidden");
 
-      const searchBtn = this.createButton("Search", {
+      const randomBtn = this.createButton("🎲", {
+        backgroundColor: "#ea66e3ff",
+        color: "white",
+        padding: "1em",
+        borderRadius: "50%",
+        fontSize: "1.2em",
+        width: "2.5em",
+        height: "2.5em",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }, () => goToRandomLevel());
+
+      const searchBtn = this.createButton("🔎 Search", {
         backgroundColor: "#667eea",
         color: "white",
-        padding: "12px 30px",
+        padding: "12px 20px",
         borderRadius: "25px",
-        fontSize: "11pt"
+        textWrap: "nowrap",
+        fontSize: "1em"
       }, () => performSearch());
 
       const performSearch = async () => {
@@ -846,11 +955,27 @@
         modal.appendChild(newList);
       };
 
+      const goToRandomLevel = async () => {
+        const levels = dataManager.queryDatabase(
+          "",
+          false,
+          false
+        );
+
+        if (levels.length > 0) {
+          const randomIndex = Math.floor(Math.random() * levels.length);
+          const randomLevel = levels[randomIndex];
+
+          await utils.playLevel(randomLevel);
+        }
+      };
+
       
 
       searchBar.appendChild(searchInput);
       searchBar.appendChild(favWrapper);
       searchBar.appendChild(hiddenWrapper);
+      searchBar.appendChild(randomBtn);
       searchBar.appendChild(searchBtn);
 
       const initialLevels = dataManager.queryDatabase("", false, false);
@@ -928,6 +1053,7 @@
         const menu = document.getElementById("community-menu");
         if (!menu) {
           state.map = utils.disableClick();
+          document.getElementById("c2canvasdiv").style.filter = "blur(1.2px)";
           UI.createCommunityMenu();
         } else {
           menu.remove();
@@ -941,6 +1067,7 @@
   globalThis.communityToggle = function (enable) {
     if (enable) {
       document.addEventListener("keydown", communityLevelsMod.keyDown);
+      
     } else {
       const menu = document.getElementById("community-menu");
       if (menu) {
