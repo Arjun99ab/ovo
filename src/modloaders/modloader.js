@@ -1,3 +1,5 @@
+//todo: make all structures more reusable and organized
+
 import {createNotifyModal, createChangelogPopup, createConfirmDeleteModal, createConfirmReloadModal} from './util/modals.js';
 import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify, menuButtonHover, levelButtonHover, addSkin, addModloaderButtonTexture } from './util/ovo.js';
 import {sleep, arraysEqual, detectDeviceType} from './util/utils.js';

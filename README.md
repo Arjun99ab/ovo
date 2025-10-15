@@ -5,17 +5,15 @@ A feature rich, gui integrated OvO mod menu.
 ![modloader screen](./src//img/github/screen.png)
 
 ## Features
-- Enable / disable mods
-- Add custom mods
-- Favorite mods
+- Enable, disable, add mods
 - Customize mod settings
 - Use community made skins
-- Saves data & mods cross sessions & versions
+- Play community made levels
+- Saves data across sessions & versions
 - Supports 9+ versions
 
 ## To-do
-- General settings
-- Profiles
+- Settings
 
 #
 Ideas? Questions? Bug reports? Contact me via Discord at '.awesomeguy.'

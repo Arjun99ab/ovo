@@ -6,9 +6,11 @@
 
   const state = {
     favorites: new Set(),
+    hidden: new Set(),
     history: [],
     searchQuery: '',
     showFavorites: false,
+    showHidden: false,
     showHistory: false,
     map: null,
     map2: null,
@@ -539,66 +541,33 @@
     }
   };
 
-  const storageManager = {
-    getData() {
-      const data = localStorage.getItem("communityLevels");
-      const defaultData = {
-        history: [],
-        favorites: [],
-      };
-      return data ? JSON.parse(data) : defaultData;
-    },
-
-    saveData(data) {
-      localStorage.setItem("communityLevels", JSON.stringify(data));
-    },
-
-    getHistory() {
-      const data = this.getData();
-      return data ? data.history : [];
-    },
-
-    saveHistory() {
-      const data = this.getData();
-      data.history = state.history;
-      this.saveData(data);
-    },
-
-    getFavorites() {
-      const data = this.getData();
-      return data ? new Set(data.favorites) : new Set();
-    },
-
-    saveFavorites() {
-      const data = this.getData();
-      data.favorites = Array.from(state.favorites);
-      this.saveData(data);
-    },
-  };
-
   const dataManager = {
-    queryDatabase(query, showFavorites, showHistory) {
+    queryDatabase(query, showFavorites, showHidden, showHistory) {
       const lowerQuery = query.toLowerCase();
 
       if (showHistory) {
         return state.history
           .map(historyItem => {
-            return state.levelData[historyItem.id];
+            return state.levelData.find(level => level.id === historyItem.id);
           })
           .filter(level => level && (
             level.levelname.replace(/_/g, " ").toLowerCase().includes(lowerQuery) ||
             level.username.toLowerCase().includes(lowerQuery)
           ))
+          .reverse();
       }
-
-      return Object.values(state.levelData).filter(level => {
+      
+      return state.levelData.filter(level => {
         const matchesQuery = 
           level.levelname.replace(/_/g, " ").toLowerCase().includes(lowerQuery) ||
           level.username.toLowerCase().includes(lowerQuery);
         
         const isFavorite = state.favorites.has(level.id);
-
-        if (showFavorites && !isFavorite) return false;
+        const isHidden = state.hidden.has(level.id);
+        
+        if (!showHidden && showFavorites && !isFavorite) return false;
+        if (!showHidden && isHidden) return false;
+        if (showHidden && !isHidden && (!showFavorites || !isFavorite)) return false;
         
         return matchesQuery;
       });
@@ -607,11 +576,19 @@
     toggleFavorite(levelId) {
       if (state.favorites.has(levelId)) {
         state.favorites.delete(levelId);
-        storageManager.saveFavorites();
         return false;
       } else {
         state.favorites.add(levelId);
-        storageManager.saveFavorites();
+        return true;
+      }
+    },
+
+    toggleHidden(levelId) {
+      if (state.hidden.has(levelId)) {
+        state.hidden.delete(levelId);
+        return false;
+      } else {
+        state.hidden.add(levelId);
         return true;
       }
     },
@@ -625,13 +602,14 @@
       
       state.history.unshift({
         id: level.id,
+        levelname: level.levelname,
+        username: level.username,
         timestamp: new Date().toISOString()
       });
       
       if (state.history.length > 50) {
         state.history = state.history.slice(0, 50);
       }
-      storageManager.saveHistory();
     },
 
     getHistoryCount() {
@@ -675,7 +653,10 @@
       });
 
       const updateGradient = () => {
-        if (state.favorites.has(level.id)) {
+        if (state.hidden.has(level.id)) {
+          card.style.background = "linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)";
+          card.style.borderColor = "#ef5350";
+        } else if (state.favorites.has(level.id)) {
           card.style.background = "linear-gradient(135deg, #fff8e1 0%, #ffe082 100%)";
           card.style.borderColor = "#ffa726";
         } else {
@@ -763,8 +744,26 @@
         }
       );
 
+      const hideBtn = this.createButton(
+        state.hidden.has(level.id) ? "👁" : "🚫",
+        {
+          backgroundColor: "#ef5350",
+          color: "white",
+          padding: "12px 18px",
+          borderRadius: "25px",
+          fontSize: "12pt",
+          minWidth: "50px"
+        },
+        () => {
+          const isHidden = dataManager.toggleHidden(level.id);
+          hideBtn.innerHTML = isHidden ? "👁" : "🚫";
+          updateGradient();
+        }
+      );
+
       actions.appendChild(playBtn);
       actions.appendChild(favBtn);
+      actions.appendChild(hideBtn);
 
       card.appendChild(header);
       card.appendChild(content);
@@ -955,7 +954,8 @@
       };
 
       const { wrapper: favWrapper, checkbox: favCheckbox } = createCheckbox("⭐ Favorites");
-      const { wrapper: historyWrapper, checkbox: historyCheckbox } = createCheckbox(`🕐 History`);
+      const { wrapper: hiddenWrapper, checkbox: hiddenCheckbox } = createCheckbox("🚫 Hidden");
+      const { wrapper: historyWrapper, checkbox: historyCheckbox } = createCheckbox(`🕐 History (${dataManager.getHistoryCount()})`);
 
 
       const randomBtn = this.createButton("🎲", {
@@ -985,6 +985,7 @@
         const levels = dataManager.queryDatabase(
           query,
           favCheckbox.checked,
+          hiddenCheckbox.checked,
           historyCheckbox.checked
         );
         
@@ -993,6 +994,8 @@
         
         const newList = this.createLevelsList(levels);
         modal.appendChild(newList);
+
+        historyWrapper.childNodes[1].textContent = `🕐 History (${dataManager.getHistoryCount()})`;
       };
 
       const goToRandomLevel = async () => {
@@ -1006,16 +1009,37 @@
           const randomIndex = Math.floor(Math.random() * levels.length);
           const randomLevel = levels[randomIndex];
 
-          dataManager.addToHistory(randomLevel);
           await utils.playLevel(randomLevel);
         }
       };
 
+      
+
       searchBar.appendChild(searchInput);
       searchBar.appendChild(favWrapper);
+      searchBar.appendChild(hiddenWrapper);
       searchBar.appendChild(historyWrapper);
       searchBar.appendChild(randomBtn);
       searchBar.appendChild(searchBtn);
+
+      if (dataManager.getHistoryCount() > 0) {
+        const clearHistoryBtn = this.createButton("🗑️ Clear History", {
+          backgroundColor: "#e74c3c",
+          color: "white",
+          padding: "12px 20px",
+          borderRadius: "25px",
+          fontSize: "10pt"
+        }, () => {
+          if (confirm(`Clear all ${dataManager.getHistoryCount()} history entries?`)) {
+            dataManager.clearHistory();
+            historyWrapper.childNodes[1].textContent = `🕐 History (0)`;
+            historyCheckbox.checked = false;
+            performSearch();
+            utils.notify("History Cleared", "Play history has been cleared", "../src/img/mods/community.png");
+          }
+        });
+        searchBar.appendChild(clearHistoryBtn);
+      }
 
       const initialLevels = dataManager.queryDatabase("", false, false);
       const levelsList = this.createLevelsList(initialLevels);
@@ -1063,9 +1087,6 @@
 
       state.levelData = await fetch("../src/communitylevels/config/data.json")
         .then(res => res.json());
-
-      state.history = storageManager.getHistory();
-      state.favorites = storageManager.getFavorites();
 
       document.addEventListener("keydown", this.keyDown);
 
