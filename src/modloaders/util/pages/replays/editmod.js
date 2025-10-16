@@ -1304,8 +1304,14 @@ let createUploadPopup = () => {
           setCompareLevelQueue(compareLevelQueue2);
         } else if(section.id == "selected-rows-section") {
           console.log("dragged to selected rows section")
-          compareLevelQueue.push(replayObj); 
-          setCompareLevelQueue(compareLevelQueue); 
+          if (!compareLevelQueue.some(obj => obj.id === replayObj.id)) {
+            compareLevelQueue.push(replayObj);
+            setCompareLevelQueue(compareLevelQueue);
+          } else {
+            console.log("replay already in compare queue:", replayObj.id);
+          }
+          // compareLevelQueue.push(replayObj); 
+          // setCompareLevelQueue(compareLevelQueue); 
         }
 
         console.log("compareLevelQueue after drop", compareLevelQueue);
@@ -1337,8 +1343,14 @@ let createUploadPopup = () => {
             setCompareLevelQueue(compareLevelQueue2);
           } else if(section.id == "selected-rows-section") {
             console.log("dragged to selected rows section")
-            compareLevelQueue.push(draggedReplayObj); 
-            setCompareLevelQueue(compareLevelQueue); 
+            if (!compareLevelQueue.some(obj => obj.id === draggedReplayObj.id)) {
+              compareLevelQueue.push(draggedReplayObj);
+              setCompareLevelQueue(compareLevelQueue);
+            } else {
+              console.log("replay already in compare queue:", draggedReplayObj.id);
+            }
+            // compareLevelQueue.push(draggedReplayObj); 
+            // setCompareLevelQueue(compareLevelQueue); 
           }
           
       
