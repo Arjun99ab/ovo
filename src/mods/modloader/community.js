@@ -841,7 +841,7 @@
         maxWidth: "1200px",
         height: "90%",
         backgroundColor: "white",
-        borderRadius: "20px",
+        borderRadius: "10px",
         // boxShadow: "0 10px 50px rgba(0, 0, 0, 0.3)",
         display: "flex",
         flexDirection: "column",

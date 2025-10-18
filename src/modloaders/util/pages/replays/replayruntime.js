@@ -514,7 +514,7 @@
           state.playerDeath = false;
           state.ghostAtFlag = false;
           state.paused = false;
-          compareState.active = true;
+          // compareState.active = true;
         }
       } else if (
         currentLayout.name === state.replayJSON?.data[state.replayJSON.data.length - 1][1][1] &&
