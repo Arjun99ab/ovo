@@ -25,7 +25,6 @@ const STORE_NAME = "packs";
 const ACTIVE_KEY = "texturePackActive";
 const ZIP_URL = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
 
-let dbPromise = null;
 let zipPromise = null;
 
 const textureKey = (path) => {
@@ -43,8 +42,7 @@ const mimeFor = (path) => {
   return "image/png";
 };
 
-const createPackId = () =>
-  Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const createPackId = () => crypto.randomUUID();
 
 const loadZip = () => {
   if (globalThis.JSZip) return Promise.resolve(globalThis.JSZip);
@@ -83,56 +81,33 @@ const getGameTextures = () => {
   return Array.from(textures.values()).sort((a, b) => a.path.localeCompare(b.path));
 };
 
-const getDb = () => {
-  if (dbPromise === null) {
-    dbPromise = new Promise((resolve, reject) => {
-      let request = indexedDB.open(DB_NAME, 1);
-      request.onupgradeneeded = () => {
-        if (!request.result.objectStoreNames.contains(STORE_NAME)) {
-          request.result.createObjectStore(STORE_NAME, { keyPath: "id" });
-        }
-      };
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-  }
-  return dbPromise;
-};
+let localforage = window.localforage;
 
 const loadPacks = async () => {
-  let db = await getDb();
-  return new Promise((resolve, reject) => {
-    let request = db.transaction(STORE_NAME, "readonly").objectStore(STORE_NAME).getAll();
-    request.onsuccess = () => resolve(request.result || []);
-    request.onerror = () => reject(request.error);
-  });
+  const keys = await localforage.keys();
+  const packs = [];
+  for (const key of keys) {
+    const pack = await localforage.getItem(key);
+    if (pack) packs.push(pack);
+  }
+  return packs;
 };
 
 const savePack = async (pack) => {
-  let db = await getDb();
-  return new Promise((resolve, reject) => {
-    let request = db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME).put(pack);
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
-  });
+  return localforage.setItem(pack.id, pack);
 };
 
 const deletePack = async (id) => {
-  let db = await getDb();
-  return new Promise((resolve, reject) => {
-    let request = db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME).delete(id);
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
-  });
+  return localforage.removeItem(id);
 };
 
-const getActivePackId = () => localStorage.getItem(ACTIVE_KEY);
+const getActivePackId = () => localforage.getItem(ACTIVE_KEY);
 
-const setActivePackId = (id) => {
+const setActivePackId = async (id) => {
   if (id === null || id === undefined) {
-    localStorage.removeItem(ACTIVE_KEY);
+    await localforage.removeItem(ACTIVE_KEY);
   } else {
-    localStorage.setItem(ACTIVE_KEY, id);
+    await localforage.setItem(ACTIVE_KEY, id);
   }
 };
 

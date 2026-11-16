@@ -47,6 +47,16 @@ const renderCreateView = (content, onSaved) => {
   Object.keys(c).forEach((a) => {
     nameInput.style[a] = c[a];
   });
+  nameInput.onmousedown = (event) => {
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+  };
+  nameInput.onclick = (event) => {
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+    event.preventDefault()
+    nameInput.focus();
+  };
   nameInput.onkeydown = (event) => {
     event.stopImmediatePropagation();
     event.stopPropagation();
