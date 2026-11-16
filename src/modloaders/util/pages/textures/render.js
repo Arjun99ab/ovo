@@ -1,0 +1,350 @@
+import { createNotifyModal } from "../../modals.js";
+import { renderCreateView } from "./editor.js";
+import {
+  applyTexturePack,
+  createPackZip,
+  deletePack,
+  downloadBlob,
+  getActivePackId,
+  importPackFromFile,
+  loadPacks,
+} from "./utils.js";
+
+export { renderTexturesMenu };
+
+const renderTexturesMenu = (sectionDiv) => {
+  while (sectionDiv.firstChild) {
+    sectionDiv.removeChild(sectionDiv.lastChild);
+  }
+
+  let wrapper = document.createElement("div");
+  wrapper.id = "textures-wrapper";
+  let c = {
+    display: "flex",
+    flexDirection: "column",
+    flex: "1",
+    height: "100%",
+    padding: "10px",
+    gap: "10px",
+    overflow: "hidden",
+  };
+  Object.keys(c).forEach((a) => {
+    wrapper.style[a] = c[a];
+  });
+  sectionDiv.appendChild(wrapper);
+
+  let content = document.createElement("div");
+  content.id = "textures-content";
+  c = {
+    display: "flex",
+    flexDirection: "column",
+    flex: "1",
+    gap: "10px",
+    overflow: "hidden",
+  };
+  Object.keys(c).forEach((a) => {
+    content.style[a] = c[a];
+  });
+
+  wrapper.appendChild(content);
+
+  renderPacksView(content);
+};
+
+const renderPacksView = async (content) => {
+  while (content.firstChild) {
+    content.removeChild(content.lastChild);
+  }
+
+  let refresh = () => renderPacksView(content);
+
+  let toolbar = document.createElement("div");
+  let c = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "10px",
+    flexShrink: "0",
+  };
+  Object.keys(c).forEach((a) => {
+    toolbar.style[a] = c[a];
+  });
+
+  let title = document.createElement("span");
+  title.innerHTML = "Texture Packs";
+  c = {
+    fontFamily: "Retron2000",
+    color: "black",
+    fontSize: "1.8vw",
+  };
+  Object.keys(c).forEach((a) => {
+    title.style[a] = c[a];
+  });
+
+  toolbar.appendChild(title);
+  content.appendChild(toolbar);
+
+  let grid = document.createElement("div");
+  c = {
+    display: "grid",
+    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+    gap: "15px",
+    overflowY: "auto",
+    alignContent: "start",
+    paddingRight: "5px",
+    flex: "1",
+  };
+  Object.keys(c).forEach((a) => {
+    grid.style[a] = c[a];
+  });
+  content.appendChild(grid);
+
+  let packs = await loadPacks();
+  let activeId = getActivePackId();
+  grid.appendChild(createDefaultCard(activeId, refresh));
+
+  packs.sort((a, b) => a.name.localeCompare(b.name));
+  packs.forEach((pack) => {
+    grid.appendChild(createPackCard(pack, activeId === pack.id, refresh));
+  });
+
+  grid.appendChild(createNewPackCard(refresh, () => renderCreateView(content, refresh)));
+};
+
+const createCardButton = (text) => {
+  let button = document.createElement("button");
+  button.innerHTML = text;
+  let c = {
+    fontFamily: "Retron2000",
+    color: "black",
+    fontSize: "1vw",
+    cursor: "pointer",
+    backgroundColor: "white",
+    padding: "5px 8px",
+    border: "solid 2px black",
+    borderRadius: "8px",
+    flex: "1",
+  };
+  Object.keys(c).forEach((a) => {
+    button.style[a] = c[a];
+  });
+  return button;
+};
+
+const createPackCard = (pack, using, refresh) => {
+  let card = document.createElement("div");
+  card.id = "texture-pack-" + pack.id;
+  let c = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    gap: "8px",
+    backgroundColor: "white",
+    border: "solid 3px black",
+    borderRadius: "10px",
+    padding: "10px",
+    fontFamily: "Retron2000",
+    color: "black",
+    minHeight: "9vw",
+  };
+  Object.keys(c).forEach((a) => {
+    card.style[a] = c[a];
+  });
+
+  let name = document.createElement("span");
+  name.innerHTML = pack.name;
+  c = {
+    fontSize: "1.4vw",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  };
+  Object.keys(c).forEach((a) => {
+    name.style[a] = c[a];
+  });
+
+  let info = document.createElement("span");
+  info.innerHTML =
+    Object.keys(pack.textures).length + " textures" + (pack.author ? " by " + pack.author : "");
+  c = {
+    fontSize: "0.9vw",
+    color: "#555",
+  };
+  Object.keys(c).forEach((a) => {
+    info.style[a] = c[a];
+  });
+
+  let buttons = document.createElement("div");
+  c = {
+    display: "flex",
+    gap: "5px",
+    flexWrap: "wrap",
+  };
+  Object.keys(c).forEach((a) => {
+    buttons.style[a] = c[a];
+  });
+
+  let useButton = createCardButton(using ? "Using" : "Use");
+  useButton.style.backgroundColor = using ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
+  useButton.onclick = () => {
+    applyTexturePack(pack);
+    refresh();
+  };
+
+  let downloadButton = createCardButton("Download");
+  downloadButton.onclick = async () => {
+    try {
+      let blob = await createPackZip(pack.name, pack.textures);
+      downloadBlob(blob, pack.name + ".zip");
+    } catch (error) {
+      createNotifyModal(error.message);
+    }
+  };
+
+  let deleteButton = createCardButton("Delete");
+  deleteButton.style.backgroundColor = "rgb(222, 48, 51)";
+  deleteButton.style.color = "white";
+  deleteButton.onclick = async () => {
+    await deletePack(pack.id);
+    if (getActivePackId() === pack.id) {
+      applyTexturePack(null);
+    }
+    refresh();
+  };
+
+  buttons.appendChild(useButton);
+  buttons.appendChild(downloadButton);
+  buttons.appendChild(deleteButton);
+  card.appendChild(name);
+  card.appendChild(info);
+  card.appendChild(buttons);
+  return card;
+};
+
+const createDefaultCard = (activeId, refresh) => {
+  let card = document.createElement("div");
+  card.id = "texture-pack-default";
+  let c = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    gap: "8px",
+    backgroundColor: "white",
+    border: "solid 3px black",
+    borderRadius: "10px",
+    padding: "10px",
+    fontFamily: "Retron2000",
+    color: "black",
+    minHeight: "9vw",
+  };
+  Object.keys(c).forEach((a) => {
+    card.style[a] = c[a];
+  });
+
+  let name = document.createElement("span");
+  name.innerHTML = "Default Textures";
+  c = {
+    fontSize: "1.4vw",
+  };
+  Object.keys(c).forEach((a) => {
+    name.style[a] = c[a];
+  });
+
+  let info = document.createElement("span");
+  info.innerHTML = "Original game textures";
+  c = {
+    fontSize: "0.9vw",
+    color: "#555",
+  };
+  Object.keys(c).forEach((a) => {
+    info.style[a] = c[a];
+  });
+
+  let using = activeId === null;
+  let useButton = createCardButton(using ? "Using" : "Use");
+  useButton.style.backgroundColor = using ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
+  useButton.onclick = () => {
+    applyTexturePack(null);
+    refresh();
+  };
+
+  card.appendChild(name);
+  card.appendChild(info);
+  card.appendChild(useButton);
+  return card;
+};
+
+const createNewPackCard = (refresh, onCreate) => {
+  let card = document.createElement("div");
+  card.id = "texture-pack-new";
+  let c = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    gap: "8px",
+    backgroundColor: "white",
+    border: "dashed 3px black",
+    borderRadius: "10px",
+    padding: "10px",
+    fontFamily: "Retron2000",
+    color: "black",
+    minHeight: "9vw",
+  };
+  Object.keys(c).forEach((a) => {
+    card.style[a] = c[a];
+  });
+
+  let name = document.createElement("span");
+  name.innerHTML = "New Textures";
+  c = {
+    fontSize: "1.4vw",
+  };
+  Object.keys(c).forEach((a) => {
+    name.style[a] = c[a];
+  });
+
+  let buttons = document.createElement("div");
+  c = {
+    display: "flex",
+    gap: "5px",
+    flexWrap: "wrap",
+  };
+  Object.keys(c).forEach((a) => {
+    buttons.style[a] = c[a];
+  });
+
+  let importInput = document.createElement("input");
+  importInput.type = "file";
+  importInput.accept = ".zip";
+  importInput.style.display = "none";
+  importInput.onchange = async () => {
+    if (!importInput.files || importInput.files.length === 0) return;
+    try {
+      let pack = await importPackFromFile(importInput.files[0]);
+      await refresh();
+      createNotifyModal(
+        "Imported " +
+          pack.name +
+          " with " +
+          Object.keys(pack.textures).length +
+          " textures."
+      );
+    } catch (error) {
+      createNotifyModal(error.message);
+    }
+  };
+
+  let importButton = createCardButton("Import");
+  importButton.onclick = () => importInput.click();
+
+  let createButton = createCardButton("Create Pack");
+  createButton.onclick = onCreate;
+
+  buttons.appendChild(createButton);
+  buttons.appendChild(importButton);
+
+  card.appendChild(name);
+  card.appendChild(buttons);
+  card.appendChild(importInput);
+  return card;
+};
