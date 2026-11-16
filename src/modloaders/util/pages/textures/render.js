@@ -24,6 +24,7 @@ const renderTexturesMenu = (sectionDiv) => {
     flexDirection: "column",
     flex: "1",
     height: "100%",
+    boxSizing: "border-box",
     padding: "10px",
     gap: "10px",
     overflow: "hidden",
@@ -35,12 +36,21 @@ const renderTexturesMenu = (sectionDiv) => {
 
   let content = document.createElement("div");
   content.id = "textures-content";
+  content.addEventListener("wheel", (e) => {
+    e.stopImmediatePropagation();
+    e.stopPropagation();
+    content.focus();
+  });
   c = {
     display: "flex",
     flexDirection: "column",
     flex: "1",
+    minHeight: "0",
     gap: "10px",
-    overflow: "hidden",
+    overflowY: "auto",
+    overflowX: "hidden",
+    scrollbarGutter: "stable",
+    scrollbarWidth: "thin",
   };
   Object.keys(c).forEach((a) => {
     content.style[a] = c[a];
@@ -89,10 +99,8 @@ const renderPacksView = async (content) => {
     display: "grid",
     gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
     gap: "15px",
-    overflowY: "auto",
     alignContent: "start",
-    paddingRight: "5px",
-    flex: "1",
+    flexShrink: "0",
   };
   Object.keys(c).forEach((a) => {
     grid.style[a] = c[a];

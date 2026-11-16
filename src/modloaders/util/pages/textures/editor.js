@@ -116,13 +116,11 @@ const renderCreateView = (content, onSaved) => {
   c = {
     display: "flex",
     flexDirection: "column",
-    flex: "1",
-    overflowY: "auto",
-    overflowX: "hidden",
+    flexShrink: "0",
+    overflow: "hidden",
     border: "solid 2px black",
     borderRadius: "10px",
     backgroundColor: "white",
-    height: "100%",
   };
   Object.keys(c).forEach((a) => {
     list.style[a] = c[a];
