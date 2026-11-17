@@ -124,7 +124,15 @@ const renderPacksView = async (content) => {
       .sort((a, b) => String(a.name).localeCompare(String(b.name)))
       .forEach((pack) => {
         try {
-          grid.insertBefore(createPackCard(pack, activeId === pack.id, refresh), newPackCard);
+          grid.insertBefore(
+            createPackCard(
+              pack,
+              activeId === pack.id,
+              refresh,
+              () => renderCreateView(content, refresh, pack)
+            ),
+            newPackCard
+          );
         } catch (error) {
           console.warn("could not render texture pack:", pack, error);
         }
@@ -154,7 +162,7 @@ const createCardButton = (text) => {
   return button;
 };
 
-const createPackCard = (pack, using, refresh) => {
+const createPackCard = (pack, using, refresh, onEdit) => {
   let card = document.createElement("div");
   card.id = "texture-pack-" + pack.id;
   let c = {
@@ -214,6 +222,9 @@ const createPackCard = (pack, using, refresh) => {
     refresh();
   };
 
+  let editButton = createCardButton("Edit");
+  editButton.onclick = onEdit;
+
   let downloadButton = createCardButton("Download");
   downloadButton.onclick = async () => {
     try {
@@ -236,6 +247,7 @@ const createPackCard = (pack, using, refresh) => {
   };
 
   buttons.appendChild(useButton);
+  buttons.appendChild(editButton);
   buttons.appendChild(downloadButton);
   buttons.appendChild(deleteButton);
   card.appendChild(name);

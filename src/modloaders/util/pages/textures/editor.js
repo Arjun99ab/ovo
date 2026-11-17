@@ -11,12 +11,12 @@ import {
 
 export { renderCreateView };
 
-const renderCreateView = (content, onSaved) => {
+const renderCreateView = (content, onSaved, existingPack = null) => {
   while (content.firstChild) {
     content.removeChild(content.lastChild);
   }
 
-  let replacements = new Map();
+  let replacements = new Map(Object.entries(existingPack ? existingPack.textures : {}));
 
   let toolbar = document.createElement("div");
   let c = {
@@ -65,6 +65,9 @@ const renderCreateView = (content, onSaved) => {
     event.stopImmediatePropagation();
     event.stopPropagation();
   };
+  if (existingPack) {
+    nameInput.value = existingPack.name;
+  }
 
   let buttonGroup = document.createElement("div");
   c = {
@@ -76,7 +79,10 @@ const renderCreateView = (content, onSaved) => {
     buttonGroup.style[a] = c[a];
   });
 
-  let saveButton = createToolbarButton("textures-save-btn", "Save Pack");
+  let saveButton = createToolbarButton(
+    "textures-save-btn",
+    existingPack ? "Save Changes" : "Save Pack"
+  );
   saveButton.onclick = async () => {
     let name = nameInput.value.trim();
     if (name === "") {
@@ -88,9 +94,9 @@ const renderCreateView = (content, onSaved) => {
       return;
     }
     await savePack({
-      id: createPackId(),
+      id: existingPack ? existingPack.id : createPackId(),
       name: name,
-      author: "",
+      author: existingPack ? existingPack.author || "" : "",
       textures: Object.fromEntries(replacements),
     });
     createNotifyModal("Saved " + name + " with " + replacements.size + " textures.");
@@ -261,6 +267,14 @@ const createTextureRow = (texture, replacements) => {
 
   let uploadButton = createRowButton("Upload");
   uploadButton.onclick = () => uploadInput.click();
+
+  let currentReplacement = replacements.get(texture.path);
+  if (currentReplacement) {
+    preview.src = currentReplacement;
+    status.innerHTML = "Replaced";
+    status.style.color = "rgb(45, 186, 47)";
+    uploadButton.innerHTML = "Replace";
+  }
 
   uploadInput.onchange = async () => {
     if (!uploadInput.files || uploadInput.files.length === 0) return;
