@@ -107,16 +107,31 @@ const renderPacksView = async (content) => {
   });
   content.appendChild(grid);
 
-  let packs = await loadPacks();
-  let activeId = await getActivePackId();
-  grid.appendChild(createDefaultCard(activeId, refresh));
+  let newPackCard = createNewPackCard(refresh, () => renderCreateView(content, refresh));
+  grid.appendChild(newPackCard);
 
-  packs.sort((a, b) => a.name.localeCompare(b.name));
-  packs.forEach((pack) => {
-    grid.appendChild(createPackCard(pack, activeId === pack.id, refresh));
-  });
+  let activeId = null;
+  try {
+    activeId = await getActivePackId();
+  } catch (error) {
+    console.warn("could not load the active texture pack:", error);
+  }
+  grid.insertBefore(createDefaultCard(activeId, refresh), newPackCard);
 
-  grid.appendChild(createNewPackCard(refresh, () => renderCreateView(content, refresh)));
+  try {
+    let packs = await loadPacks();
+    packs
+      .sort((a, b) => String(a.name).localeCompare(String(b.name)))
+      .forEach((pack) => {
+        try {
+          grid.insertBefore(createPackCard(pack, activeId === pack.id, refresh), newPackCard);
+        } catch (error) {
+          console.warn("could not render texture pack:", pack, error);
+        }
+      });
+  } catch (error) {
+    console.warn("wtf could not load texture packs:", error);
+  }
 };
 
 const createCardButton = (text) => {

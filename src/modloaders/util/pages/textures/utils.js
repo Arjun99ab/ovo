@@ -1,23 +1,7 @@
 import { runtime } from "../../../modloader.js";
 
 export {
-  loadZip,
-  getGameTextures,
-  textureKey,
-  baseName,
-  loadPacks,
-  savePack,
-  deletePack,
-  getActivePackId,
-  setActivePackId,
-  applyTexturePack,
-  applyStoredTexturePack,
-  importPackFromFile,
-  createPackZip,
-  readFileAsDataUrl,
-  downloadUrl,
-  downloadBlob,
-  createPackId,
+  applyStoredTexturePack, applyTexturePack, baseName, createPackId, createPackZip, deletePack, downloadBlob, downloadUrl, getActivePackId, getGameTextures, importPackFromFile, loadPacks, loadZip, readFileAsDataUrl, savePack, setActivePackId, textureKey
 };
 
 const DB_NAME = "ovo-texture-packs";
@@ -42,7 +26,9 @@ const mimeFor = (path) => {
   return "image/png";
 };
 
-const createPackId = () => crypto.randomUUID();
+const createPackId = () => {
+  return crypto.randomUUID();
+};
 
 const loadZip = () => {
   if (globalThis.JSZip) return Promise.resolve(globalThis.JSZip);
@@ -84,11 +70,24 @@ const getGameTextures = () => {
 let localforage = window.localforage;
 
 const loadPacks = async () => {
+  if (!localforage) return [];
   const keys = await localforage.keys();
   const packs = [];
   for (const key of keys) {
+    if (key === ACTIVE_KEY) continue;
     const pack = await localforage.getItem(key);
-    if (pack) packs.push(pack);
+    if (
+      pack &&
+      typeof pack === "object" &&
+      !Array.isArray(pack) &&
+      pack.id &&
+      pack.name &&
+      pack.textures &&
+      typeof pack.textures === "object" &&
+      !Array.isArray(pack.textures)
+    ) {
+      packs.push(pack);
+    }
   }
   return packs;
 };
