@@ -108,7 +108,7 @@ const renderPacksView = async (content) => {
   content.appendChild(grid);
 
   let packs = await loadPacks();
-  let activeId = getActivePackId();
+  let activeId = await getActivePackId();
   grid.appendChild(createDefaultCard(activeId, refresh));
 
   packs.sort((a, b) => a.name.localeCompare(b.name));
@@ -214,7 +214,7 @@ const createPackCard = (pack, using, refresh) => {
   deleteButton.style.color = "white";
   deleteButton.onclick = async () => {
     await deletePack(pack.id);
-    if (getActivePackId() === pack.id) {
+    if (await getActivePackId() === pack.id) {
       applyTexturePack(null);
     }
     refresh();
