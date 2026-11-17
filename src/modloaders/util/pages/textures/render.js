@@ -2,10 +2,12 @@ import { createNotifyModal } from "../../modals.js";
 import { renderCreateView } from "./editor.js";
 import {
   applyTexturePack,
+  createDefaultTexturesZip,
   createPackZip,
   deletePack,
   downloadBlob,
   getActivePackId,
+  getGameTextures,
   importPackFromFile,
   loadPacks,
 } from "./utils.js";
@@ -303,9 +305,37 @@ const createDefaultCard = (activeId, refresh) => {
     refresh();
   };
 
+  let downloadAllButton = createCardButton("Download All");
+  downloadAllButton.title = "Download all default textures";
+  downloadAllButton.onclick = async () => {
+    downloadAllButton.disabled = true;
+    downloadAllButton.innerHTML = "Zipping...";
+    try {
+      let blob = await createDefaultTexturesZip(getGameTextures());
+      downloadBlob(blob, "default-textures.zip");
+    } catch (error) {
+      createNotifyModal(error.message);
+    } finally {
+      downloadAllButton.disabled = false;
+      downloadAllButton.innerHTML = "Download All";
+    }
+  };
+
+  let buttons = document.createElement("div");
+  c = {
+    display: "flex",
+    gap: "5px",
+    flexWrap: "wrap",
+  };
+  Object.keys(c).forEach((a) => {
+    buttons.style[a] = c[a];
+  });
+  buttons.appendChild(useButton);
+  buttons.appendChild(downloadAllButton);
+
   card.appendChild(name);
   card.appendChild(info);
-  card.appendChild(useButton);
+  card.appendChild(buttons);
   return card;
 };
 

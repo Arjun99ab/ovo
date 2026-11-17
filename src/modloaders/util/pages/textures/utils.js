@@ -1,7 +1,7 @@
 import { runtime } from "../../../modloader.js";
 
 export {
-  applyStoredTexturePack, applyTexturePack, baseName, createPackId, createPackZip, deletePack, downloadBlob, downloadUrl, getActivePackId, getGameTextures, importPackFromFile, loadPacks, loadZip, readFileAsDataUrl, savePack, setActivePackId, textureKey
+  applyStoredTexturePack, applyTexturePack, baseName, createDefaultTexturesZip, createPackId, createPackZip, deletePack, downloadBlob, downloadUrl, getActivePackId, getGameTextures, importPackFromFile, loadPacks, loadZip, readFileAsDataUrl, savePack, setActivePackId, textureKey
 };
 
 const DB_NAME = "ovo-texture-packs";
@@ -279,6 +279,25 @@ const importPackFromFile = async (file) => {
   };
   await savePack(pack);
   return pack;
+};
+
+const createDefaultTexturesZip = async (textures) => {
+  if (textures.length === 0) {
+    throw new Error("No default textures were found.");
+  }
+  let JSZip = await loadZip();
+  let zip = new JSZip();
+  let manifest = { name: "Default Textures", author: "", textures: {} };
+  for (let texture of textures) {
+    let response = await fetch(texture.path);
+    if (!response.ok) {
+      throw new Error("Could not download " + texture.path + ".");
+    }
+    zip.file(texture.path, await response.blob());
+    manifest.textures[texture.path] = texture.path;
+  }
+  zip.file("pack.json", JSON.stringify(manifest, null, 2));
+  return zip.generateAsync({ type: "blob" });
 };
 
 const createPackZip = async (name, textures) => {
