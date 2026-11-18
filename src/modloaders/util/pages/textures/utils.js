@@ -1,4 +1,4 @@
-import { backendConfig, runtime, version } from "../../../modloader.js";
+import { backendConfig, runtime, textureVersion } from "../../../modloader.js";
 
 export {
   applyStoredTexturePack, applyTexturePack, baseName, createDefaultTexturesZip, createPackId, createPackZip, deletePack, downloadBlob, downloadUrl, getActivePackIds, getBuiltinPacks, getGameTextures, importPackFromFile, loadBuiltinPack, loadPacks, loadZip, readFileAsDataUrl, savePack, setActivePacks, textureKey
@@ -218,7 +218,7 @@ const applyTexturePack = (textures) => {
 
 const getBuiltinPacks = () =>
   Object.entries((backendConfig && backendConfig.texturepacks) || {})
-    .filter(([, entry]) => !entry.version || entry.version.includes(version))
+    .filter(([, entry]) => !entry.version || entry.version.includes(textureVersion))
     .map(([id, entry]) => ({ ...entry, id }));
 
 const builtinPackCache = new Map();

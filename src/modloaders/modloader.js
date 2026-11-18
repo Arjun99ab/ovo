@@ -20,6 +20,7 @@ import { applyStoredTexturePack } from './util/pages/textures/utils.js';
 //constants constants!!!
 export let version = VERSION.version();
 export let skinVersion = VERSION.skinVersion();
+export let textureVersion = VERSION.textureVersion();
 export let filters = new Set();
 export let skinFilters = new Set();
 export let settingFilters = new Set();

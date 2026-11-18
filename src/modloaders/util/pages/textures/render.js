@@ -79,7 +79,7 @@ const renderPacksView = async (content) => {
     console.warn("could not load the active texture packs:", error);
   }
 
-  let builtinPacks = getBuiltinPacks();
+  let builtinPacks = getBuiltinPacks().sort((a, b) => String(a.name).localeCompare(String(b.name)));
   let packs = [];
   try {
     packs = await loadPacks();
