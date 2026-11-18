@@ -1,7 +1,15 @@
 {
     "version": "2.2.2",
+    "texturepacks": {
+        "medieval": {
+            "name": "Medieval",
+            "author": "ShyGuy",
+            "desc": "Medieval!",
+            "url": "../src/texturepacks/rocket.zip",
+            "version": ["1.4", "1.4.4", "CTLE"]
+        }
+    },
     "settings": {
-        
         "maxspeed": {
             "name": "Max Speed",
             "desc": "The maximum speed of the player.",
@@ -684,11 +692,10 @@
                 "using": false
             }
         }
-        
-        
+
+
     },
-    "mods": 
-    {        
+    "mods": {        
         "leveleditor": {
             "name": "Editor",
             "author": "Awesomeguy",
@@ -1065,6 +1072,7 @@
                 "enabled": false
             }
         },
+        
         "randomlevel": {
             "name": "Random Level",
             "author": "drakeerv",
