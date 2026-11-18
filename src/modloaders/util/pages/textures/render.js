@@ -5,13 +5,13 @@ import {
   createPackZip,
   deletePack,
   downloadBlob,
-  getActivePackId,
+  getActivePackIds,
   getBuiltinPacks,
   getGameTextures,
   importPackFromFile,
   loadBuiltinPack,
   loadPacks,
-  switchTexturePack,
+  setActivePacks,
 } from "./utils.js";
 
 export { renderTexturesMenu };
@@ -72,34 +72,28 @@ const renderPacksView = async (content) => {
 
   let refresh = () => renderPacksView(content);
 
-  let toolbar = document.createElement("div");
-  let c = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "10px",
-    flexShrink: "0",
-  };
-  Object.keys(c).forEach((a) => {
-    toolbar.style[a] = c[a];
-  });
+  let activeIds = [];
+  try {
+    activeIds = await getActivePackIds();
+  } catch (error) {
+    console.warn("could not load the active texture packs:", error);
+  }
 
-  let title = document.createElement("span");
-  title.innerHTML = "Texture Packs";
-  c = {
-    fontFamily: "Retron2000",
-    color: "black",
-    fontSize: "1.8vw",
-  };
-  Object.keys(c).forEach((a) => {
-    title.style[a] = c[a];
-  });
+  let builtinPacks = getBuiltinPacks();
+  let packs = [];
+  try {
+    packs = await loadPacks();
+  } catch (error) {
+    console.warn("wtf 87 a", error);
+  }
 
-  toolbar.appendChild(title);
-  content.appendChild(toolbar);
+  let names = new Map();
+  builtinPacks.forEach((entry) => names.set(entry.id, entry.name));
+  packs.forEach((pack) => names.set(pack.id, pack.name));
+  content.appendChild(createLayerList(activeIds, names, refresh));
 
   let grid = document.createElement("div");
-  c = {
+  let c = {
     display: "grid",
     gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
     gap: "15px",
@@ -114,17 +108,11 @@ const renderPacksView = async (content) => {
   let newPackCard = createNewPackCard(refresh, () => renderCreateView(content, refresh));
   grid.appendChild(newPackCard);
 
-  let activeId = null;
-  try {
-    activeId = await getActivePackId();
-  } catch (error) {
-    console.warn("could not load the active texture pack:", error);
-  }
-  grid.insertBefore(createDefaultCard(activeId, refresh), newPackCard);
+  grid.insertBefore(createDefaultCard(), newPackCard);
 
-  getBuiltinPacks().forEach((entry) => {
+  builtinPacks.forEach((entry) => {
     grid.insertBefore(
-      createBuiltinPackCard(entry, activeId === entry.id, refresh, async () => {
+      createBuiltinPackCard(entry, activeIds, refresh, async () => {
         try {
           let pack = await loadBuiltinPack(entry.id);
           renderCreateView(content, refresh, { ...pack, id: null, name: pack.name + " (copy)" });
@@ -136,28 +124,124 @@ const renderPacksView = async (content) => {
     );
   });
 
-  try {
-    let packs = await loadPacks();
-    packs
-      .sort((a, b) => String(a.name).localeCompare(String(b.name)))
-      .forEach((pack) => {
-        try {
-          grid.insertBefore(
-            createPackCard(
-              pack,
-              activeId === pack.id,
-              refresh,
-              () => renderCreateView(content, refresh, pack)
-            ),
-            newPackCard
-          );
-        } catch (error) {
-          console.warn("could not render texture pack:", pack, error);
-        }
-      });
-  } catch (error) {
-    console.warn("wtf could not load texture packs:", error);
+  packs
+    .sort((a, b) => String(a.name).localeCompare(String(b.name)))
+    .forEach((pack) => {
+      try {
+        grid.insertBefore(
+          createPackCard(
+            pack,
+            activeIds,
+            refresh,
+            () => renderCreateView(content, refresh, pack)
+          ),
+          newPackCard
+        );
+      } catch (error) {
+        console.warn("could not render texture pack:", pack, error);
+      }
+    });
+};
+
+const createLayerList = (activeIds, names, refresh) => {
+  let list = document.createElement("div");
+  let c = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "5px",
+    flexShrink: "0",
+    backgroundColor: "white",
+    border: "solid 3px black",
+    borderRadius: "10px",
+    padding: "10px",
+    fontFamily: "Retron2000",
+    color: "black",
+  };
+  Object.keys(c).forEach((a) => {
+    list.style[a] = c[a];
+  });
+
+  let heading = document.createElement("span");
+  heading.innerText = "Active Texture Packs";
+  heading.style.fontSize = "1.2vw";
+  list.appendChild(heading);
+
+  if (activeIds.length === 0) {
+    let empty = document.createElement("span");
+    empty.innerText = "No packs active";
+    empty.style.fontSize = "1vw";
+    empty.style.color = "#777";
+    list.appendChild(empty);
   }
+
+  let update = async (ids) => {
+    try {
+      await setActivePacks(ids);
+    } catch (error) {
+      createNotifyModal(error.message);
+    }
+    refresh();
+  };
+
+  let move = (from, to) => {
+    let ids = [...activeIds];
+    [ids[from], ids[to]] = [ids[to], ids[from]];
+    update(ids);
+  };
+
+  let createIcon = (file, title, disabled, onclick) => {
+    let icon = document.createElement("img");
+    icon.src = "../src/img/modloader/texturepacks/" + file;
+    icon.title = title;
+    c = {
+      width: "1.6vw",
+      height: "1.6vw",
+      objectFit: "contain",
+      cursor: disabled ? "default" : "pointer",
+      opacity: disabled ? "0.3" : "1",
+    };
+    Object.keys(c).forEach((a) => {
+      icon.style[a] = c[a];
+    });
+    if (!disabled) icon.onclick = onclick;
+    return icon;
+  };
+
+  for (let i = activeIds.length - 1; i >= 0; i--) {
+    let row = document.createElement("div");
+    c = {
+      display: "flex",
+      alignItems: "center",
+      gap: "5px",
+    };
+    Object.keys(c).forEach((a) => {
+      row.style[a] = c[a];
+    });
+
+    let name = document.createElement("span");
+    name.innerText = names.get(activeIds[i]) || activeIds[i];
+    c = {
+      flex: "1",
+      fontSize: "1vw",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+    };
+    Object.keys(c).forEach((a) => {
+      name.style[a] = c[a];
+    });
+
+    row.appendChild(name);
+    row.appendChild(createIcon("up-arrow.png", "Move up", i === activeIds.length - 1, () => move(i, i + 1)));
+    row.appendChild(createIcon("down-arrow.png", "Move down", i === 0, () => move(i, i - 1)));
+    row.appendChild(
+      createIcon("delete.png", "Remove from active", false, () =>
+        update(activeIds.filter((_, j) => j !== i))
+      )
+    );
+    list.appendChild(row);
+  }
+  return list;
 };
 
 const createCardButton = (text) => {
@@ -189,7 +273,7 @@ const appendAuthor = (name, author) => {
   name.appendChild(by);
 };
 
-const createPackCard = (pack, using, refresh, onEdit) => {
+const createPackCard = (pack, activeIds, refresh, onEdit) => {
   let card = document.createElement("div");
   card.id = "texture-pack-" + pack.id;
   let c = {
@@ -242,10 +326,17 @@ const createPackCard = (pack, using, refresh, onEdit) => {
     buttons.style[a] = c[a];
   });
 
-  let useButton = createCardButton(using ? "Using" : "Use");
-  useButton.style.backgroundColor = using ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
+  let enabled = activeIds.includes(pack.id);
+  let useButton = createCardButton(enabled ? "Enabled" : "Enable");
+  useButton.style.backgroundColor = enabled ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
   useButton.onclick = async () => {
-    await switchTexturePack(pack.id);
+    try {
+      await setActivePacks(
+        enabled ? activeIds.filter((id) => id !== pack.id) : [...activeIds, pack.id]
+      );
+    } catch (error) {
+      createNotifyModal(error.message);
+    }
     refresh();
   };
 
@@ -267,8 +358,13 @@ const createPackCard = (pack, using, refresh, onEdit) => {
   deleteButton.style.color = "white";
   deleteButton.onclick = async () => {
     await deletePack(pack.id);
-    if (await getActivePackId() === pack.id) {
-      await switchTexturePack(null);
+    let ids = await getActivePackIds();
+    if (ids.includes(pack.id)) {
+      try {
+        await setActivePacks(ids.filter((id) => id !== pack.id));
+      } catch (error) {
+        createNotifyModal(error.message);
+      }
     }
     refresh();
   };
@@ -283,7 +379,7 @@ const createPackCard = (pack, using, refresh, onEdit) => {
   return card;
 };
 
-const createBuiltinPackCard = (entry, using, refresh, onCopy) => {
+const createBuiltinPackCard = (entry, activeIds, refresh, onCopy) => {
   let card = document.createElement("div");
   card.id = "texture-pack-" + entry.id;
   let c = {
@@ -326,13 +422,16 @@ const createBuiltinPackCard = (entry, using, refresh, onCopy) => {
     info.style[a] = c[a];
   });
 
-  let useButton = createCardButton(using ? "Using" : "Use");
-  useButton.style.backgroundColor = using ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
+  let enabled = activeIds.includes(entry.id);
+  let useButton = createCardButton(enabled ? "Enabled" : "Enable");
+  useButton.style.backgroundColor = enabled ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
   useButton.onclick = async () => {
     useButton.disabled = true;
     useButton.innerHTML = "Loading...";
     try {
-      await switchTexturePack(entry.id);
+      await setActivePacks(
+        enabled ? activeIds.filter((id) => id !== entry.id) : [...activeIds, entry.id]
+      );
     } catch (error) {
       createNotifyModal(error.message);
     }
@@ -360,7 +459,7 @@ const createBuiltinPackCard = (entry, using, refresh, onCopy) => {
   return card;
 };
 
-const createDefaultCard = (activeId, refresh) => {
+const createDefaultCard = () => {
   let card = document.createElement("div");
   card.id = "texture-pack-default";
   let c = {
@@ -399,13 +498,10 @@ const createDefaultCard = (activeId, refresh) => {
     info.style[a] = c[a];
   });
 
-  let using = activeId === null;
-  let useButton = createCardButton(using ? "Using" : "Use");
-  useButton.style.backgroundColor = using ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
-  useButton.onclick = async () => {
-    await switchTexturePack(null);
-    refresh();
-  };
+  // the default textures are always the base layer under any active packs
+  let useButton = createCardButton("Using");
+  useButton.style.backgroundColor = "rgb(45, 186, 47)";
+  useButton.style.cursor = "default";
 
   let downloadAllButton = createCardButton("Download All");
   downloadAllButton.title = "Download all default textures";

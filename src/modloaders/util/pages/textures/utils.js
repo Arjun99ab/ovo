@@ -1,11 +1,11 @@
 import { backendConfig, runtime, version } from "../../../modloader.js";
 
 export {
-  applyStoredTexturePack, applyTexturePack, baseName, createDefaultTexturesZip, createPackId, createPackZip, deletePack, downloadBlob, downloadUrl, getActivePackId, getBuiltinPacks, getGameTextures, importPackFromFile, loadBuiltinPack, loadPacks, loadZip, readFileAsDataUrl, savePack, setActivePackId, switchTexturePack, textureKey
+  applyStoredTexturePack, applyTexturePack, baseName, createDefaultTexturesZip, createPackId, createPackZip, deletePack, downloadBlob, downloadUrl, getActivePackIds, getBuiltinPacks, getGameTextures, importPackFromFile, loadBuiltinPack, loadPacks, loadZip, readFileAsDataUrl, savePack, setActivePacks, textureKey
 };
 
 const DB_NAME = "texturepacks";
-const ACTIVE_KEY = "texturePackActive";
+const ACTIVE_KEY = "texturePacksActive";
 const ZIP_URL = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
 
 let zipPromise = null;
@@ -101,15 +101,9 @@ const deletePack = async (id) => {
   return localforage.removeItem(id);
 };
 
-const getActivePackId = () => localforage.getItem(ACTIVE_KEY);
+const getActivePackIds = async () => (await localforage.getItem(ACTIVE_KEY)) || [];
 
-const setActivePackId = async (id) => {
-  if (id === null || id === undefined) {
-    await localforage.removeItem(ACTIVE_KEY);
-  } else {
-    await localforage.setItem(ACTIVE_KEY, id);
-  }
-};
+const setActivePackIds = (ids) => localforage.setItem(ACTIVE_KEY, ids);
 
 const buildLookup = (textures) => {
   let lookup = new Map();
@@ -190,9 +184,9 @@ const restoreImageSource = (image) => {
   image.src = image.cr_src;
 };
 
-const applyTexturePack = (pack) => {
+const applyTexturePack = (textures) => {
   if (!runtime) return;
-  let lookup = buildLookup(pack ? pack.textures : {});
+  let lookup = buildLookup(textures);
   collectImages().forEach((image) => {
     let key = textureKey(image.cr_src || image.src);
     if (!key) return;
@@ -203,7 +197,6 @@ const applyTexturePack = (pack) => {
       restoreImageSource(image);
     }
   });
-  setActivePackId(pack ? pack.id : null);
 };
 
 const getBuiltinPacks = () =>
@@ -236,22 +229,34 @@ const loadBuiltinPack = (id) => {
   return builtinPackCache.get(id);
 };
 
-const switchTexturePack = async (id) => {
-  let pack = null;
-  if (id) {
-    pack = getBuiltinPacks().some((entry) => entry.id === id)
-      ? await loadBuiltinPack(id)
-      : await localforage.getItem(id);
+
+const setActivePacks = async (ids) => {
+  let builtinIds = getBuiltinPacks().map((entry) => entry.id);
+  let kept = [];
+  let textures = {};
+  let errors = [];
+  for (let id of ids) {
+    try {
+      let pack = builtinIds.includes(id)
+        ? await loadBuiltinPack(id)
+        : await localforage.getItem(id);
+      if (!pack) continue;
+      Object.assign(textures, pack.textures);
+    } catch (error) {
+      errors.push(error.message);
+    }
+    kept.push(id);
   }
-  applyTexturePack(pack);
+  applyTexturePack(textures);
+  await setActivePackIds(kept);
+  if (errors.length > 0) throw new Error(errors.join("\n"));
 };
 
 const applyStoredTexturePack = async () => {
   try {
-    let id = await getActivePackId();
-    if (id) await switchTexturePack(id);
+    await setActivePacks(await getActivePackIds());
   } catch (error) {
-    console.warn("couldnt apply stored texture pack:", error);
+    console.warn("could not apply stored texture pack:", error);
   }
 };
 

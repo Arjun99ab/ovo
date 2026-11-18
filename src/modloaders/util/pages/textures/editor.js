@@ -4,9 +4,11 @@ import {
   createPackZip,
   downloadBlob,
   downloadUrl,
+  getActivePackIds,
   getGameTextures,
   readFileAsDataUrl,
   savePack,
+  setActivePacks,
 } from "./utils.js";
 
 export { renderCreateView };
@@ -93,12 +95,21 @@ const renderCreateView = (content, onSaved, existingPack = null) => {
       createNotifyModal("Upload at least one replacement texture first.");
       return;
     }
+    let id = existingPack && existingPack.id ? existingPack.id : createPackId();
     await savePack({
-      id: existingPack && existingPack.id ? existingPack.id : createPackId(),
+      id: id,
       name: name,
       author: existingPack ? existingPack.author || "" : "",
       textures: Object.fromEntries(replacements),
     });
+    let activeIds = await getActivePackIds();
+    if (activeIds.includes(id)) {
+      try {
+        await setActivePacks(activeIds);
+      } catch (error) {
+        console.warn("could not reapply texture packs:", error);
+      }
+    }
     createNotifyModal("Saved " + name + " with " + replacements.size + " textures.");
     onSaved();
   };
