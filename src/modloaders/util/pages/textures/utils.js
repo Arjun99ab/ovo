@@ -1,7 +1,7 @@
-import { runtime } from "../../../modloader.js";
+import { backendConfig, runtime, version } from "../../../modloader.js";
 
 export {
-  applyStoredTexturePack, applyTexturePack, baseName, createDefaultTexturesZip, createPackId, createPackZip, deletePack, downloadBlob, downloadUrl, getActivePackId, getGameTextures, importPackFromFile, loadPacks, loadZip, readFileAsDataUrl, savePack, setActivePackId, textureKey
+  applyStoredTexturePack, applyTexturePack, baseName, createDefaultTexturesZip, createPackId, createPackZip, deletePack, downloadBlob, downloadUrl, getActivePackId, getBuiltinPacks, getGameTextures, importPackFromFile, loadBuiltinPack, loadPacks, loadZip, readFileAsDataUrl, savePack, setActivePackId, switchTexturePack, textureKey
 };
 
 const DB_NAME = "texturepacks";
@@ -206,15 +206,52 @@ const applyTexturePack = (pack) => {
   setActivePackId(pack ? pack.id : null);
 };
 
+const getBuiltinPacks = () =>
+  Object.entries((backendConfig && backendConfig.texturepacks) || {})
+    .filter(([, entry]) => !entry.version || entry.version.includes(version))
+    .map(([id, entry]) => ({ ...entry, id }));
+
+const builtinPackCache = new Map();
+
+const loadBuiltinPack = (id) => {
+  if (!builtinPackCache.has(id)) {
+    let entry = getBuiltinPacks().find((candidate) => candidate.id === id);
+    if (!entry) return Promise.reject(new Error("Unknown texture pack: " + id));
+    let promise = fetch(entry.url)
+      .then((response) => {
+        if (!response.ok) throw new Error("Could not download " + entry.name + ".");
+        return response.blob();
+      })
+      .then((blob) => parsePackZip(blob))
+      .then((parsed) => ({
+        ...parsed,
+        id,
+        name: entry.name,
+        author: entry.author || parsed.author,
+        desc: entry.desc || "",
+      }));
+    promise.catch(() => builtinPackCache.delete(id));
+    builtinPackCache.set(id, promise);
+  }
+  return builtinPackCache.get(id);
+};
+
+const switchTexturePack = async (id) => {
+  let pack = null;
+  if (id) {
+    pack = getBuiltinPacks().some((entry) => entry.id === id)
+      ? await loadBuiltinPack(id)
+      : await localforage.getItem(id);
+  }
+  applyTexturePack(pack);
+};
+
 const applyStoredTexturePack = async () => {
-  let id = await getActivePackId();
-  if (!id) return;
-  let packs = await loadPacks();
-  let pack = packs.find((candidate) => candidate.id === id);
-  if (pack) {
-    applyTexturePack(pack);
-  } else {
-    setActivePackId(null);
+  try {
+    let id = await getActivePackId();
+    if (id) await switchTexturePack(id);
+  } catch (error) {
+    console.warn("couldnt apply stored texture pack:", error);
   }
 };
 
@@ -226,7 +263,7 @@ const readFileAsDataUrl = (file) =>
     reader.readAsDataURL(file);
   });
 
-const importPackFromFile = async (file) => {
+const parsePackZip = async (file) => {
   let JSZip = await loadZip();
   let zip = await JSZip.loadAsync(file);
   let textures = getGameTextures();
@@ -272,12 +309,16 @@ const importPackFromFile = async (file) => {
     throw new Error("No matching textures were found in this pack.");
   }
 
-  let pack = {
-    id: createPackId(),
-    name: manifest.name || file.name.replace(/\.zip$/i, ""),
+  return {
+    name: manifest.name || "Unknown",
     author: manifest.author || "",
     textures: replacements,
   };
+};
+
+const importPackFromFile = async (file) => {
+  let parsed = await parsePackZip(file);
+  let pack = { id: createPackId(), ...parsed };
   await savePack(pack);
   return pack;
 };

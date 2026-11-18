@@ -81,7 +81,7 @@ const renderCreateView = (content, onSaved, existingPack = null) => {
 
   let saveButton = createToolbarButton(
     "textures-save-btn",
-    existingPack ? "Save Changes" : "Save Pack"
+    existingPack && existingPack.id ? "Save Changes" : "Save Pack"
   );
   saveButton.onclick = async () => {
     let name = nameInput.value.trim();
@@ -94,7 +94,7 @@ const renderCreateView = (content, onSaved, existingPack = null) => {
       return;
     }
     await savePack({
-      id: existingPack ? existingPack.id : createPackId(),
+      id: existingPack && existingPack.id ? existingPack.id : createPackId(),
       name: name,
       author: existingPack ? existingPack.author || "" : "",
       textures: Object.fromEntries(replacements),

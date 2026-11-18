@@ -1,15 +1,17 @@
 import { createNotifyModal } from "../../modals.js";
 import { renderCreateView } from "./editor.js";
 import {
-  applyTexturePack,
   createDefaultTexturesZip,
   createPackZip,
   deletePack,
   downloadBlob,
   getActivePackId,
+  getBuiltinPacks,
   getGameTextures,
   importPackFromFile,
+  loadBuiltinPack,
   loadPacks,
+  switchTexturePack,
 } from "./utils.js";
 
 export { renderTexturesMenu };
@@ -120,6 +122,20 @@ const renderPacksView = async (content) => {
   }
   grid.insertBefore(createDefaultCard(activeId, refresh), newPackCard);
 
+  getBuiltinPacks().forEach((entry) => {
+    grid.insertBefore(
+      createBuiltinPackCard(entry, activeId === entry.id, refresh, async () => {
+        try {
+          let pack = await loadBuiltinPack(entry.id);
+          renderCreateView(content, refresh, { ...pack, id: null, name: pack.name + " (copy)" });
+        } catch (error) {
+          createNotifyModal(error.message);
+        }
+      }),
+      newPackCard
+    );
+  });
+
   try {
     let packs = await loadPacks();
     packs
@@ -164,6 +180,15 @@ const createCardButton = (text) => {
   return button;
 };
 
+const appendAuthor = (name, author) => {
+  if (!author) return;
+  let by = document.createElement("span");
+  by.innerText = " by " + author;
+  by.style.fontSize = "0.9vw";
+  by.style.color = "#777";
+  name.appendChild(by);
+};
+
 const createPackCard = (pack, using, refresh, onEdit) => {
   let card = document.createElement("div");
   card.id = "texture-pack-" + pack.id;
@@ -186,6 +211,7 @@ const createPackCard = (pack, using, refresh, onEdit) => {
 
   let name = document.createElement("span");
   name.innerHTML = pack.name;
+  appendAuthor(name, pack.author);
   c = {
     fontSize: "1.4vw",
     overflow: "hidden",
@@ -197,8 +223,7 @@ const createPackCard = (pack, using, refresh, onEdit) => {
   });
 
   let info = document.createElement("span");
-  info.innerHTML =
-    Object.keys(pack.textures).length + " textures" + (pack.author ? " by " + pack.author : "");
+  info.innerHTML = Object.keys(pack.textures).length + " textures";
   c = {
     fontSize: "0.9vw",
     color: "#555",
@@ -219,8 +244,8 @@ const createPackCard = (pack, using, refresh, onEdit) => {
 
   let useButton = createCardButton(using ? "Using" : "Use");
   useButton.style.backgroundColor = using ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
-  useButton.onclick = () => {
-    applyTexturePack(pack);
+  useButton.onclick = async () => {
+    await switchTexturePack(pack.id);
     refresh();
   };
 
@@ -243,7 +268,7 @@ const createPackCard = (pack, using, refresh, onEdit) => {
   deleteButton.onclick = async () => {
     await deletePack(pack.id);
     if (await getActivePackId() === pack.id) {
-      applyTexturePack(null);
+      await switchTexturePack(null);
     }
     refresh();
   };
@@ -252,6 +277,83 @@ const createPackCard = (pack, using, refresh, onEdit) => {
   buttons.appendChild(editButton);
   buttons.appendChild(downloadButton);
   buttons.appendChild(deleteButton);
+  card.appendChild(name);
+  card.appendChild(info);
+  card.appendChild(buttons);
+  return card;
+};
+
+const createBuiltinPackCard = (entry, using, refresh, onCopy) => {
+  let card = document.createElement("div");
+  card.id = "texture-pack-" + entry.id;
+  let c = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    gap: "8px",
+    backgroundColor: "white",
+    border: "solid 3px black",
+    borderRadius: "10px",
+    padding: "10px",
+    fontFamily: "Retron2000",
+    color: "black",
+    minHeight: "9vw",
+  };
+  Object.keys(c).forEach((a) => {
+    card.style[a] = c[a];
+  });
+
+  let name = document.createElement("span");
+  name.innerText = entry.name;
+  appendAuthor(name, entry.author);
+  c = {
+    fontSize: "1.4vw",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  };
+  Object.keys(c).forEach((a) => {
+    name.style[a] = c[a];
+  });
+
+  let info = document.createElement("span");
+  info.innerText = entry.desc || "";
+  c = {
+    fontSize: "0.9vw",
+    color: "#555",
+  };
+  Object.keys(c).forEach((a) => {
+    info.style[a] = c[a];
+  });
+
+  let useButton = createCardButton(using ? "Using" : "Use");
+  useButton.style.backgroundColor = using ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
+  useButton.onclick = async () => {
+    useButton.disabled = true;
+    useButton.innerHTML = "Loading...";
+    try {
+      await switchTexturePack(entry.id);
+    } catch (error) {
+      createNotifyModal(error.message);
+    }
+    refresh();
+  };
+
+  let copyButton = createCardButton("Copy");
+  copyButton.onclick = onCopy;
+
+  let buttons = document.createElement("div");
+  c = {
+    display: "flex",
+    gap: "5px",
+    flexWrap: "wrap",
+  };
+  Object.keys(c).forEach((a) => {
+    buttons.style[a] = c[a];
+  });
+  buttons.appendChild(useButton);
+  buttons.appendChild(copyButton);
+
   card.appendChild(name);
   card.appendChild(info);
   card.appendChild(buttons);
@@ -300,8 +402,8 @@ const createDefaultCard = (activeId, refresh) => {
   let using = activeId === null;
   let useButton = createCardButton(using ? "Using" : "Use");
   useButton.style.backgroundColor = using ? "rgb(45, 186, 47)" : "rgb(135, 206, 250)";
-  useButton.onclick = () => {
-    applyTexturePack(null);
+  useButton.onclick = async () => {
+    await switchTexturePack(null);
     refresh();
   };
 
