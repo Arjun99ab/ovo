@@ -4,8 +4,7 @@ export {
   applyStoredTexturePack, applyTexturePack, baseName, createDefaultTexturesZip, createPackId, createPackZip, deletePack, downloadBlob, downloadUrl, getActivePackId, getGameTextures, importPackFromFile, loadPacks, loadZip, readFileAsDataUrl, savePack, setActivePackId, textureKey
 };
 
-const DB_NAME = "ovo-texture-packs";
-const STORE_NAME = "packs";
+const DB_NAME = "texturepacks";
 const ACTIVE_KEY = "texturePackActive";
 const ZIP_URL = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
 
@@ -67,7 +66,9 @@ const getGameTextures = () => {
   return Array.from(textures.values()).sort((a, b) => a.path.localeCompare(b.path));
 };
 
-let localforage = window.localforage;
+let localforage = window.localforage
+  ? window.localforage.createInstance({ name: DB_NAME })
+  : null;
 
 const loadPacks = async () => {
   if (!localforage) return [];
@@ -206,7 +207,7 @@ const applyTexturePack = (pack) => {
 };
 
 const applyStoredTexturePack = async () => {
-  let id = getActivePackId();
+  let id = await getActivePackId();
   if (!id) return;
   let packs = await loadPacks();
   let pack = packs.find((candidate) => candidate.id === id);
