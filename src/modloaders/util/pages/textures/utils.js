@@ -150,6 +150,19 @@ const refreshImageTextures = (image) => {
     if (updated && type.updateAllCurrentTexture) {
       type.updateAllCurrentTexture();
     }
+    // account for tilebg
+    if (runtime.glwrap && type.texture_img === image && type.webGL_texture) {
+      runtime.glwrap.deleteTexture(type.webGL_texture);
+      type.webGL_texture = runtime.glwrap.loadTexture(
+        image,
+        true,
+        runtime.linearSampling,
+        type.texture_pixelformat
+      );
+      type.instances.forEach((instance) => {
+        if (!instance.has_own_texture) instance.webGL_texture = type.webGL_texture;
+      });
+    }
   });
   runtime.redraw = true;
 };
@@ -188,6 +201,10 @@ const applyTexturePack = (textures) => {
   if (!runtime) return;
   let lookup = buildLookup(textures);
   collectImages().forEach((image) => {
+    // for tilebg to avoid overwrite, ex. gay-floor
+    if (!image.cr_src && image.src && !image.src.startsWith("data:") && !image.src.startsWith("blob:")) {
+      image.cr_src = image.getAttribute("src");
+    }
     let key = textureKey(image.cr_src || image.src);
     if (!key) return;
     let replacement = lookup.get(key) || lookup.get(baseName(key));
