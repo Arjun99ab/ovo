@@ -90,20 +90,47 @@ const renderPacksView = async (content) => {
   let names = new Map();
   builtinPacks.forEach((entry) => names.set(entry.id, entry.name));
   packs.forEach((pack) => names.set(pack.id, pack.name));
-  content.appendChild(createLayerList(activeIds, names, refresh));
+  let row = document.createElement("div");
+  let c = {
+    display: "flex",
+    gap: "10px",
+    flex: "1",
+    minHeight: "0",
+  };
+  Object.keys(c).forEach((a) => {
+    row.style[a] = c[a];
+  });
+  content.appendChild(row);
+
+  let layerList = createLayerList(activeIds, names, refresh);
+  c = {
+    width: "33%",
+    boxSizing: "border-box",
+    overflowY: "auto",
+    scrollbarWidth: "thin",
+  };
+  Object.keys(c).forEach((a) => {
+    layerList.style[a] = c[a];
+  });
+  row.appendChild(layerList);
 
   let grid = document.createElement("div");
-  let c = {
+  c = {
     display: "grid",
-    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
     gap: "15px",
     alignContent: "start",
-    flexShrink: "0",
+    flex: "1",
+    minWidth: "0",
+    overflowY: "auto",
+    overflowX: "hidden",
+    scrollbarGutter: "stable",
+    scrollbarWidth: "thin",
   };
   Object.keys(c).forEach((a) => {
     grid.style[a] = c[a];
   });
-  content.appendChild(grid);
+  row.appendChild(grid);
 
   let newPackCard = createNewPackCard(refresh, () => renderCreateView(content, refresh));
   grid.appendChild(newPackCard);
@@ -163,7 +190,16 @@ const createLayerList = (activeIds, names, refresh) => {
 
   let heading = document.createElement("span");
   heading.innerText = "Active Texture Packs";
-  heading.style.fontSize = "1.2vw";
+  c = {
+    fontSize: "1.8vw",
+    textAlign: "center",
+    borderBottom: "solid 3px black",
+    paddingBottom: "6px",
+    marginBottom: "4px",
+  };
+  Object.keys(c).forEach((a) => {
+    heading.style[a] = c[a];
+  });
   list.appendChild(heading);
 
   if (activeIds.length === 0) {
@@ -194,8 +230,8 @@ const createLayerList = (activeIds, names, refresh) => {
     icon.src = "../src/img/modloader/texturepacks/" + file;
     icon.title = title;
     c = {
-      width: "1.6vw",
-      height: "1.6vw",
+      width: "2.2vw",
+      height: "2.2vw",
       objectFit: "contain",
       cursor: disabled ? "default" : "pointer",
       opacity: disabled ? "0.3" : "1",
@@ -212,7 +248,8 @@ const createLayerList = (activeIds, names, refresh) => {
     c = {
       display: "flex",
       alignItems: "center",
-      gap: "5px",
+      gap: "8px",
+      padding: "6px 0",
     };
     Object.keys(c).forEach((a) => {
       row.style[a] = c[a];
@@ -222,7 +259,7 @@ const createLayerList = (activeIds, names, refresh) => {
     name.innerText = names.get(activeIds[i]) || activeIds[i];
     c = {
       flex: "1",
-      fontSize: "1vw",
+      fontSize: "1.4vw",
       overflow: "hidden",
       textOverflow: "ellipsis",
       whiteSpace: "nowrap",
