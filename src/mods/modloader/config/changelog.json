@@ -84,6 +84,13 @@
             "Fixed bugs with the custom skin system",
             "Added the skin STEVE from the Minecraft Movie! (1.4.4+)"
         ]
+    },
+    "2.3.0": {
+        "changes": [
+            "Added texture pack system!",
+            "Use texture packs from the community, or upload your own custom textures",
+            "Thanks to @packjack!"
+        ]
     }
 
 }
