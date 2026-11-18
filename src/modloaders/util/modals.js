@@ -149,7 +149,7 @@ function createChangelogPopup(changelog, userVersion, currentVersion, map) {
       maxHeight: "80%",
       overflow: "auto",
       margin: "0",
-      padding: "10px",
+      padding: "1%",
       borderRadius: "10px",
       zIndex: "1002",
   };

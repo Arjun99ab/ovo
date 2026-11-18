@@ -14,10 +14,13 @@ import { useSkin } from './util/pages/skins/utils.js';
 
 import { createChangeLayoutHook, createDialogOpenHook, createDialogCloseHook, createDialogShowOverlayHook, createSaveHook, createButtonClickHook, createCallFunctionHook } from './util/hooks.js';
 import { renderSettingsMenu } from './util/pages/settings/render.js';
+import { renderTexturesMenu } from './util/pages/textures/render.js';
+import { applyStoredTexturePack } from './util/pages/textures/utils.js';
 
 //constants constants!!!
 export let version = VERSION.version();
 export let skinVersion = VERSION.skinVersion();
+export let textureVersion = VERSION.textureVersion();
 export let filters = new Set();
 export let skinFilters = new Set();
 export let settingFilters = new Set();
@@ -319,7 +322,7 @@ export let runtime;
       buttonContainer.className = "button-container";
 
 
-      let modsButton = createNavButton("nav-mods-btn", "Mods", "13vw");
+      let modsButton = createNavButton("nav-mods-btn", "Mods", "11vw");
       modsButton.style.backgroundColor = "lightblue"; //set default button to blue
       modsButton.onclick = function() {
         setFilter("all");
@@ -333,7 +336,7 @@ export let runtime;
         renderModsMenu(sectionDiv);
 
       }
-      let settingsButton = createNavButton("nav-settings-btn", "Settings", "13vw");
+      let settingsButton = createNavButton("nav-settings-btn", "Settings", "11vw");
       settingsButton.onclick = function() {
         searchBar.blur()
         document.getElementById("menu-bg").style.pointerEvents = "none";
@@ -350,14 +353,14 @@ export let runtime;
         // renderSettingsMenu(sectionDiv);
       }
 
-      let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "13vw");
+      let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "11vw");
       profilesButton.onclick = function() {
         searchBar.blur()
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Profiles are not available yet.");
       }
-      let skinsButton = createNavButton("nav-skins-btn", "Skins", "13vw");
+      let skinsButton = createNavButton("nav-skins-btn", "Skins", "11vw");
       skinsButton.onclick = function() {
         setFilter("all");
         searchBar.disabled = false;
@@ -369,7 +372,19 @@ export let runtime;
         skinsButton.style.backgroundColor = "lightblue";
         renderSkinsMenu(sectionDiv);
       }
-      let addmodButton = createNavButton("nav-addmod-btn", "Add Mod", "13vw");
+      let texturesButton = createNavButton("nav-textures-btn", "Textures", "11vw");
+      texturesButton.onclick = function() {
+        searchBar.disabled = true;
+        searchBar.value = "";
+        let elements = document.getElementsByClassName('nav-button');
+        for(let i = 0; i < elements.length; i++) {
+          elements[i].style.backgroundColor = 'white';
+        }
+        texturesButton.style.backgroundColor = "lightblue";
+        renderTexturesMenu(sectionDiv);
+      }
+
+      let addmodButton = createNavButton("nav-addmod-btn", "Add Mod", "11vw");
       addmodButton.onclick = function() {
         searchBar.disabled = true;
         searchBar.value = "";
@@ -383,7 +398,7 @@ export let runtime;
         
       }
 
-      let replaysButton = createNavButton("nav-replays-btn", "Replays", "13vw");
+      let replaysButton = createNavButton("nav-replays-btn", "Replays", "11vw");
       replaysButton.onclick = function() {
         searchBar.disabled = true;
         searchBar.value = "";
@@ -407,7 +422,7 @@ export let runtime;
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        width: "13vw",
+        width: "12vw",
         height: "3vw",
         cursor: "text",
         backgroundColor: "white",
@@ -473,6 +488,7 @@ export let runtime;
       // buttonContainer.appendChild(profilesButton);
       buttonContainer.appendChild(skinsButton);
       buttonContainer.appendChild(replaysButton);
+      buttonContainer.appendChild(texturesButton);
       buttonContainer.appendChild(addmodButton);
       buttonContainer.appendChild(searchBar);
 
@@ -1099,6 +1115,7 @@ export let runtime;
           });
           
           addModloaderButtonTexture();
+          await applyStoredTexturePack();
 
 
     

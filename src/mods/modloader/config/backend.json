@@ -1,7 +1,99 @@
 {
-    "version": "2.2.2",
+    "version": "2.3.0",
+    "texturepacks": {
+        "crossbow": {
+            "name": "Crossbow",
+            "author": "ShyGuy",
+            "desc": "Replaces rocket + bullets",
+            "url": "../src/texturepacks/crossbow.zip",
+            "version": ["1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
+        },
+        "golden": {
+            "name": "Golden",
+            "author": "Awesovven",
+            "desc": "Golden OvO",
+            "url": "../src/texturepacks/golden.zip",
+            "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
+        },
+        "owo": {
+            "name": "OwO",
+            "author": "ShyGuy",
+            "desc": "OwO title screen",
+            "url": "../src/texturepacks/owo.zip",
+            "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
+        },
+        "dogecoin": {
+            "name": "Dogecoin",
+            "author": "Saturnb",
+            "desc": "Dogecoin coins",
+            "url": "../src/texturepacks/dogecoin.zip",
+            "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
+        },
+        "better-hitboxes": {
+            "name": "Better Hitboxes",
+            "author": "Saturnb",
+            "desc": "Better player hitbox",
+            "url": "../src/texturepacks/better-hitboxes.zip",
+            "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
+        },
+        "better-hashes": {
+            "name": "Better Hashes",
+            "author": "Saturnb",
+            "desc": "Better hash textures",
+            "url": "../src/texturepacks/better-hashes.zip",
+            "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
+        },
+        "gay-floor": {
+            "name": "Gay Floor",
+            "author": "Saturnb",
+            "desc": "Gay floor solids",
+            "url": "../src/texturepacks/gay-floor.zip",
+            "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
+        },
+        "neon": {
+            "name": "Neon Texture Pack",
+            "author": "Annihilazer",
+            "desc": "Neon",
+            "url": "../src/texturepacks/neon.zip",
+            "version": ["1.4.3"]
+        },
+        "water-gun": {
+            "name": "Water Gun",
+            "author": "illusion",
+            "desc": "Water gun + bullet textures",
+            "url": "../src/texturepacks/water-gun.zip",
+            "version": ["1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
+        },
+        "abyss": {
+            "name": "Abyss",
+            "author": "Annihilazer",
+            "desc": "For those who wish to explore deep into the unknown",
+            "url": "../src/texturepacks/abyss.zip",
+            "version": ["1.4.4", "CTLE"]
+        },
+        "checkboxes": {
+            "name": "Checkboxes",
+            "author": "Annihilazer",
+            "desc": "Checkboxes instead of buttons",
+            "url": "../src/texturepacks/checkboxes.zip",
+            "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
+        },
+        "door-frame": {
+            "name": "Door Frame",
+            "author": "Annihilazer",
+            "desc": "Door frame flag",
+            "url": "../src/texturepacks/door-frame.zip",
+            "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE"]
+        },
+        "fire-flag": {
+            "name": "Fire Flag",
+            "author": "Annihilazer",
+            "desc": "Fire flag",
+            "url": "../src/texturepacks/fire-flag.zip",
+            "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE"]
+        }
+    },
     "settings": {
-        
         "maxspeed": {
             "name": "Max Speed",
             "desc": "The maximum speed of the player.",
@@ -684,11 +776,10 @@
                 "using": false
             }
         }
-        
-        
+
+
     },
-    "mods": 
-    {        
+    "mods": {        
         "leveleditor": {
             "name": "Editor",
             "author": "Awesomeguy",
@@ -1065,6 +1156,7 @@
                 "enabled": false
             }
         },
+        
         "randomlevel": {
             "name": "Random Level",
             "author": "drakeerv",
