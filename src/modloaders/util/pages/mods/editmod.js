@@ -1,11 +1,13 @@
 import { backendConfig } from "../../../modloader.js";
-import { createConfirmDeleteModal } from "../../modals.js";
+import { createConfirmDeleteModal, createNotifyModal } from "../../modals.js";
 import { renderModsMenu } from "./render.js";
+import { customModNum, incCustomModNum } from "./utils.js";
 
 export {createEditModPopup}
 
 
 let createEditModPopup = (modId) => {
+    let isNew = modId === null || modId === undefined;
     //Create background div
     let editmodPopup = document.createElement("div");
     editmodPopup.id = "editmodPopup-bg";
@@ -73,7 +75,7 @@ let createEditModPopup = (modId) => {
         titleText.style[a] = c[a];
     });
     titleText.id = "title-text";
-    let newContent = document.createTextNode("Settings");
+    let newContent = document.createTextNode(isNew ? "Add Mod" : "Settings");
     titleText.appendChild(newContent);
   
     editmodPopup.appendChild(titleText);
@@ -270,10 +272,11 @@ let createEditModPopup = (modId) => {
       }
     };
 
-    addModName.value = modSettings['mods'][modId].name;
-    console.log(modSettings['mods'][modId])
-    addModCode.value = modSettings['mods'][modId].url;
-    addModDesc.value = modSettings['mods'][modId].desc.replace(/<br\/>/g, "\n");
+    if (!isNew) {
+      addModName.value = modSettings['mods'][modId].name;
+      addModCode.value = modSettings['mods'][modId].url;
+      addModDesc.value = modSettings['mods'][modId].desc.replace(/<br\/>/g, "\n");
+    }
 
 
     let buttonsContainer = document.createElement("div");
@@ -292,7 +295,7 @@ let createEditModPopup = (modId) => {
 
     // Create confirm button
     let saveButton = document.createElement("button");
-    saveButton.innerHTML = "Save Settings";
+    saveButton.innerHTML = isNew ? "Save Mod" : "Save Settings";
     let g = {
         fontFamily: "Retron2000",
         fontSize: "14pt",
@@ -308,6 +311,34 @@ let createEditModPopup = (modId) => {
     });
 
     saveButton.onclick = function() {
+        if (isNew) {
+            if (addModName.value === "" || addModCode.value === "") {
+                createNotifyModal("Please fill out the name and code fields before saving.");
+                return;
+            }
+            incCustomModNum();
+            let modSettings = JSON.parse(localStorage.getItem("modSettings"));
+            modSettings["mods"]["customMod" + customModNum] = {
+                author: null,
+                icon: "../src/img/mods/custommod.png",
+                platform: ["pc", "mobile"],
+                version: ["1.4", "1.4.4", "CTLE"],
+                tags: ["custom"],
+                reload: true,
+                settings: null,
+                favorite: false,
+                name: addModName.value,
+                desc: addModDesc.value.replace(/\n/g, "<br/>"),
+                enabled: false,
+                url: addModCode.value,
+            };
+            localStorage.setItem("modSettings", JSON.stringify(modSettings));
+            editmodPopup.remove();
+            document.getElementById("menu-bg").style.pointerEvents = "auto";
+            document.getElementById("menu-bg").style.filter = "none";
+            document.getElementById("nav-mods-btn").click();
+            return;
+        }
         let modSettings = JSON.parse(localStorage.getItem('modSettings'));
         let modName = addModName.value;
         let modCode = addModCode.value;
@@ -345,7 +376,7 @@ let createEditModPopup = (modId) => {
 
     // Append buttons to the buttons container
     buttonsContainer.appendChild(saveButton);
-    buttonsContainer.appendChild(deleteButton);
+    if (!isNew) buttonsContainer.appendChild(deleteButton);
     
     settingsDiv.appendChild(addModName); 
     settingsDiv.appendChild(addModCode);

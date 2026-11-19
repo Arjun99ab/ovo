@@ -5,7 +5,7 @@ import { isInLevel, isPaused, closePaused, disableClick, enableClick, notify, me
 import {sleep, arraysEqual, detectDeviceType} from './util/utils.js';
 
 import {currentFilter, setFilter} from './util/pages/mods/filters.js';
-import {renderModsMenu, renderAddModMenu, searchMods} from './util/pages/mods/render.js';
+import {renderModsMenu, searchMods} from './util/pages/mods/render.js';
 import { customModNum, incCustomModNum } from './util/pages/mods/utils.js';
 
 import {renderSkinsMenu, searchSkins} from './util/pages/skins/render.js';
@@ -322,7 +322,7 @@ export let runtime;
       buttonContainer.className = "button-container";
 
 
-      let modsButton = createNavButton("nav-mods-btn", "Mods", "11vw");
+      let modsButton = createNavButton("nav-mods-btn", "Mods", "13vw");
       modsButton.style.backgroundColor = "lightblue"; //set default button to blue
       modsButton.onclick = function() {
         setFilter("all");
@@ -336,7 +336,7 @@ export let runtime;
         renderModsMenu(sectionDiv);
 
       }
-      let settingsButton = createNavButton("nav-settings-btn", "Settings", "11vw");
+      let settingsButton = createNavButton("nav-settings-btn", "Settings", "13vw");
       settingsButton.onclick = function() {
         searchBar.blur()
         document.getElementById("menu-bg").style.pointerEvents = "none";
@@ -353,14 +353,14 @@ export let runtime;
         // renderSettingsMenu(sectionDiv);
       }
 
-      let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "11vw");
+      let profilesButton = createNavButton("nav-profiles-btn", "Profiles", "13vw");
       profilesButton.onclick = function() {
         searchBar.blur()
         document.getElementById("menu-bg").style.pointerEvents = "none";
         document.getElementById("menu-bg").style.filter = "blur(1.2px)";
         createNotifyModal("Profiles are not available yet.");
       }
-      let skinsButton = createNavButton("nav-skins-btn", "Skins", "11vw");
+      let skinsButton = createNavButton("nav-skins-btn", "Skins", "13vw");
       skinsButton.onclick = function() {
         setFilter("all");
         searchBar.disabled = false;
@@ -372,7 +372,7 @@ export let runtime;
         skinsButton.style.backgroundColor = "lightblue";
         renderSkinsMenu(sectionDiv);
       }
-      let texturesButton = createNavButton("nav-textures-btn", "Textures", "11vw");
+      let texturesButton = createNavButton("nav-textures-btn", "Textures", "13vw");
       texturesButton.onclick = function() {
         searchBar.disabled = true;
         searchBar.value = "";
@@ -384,21 +384,7 @@ export let runtime;
         renderTexturesMenu(sectionDiv);
       }
 
-      let addmodButton = createNavButton("nav-addmod-btn", "Add Mod", "11vw");
-      addmodButton.onclick = function() {
-        searchBar.disabled = true;
-        searchBar.value = "";
-        // searchBar.style.cursor = "not-allowed";
-        let elements = document.getElementsByClassName('nav-button');
-        for(let i = 0; i < elements.length; i++) {
-          elements[i].style.backgroundColor = 'white';
-        }
-        addmodButton.style.backgroundColor = "lightblue";
-        renderAddModMenu(sectionDiv);
-        
-      }
-
-      let replaysButton = createNavButton("nav-replays-btn", "Replays", "11vw");
+      let replaysButton = createNavButton("nav-replays-btn", "Replays", "13vw");
       replaysButton.onclick = function() {
         searchBar.disabled = true;
         searchBar.value = "";
@@ -489,7 +475,6 @@ export let runtime;
       buttonContainer.appendChild(skinsButton);
       buttonContainer.appendChild(replaysButton);
       buttonContainer.appendChild(texturesButton);
-      buttonContainer.appendChild(addmodButton);
       buttonContainer.appendChild(searchBar);
 
 

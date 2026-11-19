@@ -1,11 +1,10 @@
 import { version, filters, backendConfig } from "../../../modloader.js";
-import { createNotifyModal } from "../../modals.js";
 import { detectDeviceType } from "../../utils.js";
 import { createMenuCard } from "./cards.js";
-import { createFilterButton, currentFilter, setFilter } from "./filters.js";
-import { toggleMod, customModNum, incCustomModNum } from "./utils.js";
+import { createFilterButton, setFilter } from "./filters.js";
+import { createEditModPopup } from "./editmod.js";
 
-export { renderModsMenu, renderAddModMenu, searchMods };
+export { renderModsMenu, searchMods };
 
 let renderModsMenu = (sectionDiv) => {
 
@@ -41,14 +40,14 @@ let renderModsMenu = (sectionDiv) => {
     display: "flex",
     // flex: "1",
     alignItems: "left",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     padding: "10px",
     flexDirection: "column",
     // width: "10%",
     // borderTop: "solid 3px black",
 
-    height: "auto",
-    maxHeight: "100%",
+    boxSizing: "border-box",
+    height: "100%",
     
     overflowY: "scroll",
     overflowX: "hidden",
@@ -121,6 +120,32 @@ let renderModsMenu = (sectionDiv) => {
     filtersDiv.appendChild(filterButton);
   }
 
+  let addModButton = document.createElement("button");
+  addModButton.id = "add-mod-btn";
+  addModButton.innerHTML = "+ Add Mod";
+  c = {
+    fontFamily: "Retron2000",
+    color: "black",
+    fontSize: "2vw",
+    cursor: "pointer",
+    backgroundColor: "white",
+    width: "13vw",
+    textAlign: "center",
+    border: "dashed 3px black",
+    borderRadius: "10px",
+    marginTop: "auto",
+    flexShrink: "0",
+  };
+  Object.keys(c).forEach(function (a) {
+    addModButton.style[a] = c[a];
+  });
+  addModButton.onclick = () => {
+    document.getElementById("menu-bg").style.pointerEvents = "none";
+    document.getElementById("menu-bg").style.filter = "blur(1.2px)";
+    createEditModPopup(null);
+  };
+  filtersDiv.appendChild(addModButton);
+
   let cardsList = [];
   console.log(backendConfig["mods"]);
   for (const [key] of Object.entries(backendConfig["mods"])) {
@@ -168,283 +193,6 @@ let renderModsMenu = (sectionDiv) => {
   for (const card of cardsList) {
     cardsDiv.appendChild(card);
   }
-};
-
-let renderAddModMenu = (sectionDiv) => {
-
-  while (sectionDiv.firstChild) {
-    sectionDiv.removeChild(sectionDiv.lastChild);
-  }
-
-  let filtersDiv = document.createElement("div");
-  filtersDiv.addEventListener('wheel', (e) => {
-    // console.log("hello)")
-    e.stopImmediatePropagation()
-    e.stopPropagation();
-    // e.preventDefault();
-    filtersDiv.focus();
-  });
-  filtersDiv.id = "filters-div";  
-      
-  let cardsDiv = document.createElement("div");
-  cardsDiv.addEventListener('wheel', (e) => {
-    // console.log("hello)")
-    e.stopImmediatePropagation()
-    e.stopPropagation();
-    // e.preventDefault();
-    cardsDiv.focus();
-  });
-  cardsDiv.id = "cards-div";
-
-  sectionDiv.appendChild(filtersDiv);
-  sectionDiv.appendChild(cardsDiv);
-
-  let c = {
-    display: "flex",
-    // flex: "1",
-    alignItems: "left",
-    justifyContent: "center",
-    padding: "0px",
-    flexDirection: "column",
-    // width: "10%",
-    borderTop: "solid 3px black",
-
-    height: "calc(100% - 3px)",
-    overflowY: "auto",
-    overflowX: "auto",
-
-    scrollbarGutter: "stable",
-    scrollbarWidth: "thin",
-    // backgroundColor: "red",
-    // position: "sticky",
-    // marginRight: "2%",
-  };
-  Object.keys(c).forEach(function (a) {
-    filtersDiv.style[a] = c[a];
-  });
-
-  c = {
-    display: "flex",
-    padding: "10px 20px",
-    flexDirection: "column",
-    gap: "6% 4%",
-    borderLeft: "solid 3px black",
-    borderTop: "solid 3px black",
-    width: "83%",
-    height: "calc(100% - 24px)",
-    overflowY: "auto",
-    overflowX: "hidden",
-    scrollbarGutter: "stable",
-    scrollbarWidth: "thin",
-    justifyContent: "center",
-    alignItems: "center",
-  };
-  Object.keys(c).forEach(function (a) {
-    cardsDiv.style[a] = c[a];
-  });
-
-  let saveButtonCss = {
-    fontFamily: "Retron2000",
-    color: "black",
-    fontSize: "2vw",
-    cursor: "pointer",
-    backgroundColor: "lightgreen",
-    width: "13vw",
-    height: "100%",
-    textAlign: "center",
-    verticalAlign: "middle",
-    // marginBottom: "15px",
-    // border: "solid 3px black",
-    borderRadius: "0 0 0 10px",
-    // margin: "10px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    // marginBottom: "15px",
-  };
-
-  let saveButton = document.createElement("div");
-  saveButton.innerHTML = "Save Mod";
-  Object.keys(saveButtonCss).forEach(function (a) {
-    saveButton.style[a] = saveButtonCss[a];
-  });
-
-  saveButton.onclick = function () {
-    if (addModName.value !== "" && addModCode.value !== "") {
-      incCustomModNum();
-      console.log("brand new mod");
-
-      let modSettings = JSON.parse(localStorage.getItem("modSettings"));
-      let customModConfig = {};
-      customModConfig["author"] = null;
-      customModConfig["icon"] = "../src/img/mods/custommod.png";
-      customModConfig["platform"] = ["pc", "mobile"];
-      customModConfig["version"] = ["1.4", "1.4.4", "CTLE"];
-      customModConfig["tags"] = ["custom"];
-      customModConfig["reload"] = true;
-      customModConfig["settings"] = null;
-      customModConfig["favorite"] = false;
-      customModConfig["name"] = addModName.value;
-      customModConfig["desc"] = addModDesc.value.replace(/\n/g, "<br/>");
-      customModConfig["enabled"] = false;
-      customModConfig["url"] = addModCode.value;
-      modSettings["mods"]["customMod" + customModNum] = customModConfig;
-      localStorage.setItem("modSettings", JSON.stringify(modSettings));
-
-      document.getElementById("nav-mods-btn").click();
-    } else {
-      document.getElementById("menu-bg").style.pointerEvents = "none";
-      document.getElementById("menu-bg").style.filter = "blur(1.2px)";
-      createNotifyModal(
-        "Please fill out the name and code fields before saving."
-      );
-    }
-  };
-
-  filtersDiv.appendChild(saveButton);
-
-  let addModName = document.createElement("input");
-  addModName.placeholder = "Mod Name";
-  let d = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    height: "3vw",
-    cursor: "text",
-    backgroundColor: "white",
-    verticalAlign: "middle",
-    border: "solid 3px black",
-    fontSize: "2vw",
-    color: "black",
-    fontFamily: "Retron2000",
-    // paddingLeft: "10px",
-    borderRadius: "10px 10px 10px 10px",
-  };
-  Object.keys(d).forEach(function (a) {
-    addModName.style[a] = d[a];
-  });
-  addModName.onclick = (e) => {
-    //ensure that input box focus
-    // console.log("please");
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-    e.preventDefault();
-    addModName.focus();
-  };
-  document.getElementById("menu-bg").onclick = (e) => {
-    //ensure that input box focus
-    // console.log("please");
-    addModName.blur();
-  };
-  addModName.onkeydown = (e) => {
-    // ensures that user is able to type in input box
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-    if (e.keyCode === 27) {
-      addModName.blur();
-    }
-    if (e.keyCode === 13) {
-      addModName.blur();
-    }
-  };
-
-  let addModCode = document.createElement("textarea");
-  addModCode.placeholder = "Mod Code";
-  addModCode.rows = "10";
-  addModCode.cols = "50";
-  let e = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    height: "50%",
-    cursor: "text",
-    backgroundColor: "white",
-    verticalAlign: "middle",
-    border: "solid 3px black",
-    fontSize: "2vw",
-    color: "black",
-    fontFamily: "Retron2000",
-    // paddingLeft: "10px",
-    borderRadius: "10px 10px 10px 10px",
-  };
-  Object.keys(d).forEach(function (a) {
-    addModCode.style[a] = e[a];
-  });
-  addModCode.onclick = (e) => {
-    //ensure that input box focus
-    // console.log("please");
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-    e.preventDefault();
-    addModCode.focus();
-  };
-  document.getElementById("menu-bg").onclick = (e) => {
-    //ensure that input box focus
-    // console.log("please");
-  };
-  addModCode.onkeydown = (e) => {
-    // ensures that user is able to type in input box
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-    if (e.keyCode === 27) {
-      addModCode.blur();
-    }
-  };
-
-  let addModDesc = document.createElement("textarea");
-  addModDesc.placeholder = "Mod Description";
-  addModDesc.rows = "10";
-  addModDesc.cols = "50";
-  let f = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    height: "50%",
-    cursor: "text",
-    backgroundColor: "white",
-    verticalAlign: "middle",
-    border: "solid 3px black",
-    fontSize: "2vw",
-    color: "black",
-    fontFamily: "Retron2000",
-    // paddingLeft: "10px",
-    borderRadius: "10px 10px 10px 10px",
-  };
-  Object.keys(d).forEach(function (a) {
-    addModDesc.style[a] = f[a];
-  });
-  addModDesc.onclick = (e) => {
-    //ensure that input box focus
-    // console.log("please");
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-    e.preventDefault();
-    addModDesc.focus();
-  };
-
-  addModDesc.onkeydown = (e) => {
-    // ensures that user is able to type in input box
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-    if (e.keyCode === 27) {
-      addModDesc.blur();
-    }
-  };
-
-  document.getElementById("menu-bg").onclick = (e) => {
-    //ensure that input box focus
-    // console.log("please");
-    addModName.blur();
-    addModCode.blur();
-    addModDesc.blur();
-  };
-
-  cardsDiv.appendChild(addModName);
-  cardsDiv.appendChild(addModCode);
-  cardsDiv.appendChild(addModDesc);
 };
 
 let searchMods = (search, filter = "all") => {
