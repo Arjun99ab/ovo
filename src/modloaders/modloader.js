@@ -1025,7 +1025,7 @@ export let runtime;
             let saveObj = runtime.types_by_index.filter((x) => x.plugin instanceof cr.plugins_.SyncStorage)[0].instances[0];
             let skin = saveObj.data.CurSkin === undefined ? "" : saveObj.data.CurSkin;
             console.log(saveObj)
-            if(backendConfig['skins'][skin]['version'].includes(skinVersion)) { //skin loaded fine
+            if(backendConfig['skins'][skin] && backendConfig['skins'][skin]['version'].includes(skinVersion)) { //skin loaded fine
               userConfig['skins'][skin]['using'] = true;
             } else {
               userConfig['skins'][""]["using"] = true;

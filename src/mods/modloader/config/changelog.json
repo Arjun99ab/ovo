@@ -91,6 +91,11 @@
             "Use texture packs from the community, or upload your own custom textures",
             "Thanks to @packjack!"
         ]
+    },
+    "2.3.1": {
+        "changes": [
+            "Added new community skins: Glitch, Samurai, GcubeFlow4, REDAMMAIL74, GamingPrime, Newkem"
+        ]
     }
 
 }

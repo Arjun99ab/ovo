@@ -1,5 +1,5 @@
 {
-    "version": "2.3.0",
+    "version": "2.3.1",
     "texturepacks": {
         "crossbow": {
             "name": "Crossbow",
@@ -73,21 +73,21 @@
         },
         "checkboxes": {
             "name": "Checkboxes",
-            "author": "Annihilazer",
+            "author": "packjack",
             "desc": "Checkboxes instead of buttons",
             "url": "../src/texturepacks/checkboxes.zip",
             "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE", "1.4.5"]
         },
         "door-frame": {
             "name": "Door Frame",
-            "author": "Annihilazer",
+            "author": "ShyGuy",
             "desc": "Door frame flag",
             "url": "../src/texturepacks/door-frame.zip",
             "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE"]
         },
         "fire-flag": {
             "name": "Fire Flag",
-            "author": "Annihilazer",
+            "author": "ShyGuy & Saturnb",
             "desc": "Fire flag",
             "url": "../src/texturepacks/fire-flag.zip",
             "version": ["1.4", "1.4.1", "1.4.2", "1.4.3", "1.4.4", "CTLE"]
@@ -775,9 +775,91 @@
                 "favorite": false,
                 "using": false
             }
+        },
+        "samurai": {
+            "name": "Samurai",
+            "author": "Newkem",
+            "desc": "A Legendary Samurai",
+            "url": "../src/skins/samurai.png",
+            "icon": "../src/skins/icons/samurai.png",
+            "version": ["1.4.4", "1.4.5"],
+            "tags": ["community"],
+            "replaces": "french",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "glitch": {
+            "name": "Glitch",
+            "author": "GcubeFlow4",
+            "desc": "A skin made by gcube for fun",
+            "url": "../src/skins/glitch.png",
+            "icon": "../src/skins/icons/glitch.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
+            "tags": ["community"],
+            "replaces": "ada",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "gcube": {
+            "name": "GcubeFlow4",
+            "author": "GcubeFlow4",
+            "desc": "He solve cubes, and is an src mod",
+            "url": "../src/skins/gcubeflow4.png",
+            "icon": "../src/skins/icons/gcubeflow4.png",
+            "version": ["1.4.3", "1.4.4", "1.4.5"],
+            "tags": ["community"],
+            "replaces": "fl1ckd",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "redammail": {
+            "name": "REDAMMAIL74",
+            "author": "REDAMMAIL74",
+            "desc": "an IRL friend of gcube",
+            "url": "../src/skins/redammail74.png",
+            "icon": "../src/skins/icons/redammail74.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
+            "tags": ["community"],
+            "replaces": "thefall",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "gamingprime": {
+            "name": "GamingPrime",
+            "author": "GcubeFlow4",
+            "desc": "The Glorious 1.4.4 Any% FWR Holder with a 6:07, GamingPrime",
+            "url": "../src/skins/gamingprime.png",
+            "icon": "../src/skins/icons/gamingprime.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
+            "tags": ["community"],
+            "replaces": "thefall",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
+        },
+        "newkem": {
+            "name": "Newkem",
+            "author": "Newkem",
+            "desc": "The Third Worst Thing to happen to those Orphans",
+            "url": "../src/skins/newkem.png",
+            "icon": "../src/skins/icons/newkem.png",
+            "version": ["1.4", "1.4.2", "1.4.3", "1.4.4", "1.4.5"],
+            "tags": ["community"],
+            "replaces": "dknight",
+            "defaultSettings": {
+                "favorite": false,
+                "using": false
+            }
         }
-
-
     },
     "mods": {        
         "leveleditor": {
